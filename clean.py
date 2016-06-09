@@ -10,6 +10,8 @@ replaceStrings = ["REMOVED_DATE", "REMOVED_MONTH", "REMOVED_PATIENT_NAME", "REMO
 #Script to dump xml file into a deIdentifiedDict
 def deIden(data):
     print "Calling Deint data"
+    print "Number of dirty reports", len(cleanedData)
+    showEx = True
     cleanedData = []
     for pathReport in data:
         cleanedReport = {}
@@ -19,12 +21,20 @@ def deIden(data):
                 cleanedReport[key] = pathReport[key]
         #This is the raw patient report. Might contain Patient Name, or dates or Accession number 
         ## All of which must be removed
-        dirtyText = pathReport['Report_Text']
-        cleanText = deIdenText(dirtyText)
-        cleanedReport['Report_Text'] = cleanText
+        try:
+            dirtyText = pathReport['Report_Text']
+            cleanText = deIdenText(dirtyText)
+            cleanedReport['Report_Text'] = cleanText
 
-        cleanedData.append(cleanedReport)
+            cleanedData.append(cleanedReport)
+        except Exception, e:
+            if showEx:
+                print "Example diff report"
+                print pathReport
+                raw_input()
+                showEx = False
 
+    print "Number of clean reports", len(cleanedData)
     return cleanedData
 
 def deIdenText(dirtyText):
