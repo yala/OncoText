@@ -11,7 +11,7 @@ replaceStrings = ["REMOVED_DATE", "REMOVED_MONTH", "REMOVED_PATIENT_NAME", "REMO
 def deIden(data):
     print "Calling Deint data"
     cleanedData = []
-    for pathReport in data[:10]:
+    for pathReport in data[:1]:
         cleanedReport = {}
         for key in pathReport:
             #These keys constitute the annotation
@@ -49,7 +49,7 @@ def deIdenText(dirtyText):
     print "Cleaned text"
     print 
     print cleanedText
-    raw_input
+    raw_input()
 
     return cleanedText
 
@@ -109,7 +109,7 @@ goldString = "Accession Number: REMOVED_ACCESSION_ID                   Report St
             "Accesioned On: REMOVED_DATE\nRICHARDSON, ANDREA, K, M,D~PH.D\nPATIENT: REMOVED_PATIENT_NAME\n"+\
             "Something on REMOVED_MONTH first/second/third yaknow REMOVED_DATE REMOVED_MONTH, 02, 2016, REMOVED_DATE, REMOVED_DATE, REMOVED_DATE" 
 
-test = True
+test = False
 xmlPath = "/c/Users/ksh1/Desktop/ReportDiagnosesByMRNDateSideMaxDXAll.xml"
 outPath = "deidentifiedPathReports.p"
 readXmlFile = True
