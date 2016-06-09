@@ -22,6 +22,9 @@ def deIden(data):
         dirtyText = pathReport['Report_Text']
         cleanText = deIdenText(dirtyText)
         cleanedReport['Report_Text'] = cleanText
+
+        cleanData.append(cleanedReport)
+        
     return cleanedData
 
 def deIdenText(dirtyText):
@@ -128,8 +131,8 @@ if __name__ == '__main__':
         if deanon:
             cleanData = deIden(pathReports)
 
-        if dump:
-            p.dump(cleanData, open(outPath, 'wb'))
+            if dump:
+                p.dump(cleanData, open(outPath, 'wb')) 
 
     if test:
         cleanedAttempt = deIdenText(testString)
