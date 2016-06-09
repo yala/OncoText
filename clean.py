@@ -28,7 +28,7 @@ def deIdenText(dirtyText):
     print "calling deIdenDirtyText"
     print "DirtyText looks like"
     print dirtyText
-
+    print '***************************'
     cleanLines = []
     lines = dirtyText.split('\n')
     for line in lines:
@@ -45,10 +45,11 @@ def deIdenText(dirtyText):
         cleanLines.append(cleanLine)
 
     cleanedText = "\n".join(cleanLines)
-
+    raw_input()
     print "Cleaned text"
     print 
     print cleanedText
+    raw_input
 
     return cleanedText
 
