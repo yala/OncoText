@@ -11,7 +11,7 @@ replaceStrings = ["REMOVED_DATE", "REMOVED_MONTH", "REMOVED_PATIENT_NAME", "REMO
 def deIden(data):
     print "Calling Deint data"
     cleanedData = []
-    for pathReport in data[:100]:
+    for pathReport in data[:10]:
         cleanedReport = {}
         for key in pathReport:
             #These keys constitute the annotation
