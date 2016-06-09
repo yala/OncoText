@@ -10,7 +10,7 @@ replaceStrings = ["REMOVED_DATE", "REMOVED_MONTH", "REMOVED_PATIENT_NAME", "REMO
 #Script to dump xml file into a deIdentifiedDict
 def deIden(data):
     print "Calling Deint data"
-    print "Number of dirty reports", len(cleanedData)
+    print "Number of dirty reports", len(data)
     showEx = True
     cleanedData = []
     for pathReport in data:
