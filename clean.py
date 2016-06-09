@@ -11,7 +11,7 @@ replaceStrings = ["REMOVED_DATE", "REMOVED_MONTH", "REMOVED_PATIENT_NAME", "REMO
 def deIden(data):
     print "Calling Deint data"
     cleanedData = []
-    for pathReport in data[:1]:
+    for pathReport in data:
         cleanedReport = {}
         for key in pathReport:
             #These keys constitute the annotation
@@ -24,14 +24,16 @@ def deIden(data):
         cleanedReport['Report_Text'] = cleanText
 
         cleanedData.append(cleanedReport)
-        
+
     return cleanedData
 
 def deIdenText(dirtyText):
-    print "calling deIdenDirtyText"
-    print "DirtyText looks like"
-    print dirtyText
-    print '***************************'
+    debug = False
+    if debug:
+        print "calling deIdenDirtyText"
+        print "DirtyText looks like"
+        print dirtyText
+        print '***************************'
     cleanLines = []
     lines = dirtyText.split('\n')
     for line in lines:
@@ -48,11 +50,13 @@ def deIdenText(dirtyText):
         cleanLines.append(cleanLine)
 
     cleanedText = "\n".join(cleanLines)
-    raw_input()
-    print "Cleaned text"
-    print 
-    print cleanedText
-    raw_input()
+
+    if debug:
+        raw_input()
+        print "Cleaned text"
+        print 
+        print cleanedText
+        raw_input()
 
     return cleanedText
 
@@ -131,8 +135,10 @@ if __name__ == '__main__':
         if deanon:
             cleanData = deIden(pathReports)
 
+            print "Begin dump"
             if dump:
                 p.dump(cleanData, open(outPath, 'wb')) 
+
 
     if test:
         cleanedAttempt = deIdenText(testString)
