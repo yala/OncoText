@@ -23,7 +23,7 @@ def deIden(data):
         cleanText = deIdenText(dirtyText)
         cleanedReport['Report_Text'] = cleanText
 
-        cleanData.append(cleanedReport)
+        cleanedData.append(cleanedReport)
         
     return cleanedData
 
