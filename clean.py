@@ -129,7 +129,7 @@ if __name__ == '__main__':
             cleanData = deIden(pathReports)
 
         if dump:
-            p.dump(cleanData, dump)
+            p.dump(cleanData, open(outPath, 'wb'))
 
     if test:
         cleanedAttempt = deIdenText(testString)
