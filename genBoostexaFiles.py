@@ -8,7 +8,7 @@ goldDataPath = 'goldPathReports.p'
 trainOutPath = "boostexer/pathology.data"
 testOutPath = "boostexer/pathology.test"
 
-dumpGold = True
+dumpGold = False
 
 if dumpGold:
     allData = p.load(open(dataPath, 'rb'))
@@ -21,6 +21,9 @@ labels = [d['DCIS'] for d in goldData]
 reports = [d['Report_Text'] for d in goldData]
 
 cleanReports = [ re.sub(r"\W", " ", d) for d in reports]
+cleanReports = [ ' '.join(d.split('\n')) for d in cleanReports]
+cleanReports = [ re.sub(r"(----)+", "", d) for d in cleanReports]
+cleanReports = [ re.sub(r"(====)+", "", d) for d in cleanReports]
 
 debug = False
 if debug:
