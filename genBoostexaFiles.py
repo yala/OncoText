@@ -50,7 +50,7 @@ filteredReport = []
 filteredLabel  = []
 for i in range(len(cleanReports)):
     if not cleanReports[i] in dups:
-        filteredReport.append(cleanReports[i])
+        filteredReport.append(cleanReports[i].lower())
         filteredLabel.append(labels[i])
 assert len(filteredReport) < len(cleanReports)
 cleanReports = filteredReport
@@ -85,22 +85,21 @@ print "Label dist for test",  sum([l == 'DCIS' for l in testLabels])
 print len(testLabels)
 
 
-mistakeIds = [85, 102, 213, 273, 310]
-goldLabels = [testLabels[i] for i in mistakeIds]
+mistakeIds = [102, 273, 310]
+goldLabels = [testLabels[idx] for idx in mistakeIds]
 yalaLabel = ['DCIS', 'no_DCIS', 'DCIS', 'DCIS',  'no_DCIS']
 
 print 'goldLabels', goldLabels
 
 
-assert goldLabels == ['no_DCIS', 'no_DCIS', 'no_DCIS', 'DCIS', 'no_DCIS']
 for idx in mistakeIds:
     print "************************"
     print "MISTAKE ", idx
-    print "gold", labels[idx]
+    print "gold", testLabels[idx]
     print testReports[idx]
     raw_input()
 
-write = False
+write = True
 if write:
 
     with open(trainOutPath, "wb") as f: 
