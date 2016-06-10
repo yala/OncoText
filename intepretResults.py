@@ -13,8 +13,6 @@ for sample in samples:
     gold.append(g)
     guessed.append(p)
 
-assert sum([not gold[i] == guessed[i] for i in range(len(gold))]) == 9
-
 mistakeIds = [85, 102, 213, 273, 310]
 yalaLabel = ['DCIS', 'no_DCIS', 'DCIS', 'DCIS',  'no_DCIS']
 
@@ -37,7 +35,6 @@ f1        =  2. * (percision * recall)  / (percision + recall)
 print "percision, recall, f1", percision, recall, f1
 
 mistakes = [("gold, guessed", gold[i], guessed[i]) for i in range(len(gold)) if not gold[i] == guessed[i] ]
-assert len(mistakes) == 9
 
 print "Mistakes are"
 for mistake in mistakes:
