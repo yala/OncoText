@@ -17,6 +17,7 @@ if dumpGold:
 else:
     goldData = p.load(open(goldDataPath, 'rb'))
 
+print "Report keys:", goldData[0].keys()
 labels = ['DCIS' if d['DCIS'] == '1' else "no_DCIS" for d in goldData]
 reports = [d['Report_Text'] for d in goldData]
 
@@ -24,6 +25,31 @@ cleanReports = [ re.sub(r"\W", " ", d) for d in reports]
 cleanReports = [ ' '.join(d.split('\n')) for d in cleanReports]
 cleanReports = [ re.sub(r"(----)+", "", d) for d in cleanReports]
 cleanReports = [ re.sub(r"(====)+", "", d) for d in cleanReports]
+
+
+dups= {}
+for i,report in enumerate(set(cleanReports)):
+    count = 0
+    for r2 in cleanReports:
+        if r2 == report:
+            count +=1
+        if count > 1:
+            dups[report] = count
+
+
+filteredReport = []
+filteredLabel  = []
+for i in range(len(cleanReports)):
+    if not cleanReports[i] in dups:
+        filteredReport.append(cleanReports[i])
+        filteredLabel.append(labels[i])
+assert len(filteredReport) < len(cleanReports)
+cleanReports = filteredReport
+labels = filteredLabel
+
+
+assert len(cleanReports) == len(set(cleanReports))
+
 
 assert len(cleanReports) == len(labels)
 debug = False
@@ -36,22 +62,25 @@ if debug:
 
 test_Size = 500
 
-idx = range(len(reports))
+idx = range(len(cleanReports))
 random.shuffle(idx)
 
 trainReports = [cleanReports[i] for i in idx[:-500]]
 trainLabels = [labels[i] for i in idx[:-500]]
-print "Label dist for train", sum([l == 'DCIS' for l in trainLabels])*1./len(trainLabels)
+print "Label dist for train", sum([l == 'DCIS' for l in trainLabels])
+print len(trainLabels)
 
 testReports = [cleanReports[i] for i in idx[-500:]]
 testLabels = [labels[i] for i in idx[-500:]]
-print "Label dist for test",  sum([l == 'DCIS' for l in testLabels])*1./len(testLabels)
+print "Label dist for test",  sum([l == 'DCIS' for l in testLabels])
+print len(testLabels)
 
 
 with open(trainOutPath, "wb") as f: 
     for i in range(len(trainReports)):
         label = trainLabels[i]
         report = trainReports[i]
+        assert not "\n" in report
         f.write(report + ", " + label + '.\n')
 print "Saved", trainOutPath
 
@@ -59,5 +88,6 @@ with open(testOutPath, "wb") as f:
     for i in range(len(testReports)):
         label = testLabels[i]
         report = testReports[i]
+        assert not "\n" in report
         f.write(report + ", " + label + '.\n')
 print "Saved", testOutPath
