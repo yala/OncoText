@@ -50,7 +50,7 @@ filteredReport = []
 filteredLabel  = []
 for i in range(len(cleanReports)):
     if not cleanReports[i] in dups:
-        filteredReport.append(cleanReports[i].lower())
+        filteredReport.append(cleanReports[i])
         filteredLabel.append(labels[i])
 assert len(filteredReport) < len(cleanReports)
 cleanReports = filteredReport
