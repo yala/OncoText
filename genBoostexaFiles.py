@@ -17,7 +17,7 @@ if dumpGold:
 else:
     goldData = p.load(open(goldDataPath, 'rb'))
 
-labels = [d['DCIS'] for d in goldData]
+labels = ['DCIS' if d['DCIS'] == '1' else "no_DCIS" for d in goldData]
 reports = [d['Report_Text'] for d in goldData]
 
 cleanReports = [ re.sub(r"\W", " ", d) for d in reports]
@@ -25,6 +25,7 @@ cleanReports = [ ' '.join(d.split('\n')) for d in cleanReports]
 cleanReports = [ re.sub(r"(----)+", "", d) for d in cleanReports]
 cleanReports = [ re.sub(r"(====)+", "", d) for d in cleanReports]
 
+assert len(cleanReports) == len(labels)
 debug = False
 if debug:
     for i in range(len(reports)):
@@ -40,11 +41,11 @@ random.shuffle(idx)
 
 trainReports = [cleanReports[i] for i in idx[:-500]]
 trainLabels = [labels[i] for i in idx[:-500]]
-print "Label dist for train", sum([l == '1' for l in trainLabels])*1./len(trainLabels)
+print "Label dist for train", sum([l == 'DCIS' for l in trainLabels])*1./len(trainLabels)
 
 testReports = [cleanReports[i] for i in idx[-500:]]
 testLabels = [labels[i] for i in idx[-500:]]
-print "Label dist for test",  sum([l == '1' for l in testLabels])*1./len(testLabels)
+print "Label dist for test",  sum([l == 'DCIS' for l in testLabels])*1./len(testLabels)
 
 
 with open(trainOutPath, "wb") as f: 
