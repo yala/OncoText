@@ -32,7 +32,12 @@ percision = 1. * truePos / (truePos + falsePos)
 recall    =  1. * truePos / (truePos + falseNeg)
 f1        =  2. * (percision * recall)  / (percision + recall)
 
-print "percision, recall, f1", percision, recall, f1
+sensitivity = recall
+specifcity = 1.* trueNeg / (trueNeg + falsePos)
+
+print "percision, recall, f1:", percision, ',', recall, ',', f1
+print "sensitivity, specifcity:", sensitivity, ',', specifcity
+
 
 mistakes = [("gold, guessed", gold[i], guessed[i]) for i in range(len(gold)) if not gold[i] == guessed[i] ]
 
