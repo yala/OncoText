@@ -45,3 +45,4 @@ print "number of people with DCIS" , sum([g == "DCIS" for g in gold])
 idxMistakes = [ i for i in range(len(gold)) if \
             (not guessed[i] == gold[i]) ]
 
+print 'idxMistakes', idxMistakes
