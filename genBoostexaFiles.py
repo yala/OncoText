@@ -38,10 +38,10 @@ test_Size = 500
 idx = range(len(reports))
 random.shuffle(idx)
 
-trainReports = [reports[i] for i in idx[:-500]]
+trainReports = [cleanReports[i] for i in idx[:-500]]
 trainLabels = [labels[i] for i in idx[:-500]]
 
-testReports = [reports[i] for i in idx[-500:]]
+testReports = [cleanReports[i] for i in idx[-500:]]
 testLabels = [labels[i] for i in idx[-500:]]
 
 with open(trainOutPath, "wb") as f: 
@@ -49,9 +49,11 @@ with open(trainOutPath, "wb") as f:
         label = trainLabels[i]
         report = trainReports[i]
         f.write(report + ", " + label + '.\n')
+print "Saved", trainOutPath
 
 with open(testOutPath, "wb") as f: 
     for i in range(len(testReports)):
         label = testLabels[i]
         report = testReports[i]
         f.write(report + ", " + label + '.\n')
+print "Saved", testOutPath
