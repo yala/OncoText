@@ -22,6 +22,7 @@ falsePos = sum([guessed[i] == "DCIS" and gold[i] == "no" for i in range(len(gold
 trueNeg  = sum([guessed[i] == "no" and gold[i] == "no" for i in range(len(gold))])
 falseNeg = sum([guessed[i] == "no" and gold[i] == "DCIS" for i in range(len(gold))])
 
+
 percision = 1. * truePos / (truePos + falsePos)
 recall    =  1. * truePos / (truePos + falseNeg)
 f1        =  2. * (percision * recall)  / (percision + recall)
@@ -36,3 +37,9 @@ for mistake in mistakes:
     print mistake
 
 print "number of people with DCIS" , sum([g == "DCIS" for g in gold])
+
+idxMistakes = [ i for i in range(len(gold)) if \
+            guessed[i] == "DCIS" and gold[i] == "no"  or \
+            [guessed[i] == "no" and gold[i] == "DCIS" ]]
+
+print "ID of mistakes", idxMistakes
