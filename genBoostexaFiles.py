@@ -40,9 +40,12 @@ random.shuffle(idx)
 
 trainReports = [cleanReports[i] for i in idx[:-500]]
 trainLabels = [labels[i] for i in idx[:-500]]
+print "Label dist for train", sum([l == '1' for l in trainLabels])*1./len(trainLabels)
 
 testReports = [cleanReports[i] for i in idx[-500:]]
 testLabels = [labels[i] for i in idx[-500:]]
+print "Label dist for test",  sum([l == '1' for l in testLabels])*1./len(testLabels)
+
 
 with open(trainOutPath, "wb") as f: 
     for i in range(len(trainReports)):
