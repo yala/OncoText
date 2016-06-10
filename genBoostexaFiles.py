@@ -85,18 +85,36 @@ print "Label dist for test",  sum([l == 'DCIS' for l in testLabels])
 print len(testLabels)
 
 
-with open(trainOutPath, "wb") as f: 
-    for i in range(len(trainReports)):
-        label = trainLabels[i]
-        report = trainReports[i]
-        assert not "\n" in report
-        f.write(report + ", " + label + '.\n')
-print "Saved", trainOutPath
+mistakeIds = [85, 102, 213, 273, 310]
+goldLabels = [testLabels[i] for i in mistakeIds]
+yalaLabel = ['DCIS', 'no_DCIS', 'DCIS', 'DCIS',  'no_DCIS']
 
-with open(testOutPath, "wb") as f: 
-    for i in range(len(testReports)):
-        label = testLabels[i]
-        report = testReports[i]
-        assert not "\n" in report
-        f.write(report + ", " + label + '.\n')
-print "Saved", testOutPath
+print 'goldLabels', goldLabels
+
+
+assert goldLabels == ['no_DCIS', 'no_DCIS', 'no_DCIS', 'DCIS', 'no_DCIS']
+for idx in mistakeIds:
+    print "************************"
+    print "MISTAKE ", idx
+    print "gold", labels[idx]
+    print testReports[idx]
+    raw_input()
+
+write = False
+if write:
+
+    with open(trainOutPath, "wb") as f: 
+        for i in range(len(trainReports)):
+            label = trainLabels[i]
+            report = trainReports[i]
+            assert not "\n" in report
+            f.write(report + ", " + label + '.\n')
+    print "Saved", trainOutPath
+
+    with open(testOutPath, "wb") as f: 
+        for i in range(len(testReports)):
+            label = testLabels[i]
+            report = testReports[i]
+            assert not "\n" in report
+            f.write(report + ", " + label + '.\n')
+    print "Saved", testOutPath

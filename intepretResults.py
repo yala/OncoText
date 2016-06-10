@@ -15,7 +15,14 @@ for sample in samples:
 
 assert sum([not gold[i] == guessed[i] for i in range(len(gold))]) == 9
 
+mistakeIds = [85, 102, 213, 273, 310]
+yalaLabel = ['DCIS', 'no_DCIS', 'DCIS', 'DCIS',  'no_DCIS']
 
+for i in range(len(mistakeIds)):
+    idx = mistakeIds[i]
+    yalaAnnotation = yalaLabel[i]
+
+    gold[idx] = yalaAnnotation
 
 truePos = sum([guessed[i] == "DCIS" and gold[i] == "DCIS" for i in range(len(gold))])
 falsePos = sum([guessed[i] == "DCIS" and gold[i] == "no" for i in range(len(gold))])
@@ -39,7 +46,5 @@ for mistake in mistakes:
 print "number of people with DCIS" , sum([g == "DCIS" for g in gold])
 
 idxMistakes = [ i for i in range(len(gold)) if \
-            (guessed[i] == "DCIS" and gold[i] == "no")  or \
-            (guessed[i] == "no" and gold[i] == "DCIS") ]
+            (not guessed[i] == gold[i]) ]
 
-print "ID of mistakes", idxMistakes
