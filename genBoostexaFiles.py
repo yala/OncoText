@@ -28,14 +28,23 @@ cleanReports = [ re.sub(r"(====)+", "", d) for d in cleanReports]
 
 
 dups= {}
+dupLabels= {}
 for i,report in enumerate(set(cleanReports)):
     count = 0
-    for r2 in cleanReports:
+    dupLabels[report] = set([labels[i]])
+    for j,r2 in enumerate(cleanReports):
         if r2 == report:
             count +=1
+            dupLabels[report].add(labels[j])
         if count > 1:
             dups[report] = count
 
+nonSepDups = []
+for dup in dupLabels:
+    if len(dupLabels[dup]) >1:
+        nonSepDups.append(dup)
+
+print 'len(nonSepDups)', len(nonSepDups)
 
 filteredReport = []
 filteredLabel  = []
