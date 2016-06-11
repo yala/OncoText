@@ -8,6 +8,18 @@ goldDataPath = 'goldPathReports.p'
 trainOutPath = "boostexer/pathology.data"
 testOutPath = "boostexer/pathology.test"
 
+diagnoses = [ u'Phylodes', u'ILC', u'CancerSuspicious', \
+ u'CancerNOS', u'TubularCancer', u'IDC', u'LCIS',  \
+ u'ADH', u'CancerInvInsituNOS', u'DCIS',\
+ u'ClingingCarcinoma', u'InvasiveSuspicious', u'LobularNeoplasia', u'FlatEpithelial', 
+ u'BluntAdenosis', u'Medullary', u'ALH', u'ADH_DCIS']
+
+def processLabels(labels):
+    result =  [lab for lab in labels if not "no_" in lab]
+    if len(result) == 0:
+        result = ['no']
+    return result
+
 if __name__ == "__main__":
     dumpGold = False
 
@@ -18,9 +30,23 @@ if __name__ == "__main__":
     else:
         goldData = p.load(open(goldDataPath, 'rb'))
 
-    print "Report keys:", goldData[0].keys()
-    labels = ['DCIS' if d['DCIS'] == '1' else "no_DCIS" for d in goldData]
+
+    labels = []
+    for i in range(len(goldData)):
+        diags = []
+        sample = goldData[i]
+        for diag in diagnoses:
+            if diag in sample and sample[diag] == '1':
+                diags.append(diag)
+            else:
+                diags.append('no_'+diag)
+        labels.append(diags)
+
+
     reports = [d['Report_Text'] for d in goldData]
+    print "done labeling bruv"
+
+    print goldData[100]['CancerInvInsituNOS']
 
     cleanReports = [ re.sub(r"\W", " ", d) for d in reports]
     cleanReports = [ ' '.join(d.split('\n')) for d in cleanReports]
@@ -29,23 +55,23 @@ if __name__ == "__main__":
 
 
     dups= {}
-    dupLabels= {}
+    # dupLabels= {}
     for i,report in enumerate(set(cleanReports)):
         count = 0
-        dupLabels[report] = set([labels[i]])
+        # dupLabels[report] = set([labels[i]])
         for j,r2 in enumerate(cleanReports):
             if r2 == report:
                 count +=1
-                dupLabels[report].add(labels[j])
+                # dupLabels[report].add(labels[j])
             if count > 1:
                 dups[report] = count
 
-    nonSepDups = []
-    for dup in dupLabels:
-        if len(dupLabels[dup]) >1:
-            nonSepDups.append(dup)
+    # nonSepDups = []
+    # for dup in dupLabels:
+    #     if len(dupLabels[dup]) >1:
+    #         nonSepDups.append(dup)
 
-    print 'len(nonSepDups)', len(nonSepDups)
+    # print 'len(nonSepDups)', len(nonSepDups)
 
     filteredReport = []
     filteredLabel  = []
@@ -62,6 +88,8 @@ if __name__ == "__main__":
 
 
     assert len(cleanReports) == len(labels)
+    assert len(labels[0]) == len(diagnoses)
+    print "Sample label", labels[0]
     debug = False
     if debug:
         for i in range(len(reports)):
@@ -77,45 +105,57 @@ if __name__ == "__main__":
 
     trainReports = [cleanReports[i] for i in idx[:-500]]
     trainLabels = [labels[i] for i in idx[:-500]]
-    print "Label dist for train", sum([l == 'DCIS' for l in trainLabels])
+
+    print "Label dist for train"
+    print "Sample label", trainLabels[100]
+
+    numTrainSamples = len(trainReports)
+    print 'diagnoses', diagnoses
+    for z in diagnoses:
+        print 'diag', z
+        print z, ":", sum([z in l for l in trainLabels]) * 1. / numTrainSamples
     print len(trainLabels)
 
     testReports = [cleanReports[i] for i in idx[-500:]]
     testLabels = [labels[i] for i in idx[-500:]]
-    print "Label dist for test",  sum([l == 'DCIS' for l in testLabels])
+    print "Label dist for test"
+    print "Sample label", testLabels[100]
+    numTestSamples = len(testReports)
+    for w in diagnoses:
+        print w, ":", sum([w in l for l in testLabels]) * 1. / numTestSamples
+    
     print len(testLabels)
 
-
     # mistakeIds = [102, 273, 310]
-    mistakeIds = [85, 213]
-    goldLabels = [testLabels[idx] for idx in mistakeIds]
-    yalaLabel = ['DCIS', 'no_DCIS', 'DCIS', 'DCIS',  'no_DCIS']
+    # mistakeIds = [85, 213]
+    # goldLabels = [testLabels[idx] for idx in mistakeIds]
+    # yalaLabel = ['DCIS', 'no_DCIS', 'DCIS', 'DCIS',  'no_DCIS']
 
-    print 'goldLabels', goldLabels
+    # print 'goldLabels', goldLabels
 
 
-    for idx in mistakeIds:
-        print "************************"
-        print "MISTAKE ", idx
-        print "gold", testLabels[idx]
-        print testReports[idx]
-        raw_input()
+    # for idx in mistakeIds:
+    #     print "************************"
+    #     print "MISTAKE ", idx
+    #     print "gold", testLabels[idx]
+    #     print testReports[idx]
+    #     raw_input()
 
     write = True
     if write:
 
         with open(trainOutPath, "wb") as f: 
             for i in range(len(trainReports)):
-                label = trainLabels[i]
+                label = processLabels( trainLabels[i])
                 report = trainReports[i]
                 assert not "\n" in report
-                f.write(report + ", " + label + '.\n')
+                f.write(report + ", " + " ".join(label) + '.\n')
         print "Saved", trainOutPath
 
         with open(testOutPath, "wb") as f: 
             for i in range(len(testReports)):
-                label = testLabels[i]
+                label =  processLabels(testLabels[i])
                 report = testReports[i]
                 assert not "\n" in report
-                f.write(report + ", " + label + '.\n')
+                f.write(report + ", " + " ".join(label) + '.\n')
         print "Saved", testOutPath
