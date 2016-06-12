@@ -1,9 +1,9 @@
 import pickle as p
-from clean import outPath as dataPath
 import re
 import random
 
 random.seed(1)
+dataPath = "deidentifiedPathReports.p"
 goldDataPath = 'goldPathReports.p'
 trainOutPath = "boostexer/pathology.data"
 testOutPath = "boostexer/pathology.test"
@@ -28,6 +28,8 @@ def getGoldTags(dumpGold = False):
     else:
         goldData = p.load(open(goldDataPath, 'rb'))
     return goldData
+
+def 
 
 if __name__ == "__main__":
 
