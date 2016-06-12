@@ -8,9 +8,9 @@ goldDataPath = 'goldPathReports.p'
 trainOutPath = "boostexer/pathology.data"
 testOutPath = "boostexer/pathology.test"
 
-diagnoses = [ u'Phylodes', u'ILC', u'CancerSuspicious', \
+diagnoses = [ u'DCIS', u'ILC', u'Phylodes', u'CancerSuspicious', \
  u'CancerNOS', u'TubularCancer', u'IDC', u'LCIS',  \
- u'ADH', u'CancerInvInsituNOS', u'DCIS',\
+ u'ADH', u'CancerInvInsituNOS',\
  u'ClingingCarcinoma', u'InvasiveSuspicious', u'LobularNeoplasia', u'FlatEpithelial', 
  u'BluntAdenosis', u'Medullary', u'ALH', u'ADH_DCIS']
 
@@ -20,16 +20,18 @@ def processLabels(labels):
         result = ['no']
     return result
 
-if __name__ == "__main__":
-    dumpGold = False
-
+def getGoldTags(dumpGold = False):
     if dumpGold:
         allData = p.load(open(dataPath, 'rb'))
         goldData = [d for d in allData if 'Correct' in d]
         p.dump(goldData, open(goldDataPath, 'wb'))
     else:
         goldData = p.load(open(goldDataPath, 'rb'))
+    return goldData
 
+if __name__ == "__main__":
+
+    goldData = getGoldTags()
 
     labels = []
     for i in range(len(goldData)):
