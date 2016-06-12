@@ -12,24 +12,34 @@ dupLabels = {}
 dupMRNs = {}
 countNotSameMRNs = 0
 dups = {}
-for i,report in enumerate(set(reports)):
+printed = True
+for i in range(len(goldData)):
+    report = goldData[i]['Report_Text'] 
+    if report in dups: #Meaning we have already marked this
+        continue
     mrn = goldData[i]['MRNPlusX']
     count = 0
     dupLabels[report] = set([labels[i]])
-    dupMRNs[report] = set([mrn])
+    dupMRNs[report] = set([(mrn,goldData[i]['Report_Date_TimePlusX'])])
 
-    for j,r2 in enumerate(reports):
+    for j in range(i, len(goldData)):
+        r2 = goldData[j]['Report_Text']
         if r2 == report and not "PATIENT: REMOVED_PATIENT_NAME" == report:
             count +=1
             mrn2 = goldData[j]['MRNPlusX']
             if not mrn == mrn2:
-                # print "MRNS NOT MATCHIN"
-                # print mrn, "," , mrn2
-                # print "REPORT IS"
-                # print report
                 countNotSameMRNs += 1
                 dupLabels[report].add( labels[j] )
-                dupMRNs[report].add(mrn2)
+                dupMRNs[report].add((mrn2, goldData[j]['Report_Date_TimePlusX']))
+
+                if printed:
+                    print goldData[i]
+                    print '****************************'
+                    print goldData[j]
+                    print "-------------------"
+                    inp = raw_input()
+                    if inp.lower() == "stop":
+                        printed = False
         if count > 1:
             dups[report] = count
 

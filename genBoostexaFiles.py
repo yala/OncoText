@@ -29,7 +29,27 @@ def getGoldTags(dumpGold = False):
         goldData = p.load(open(goldDataPath, 'rb'))
     return goldData
 
-def 
+def filterGold(reports, labels):
+    reportLabelDict = {}
+
+    filtered_reports = []
+    filtered_labels = []
+    for i in range(len(goldData)):
+        report = reports[i]
+        label = labels[i]
+
+        if not ( report.strip() == "PATIENT  REMOVED_PATIENT_NAME" or \
+            "Accession Number  REMOVED_ACCESSION_ID Report Status  Preliminary Type  Surgical Pathology Report not finalized SPECIMEN TYPE  BREAST   EXCISIONAL TISSUE W MARGINS  report_end" ==  report.strip()):
+            if report in reportLabelDict:
+                assert label == reportLabelDict[report]
+            reportLabelDict[report]= label
+
+    for r in reportLabelDict:
+        filtered_reports.append(r)
+        filtered_labels.append(reportLabelDict[r])
+
+    return filtered_reports, filtered_labels
+
 
 if __name__ == "__main__":
 
@@ -50,40 +70,16 @@ if __name__ == "__main__":
     reports = [d['Report_Text'] for d in goldData]
     print "done labeling bruv"
 
-    print goldData[100]['CancerInvInsituNOS']
-
     cleanReports = [ re.sub(r"\W", " ", d) for d in reports]
     cleanReports = [ ' '.join(d.split('\n')) for d in cleanReports]
     cleanReports = [ re.sub(r"(----)+", "", d) for d in cleanReports]
     cleanReports = [ re.sub(r"(====)+", "", d) for d in cleanReports]
 
 
-    dups= {}
-    # dupLabels= {}
-    for i,report in enumerate(set(cleanReports)):
-        count = 0
-        # dupLabels[report] = set([labels[i]])
-        for j,r2 in enumerate(cleanReports):
-            if r2 == report:
-                count +=1
-                # dupLabels[report].add(labels[j])
-            if count > 1:
-                dups[report] = count
 
-    # nonSepDups = []
-    # for dup in dupLabels:
-    #     if len(dupLabels[dup]) >1:
-    #         nonSepDups.append(dup)
+    filteredReport, filteredLabel = filterGold(cleanReports, labels)
+    print "len diff", len(reports) - len(filteredReport)
 
-    # print 'len(nonSepDups)', len(nonSepDups)
-
-    filteredReport = []
-    filteredLabel  = []
-    for i in range(len(cleanReports)):
-        if not cleanReports[i] in dups:
-            filteredReport.append(cleanReports[i])
-            filteredLabel.append(labels[i])
-    assert len(filteredReport) < len(cleanReports)
     cleanReports = filteredReport
     labels = filteredLabel
 
