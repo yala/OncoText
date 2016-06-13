@@ -15,9 +15,16 @@ diagnoses = [ u'DCIS', u'ILC', u'Phylodes', u'CancerSuspicious', \
  u'BluntAdenosis', u'Medullary', u'ALH', u'ADH_DCIS']
 
 def processLabels(labels):
+    debug = False
     result =  [lab for lab in labels if not "no_" in lab]
     if len(result) == 0:
         result = ['no']
+
+    if debug:
+        print "--------Process labels-----------"
+        print labels
+        print result
+        raw_input()
     return result
 
 def getGoldTags(dumpGold = False):
@@ -50,6 +57,42 @@ def filterGold(reports, labels):
 
     return filtered_reports, filtered_labels
 
+def printLabelDist(trainLabels, trainReports, testLabels, testReports):
+        print "Label dist for train, label dist for tet"
+        numTrainSamples = len(trainReports)
+        numTestSamples = len(testReports)
+        print 'diagnoses', diagnoses
+        for z in diagnoses:
+            print 'diag', z
+            print "TRAIN:", sum([z in l  for l in trainLabels]) * 1. / numTrainSamples
+            print "TEST:", sum([z in l  for l in testLabels]) * 1. / numTestSamples
+            print "---------------------"
+        #Print no diagnosis case
+        print 'diag', "none"
+        print "TRAIN:", sum([processLabels(l) == ["no"] for l in trainLabels]) * 1. / numTrainSamples
+        print "TEST:" , sum([processLabels(l) == ["no"] for l in testLabels]) * 1. / numTestSamples
+        print "---------------------"
+        print numTrainSamples, numTestSamples
+
+def interpretMistakes(mistakesIds, reports, labels):
+
+    for diag in mistakesIds:
+        mistakes = mistakesIds[diag]
+
+        wanted = []
+        if not diag in wanted: 
+            continue
+
+        for idx in mistakes:
+            print "-------------------"
+            print "diagnosis:", diag
+            print "IDX", idx
+            print "Gold", labels[idx]
+            print "Report", reports[idx]
+            raw_input()
+
+
+
 
 if __name__ == "__main__":
 
@@ -68,35 +111,17 @@ if __name__ == "__main__":
 
 
     reports = [d['Report_Text'] for d in goldData]
-    print "done labeling bruv"
 
     cleanReports = [ re.sub(r"\W", " ", d) for d in reports]
     cleanReports = [ ' '.join(d.split('\n')) for d in cleanReports]
     cleanReports = [ re.sub(r"(----)+", "", d) for d in cleanReports]
     cleanReports = [ re.sub(r"(====)+", "", d) for d in cleanReports]
 
-
-
     filteredReport, filteredLabel = filterGold(cleanReports, labels)
-    print "len diff", len(reports) - len(filteredReport)
 
     cleanReports = filteredReport
     labels = filteredLabel
-
-
     assert len(cleanReports) == len(set(cleanReports))
-
-
-    assert len(cleanReports) == len(labels)
-    assert len(labels[0]) == len(diagnoses)
-    print "Sample label", labels[0]
-    debug = False
-    if debug:
-        for i in range(len(reports)):
-            print "___________________________________"
-            print reports[1]
-            print cleanReports[1]
-            raw_input()
 
     test_Size = 500
 
@@ -105,57 +130,36 @@ if __name__ == "__main__":
 
     trainReports = [cleanReports[i] for i in idx[:-500]]
     trainLabels = [labels[i] for i in idx[:-500]]
-
-    print "Label dist for train"
-    print "Sample label", trainLabels[100]
-
-    numTrainSamples = len(trainReports)
-    print 'diagnoses', diagnoses
-    for z in diagnoses:
-        print 'diag', z
-        print z, ":", sum([z in l for l in trainLabels]) * 1. / numTrainSamples
-    print len(trainLabels)
-
     testReports = [cleanReports[i] for i in idx[-500:]]
     testLabels = [labels[i] for i in idx[-500:]]
-    print "Label dist for test"
-    print "Sample label", testLabels[100]
-    numTestSamples = len(testReports)
-    for w in diagnoses:
-        print w, ":", sum([w in l for l in testLabels]) * 1. / numTestSamples
-    
-    print len(testLabels)
-
-    # mistakeIds = [102, 273, 310]
-    # mistakeIds = [85, 213]
-    # goldLabels = [testLabels[idx] for idx in mistakeIds]
-    # yalaLabel = ['DCIS', 'no_DCIS', 'DCIS', 'DCIS',  'no_DCIS']
-
-    # print 'goldLabels', goldLabels
 
 
-    # for idx in mistakeIds:
-    #     print "************************"
-    #     print "MISTAKE ", idx
-    #     print "gold", testLabels[idx]
-    #     print testReports[idx]
-    #     raw_input()
+    verbose = False
 
-    write = True
+    if verbose:
+        printLabelDist(trainLabels, trainReports, testLabels, trainReports)
+
+    debugMistakes = False
+
+    if debugMistakes:
+        mistakesIds = p.load(open('mistakes.p', 'rb'))
+        interpretMistakes(mistakesIds, testReports, testLabels)
+
+    write = False
     if write:
 
         with open(trainOutPath, "wb") as f: 
-            for i in range(len(trainReports)):
-                label = processLabels( trainLabels[i])
-                report = trainReports[i]
+            for a in range(len(trainReports)):
+                label = processLabels( trainLabels[a])
+                report = trainReports[a]
                 assert not "\n" in report
                 f.write(report + ", " + " ".join(label) + '.\n')
         print "Saved", trainOutPath
 
         with open(testOutPath, "wb") as f: 
-            for i in range(len(testReports)):
-                label =  processLabels(testLabels[i])
-                report = testReports[i]
+            for b in range(len(testReports)):
+                label =  processLabels(testLabels[b])
+                report = testReports[b]
                 assert not "\n" in report
                 f.write(report + ", " + " ".join(label) + '.\n')
         print "Saved", testOutPath
