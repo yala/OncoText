@@ -7,28 +7,40 @@ months = ["jan", "feb", "mar", "apr", "jun", "jul", "sep", "oct", "nov", "dec",\
 "january", "febuary", "march", "april", "june", "july", "september", "october", "november", "december"]
 
 replaceStrings = ["REMOVED_DATE", "REMOVED_MONTH", "REMOVED_PATIENT_NAME", "REMOVED_ACCESSION_ID", "REMOVED_CASE_ID"]
-#Script to dump xml file into a deIdentifiedDict
+
+#dump xml file into a deindentified python dictionary called deIdentifiedDict
 def deIden(data):
     print "Calling Deint data"
     print "Number of dirty reports", len(data)
-    showEx = True
+    debug = False
+    examplesShown = 0
     cleanedData = []
     for pathReport in data:
         cleanedReport = {}
         for key in pathReport:
             #These keys constitute the annotation
-            if not key == 'Report_Text':
+            if not key == reportKey:
                 cleanedReport[key] = pathReport[key]
         #This is the raw patient report. Might contain Patient Name, or dates or Accession number 
         ## All of which must be removed
         try:
-            dirtyText = pathReport['Report_Text']
+            dirtyText = pathReport[reportKey]
             cleanText = deIdenText(dirtyText)
-            cleanedReport['Report_Text'] = cleanText
-
+            cleanedReport[reportKey] = cleanText
             cleanedData.append(cleanedReport)
+
+            if examplesShown < numExamples:
+                print "dirty Text"
+                print dirtyText
+                print "-------------------"
+                print "deidentified text"
+                print cleanText
+                print "#########################"
+                examplesShown += 1
+                raw_input()
+
         except Exception, e:
-            if showEx:
+            if debug:
                 print "Example diff report"
                 print pathReport
                 raw_input()
@@ -37,6 +49,8 @@ def deIden(data):
     print "Number of clean reports", len(cleanedData)
     return cleanedData
 
+
+#Takes a single path report and removes names, dates, and ID numbers
 def deIdenText(dirtyText):
     debug = False
     if debug:
@@ -47,7 +61,7 @@ def deIdenText(dirtyText):
     cleanLines = []
     lines = dirtyText.split('\n')
     for line in lines:
-        ## TODO Check for dates (12/23/1212) format and if it matches months
+        ## Check for dates (12/23/1212) format and if it matches months
         ## Check for accesion number and &quot&
         ## Check for patient names, with PATIENT
         ## Remove Pathology Report Number
@@ -70,7 +84,7 @@ def deIdenText(dirtyText):
 
     return cleanedText
 
-#remove ,.?;;'"|/
+#remove ,.?;; from end of string
 def stripDelims(word):
     if word[-1] in ",.?;:":
         return word[:-1]
@@ -78,7 +92,7 @@ def stripDelims(word):
         return word
 
 
-#Remove dates of format ##/##/##### and replaces with REMOVED_DATE or REMOVED_MONTH
+#Remove dates and replaces with REMOVED_DATE or REMOVED_MONTH
 def stripDates(line):
     cleanWords = []
 
@@ -92,6 +106,7 @@ def stripDates(line):
             cleanWords.append(w)
 
     cleanedLine = " ".join(cleanWords) + " "
+    ## Replace "1.2 cm" with "1.2cm" so we don't remove measurments as dates
     cleanedLine   = re.sub(mmMeasurementRegex, "mm ", cleanedLine)
     cleanedLine   = re.sub(cmMeasurementRegex, "cm ", cleanedLine)
     cleanedLine = re.sub(dateRegex, " REMOVED_DATE ", cleanedLine)
@@ -113,6 +128,7 @@ def stripAccesionNumber(line):
     return cleanedLine
 
 
+
 dateRegex = r"[ ]+\d+[- /.]+\d+[- /.]?\d*[ ,.;:?\n]"
 mmMeasurementRegex = r"[ ]+mm[ .,;:?\n]?"
 cmMeasurementRegex = r"[ ]+cm[ .,;:?\n]?"
@@ -132,12 +148,17 @@ goldString = "Accession Number: REMOVED_ACCESSION_ID                   Report St
             "Accesioned On: REMOVED_DATE\nRICHARDSON, ANDREA, K, M,D~PH.D\nPATIENT: REMOVED_PATIENT_NAME\n"+\
             "Something on REMOVED_MONTH first/second/third yaknow REMOVED_DATE REMOVED_MONTH, 02, 2016, REMOVED_DATE, REMOVED_DATE, REMOVED_DATE 0.12 cm" 
 
-test = True
+
+test = False
+readXmlFile = True
+deanon = True
+dump = True
+
+## TODO: Matt, change these variables to point to where the XML file is, and what the path report column is labeled.
 xmlPath = "/c/Users/ksh1/Desktop/ReportDiagnosesByMRNDateSideMaxDXAll.xml"
 outPath = "deidentifiedPathReports.p"
-readXmlFile = False
-deanon = False
-dump = False
+reportKey = "Report_Text"
+numExamples = 3
 
 
 if __name__ == '__main__':
