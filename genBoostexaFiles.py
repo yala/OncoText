@@ -16,6 +16,15 @@ diagnoses = [ u'DCIS', u'ILC', u'Phylodes', u'CancerSuspicious', \
  u'ClingingCarcinoma', u'InvasiveSuspicious', u'LobularNeoplasia', u'FlatEpithelial', 
  u'BluntAdenosis', u'Medullary', u'ALH', u'ADH_DCIS']
 
+def writeNameFiles():
+    for diag in diagnoses:
+        with open("boostexer/pathology_"+diag+".names", "wb") as f:
+            labels = diag + ", " + "no_"+diag+".\n"
+            features = "pathReport : text.\n"
+            f.write(labels)
+            f.write(features)
+
+
 def processLabels(labels):
     debug = False
     result =  [lab for lab in labels if not "no_" in lab]
@@ -153,7 +162,12 @@ if __name__ == "__main__":
 
         testReports = [cleanReports[c] for c in idx[-600:-500]]
         testLabels = [labels[d] for d in idx[-600:-500]]
+    else:
+        trainReports = [cleanReports[a] for a in idx[:-500]]
+        trainLabels = [labels[b] for b in idx[:-500]]
 
+        testReports = [cleanReports[c] for c in idx[-500:]]
+        testLabels = [labels[d] for d in idx[-500:]]
 
     verbose = True
 
@@ -168,21 +182,27 @@ if __name__ == "__main__":
 
     write = True
     if write:
+        writeNameFiles()
+        for diag in diagnoses:
+            trainStem, trainSuf = trainOutPath.split('.')
+            with open(trainStem+"_"+diag+"."+trainSuf, "wb") as f: 
+                for a in range(len(trainReports)):
+                    label = diag if processLabels( trainLabels[a]) else "no_"+diag
+                    report = trainReports[a]
 
-        with open(trainOutPath, "wb") as f: 
-            for a in range(len(trainReports)):
-                label = processLabels( trainLabels[a])
-                report = trainReports[a]
-                assert not "\n" in report
-                f.write(report + ", " + " ".join(label) + '.\n')
-        print "Saved", trainOutPath
+                    assert not "\n" in report
+                    f.write(report + ", " + label + '.\n')
+            print "Saved", trainStem+"_"+diag+trainSuf
 
-        if dev:
-            testOutPath = devOutPath
-        with open(testOutPath, "wb") as f: 
-            for b in range(len(testReports)):
-                label =  processLabels(testLabels[b])
-                report = testReports[b]
-                assert not "\n" in report
-                f.write(report + ", " + " ".join(label) + '.\n')
-        print "Saved", testOutPath
+            if dev:
+                testOutPath = devOutPath
+            testStem, testSuf = testOutPath.split('.')
+            with open(testStem+"_"+diag+"."+testSuf, "wb") as f: 
+                for b in range(len(testReports)):
+                    label =  diag if diag in processLabels(testLabels[b]) else "no_"+diag
+                    report = testReports[b]
+
+                    assert not "\n" in report
+                    f.write(report + ", " + label + '.\n')
+
+            print "Saved", testStem+"_"+diag+testSuf
