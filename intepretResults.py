@@ -14,7 +14,7 @@ skipList = [188] #This report says nothing, should have been filtered out
 
 
 if __name__ == "__main__":
-    with open("classifier_results_all_classes_dev_2.txt", 'rb') as f:
+    with open("classifier_results_all_classes.txt", 'rb') as f:
        samples = f.readlines()
     diagnoses = genBoostexaFiles.diagnoses + ["no"]
 
@@ -38,24 +38,22 @@ if __name__ == "__main__":
         assert len(goldsAndPredictions) % 2 == 0
         golds = []
         guesses = []
+        numMistakes = 0
         for j in range(len(goldsAndPredictions)/2):
     
             # if diagnoses[j] in yalaAnnotations and row in yalaAnnotations[diagnoses[j]]:
             #     goldsAndPredictions[j] = 1
             #     c += 1
-            
+            if not goldsAndPredictions[:len(goldsAndPredictions)/2] == [ 1 if p < 0 else 0 for p in goldsAndPredictions[len(goldsAndPredictions)/2:]]:
+                numMistakes += 1
             gold[diagnoses[j]].append(goldsAndPredictions[j])
             prediction = 1 if goldsAndPredictions[len(goldsAndPredictions)/2 + j] > 0 else 0
             guessed[diagnoses[j]].append(prediction)
             assert len(gold[diagnoses[j]]) == len(guessed[diagnoses[j]])
 
-    numMistakes = 0
-    for i in range(len(gold)):
-        if not gold[i] == guessed[i]:
-            numMistakes += 1
+           
     print "Num Mistakes", numMistakes
-    print c
-    # assert c > 10
+
     overallGold = []
     overallGuessed = []
     mistakeIds = {}
