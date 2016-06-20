@@ -187,7 +187,7 @@ if __name__ == "__main__":
             trainStem, trainSuf = trainOutPath.split('.')
             with open(trainStem+"_"+diag+"."+trainSuf, "wb") as f: 
                 for a in range(len(trainReports)):
-                    label = diag if processLabels( trainLabels[a]) else "no_"+diag
+                    label = diag if diag in processLabels( trainLabels[a]) else "no_"+diag
                     report = trainReports[a]
 
                     assert not "\n" in report
