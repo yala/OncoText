@@ -7,6 +7,8 @@ dataPath = "deidentifiedPathReports.p"
 goldDataPath = 'goldPathReports.p'
 trainOutPath = "boostexer/pathology.data"
 testOutPath = "boostexer/pathology.test"
+devOutPath = "boostexer/pathology.dev"
+
 
 diagnoses = [ u'DCIS', u'ILC', u'Phylodes', u'CancerSuspicious', \
  u'CancerNOS', u'TubularCancer', u'IDC', u'LCIS',  \
@@ -58,21 +60,37 @@ def filterGold(reports, labels):
     return filtered_reports, filtered_labels
 
 def printLabelDist(trainLabels, trainReports, testLabels, testReports):
-        print "Label dist for train, label dist for tet"
-        numTrainSamples = len(trainReports)
-        numTestSamples = len(testReports)
-        print 'diagnoses', diagnoses
-        for z in diagnoses:
-            print 'diag', z
-            print "TRAIN:", sum([z in l  for l in trainLabels]) * 1. / numTrainSamples
-            print "TEST:", sum([z in l  for l in testLabels]) * 1. / numTestSamples
-            print "---------------------"
-        #Print no diagnosis case
-        print 'diag', "none"
-        print "TRAIN:", sum([processLabels(l) == ["no"] for l in trainLabels]) * 1. / numTrainSamples
-        print "TEST:" , sum([processLabels(l) == ["no"] for l in testLabels]) * 1. / numTestSamples
+    sumTest = 0
+    sumTrain = 0
+    print "Label dist for train, label dist for tet"
+    numTrainSamples = len(trainReports)
+    numTestSamples = len(testReports)
+    print 'diagnoses', diagnoses
+    
+    assert len(trainLabels) == numTrainSamples
+    assert numTestSamples   == len(testLabels)
+
+    for z in diagnoses:
+        trainDist = sum([z in l  for l in trainLabels]) * 1. / numTrainSamples
+        testDist  = sum([z in l  for l in testLabels]) * 1. / numTestSamples
+        print 'diag', z
+        print "TRAIN:", trainDist
+        print "TEST:", testDist
         print "---------------------"
-        print numTrainSamples, numTestSamples
+        sumTrain += trainDist
+        sumTest  += testDist
+    #Print no diagnosis case
+    trainDist = sum([processLabels(l) == ["no"] for l in trainLabels]) * 1. / numTrainSamples
+    testDist  = sum([processLabels(l) == ["no"] for l in testLabels]) * 1. / numTestSamples
+    print 'diag', "none"
+    print "TRAIN:", trainDist 
+    print "TEST:" , testDist
+    print "---------------------"
+    print numTrainSamples, numTestSamples
+    sumTrain += trainDist
+    sumTest  += testDist
+    print "Sum trainDist ", sumTrain
+    print "sum testDist  ", sumTest
 
 def interpretMistakes(mistakesIds, reports, labels):
 
@@ -128,16 +146,19 @@ if __name__ == "__main__":
     idx = range(len(cleanReports))
     random.shuffle(idx)
 
-    trainReports = [cleanReports[i] for i in idx[:-500]]
-    trainLabels = [labels[i] for i in idx[:-500]]
-    testReports = [cleanReports[i] for i in idx[-500:]]
-    testLabels = [labels[i] for i in idx[-500:]]
+    dev = True
+    if dev:
+        trainReports = [cleanReports[a] for a in idx[:-600]]
+        trainLabels = [labels[b] for b in idx[:-600]]
+
+        testReports = [cleanReports[c] for c in idx[-600:-500]]
+        testLabels = [labels[d] for d in idx[-600:-500]]
 
 
-    verbose = False
+    verbose = True
 
     if verbose:
-        printLabelDist(trainLabels, trainReports, testLabels, trainReports)
+        printLabelDist(trainLabels, trainReports, testLabels, testReports)
 
     debugMistakes = False
 
@@ -145,7 +166,7 @@ if __name__ == "__main__":
         mistakesIds = p.load(open('mistakes.p', 'rb'))
         interpretMistakes(mistakesIds, testReports, testLabels)
 
-    write = False
+    write = True
     if write:
 
         with open(trainOutPath, "wb") as f: 
@@ -156,6 +177,8 @@ if __name__ == "__main__":
                 f.write(report + ", " + " ".join(label) + '.\n')
         print "Saved", trainOutPath
 
+        if dev:
+            testOutPath = devOutPath
         with open(testOutPath, "wb") as f: 
             for b in range(len(testReports)):
                 label =  processLabels(testLabels[b])
