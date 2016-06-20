@@ -1,10 +1,10 @@
 ---------------------------
 DCIS
-Number of gold 32.0
+Number of gold 31.0
 Number guessed 32
-truePos, falsePos, trueNeg, falseNeg: 30 2 465 2
-DCIS percision, recall, f1: 0.9375 , 0.9375 , 0.9375
-DCIS sensitivity, specifcity: 0.9375 , 0.995717344754
+truePos, falsePos, trueNeg, falseNeg: 29 3 465 2
+DCIS percision, recall, f1: 0.90625 , 0.935483870968 , 0.920634920635
+DCIS sensitivity, specifcity: 0.935483870968 , 0.99358974359
 ---------------------------
 ILC
 Number of gold 5.0
@@ -49,11 +49,11 @@ LCIS percision, recall, f1: 0.933333333333 , 0.982456140351 , 0.957264957265
 LCIS sensitivity, specifcity: 0.982456140351 , 0.990950226244
 ---------------------------
 ADH
-Number of gold 189.0
+Number of gold 183.0
 Number guessed 186
-truePos, falsePos, trueNeg, falseNeg: 174 12 298 15
-ADH percision, recall, f1: 0.935483870968 , 0.920634920635 , 0.928
-ADH sensitivity, specifcity: 0.920634920635 , 0.961290322581
+truePos, falsePos, trueNeg, falseNeg: 171 15 301 12
+ADH percision, recall, f1: 0.91935483871 , 0.934426229508 , 0.926829268293
+ADH sensitivity, specifcity: 0.934426229508 , 0.95253164557
 ---------------------------
 LobularNeoplasia
 Number of gold 30.0
@@ -77,11 +77,11 @@ BluntAdenosis percision, recall, f1: 1 , 0.0 , 0.0
 BluntAdenosis sensitivity, specifcity: 0.0 , 1.0
 ---------------------------
 ALH
-Number of gold 123.0
+Number of gold 121.0
 Number guessed 119
-truePos, falsePos, trueNeg, falseNeg: 116 3 373 7
-ALH percision, recall, f1: 0.974789915966 , 0.943089430894 , 0.95867768595
-ALH sensitivity, specifcity: 0.943089430894 , 0.992021276596
+truePos, falsePos, trueNeg, falseNeg: 115 4 374 6
+ALH percision, recall, f1: 0.966386554622 , 0.95041322314 , 0.958333333333
+ALH sensitivity, specifcity: 0.95041322314 , 0.989417989418
 ---------------------------
 ADH_DCIS
 Number of gold 42.0
@@ -98,8 +98,8 @@ no percision, recall, f1: 0.934782608696 , 0.914893617021 , 0.924731182796
 no sensitivity, specifcity: 0.914893617021 , 0.974860335196
 ---------------------------
 Overall
-Number of gold 651.0
+Number of gold 642.0
 Number guessed 621
-truePos, falsePos, trueNeg, falseNeg: 585 36 6299 66
-no percision, recall, f1: 0.942028985507 , 0.898617511521 , 0.919811320755
-no sensitivity, specifcity: 0.898617511521 , 0.994317284925
+truePos, falsePos, trueNeg, falseNeg: 580 41 6303 62
+no percision, recall, f1: 0.933977455717 , 0.903426791277 , 0.918448139351
+no sensitivity, specifcity: 0.903426791277 , 0.993537200504
