@@ -45,8 +45,9 @@ if __name__ == "__main__":
             goldsVec = goldsAndPredictions[:len(goldsAndPredictions)/2]
             guessedVec = [ 1 if p >= 0 else 0 for p in goldsAndPredictions[len(goldsAndPredictions)/2:]]
             assert len(goldsVec) == len(guessedVec)
-            if not goldsVec == guessedVec and daig == "DCIS":
-                print row
+            if not goldsVec == guessedVec and (daig == "DCIS" or diag == "FlatEpithelial"\
+                or diag == "BluntAdenosis" or diag == "ADH_DCIS"):
+                print diag, ",",row
                 numMistakes += 1
               
             gold[diag].append(goldsVec[0])
