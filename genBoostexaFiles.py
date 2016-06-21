@@ -11,14 +11,14 @@ devOutPath = "boostexer/pathology.dev"
 
 
 diagnoses = [ u'DCIS', u'ILC', u'Phylodes', u'CancerSuspicious', \
- u'CancerNOS', u'TubularCancer', u'IDC', u'LCIS',  \
+ u'CancerNOS', u'TubularCancer', u'IDC', u'LCIS', 'InsituNOS' \
  u'ADH', u'CancerInvInsituNOS',\
  u'ClingingCarcinoma', u'InvasiveSuspicious', u'LobularNeoplasia', u'FlatEpithelial', 
  u'BluntAdenosis', u'Medullary', u'ALH', u'ADH_DCIS']
 
-def writeNameFiles():
+def writeNameFiles(stem):
     for diag in diagnoses:
-        with open("boostexer/pathology_"+diag+".names", "wb") as f:
+        with open(stem+"_"+diag+".names", "wb") as f:
             labels = diag + ", " + "no_"+diag+".\n"
             features = "pathReport : text.\n"
             f.write(labels)
@@ -49,23 +49,32 @@ def getGoldTags(dumpGold = False):
 
 def filterGold(reports, labels):
     reportLabelDict = {}
-
+    countWut = 0
     filtered_reports = []
     filtered_labels = []
-    for i in range(len(goldData)):
+    for i in range(len(reports)):
         report = reports[i]
         label = labels[i]
 
         if not ( report.strip() == "PATIENT  REMOVED_PATIENT_NAME" or \
             "Accession Number  REMOVED_ACCESSION_ID Report Status  Preliminary Type  Surgical Pathology Report not finalized SPECIMEN TYPE  BREAST   EXCISIONAL TISSUE W MARGINS  report_end" ==  report.strip()):
             if report in reportLabelDict:
-                assert label == reportLabelDict[report]
+                if not label == reportLabelDict[report]:
+                    print "report with diff labels"
+                    print report
+                    print label
+                    print reportLabelDict[report]
+                    countWut +=1
+                    raw_input()
             reportLabelDict[report]= label
 
     for r in reportLabelDict:
         filtered_reports.append(r)
         filtered_labels.append(reportLabelDict[r])
 
+    assert len(filtered_reports) == len(filtered_labels)
+    print "NUM REPORTS", len(filtered_reports)
+    print "COUNT WIERD DUPS", countWut
     return filtered_reports, filtered_labels
 
 def printLabelDist(trainLabels, trainReports, testLabels, testReports):
@@ -119,7 +128,33 @@ def interpretMistakes(mistakesIds, reports, labels):
             raw_input()
 
 
+def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem):
+    writeNameFiles(stem)
+    for diag in diagnoses:
+        trainStem, trainSuf = trainOutPath.split('.')
+        trainStem = stem
+        with open(trainStem+"_"+diag+"."+trainSuf, "wb") as f: 
+            for a in range(len(trainReports)):
+                label = diag if diag in processLabels( trainLabels[a]) else "no_"+diag
+                report = trainReports[a]
 
+                assert not "\n" in report
+                f.write(report + ", " + label + '.\n')
+        print "Saved", trainStem+"_"+diag+"."+trainSuf
+
+        # if dev:
+        #     testOutPath = devOutPath
+        testStem, testSuf = testOutPath.split('.')
+        testStem = stem
+        with open(testStem+"_"+diag+"."+testSuf, "wb") as f: 
+            for b in range(len(testReports)):
+                label =  diag if diag in processLabels(testLabels[b]) else "no_"+diag
+                report = testReports[b]
+
+                assert not "\n" in report
+                f.write(report + ", " + label + '.\n')
+
+        print "Saved", testStem+"_"+diag+"."+testSuf
 
 if __name__ == "__main__":
 
@@ -182,27 +217,4 @@ if __name__ == "__main__":
 
     write = True
     if write:
-        writeNameFiles()
-        for diag in diagnoses:
-            trainStem, trainSuf = trainOutPath.split('.')
-            with open(trainStem+"_"+diag+"."+trainSuf, "wb") as f: 
-                for a in range(len(trainReports)):
-                    label = diag if diag in processLabels( trainLabels[a]) else "no_"+diag
-                    report = trainReports[a]
-
-                    assert not "\n" in report
-                    f.write(report + ", " + label + '.\n')
-            print "Saved", trainStem+"_"+diag+"."+trainSuf
-
-            # if dev:
-            #     testOutPath = devOutPath
-            testStem, testSuf = testOutPath.split('.')
-            with open(testStem+"_"+diag+"."+testSuf, "wb") as f: 
-                for b in range(len(testReports)):
-                    label =  diag if diag in processLabels(testLabels[b]) else "no_"+diag
-                    report = testReports[b]
-
-                    assert not "\n" in report
-                    f.write(report + ", " + label + '.\n')
-
-            print "Saved", testStem+"_"+diag+"."+testSuf
+        genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, "boostexer/pathology")
