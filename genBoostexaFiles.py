@@ -192,7 +192,7 @@ if __name__ == "__main__":
 
                     assert not "\n" in report
                     f.write(report + ", " + label + '.\n')
-            print "Saved", trainStem+"_"+diag+trainSuf
+            print "Saved", trainStem+"_"+diag+"."+trainSuf
 
             # if dev:
             #     testOutPath = devOutPath
@@ -205,4 +205,4 @@ if __name__ == "__main__":
                     assert not "\n" in report
                     f.write(report + ", " + label + '.\n')
 
-            print "Saved", testStem+"_"+diag+testSuf
+            print "Saved", testStem+"_"+diag+"."+testSuf
