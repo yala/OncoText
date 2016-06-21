@@ -58,8 +58,8 @@ if __name__ == "__main__":
     overallGuessed = []
     mistakeIds = {}
     for diag in diagnoses:
-        if sum(gold[diag]) == 0:
-            continue
+        # if sum(gold[diag]) == 0:
+        #     continue
         defualt = 1
         print "---------------------------"
         print diag
