@@ -3,6 +3,6 @@ pathTypes=(DCIS ILC Phylodes CancerSuspicious CancerNOS TubularCancer IDC LCIS A
 for name in "${pathTypes[@]}"; do
     echo $name;
     ./boostexter -n 300 -W 4 -N ngram -S pathology_$name - V &&
-    ./boostexter -C -S pathology_$namegst < pathology_$name.test  > ../class_results_$name.txt &
+    ./boostexter -C -S pathology_$name < pathology_$name.test  > ../class_results_$name.txt &
 done
 echo "Done"
