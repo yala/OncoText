@@ -155,7 +155,7 @@ if __name__ == "__main__":
     idx = range(len(cleanReports))
     random.shuffle(idx)
 
-    dev = True
+    dev = False
     if dev:
         trainReports = [cleanReports[a] for a in idx[:-600]]
         trainLabels = [labels[b] for b in idx[:-600]]
