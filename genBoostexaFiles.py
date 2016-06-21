@@ -111,13 +111,9 @@ def printLabelDist(trainLabels, trainReports, testLabels, testReports):
     print "sum testDist  ", sumTest
 
 def interpretMistakes(mistakesIds, reports, labels):
-
     for diag in mistakesIds:
-        mistakes = mistakesIds[diag]
 
-        wanted = []
-        if not diag in wanted: 
-            continue
+        mistakes = mistakesIds[diag]
 
         for idx in mistakes:
             print "-------------------"
@@ -212,7 +208,10 @@ if __name__ == "__main__":
     debugMistakes = False
 
     if debugMistakes:
-        mistakesIds = p.load(open('mistakes.p', 'rb'))
+        print "Debug mistakes"
+        mistakesIds = { 'DCIS':[19, 36, 41, 166, 219, 365, 434],\
+                        'FlatEpithelial':[14, 188, 394, 168],\
+                        'ADH_DCIS':[143, 249, 255, 310, 365, 422, 472] }
         interpretMistakes(mistakesIds, testReports, testLabels)
 
     write = True

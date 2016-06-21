@@ -2,9 +2,8 @@ import genBoostexaFiles
 import pickle
 
 
-yalaAnnotations = { "ADH": [392, 444, 369, 72, 107, 211, 226, 255, 452], \
-                    "ALH": [477, 85],\
-                    "DCIS": [101]}
+yalaAnnotations = { "FlatEpithelial": [14, 394], \
+                    "DCIS": [36, 41, 365]}
 
 diagToInt = {"ADH":8,\
              "ALH":16,\
@@ -36,6 +35,12 @@ if __name__ == "__main__":
         samples = diagSamples[diag]
         for row, sample in enumerate(samples):
 
+            skip = True
+
+            if skip and row in skipList:
+                continue
+
+
             goldsAndPredictions = [float(f) for f in sample.split()]
 
             assert len(goldsAndPredictions) % 2 == 0
@@ -45,12 +50,15 @@ if __name__ == "__main__":
             goldsVec = goldsAndPredictions[:len(goldsAndPredictions)/2]
             guessedVec = [ 1 if p >= 0 else 0 for p in goldsAndPredictions[len(goldsAndPredictions)/2:]]
             assert len(goldsVec) == len(guessedVec)
-            if not goldsVec == guessedVec and (daig == "DCIS" or diag == "FlatEpithelial"\
+            if not goldsVec == guessedVec and (diag == "DCIS" or diag == "FlatEpithelial"\
                 or diag == "BluntAdenosis" or diag == "ADH_DCIS"):
                 print diag, ",",row
                 numMistakes += 1
-              
-            gold[diag].append(goldsVec[0])
+            
+            if diag in yalaAnnotations and row in yalaAnnotations[diag]:
+                gold[diag].append(1)
+            else:
+                gold[diag].append(goldsVec[0])
 
             prediction = 1 if guessedVec[0] > 0 else 0
             guessed[diag].append(prediction)
