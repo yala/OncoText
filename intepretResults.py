@@ -12,47 +12,47 @@ diagToInt = {"ADH":8,\
 
 skipList = [188] #This report says nothing, should have been filtered out
 
+diagSamples = {}
 
 if __name__ == "__main__":
-    with open("classifier_results_all_classes.txt", 'rb') as f:
-       samples = f.readlines()
-    diagnoses = genBoostexaFiles.diagnoses + ["no"]
 
-    assert diagnoses == ["DCIS", "ILC", "Phylodes", \
-    "CancerSuspicious", "CancerNOS", "TubularCancer", "IDC", "LCIS", \
-    "ADH", "CancerInvInsituNOS", "ClingingCarcinoma", "InvasiveSuspicious", \
-    "LobularNeoplasia", "FlatEpithelial", "BluntAdenosis", "Medullary", "ALH", \
-    "ADH_DCIS", "no"]
+    diagnoses = genBoostexaFiles.diagnoses
+
+    for diag in diagnoses:
+        with open("class_results_"+diag+".txt", 'rb') as f:
+           diagSamples[diag] = f.readlines()
+
+
     gold = {}
     guessed = {}
     for d in diagnoses:
         gold[d] = []
         guessed[d] = []
     c = 0
-    for row, sample in enumerate(samples):
-        # if row in skipList:
-        #     continue
 
-        goldsAndPredictions = [float(f) for f in sample.split()]
+    numMistakes = 0
 
-        assert len(goldsAndPredictions) % 2 == 0
-        golds = []
-        guesses = []
-        numMistakes = 0
-        for j in range(len(goldsAndPredictions)/2):
-    
-            # if diagnoses[j] in yalaAnnotations and row in yalaAnnotations[diagnoses[j]]:
-            #     goldsAndPredictions[j] = 1
-            #     c += 1
-            if not goldsAndPredictions[:len(goldsAndPredictions)/2] == [ 1 if p < 0 else 0 for p in goldsAndPredictions[len(goldsAndPredictions)/2:]]:
+    for diag in diagnoses:
+        samples = diagSamples[diag]
+        for row, sample in enumerate(samples):
+
+            goldsAndPredictions = [float(f) for f in sample.split()]
+
+            assert len(goldsAndPredictions) % 2 == 0
+            golds = []
+            guesses = []
+
+            goldsVec = goldsAndPredictions[:len(goldsAndPredictions)/2]
+            guessedVec = [ 1 if p >= 0 else 0 for p in goldsAndPredictions[len(goldsAndPredictions)/2:]]
+            assert len(goldsVec) == len(guessedVec)
+            if not goldsVec == guessedVec:
                 numMistakes += 1
-            gold[diagnoses[j]].append(goldsAndPredictions[j])
-            prediction = 1 if goldsAndPredictions[len(goldsAndPredictions)/2 + j] > 0 else 0
-            guessed[diagnoses[j]].append(prediction)
-            assert len(gold[diagnoses[j]]) == len(guessed[diagnoses[j]])
+              
+            gold[diag].append(goldsVec[0])
 
-           
-    print "Num Mistakes", numMistakes
+            prediction = 1 if guessedVec[0] > 0 else 0
+            guessed[diag].append(prediction)
+
 
     overallGold = []
     overallGuessed = []
@@ -85,6 +85,7 @@ if __name__ == "__main__":
         print "truePos, falsePos, trueNeg, falseNeg:", truePos, falsePos, trueNeg, falseNeg
         print diag, "percision, recall, f1:", percision, ',', recall, ',', f1
         print diag, "sensitivity, specifcity:", sensitivity, ',', specifcity
+        print "Diag", diag, ", Num Mistakes:", (falsePos + falseNeg), ", error rate", (falsePos + falseNeg)*1./500
 
     print "---------------------------"
     print "Overall"
@@ -105,7 +106,8 @@ if __name__ == "__main__":
     sensitivity = recall
     specifcity = 1.* trueNeg / (trueNeg + falsePos) if (trueNeg + falsePos) >0 else defualt
     print "truePos, falsePos, trueNeg, falseNeg:", truePos, falsePos, trueNeg, falseNeg
-    print diag, "percision, recall, f1:", percision, ',', recall, ',', f1
-    print diag, "sensitivity, specifcity:", sensitivity, ',', specifcity
+    print "Overall", "percision, recall, f1:", percision, ',', recall, ',', f1
+    print "Overall", "sensitivity, specifcity:", sensitivity, ',', specifcity
+    print "Overall", "Num Mistakes:", (falsePos + falseNeg), ", error rate", (falsePos + falseNeg)*1./(truePos+falsePos+falseNeg+trueNeg)
 
     pickle.dump(mistakeIds, open("mistakes.p", "wb"))

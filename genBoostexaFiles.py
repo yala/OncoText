@@ -194,8 +194,8 @@ if __name__ == "__main__":
                     f.write(report + ", " + label + '.\n')
             print "Saved", trainStem+"_"+diag+trainSuf
 
-            if dev:
-                testOutPath = devOutPath
+            # if dev:
+            #     testOutPath = devOutPath
             testStem, testSuf = testOutPath.split('.')
             with open(testStem+"_"+diag+"."+testSuf, "wb") as f: 
                 for b in range(len(testReports)):

@@ -1,105 +1,104 @@
 ---------------------------
 DCIS
-Number of gold 31.0
-Number guessed 32
-truePos, falsePos, trueNeg, falseNeg: 29 3 465 2
-DCIS percision, recall, f1: 0.90625 , 0.935483870968 , 0.920634920635
-DCIS sensitivity, specifcity: 0.935483870968 , 0.99358974359
+Number of gold 24.0
+Number guessed 24
+truePos, falsePos, trueNeg, falseNeg: 20 4 472 4
+DCIS percision, recall, f1: 0.833333333333 , 0.833333333333 , 0.833333333333
+DCIS sensitivity, specifcity: 0.833333333333 , 0.991596638655
+Diag DCIS , Num Mistakes: 8 , error rate 0.016
 ---------------------------
 ILC
-Number of gold 5.0
-Number guessed 5
-truePos, falsePos, trueNeg, falseNeg: 4 1 493 1
-ILC percision, recall, f1: 0.8 , 0.8 , 0.8
-ILC sensitivity, specifcity: 0.8 , 0.997975708502
+Number of gold 8.0
+Number guessed 8
+truePos, falsePos, trueNeg, falseNeg: 8 0 492 0
+ILC percision, recall, f1: 1.0 , 1.0 , 1.0
+ILC sensitivity, specifcity: 1.0 , 1.0
+Diag ILC , Num Mistakes: 0 , error rate 0.0
 ---------------------------
 Phylodes
-Number of gold 4.0
-Number guessed 3
-truePos, falsePos, trueNeg, falseNeg: 2 1 494 2
-Phylodes percision, recall, f1: 0.666666666667 , 0.5 , 0.571428571429
-Phylodes sensitivity, specifcity: 0.5 , 0.99797979798
+Number of gold 2.0
+Number guessed 1
+truePos, falsePos, trueNeg, falseNeg: 1 0 498 1
+Phylodes percision, recall, f1: 1.0 , 0.5 , 0.666666666667
+Phylodes sensitivity, specifcity: 0.5 , 1.0
+Diag Phylodes , Num Mistakes: 1 , error rate 0.002
 ---------------------------
 CancerNOS
-Number of gold 5.0
-Number guessed 1
-truePos, falsePos, trueNeg, falseNeg: 1 0 494 4
-CancerNOS percision, recall, f1: 1.0 , 0.2 , 0.333333333333
-CancerNOS sensitivity, specifcity: 0.2 , 1.0
----------------------------
-TubularCancer
 Number of gold 3.0
-Number guessed 0
-truePos, falsePos, trueNeg, falseNeg: 0 0 496 3
-TubularCancer percision, recall, f1: 1 , 0.0 , 0.0
-TubularCancer sensitivity, specifcity: 0.0 , 1.0
+Number guessed 3
+truePos, falsePos, trueNeg, falseNeg: 2 1 496 1
+CancerNOS percision, recall, f1: 0.666666666667 , 0.666666666667 , 0.666666666667
+CancerNOS sensitivity, specifcity: 0.666666666667 , 0.997987927565
+Diag CancerNOS , Num Mistakes: 2 , error rate 0.004
 ---------------------------
 IDC
-Number of gold 11.0
+Number of gold 13.0
 Number guessed 12
-truePos, falsePos, trueNeg, falseNeg: 11 1 487 0
-IDC percision, recall, f1: 0.916666666667 , 1.0 , 0.95652173913
-IDC sensitivity, specifcity: 1.0 , 0.997950819672
+truePos, falsePos, trueNeg, falseNeg: 12 0 487 1
+IDC percision, recall, f1: 1.0 , 0.923076923077 , 0.96
+IDC sensitivity, specifcity: 0.923076923077 , 1.0
+Diag IDC , Num Mistakes: 1 , error rate 0.002
 ---------------------------
 LCIS
-Number of gold 57.0
-Number guessed 60
-truePos, falsePos, trueNeg, falseNeg: 56 4 438 1
-LCIS percision, recall, f1: 0.933333333333 , 0.982456140351 , 0.957264957265
-LCIS sensitivity, specifcity: 0.982456140351 , 0.990950226244
+Number of gold 74.0
+Number guessed 80
+truePos, falsePos, trueNeg, falseNeg: 71 9 417 3
+LCIS percision, recall, f1: 0.8875 , 0.959459459459 , 0.922077922078
+LCIS sensitivity, specifcity: 0.959459459459 , 0.978873239437
+Diag LCIS , Num Mistakes: 12 , error rate 0.024
 ---------------------------
 ADH
-Number of gold 183.0
-Number guessed 186
-truePos, falsePos, trueNeg, falseNeg: 171 15 301 12
-ADH percision, recall, f1: 0.91935483871 , 0.934426229508 , 0.926829268293
-ADH sensitivity, specifcity: 0.934426229508 , 0.95253164557
+Number of gold 173.0
+Number guessed 168
+truePos, falsePos, trueNeg, falseNeg: 159 9 318 14
+ADH percision, recall, f1: 0.946428571429 , 0.919075144509 , 0.932551319648
+ADH sensitivity, specifcity: 0.919075144509 , 0.97247706422
+Diag ADH , Num Mistakes: 23 , error rate 0.046
 ---------------------------
 LobularNeoplasia
-Number of gold 30.0
-Number guessed 29
-truePos, falsePos, trueNeg, falseNeg: 29 0 469 1
-LobularNeoplasia percision, recall, f1: 1.0 , 0.966666666667 , 0.983050847458
-LobularNeoplasia sensitivity, specifcity: 0.966666666667 , 1.0
+Number of gold 50.0
+Number guessed 48
+truePos, falsePos, trueNeg, falseNeg: 46 2 448 4
+LobularNeoplasia percision, recall, f1: 0.958333333333 , 0.92 , 0.938775510204
+LobularNeoplasia sensitivity, specifcity: 0.92 , 0.995555555556
+Diag LobularNeoplasia , Num Mistakes: 6 , error rate 0.012
 ---------------------------
 FlatEpithelial
-Number of gold 5.0
-Number guessed 3
-truePos, falsePos, trueNeg, falseNeg: 3 0 494 2
-FlatEpithelial percision, recall, f1: 1.0 , 0.6 , 0.75
-FlatEpithelial sensitivity, specifcity: 0.6 , 1.0
+Number of gold 6.0
+Number guessed 7
+truePos, falsePos, trueNeg, falseNeg: 5 2 492 1
+FlatEpithelial percision, recall, f1: 0.714285714286 , 0.833333333333 , 0.769230769231
+FlatEpithelial sensitivity, specifcity: 0.833333333333 , 0.995951417004
+Diag FlatEpithelial , Num Mistakes: 3 , error rate 0.006
 ---------------------------
 BluntAdenosis
-Number of gold 4.0
+Number of gold 1.0
 Number guessed 0
-truePos, falsePos, trueNeg, falseNeg: 0 0 495 4
+truePos, falsePos, trueNeg, falseNeg: 0 0 499 1
 BluntAdenosis percision, recall, f1: 1 , 0.0 , 0.0
 BluntAdenosis sensitivity, specifcity: 0.0 , 1.0
+Diag BluntAdenosis , Num Mistakes: 1 , error rate 0.002
 ---------------------------
 ALH
-Number of gold 121.0
+Number of gold 122.0
 Number guessed 119
-truePos, falsePos, trueNeg, falseNeg: 115 4 374 6
-ALH percision, recall, f1: 0.966386554622 , 0.95041322314 , 0.958333333333
-ALH sensitivity, specifcity: 0.95041322314 , 0.989417989418
+truePos, falsePos, trueNeg, falseNeg: 114 5 373 8
+ALH percision, recall, f1: 0.957983193277 , 0.934426229508 , 0.946058091286
+ALH sensitivity, specifcity: 0.934426229508 , 0.986772486772
+Diag ALH , Num Mistakes: 13 , error rate 0.026
 ---------------------------
 ADH_DCIS
-Number of gold 42.0
-Number guessed 33
-truePos, falsePos, trueNeg, falseNeg: 30 3 454 12
-ADH_DCIS percision, recall, f1: 0.909090909091 , 0.714285714286 , 0.8
-ADH_DCIS sensitivity, specifcity: 0.714285714286 , 0.993435448578
----------------------------
-no
-Number of gold 141.0
-Number guessed 138
-truePos, falsePos, trueNeg, falseNeg: 129 9 349 12
-no percision, recall, f1: 0.934782608696 , 0.914893617021 , 0.924731182796
-no sensitivity, specifcity: 0.914893617021 , 0.974860335196
+Number of gold 34.0
+Number guessed 29
+truePos, falsePos, trueNeg, falseNeg: 29 0 466 5
+ADH_DCIS percision, recall, f1: 1.0 , 0.852941176471 , 0.920634920635
+ADH_DCIS sensitivity, specifcity: 0.852941176471 , 1.0
+Diag ADH_DCIS , Num Mistakes: 5 , error rate 0.01
 ---------------------------
 Overall
-Number of gold 642.0
-Number guessed 621
-truePos, falsePos, trueNeg, falseNeg: 580 41 6303 62
-no percision, recall, f1: 0.933977455717 , 0.903426791277 , 0.918448139351
-no sensitivity, specifcity: 0.903426791277 , 0.993537200504
+Number of gold 510.0
+Number guessed 499
+truePos, falsePos, trueNeg, falseNeg: 467 32 5458 43
+Overall percision, recall, f1: 0.935871743487 , 0.91568627451 , 0.925668979187
+Overall sensitivity, specifcity: 0.91568627451 , 0.994171220401
+Overall Num Mistakes: 75 , error rate 0.0125
