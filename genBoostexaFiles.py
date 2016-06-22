@@ -149,8 +149,7 @@ def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem):
                 f.write(report + ", " + label + '.\n')
         print "Saved", trainStem+"_"+diag+"."+trainSuf
 
-        # if dev:
-        #     testOutPath = devOutPath
+    
         testStem, testSuf = testOutPath.split('.')
         testStem = stem
         with open(testStem+"_"+diag+"."+testSuf, "wb") as f: 
@@ -160,7 +159,6 @@ def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem):
                     if 'RIGHT' in processLabels(testLabels[b]):
                         label = 'RIGHT'
                     else:
-                        assert 'LEFT' in testLabels[b]
                         label = 'LEFT'
                 else:
                     label =  diag if diag in processLabels(testLabels[b]) else "no_"+diag

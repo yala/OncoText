@@ -151,10 +151,18 @@ ADH_DCIS percision, recall, f1: 1.0 , 0.852941176471 , 0.920634920635
 ADH_DCIS sensitivity, specifcity: 0.852941176471 , 1.0
 Diag ADH_DCIS , Num Mistakes: 5 , error rate 0.01
 ---------------------------
+BreastSide
+Number of gold 227.0
+Number guessed 230
+truePos, falsePos, trueNeg, falseNeg: 221 9 263 6
+BreastSide percision, recall, f1: 0.960869565217 , 0.973568281938 , 0.967177242888
+BreastSide sensitivity, specifcity: 0.973568281938 , 0.966911764706
+Diag BreastSide , Num Mistakes: 15 , error rate 0.03
+---------------------------
 Overall
-Number of gold 513.0
-Number guessed 499
-truePos, falsePos, trueNeg, falseNeg: 472 27 8941 41
-Overall percision, recall, f1: 0.945891783567 , 0.92007797271 , 0.932806324111
-Overall sensitivity, specifcity: 0.92007797271 , 0.996989295272
-Overall Num Mistakes: 68 , error rate 0.00717223921527
+Number of gold 740.0
+Number guessed 729
+truePos, falsePos, trueNeg, falseNeg: 693 36 9204 47
+Overall percision, recall, f1: 0.950617283951 , 0.936486486486 , 0.943498978897
+Overall sensitivity, specifcity: 0.936486486486 , 0.996103896104
+Overall Num Mistakes: 83 , error rate 0.00831663326653
