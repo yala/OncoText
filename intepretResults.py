@@ -18,7 +18,7 @@ if __name__ == "__main__":
     diagnoses = genBoostexaFiles.diagnoses
 
     for diag in diagnoses:
-        with open("class_results_"+diag+".txt", 'rb') as f:
+        with open("classification_results/class_results_"+diag+".txt", 'rb') as f:
            diagSamples[diag] = f.readlines()
 
 
