@@ -11,24 +11,26 @@ import pprint
 random.seed(1)
 dataPath = "deidentifiedPathReports.p"
 outPath = "episodicDB.p"
+goldDataPath = 'goldPathReports.p'
 
-metaData = ['Report_Date_TimePlusX', 'MRNPlusX', 'Correct', 'Institution', 'BreastSide']
+
+metaData = ['Report_Date_TimePlusX', 'MRNPlusX', 'Correct', 'Institution']
 
 SIX_MONTHS=365/2
 
 
-cols = diagnoses + metaData + ['Report_Text', "Preprocessed_Report_Text"]
+cols = diagnoses + metaData + ['Report_Text', "Preprocessed_Report_Text", "filitiredOut"]
 
 
 # Set write to true to generate train and test files for classification. 
 # Set write to false to collace files for export
 def binarizeFilesForClassification(write = True):
     allData = p.load(open(dataPath, 'rb'))
-    goldData = [d for d in allData if 'Correct' in d]
+    goldData = p.load(open(goldDataPath, 'rb'))
     remainData = [d for d in allData if not 'Correct' in d]
     
-    trainReports, trainLabels = getLabelsAndReports(goldData, write)
-    restReports,  restLabels = getLabelsAndReports(remainData, write)
+    trainReports, trainLabels = getLabelsAndReports(goldData, not write)
+    restReports,  restLabels = getLabelsAndReports(remainData, not write)
 
     classifierLabels = parseResultsFiles()
 
@@ -53,7 +55,6 @@ def binarizeFilesForClassification(write = True):
 def retagLabels(oldLabels, newLabels):
     assert len(oldLabels)== len(newLabels)
     assert len(oldLabels[0]) == len(cols)
-    print len(newLabels[0]) , len(diagnoses)
     assert len(newLabels[0]) == len(diagnoses)
     result = []
     for i in range(len(oldLabels)):
@@ -155,6 +156,10 @@ def parseResultsFiles(debug = False):
 def getMaxDX(labels):
     return False
 
+#TODO implement
+def buildEpisodes(data):
+    return False
+
 if __name__ == "__main__":
 
     train = False
@@ -166,3 +171,6 @@ if __name__ == "__main__":
     if buildExportBool:
         exportData = binarizeFilesForClassification(buildExportBool)
         p.dump( exportData, open(outPath, 'wb'))
+    else:
+        exportData = p.load(open(outPath, 'wb'))
+

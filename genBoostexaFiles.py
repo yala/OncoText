@@ -14,12 +14,15 @@ diagnoses = [ u'DCIS', u'ILC', u'Phylodes', u'CancerSuspicious', \
  u'CancerNOS', u'TubularCancer', u'IDC', u'LCIS', 'InsituNOS', \
  u'ADH', u'CancerInvInsituNOS',\
  u'ClingingCarcinoma', u'InvasiveSuspicious', u'LobularNeoplasia', u'FlatEpithelial', 
- u'BluntAdenosis', u'Medullary', u'ALH', u'ADH_DCIS']
+ u'BluntAdenosis', u'Medullary', u'ALH', u'ADH_DCIS', u'BreastSide']
 
 def writeNameFiles(stem):
     for diag in diagnoses:
         with open(stem+"_"+diag+".names", "wb") as f:
-            labels = diag + ", " + "no_"+diag+".\n"
+            if diag == u'BreastSide':
+                labels = "RIGHT, LEFT.\n"
+            else:
+                labels = diag + ", " + "no_"+diag+".\n"
             features = "pathReport : text.\n"
             f.write(labels)
             f.write(features)
@@ -73,8 +76,9 @@ def filterGold(reports, labels, debug = False):
         filtered_labels.append(reportLabelDict[r])
 
     assert len(filtered_reports) == len(filtered_labels)
-    print "NUM REPORTS", len(filtered_reports)
-    print "COUNT WIERD DUPS", countWut
+    if debug:
+        print "NUM REPORTS", len(filtered_reports)
+        print "COUNT WIERD DUPS", countWut
     return filtered_reports, filtered_labels
 
 def printLabelDist(trainLabels, trainReports, testLabels, testReports):
@@ -131,7 +135,14 @@ def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem):
         trainStem = stem
         with open(trainStem+"_"+diag+"."+trainSuf, "wb") as f: 
             for a in range(len(trainReports)):
-                label = diag if diag in processLabels( trainLabels[a]) else "no_"+diag
+                if diag == u'BreastSide':
+                    if 'RIGHT' in processLabels(trainLabels[a]):
+                        label = 'RIGHT'
+                    else:
+                        assert 'LEFT' in trainLabels[a]
+                        label = 'LEFT'
+                else:
+                    label = diag if diag in processLabels( trainLabels[a]) else "no_"+diag
                 report = trainReports[a]
 
                 assert not "\n" in report
@@ -144,7 +155,15 @@ def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem):
         testStem = stem
         with open(testStem+"_"+diag+"."+testSuf, "wb") as f: 
             for b in range(len(testReports)):
-                label =  diag if diag in processLabels(testLabels[b]) else "no_"+diag
+                
+                if diag == u'BreastSide':
+                    if 'RIGHT' in processLabels(testLabels[b]):
+                        label = 'RIGHT'
+                    else:
+                        assert 'LEFT' in testLabels[b]
+                        label = 'LEFT'
+                else:
+                    label =  diag if diag in processLabels(testLabels[b]) else "no_"+diag
                 report = testReports[b]
 
                 assert not "\n" in report
@@ -157,16 +176,19 @@ if __name__ == "__main__":
     goldData = getGoldTags()
 
     labels = []
+    debug = True
     for i in range(len(goldData)):
         diags = []
         sample = goldData[i]
         for diag in diagnoses:
-            if diag in sample and sample[diag] == '1':
-                diags.append(diag)
+            if diag == u'BreastSide' and u'BreastSide' in sample:
+                diags.append(sample[diag])
             else:
-                diags.append('no_'+diag)
+                if diag in sample and sample[diag] == '1':
+                    diags.append(diag)
+                else:
+                    diags.append('no_'+diag)
         labels.append(diags)
-
 
     reports = [d['Report_Text'] for d in goldData]
 
