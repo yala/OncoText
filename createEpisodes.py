@@ -26,8 +26,8 @@ cols = diagnoses + metaData + ['Report_Text', "Preprocessed_Report_Text", "filit
 # Set write to false to collace files for export
 def binarizeFilesForClassification(write = True):
     allData = p.load(open(dataPath, 'rb'))
-    # goldData = p.load(open(goldDataPath, 'rb'))
-    goldData = [d for d in allData if 'Correct' in d]
+    goldData = p.load(open(goldDataPath, 'rb'))
+    # goldData = [d for d in allData if 'Correct' in d]
 
     remainData = [d for d in allData if not 'Correct' in d]
     
@@ -35,6 +35,7 @@ def binarizeFilesForClassification(write = True):
     trainReports, trainLabels = getLabelsAndReports(goldData, export)
     restReports,  restLabels = getLabelsAndReports(remainData, export)
 
+    assert len(trainReports) == len(trainReports)
 
     stem = "boostexer/pathology_all"
 
