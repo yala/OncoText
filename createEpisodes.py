@@ -29,12 +29,10 @@ def binarizeFilesForClassification(write = True):
     goldData = p.load(open(goldDataPath, 'rb'))
     remainData = [d for d in allData if not 'Correct' in d]
     
-    trainReports, trainLabels = getLabelsAndReports(goldData, not write)
-    restReports,  restLabels = getLabelsAndReports(remainData, not write)
+    export = not write
+    trainReports, trainLabels = getLabelsAndReports(goldData, export)
+    restReports,  restLabels = getLabelsAndReports(remainData, export)
 
-    classifierLabels = parseResultsFiles()
-
-    restLabels = retagLabels(restLabels, classifierLabels)
 
     stem = "boostexer/pathology_all"
 
@@ -42,6 +40,9 @@ def binarizeFilesForClassification(write = True):
         genTrainTestFiles(trainReports, trainLabels, restReports, restLabels, stem)
     else:
         exportableData = {}
+
+        classifierLabels = parseResultsFiles()
+        restLabels = retagLabels(restLabels, classifierLabels)
         
         buildExport(exportableData, trainLabels, 0)
         assert len(exportableData) == len(trainLabels)
@@ -86,7 +87,7 @@ def preprocessReports(reports):
 
     return cleanReports
 
-def getLabelsAndReports(data, write = True):
+def getLabelsAndReports(data, export = False):
     reports = [d['Report_Text'] for d in data]
     cleanReports = preprocessReports(reports)
 
@@ -96,12 +97,15 @@ def getLabelsAndReports(data, write = True):
         diags = []
         sample = data[i]
         for diag in diagnoses:
-            if diag in sample and sample[diag] == '1':
-                diags.append(diag)
+            if diag == u'BreastSide' and u'BreastSide' in sample:
+                diags.append(sample[diag])
             else:
-                diags.append('no_'+diag)
+                if diag in sample and sample[diag] == '1':
+                    diags.append(diag)
+                else:
+                    diags.append('no_'+diag)
 
-            if not write:
+            if export:
                 for meta in metaData:
                     assert meta in sample
                     diags.append(sample[meta])
@@ -167,10 +171,11 @@ if __name__ == "__main__":
         binarizeFilesForClassification()
 
 
-    buildExportBool = True
+    buildExportBool = False
     if buildExportBool:
-        exportData = binarizeFilesForClassification(buildExportBool)
+        exportData = binarizeFilesForClassification(False)
         p.dump( exportData, open(outPath, 'wb'))
     else:
-        exportData = p.load(open(outPath, 'wb'))
+        binarizeFilesForClassification( True)
+        # exportData = p.load(open(outPath, 'wb'))
 
