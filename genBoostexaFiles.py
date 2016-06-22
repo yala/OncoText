@@ -47,7 +47,7 @@ def getGoldTags(dumpGold = False):
         goldData = p.load(open(goldDataPath, 'rb'))
     return goldData
 
-def filterGold(reports, labels):
+def filterGold(reports, labels, debug = False):
     reportLabelDict = {}
     countWut = 0
     filtered_reports = []
@@ -60,12 +60,12 @@ def filterGold(reports, labels):
             "Accession Number  REMOVED_ACCESSION_ID Report Status  Preliminary Type  Surgical Pathology Report not finalized SPECIMEN TYPE  BREAST   EXCISIONAL TISSUE W MARGINS  report_end" ==  report.strip()):
             if report in reportLabelDict:
                 if not label == reportLabelDict[report]:
-                    print "report with diff labels"
-                    print report
-                    print label
-                    print reportLabelDict[report]
+                    if debug:
+                        print "report with diff labels"
+                        print report
+                        print label
+                        print reportLabelDict[report]
                     countWut +=1
-                    raw_input()
             reportLabelDict[report]= label
 
     for r in reportLabelDict:

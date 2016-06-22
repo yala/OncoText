@@ -17,7 +17,7 @@ metaData = ['Report_Date_TimePlusX', 'MRNPlusX', 'Correct', 'Institution', 'Brea
 SIX_MONTHS=365/2
 
 
-cols = diagnoses + metaData + ['Report_Text', "Preprocessed_Report_Text", "filitiredOut"]
+cols = diagnoses + metaData + ['Report_Text', "Preprocessed_Report_Text"]
 
 
 # Set write to true to generate train and test files for classification. 
@@ -27,27 +27,39 @@ def binarizeFilesForClassification(write = True):
     goldData = [d for d in allData if 'Correct' in d]
     remainData = [d for d in allData if not 'Correct' in d]
     
-    trainReports, trainLabels = getLabelsAndReports(goldData, write, True)
+    trainReports, trainLabels = getLabelsAndReports(goldData, write)
     restReports,  restLabels = getLabelsAndReports(remainData, write)
 
-    retagedLabels = parseResultsFiles()
+    classifierLabels = parseResultsFiles()
+
+    restLabels = retagLabels(restLabels, classifierLabels)
 
     stem = "boostexer/pathology_all"
 
-    
     if write:
         genTrainTestFiles(trainReports, trainLabels, restReports, restLabels, stem)
     else:
-        filiteredData = {}
+        exportableData = {}
         
-        buildExport(filiteredData, trainLabels, 0)
-        assert len(filiteredData) == len(trainLabels)
-        buildExport(filiteredData, restLabels, len(trainLabels))
-        assert len(filiteredData) == len(trainLabels) + len(remainData)
+        buildExport(exportableData, trainLabels, 0)
+        assert len(exportableData) == len(trainLabels)
+        buildExport(exportableData, restLabels, len(trainLabels))
+        assert len(exportableData) == len(trainLabels) + len(remainData)
 
-        return filiteredData
+        return exportableData
 
     return "NOT EXPORTING"
+
+def retagLabels(oldLabels, newLabels):
+    assert len(oldLabels)== len(newLabels)
+    assert len(oldLabels[0]) == len(cols)
+    print len(newLabels[0]) , len(diagnoses)
+    assert len(newLabels[0]) == len(diagnoses)
+    result = []
+    for i in range(len(oldLabels)):
+        results.append( newLabels + oldLabels[len(diagnoses):] )
+    return results
+
 
 def buildExport(exportData, data, startIdx):
     for i in range(len(data)):
@@ -71,7 +83,7 @@ def preprocessReports(reports):
     cleanReports = [ re.sub(r"(----)+", "", d) for d in cleanReports]
     cleanReports = [ re.sub(r"(====)+", "", d) for d in cleanReports]
 
-    return reports
+    return cleanReports
 
 def getLabelsAndReports(data, write = True):
     reports = [d['Report_Text'] for d in data]
@@ -83,13 +95,10 @@ def getLabelsAndReports(data, write = True):
         diags = []
         sample = data[i]
         for diag in diagnoses:
-            if write:
-                if diag in sample and sample[diag] == '1':
-                    diags.append(diag)
-                else:
-                    diags.append('no_'+diag)
+            if diag in sample and sample[diag] == '1':
+                diags.append(diag)
             else:
-                diags.append(int(diag in sample and sample[diag] == '1'))
+                diags.append('no_'+diag)
 
             if not write:
                 for meta in metaData:
@@ -103,15 +112,11 @@ def getLabelsAndReports(data, write = True):
 
     filteredReport, filteredLabel = filterGold(cleanReports, labels)
 
-    if write:
-        cleanReports = filteredReport
-        labels = filteredLabel
+    cleanReports = filteredReport
+    labels = filteredLabel
 
-        return cleanReports, labels
-    else:
-        for report, label in zip(cleanReports, labels):
-            label.append(report in filteredReport)
-        return cleanReports, labels
+    return cleanReports, labels
+
 
 def say(s):
     pprint.pprint(s)
@@ -160,3 +165,4 @@ if __name__ == "__main__":
     buildExportBool = True
     if buildExportBool:
         exportData = binarizeFilesForClassification(buildExportBool)
+        p.dump( exportData, open(outPath, 'wb'))
