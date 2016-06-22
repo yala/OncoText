@@ -26,8 +26,23 @@ cols = diagnoses + metaData + ['Report_Text', "Preprocessed_Report_Text", "filit
 # Set write to false to collace files for export
 def binarizeFilesForClassification(write = True):
     allData = p.load(open(dataPath, 'rb'))
-    goldData = p.load(open(goldDataPath, 'rb'))
-    # goldData = [d for d in allData if 'Correct' in d]
+    goldBreastData = p.load(open(goldDataPath, 'rb'))
+    goldData = [d for d in allData if 'Correct' in d]
+
+    for i in range(len(goldData)):
+        if 'BreastSide' in goldBreastData[i]:
+            goldData[i]['BreastSide'] = goldBreastData[i]['BreastSide']
+
+        for diag in diagnoses:
+            sample1 = goldData[i]
+            sample2 = goldBreastData[i]
+
+            if diag in sample1:
+                assert diag in sample2
+                assert sample2[diag] == sample1[diag]
+            else:
+                assert diag not in sample2
+
 
     remainData = [d for d in allData if not 'Correct' in d]
     
@@ -101,8 +116,11 @@ def getLabelsAndReports(data, export = False):
         diags = []
         sample = data[i]
         for diag in diagnoses:
-            if diag == u'BreastSide' and u'BreastSide' in sample:
-                diags.append(sample[diag])
+            if diag == u'BreastSide':
+                if u'BreastSide' in sample:
+                    diags.append(sample[diag])
+                else:
+                    diags.append("LEFT")
             else:
                 if diag in sample and sample[diag] == '1':
                     diags.append(diag)
@@ -117,7 +135,7 @@ def getLabelsAndReports(data, export = False):
                 diags.append(sample['Report_Text'])
                 diags.append(cleanReports[i])
 
-            labels.append(diags)
+        labels.append(diags)
 
     filteredReport, filteredLabel = filterGold(cleanReports, labels)
 
@@ -170,7 +188,7 @@ def buildEpisodes(data):
 
 if __name__ == "__main__":
 
-    train = False
+    train = True
     if train:
         binarizeFilesForClassification()
 
@@ -179,7 +197,6 @@ if __name__ == "__main__":
     if buildExportBool:
         exportData = binarizeFilesForClassification(False)
         p.dump( exportData, open(outPath, 'wb'))
-    else:
-        binarizeFilesForClassification( True)
+ 
         # exportData = p.load(open(outPath, 'wb'))
 
