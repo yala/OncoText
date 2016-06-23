@@ -96,6 +96,8 @@ def buildExport(exportData, data, startIdx):
                 year, mo, day = [int(d) for d in yyyymmdd.split('-')]
                 date = datetime.datetime.strptime(yyyymmdd, '%Y-%m-%d')
                 record[col] = date
+            elif col in diagnoses:
+                    record[col] = int (not "no_" in colVals[j])
             else:
                 record[col] = colVals[j]
         exportData[startIdx+i] = record
@@ -183,8 +185,40 @@ def parseResultsFiles(debug = False):
         print 'len(results)[0]', 'len(diagnoses):', len(results[0]), len(diagnoses)
     return results
 
-#TODO: Label MaxDX from labels
-def getMaxDX(labels):
+def getMaxDX(data):
+    for reportId in data:
+        labels = data[reportId]
+        if labels['Medullary'] == 1:
+            labels['MaxDX'] = 'Medullary'
+        elif labels['ILC'] == 1:
+            labels['MaxDX'] = 'ILC'
+        elif labels['IDC'] == 1:
+            labels['MaxDX'] = 'IDC'
+        elif labels['TubularCancer'] == 1:
+            labels['MaxDX'] = 'TubularCancer'
+        elif labels['InvasiveCancerNOS'] == 1:
+            labels['MaxDX'] = 'InvasiveCancerNOS'
+        elif labels['DCIS'] == 1:
+            labels['MaxDX'] = 'DCIS'
+        elif labels['CancerInvasiveInsituNOS'] == 1:
+            labels['MaxDX'] = 'CancerInvasiveInsituNOS'
+        elif labels['Borderline'] == 1:
+            labels['MaxDX'] = 'Borderline'
+        elif labels['InsituNOS'] == 1:
+            labels['MaxDX'] = 'InsituNOS'
+        elif labels['LCIS'] == 1:
+            labels['MaxDX'] = 'LCIS'
+        elif labels['ALH'] == 1:
+            labels['MaxDX'] = 'ALH'
+        elif labels['LobularNeoplasia'] == 1:
+            labels['MaxDX'] = 'LobularNeoplasia'
+        elif labels['ADH'] == 1:
+            labels['MaxDX'] = 'ADH'
+        elif labels['Phyllodes'] == 1:
+            labels['MaxDX'] = 'Phyllodes'
+        else:
+            labels['MaxDX'] = 'None'
+
     return False
 
 #TODO implement
@@ -198,7 +232,7 @@ if __name__ == "__main__":
         binarizeFilesForClassification()
 
 
-    buildExportBool = False
+    buildExportBool = True
     if buildExportBool:
         print "Calling export"
         exportData = binarizeFilesForClassification(False)
@@ -211,5 +245,5 @@ if __name__ == "__main__":
     if labelMaxDXBool:
         getMaxDX(exportData)
         p.dump( exportData, open(outPath, 'wb'))
-    
+
 
