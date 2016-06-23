@@ -1,6 +1,9 @@
-# large test files
+# large files
 *_all_*.test
 episodicDB.p
+episodicDB.json
+EpisodesThatStartWithNeedleBiopsyAll2+Eps.p
+OtherEpisodesForLM.p
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
