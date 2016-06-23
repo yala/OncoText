@@ -7,13 +7,15 @@ from genBoostexaFiles import filterGold
 import datetime
 import pprint
 from operator import itemgetter
+import json
 
 random.seed(1)
 dataPath = "deidentifiedPathReports.p"
 outPath = "episodicDB.p"
 goldDataPath = 'goldPathReports.p'
-lilyYedidDBPath = "EpisodesThatStartWithNeedleBiopsy.p"
-
+lilyYedidDBPath = "EpisodesThatStartWithNeedleBiopsyAll2+Eps.p"
+allOtherReportsPath = "OtherEpisodesForLM.p"
+JSONpath = "episodicDB.json"
 
 metaData = ['Report_Date_TimePlusX', 'MRNPlusX', 'Correct', 'Institution']
 
@@ -300,6 +302,7 @@ def isExcision(report, debug = False):
 
 def buildNeedleStartEpDB(data):
     resDB = []
+    othrDB = []
 
     episodes = {}
     
@@ -317,10 +320,20 @@ def buildNeedleStartEpDB(data):
             if isExcision(rep):
                 laterExcision = True
                 break
-        if startAsNeedle and laterExcision:
+        if startAsNeedle and len(episodes[epId]) > 1:# laterExcision:
             resDB.append(episodes[epId])
+        else:
+            othrDB.append(episodes[epId])
 
-    return resDB
+    return resDB, othrDB
+
+def portToJSON(data):
+    for report in data:    
+        report['Report_Date_TimePlusX'] = report['Report_Date_TimePlusX'].isoformat()
+    jsonData = json.dumps(data)
+    print "Len data to dump to JSON", len(jsonData)
+    with open(JSONpath, 'wb') as f:
+        f.write(jsonData)
 
 if __name__ == "__main__":
 
@@ -350,12 +363,18 @@ if __name__ == "__main__":
         raw_input("Dump again? Press any key to continue")
         p.dump( exportData, open(outPath, 'wb'))
 
-    buildLilysDB = True
+    buildLilysDB = False
     if buildLilysDB:
-        lilyDB = buildNeedleStartEpDB(exportData)
-        print "Num Records in lilyDB", len(lilyDB)
+        lilyDB, othrDB = buildNeedleStartEpDB(exportData)
+        print "Num episodes in lilyDB", len(lilyDB)
+        print "Num episodes in othrDB", len(othrDB)
         raw_input("Dump Lily's DB? Press any key to continue")
         p.dump(lilyDB, open(lilyYedidDBPath, 'wb'))
+        p.dump(othrDB, open(allOtherReportsPath, 'wb'))
+
+    portToJSONBool = True
+    if portToJSONBool:
+        portToJSON(exportData)
 
 
 
