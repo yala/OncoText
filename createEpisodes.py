@@ -19,7 +19,7 @@ metaData = ['Report_Date_TimePlusX', 'MRNPlusX', 'Correct', 'Institution']
 SIX_MONTHS=365/2
 
 
-cols = diagnoses + metaData + ['Report_Text', "Preprocessed_Report_Text", "filitiredOut"]
+cols = diagnoses + metaData + ['Report_Text', "Preprocessed_Report_Text"]
 
 
 # Set write to true to generate train and test files for classification. 
@@ -60,13 +60,16 @@ def binarizeFilesForClassification(write = True):
     else:
         exportableData = {}
 
+        print "Parse Result Files"
         classifierLabels = parseResultsFiles()
+        print "Retag Labels"
         restLabels = retagLabels(restLabels, classifierLabels)
         
+        print "Exporting"
         buildExport(exportableData, trainLabels, 0)
         assert len(exportableData) == len(trainLabels)
         buildExport(exportableData, restLabels, len(trainLabels))
-        assert len(exportableData) == len(trainLabels) + len(remainData)
+        assert len(exportableData) == len(trainLabels) + len(restLabels)
 
         return exportableData
 
@@ -76,9 +79,9 @@ def retagLabels(oldLabels, newLabels):
     assert len(oldLabels)== len(newLabels)
     assert len(oldLabels[0]) == len(cols)
     assert len(newLabels[0]) == len(diagnoses)
-    result = []
+    results = []
     for i in range(len(oldLabels)):
-        results.append( newLabels + oldLabels[len(diagnoses):] )
+        results.append( newLabels[i] + oldLabels[i][len(diagnoses):] )
     return results
 
 
@@ -91,7 +94,7 @@ def buildExport(exportData, data, startIdx):
                 date = colVals[j]
                 yyyymmdd = date.split('T')[0]
                 year, mo, day = [int(d) for d in yyyymmdd.split('-')]
-                date = datetime.strptime(yyyymmdd, '%Y-%m-%d')
+                date = datetime.datetime.strptime(yyyymmdd, '%Y-%m-%d')
                 record[col] = date
             else:
                 record[col] = colVals[j]
@@ -127,13 +130,15 @@ def getLabelsAndReports(data, export = False):
                 else:
                     diags.append('no_'+diag)
 
-            if export:
-                for meta in metaData:
-                    assert meta in sample
+        if export:
+            for meta in metaData:
+                if meta == "Correct" and not meta in sample:
+                    diags.append(0)
+                else:    
                     diags.append(sample[meta])
 
-                diags.append(sample['Report_Text'])
-                diags.append(cleanReports[i])
+            diags.append(sample['Report_Text'])
+            diags.append(cleanReports[i])
 
         labels.append(diags)
 
@@ -188,15 +193,23 @@ def buildEpisodes(data):
 
 if __name__ == "__main__":
 
-    train = True
+    train = False
     if train:
         binarizeFilesForClassification()
 
 
     buildExportBool = False
     if buildExportBool:
+        print "Calling export"
         exportData = binarizeFilesForClassification(False)
+        print "dumping"
         p.dump( exportData, open(outPath, 'wb'))
- 
-        # exportData = p.load(open(outPath, 'wb'))
+    else: 
+        exportData = p.load(open(outPath, 'wb'))
+
+    labelMaxDXBool = True
+    if labelMaxDXBool:
+        getMaxDX(exportData)
+        p.dump( exportData, open(outPath, 'wb'))
+    
 
