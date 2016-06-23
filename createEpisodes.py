@@ -6,17 +6,18 @@ from genBoostexaFiles import genTrainTestFiles
 from genBoostexaFiles import filterGold
 import datetime
 import pprint
-
+from operator import itemgetter
 
 random.seed(1)
 dataPath = "deidentifiedPathReports.p"
 outPath = "episodicDB.p"
 goldDataPath = 'goldPathReports.p'
+lilyYedidDBPath = "EpisodesThatStartWithNeedleBiopsy.p"
 
 
 metaData = ['Report_Date_TimePlusX', 'MRNPlusX', 'Correct', 'Institution']
 
-SIX_MONTHS=365/2
+SIX_MONTHS = datetime.timedelta(365/2)
 
 
 cols = diagnoses + metaData + ['Report_Text', "Preprocessed_Report_Text"]
@@ -96,8 +97,6 @@ def buildExport(exportData, data, startIdx):
                 year, mo, day = [int(d) for d in yyyymmdd.split('-')]
                 date = datetime.datetime.strptime(yyyymmdd, '%Y-%m-%d')
                 record[col] = date
-            elif col in diagnoses:
-                    record[col] = int (not "no_" in colVals[j])
             else:
                 record[col] = colVals[j]
         exportData[startIdx+i] = record
@@ -196,12 +195,12 @@ def getMaxDX(data):
             labels['MaxDX'] = 'IDC'
         elif labels['TubularCancer'] == 1:
             labels['MaxDX'] = 'TubularCancer'
-        elif labels['InvasiveCancerNOS'] == 1:
-            labels['MaxDX'] = 'InvasiveCancerNOS'
+        elif labels['CancerNOS'] == 1:
+            labels['MaxDX'] = 'CancerNOS'
         elif labels['DCIS'] == 1:
             labels['MaxDX'] = 'DCIS'
-        elif labels['CancerInvasiveInsituNOS'] == 1:
-            labels['MaxDX'] = 'CancerInvasiveInsituNOS'
+        elif labels['CancerInvInsituNOS'] == 1:
+            labels['MaxDX'] = 'CancerInvInsituNOS'
         elif labels['Borderline'] == 1:
             labels['MaxDX'] = 'Borderline'
         elif labels['InsituNOS'] == 1:
@@ -214,16 +213,114 @@ def getMaxDX(data):
             labels['MaxDX'] = 'LobularNeoplasia'
         elif labels['ADH'] == 1:
             labels['MaxDX'] = 'ADH'
-        elif labels['Phyllodes'] == 1:
-            labels['MaxDX'] = 'Phyllodes'
+        elif labels['Phylodes'] == 1:
+            labels['MaxDX'] = 'Phylodes'
         else:
             labels['MaxDX'] = 'None'
 
     return False
 
-#TODO implement
+
+def multikeysort(items, debug = False):
+    sortedItems = []
+    for i in range(len(items)):
+        items[i]['ReportID'] = i
+        sortedItems.append(items[i])
+    if debug:
+        print " items pre"
+        say(sortedItems)
+        raw_input('Press any key to continue')
+    for c in columns:
+        sortedItems = sorted(sortedItems, key=itemgetter(c))
+        if debug:
+            print "Sorted by ", c
+            say(sortedItems)
+            raw_input('Press any key to continue')
+
+    return sortedItems
+
 def buildEpisodes(data):
-    return False
+
+    mrns = {}
+    for i in range(len(data)):
+        data[i]['ReportID'] = i
+
+        if not data[i]['MRNPlusX'] in mrns:
+            mrns[data[i]['MRNPlusX']] = {}
+
+        if not data[i]['BreastSide'] in mrns[data[i]['MRNPlusX']]:
+            mrns[data[i]['MRNPlusX']][data[i]['BreastSide']] = [data[i]]
+        else:
+            mrns[data[i]['MRNPlusX']][data[i]['BreastSide']].append(data[i])
+
+    assert len(mrns) == 37729
+    
+    episodes = []
+    episodeId = -1    
+    for mrn in mrns:
+        patient = mrns[mrn]
+        for side in patient:
+            patient[side] = sorted( patient[side], key=itemgetter('Report_Date_TimePlusX') )
+            for idx, rep in enumerate(patient[side]):
+                if idx == 0:
+                    episodeId += 1
+                    rep['EpisodeID'] = 'E'+str(episodeId)
+                else:
+                    prevVisit = patient[side][idx - 1]
+                    if rep['Report_Date_TimePlusX'] - prevVisit['Report_Date_TimePlusX'] < SIX_MONTHS:
+                        rep['EpisodeID'] = str(prevVisit['EpisodeID'])
+                    else:
+                        episodeId += 1
+                        rep['EpisodeID'] = 'E'+str(episodeId)
+
+                episodes.append(rep)
+
+    return episodes
+
+def isNeedleBiop(report, debug = False):
+    reportText = report['Preprocessed_Report_Text']
+    reportTextSaysNeedleBool = "NEEDLE BIOPSY".lower() in reportText.lower()
+
+    typesOfCarcinoma = ["DCIS", "ILC", "IDC", "LCIS", "TubularCancer", \
+                            "CancerNOS", "InsituNOS", "CancerInvInsituNOS",\
+                            "ClingingCarcinoma", "Medullary", "ADH_DCIS"] 
+    noCarcinomaBool  = not bool( sum( [report[c] == 1 for c in typesOfCarcinoma]))
+    
+    if debug:    
+        print 'noCarcinomaBool', noCarcinomaBool
+        print reportText
+        print 'reportTextSaysNeedleBool', reportTextSaysNeedleBool
+        raw_input()
+    return reportTextSaysNeedleBool and noCarcinomaBool
+
+def isExcision(report, debug = False):
+    reportText = report['Preprocessed_Report_Text']
+    return not "NEEDLE BIOPSY".lower() in reportText.lower()
+
+
+def buildNeedleStartEpDB(data):
+    resDB = []
+
+    episodes = {}
+    
+    for rep in data:
+        if rep['EpisodeID'] in episodes:
+            episodes[rep['EpisodeID']].append(rep)
+        else:
+            episodes[rep['EpisodeID']] = [rep]
+
+    for epId in episodes:
+        episodes[epId] = sorted( episodes[epId], key=itemgetter('Report_Date_TimePlusX') )
+        startAsNeedle = isNeedleBiop(episodes[epId][0])
+        laterExcision = False
+        for rep in episodes[epId][1:]: 
+            if isExcision(rep):
+                laterExcision = True
+                break
+        if startAsNeedle and laterExcision:
+            resDB.append(episodes[epId])
+
+    return resDB
 
 if __name__ == "__main__":
 
@@ -232,18 +329,33 @@ if __name__ == "__main__":
         binarizeFilesForClassification()
 
 
-    buildExportBool = True
+    buildExportBool = False
     if buildExportBool:
         print "Calling export"
         exportData = binarizeFilesForClassification(False)
         print "dumping"
         p.dump( exportData, open(outPath, 'wb'))
     else: 
-        exportData = p.load(open(outPath, 'wb'))
+        exportData = p.load(open(outPath, 'rb'))
 
-    labelMaxDXBool = True
+    labelMaxDXBool = False
     if labelMaxDXBool:
         getMaxDX(exportData)
+        raw_input("Dump again? Press any key to continue")
         p.dump( exportData, open(outPath, 'wb'))
+
+    buildEpisodesBool = False
+    if buildEpisodesBool:
+        exportData = buildEpisodes(exportData)
+        raw_input("Dump again? Press any key to continue")
+        p.dump( exportData, open(outPath, 'wb'))
+
+    buildLilysDB = True
+    if buildLilysDB:
+        lilyDB = buildNeedleStartEpDB(exportData)
+        print "Num Records in lilyDB", len(lilyDB)
+        raw_input("Dump Lily's DB? Press any key to continue")
+        p.dump(lilyDB, open(lilyYedidDBPath, 'wb'))
+
 
 
