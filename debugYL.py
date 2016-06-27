@@ -1,9 +1,18 @@
 import pickle as p
 from createEpisodes import preprocessReports
 from genBoostexaFiles import genTrainTestFiles
+import random
+
+random.seed(1)
 
 trainData = p.load(open('adams_training_set.p', 'rb'))
 testData = p.load(open('adams_test_set.p', 'rb'))
+
+data = trainData + testData
+random.shuffle(data)
+
+trainData = data[:326]
+testData  = data[326:]
 
 stem = "boostexer/predictM."
 
@@ -25,11 +34,16 @@ def writeBoostFiles(reports, labels, path):
 if __name__ == "__main__":    
     writeNameFile()
 
+
     trainReports = preprocessReports([tr[0] for tr in trainData])
     trainLabels = ['M' if tr[1] == 'M' else 'no_M' for tr in trainData]
 
+    print "Train stats", sum([l == "M" for l in trainLabels])*1./len(trainLabels), len(trainLabels)
+
     testReports = preprocessReports([tr[0] for tr in testData])
     testLabels = ['M' if tr[1] == 'M' else 'no_M' for tr in testData]
+
+    print "Test stats", sum([l == "M" for l in testLabels])*1./len(testLabels), len(testLabels)
 
     writeBoostFiles(trainReports, trainLabels, stem+"data")
     writeBoostFiles(testReports, testLabels, stem+"test")
