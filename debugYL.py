@@ -1,14 +1,29 @@
 import pickle as p
+import xmltodict
 from createEpisodes import preprocessReports
 from genBoostexaFiles import genTrainTestFiles
 import random
+from pandas import *
 
 random.seed(1)
 
-trainData = p.load(open('adams_training_set.p', 'rb'))
-testData = p.load(open('adams_test_set.p', 'rb'))
+# trainData = p.load(open('adams_training_set.p', 'rb'))
+# testData = p.load(open('adams_test_set.p', 'rb'))
 
-data = trainData + testData
+# data = trainData + testData
+data = []
+allData = []
+xls = ExcelFile("pathreports.xlsx")
+df = xls.parse(xls.sheet_names[0])
+allData = df.to_dict()
+
+
+for ind in range(436):
+    label = allData['SXRESULT'][ind].strip()
+    text  = allData['BXPATHREP'][ind].strip()
+    
+    data.append( (text, label) )
+
 random.shuffle(data)
 
 trainData = data[:326]
