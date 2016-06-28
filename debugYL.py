@@ -51,14 +51,16 @@ if __name__ == "__main__":
 
 
     trainReports = preprocessReports([tr[0] for tr in trainData])
+    trainReports = [" ".join(r.split()[17:]) for r in trainReports]
     trainLabels = ['M' if tr[1] == 'M' else 'no_M' for tr in trainData]
 
     print "Train stats", sum([l == "M" for l in trainLabels])*1./len(trainLabels), len(trainLabels)
-
+    print "Avg num words", sum([len(r.split()) for r in trainReports])*1. / len(trainLabels)
     testReports = preprocessReports([tr[0] for tr in testData])
+    testReports = [" ".join(r.split()[17:]) for r in testReports]
     testLabels = ['M' if tr[1] == 'M' else 'no_M' for tr in testData]
 
     print "Test stats", sum([l == "M" for l in testLabels])*1./len(testLabels), len(testLabels)
-
+    print "Avg num words", sum([len(r.split()) for r in testReports])*1. / len(testLabels)
     writeBoostFiles(trainReports, trainLabels, stem+"data")
     writeBoostFiles(testReports, testLabels, stem+"test")
