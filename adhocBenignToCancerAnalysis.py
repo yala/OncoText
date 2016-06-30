@@ -143,13 +143,19 @@ def makeReportPairs(db):
     p.dump(pairs, open(reportPairsPath, 'wb'))
     return pairs
 
-def buildDataForClassifier(pairs):
+def buildDataForClassifier(pairs, textBased):
     data = []
     dev = True
     for pair, label in pairs:
         orig = pair[0]
-        text = orig['Preprocessed_Report_Text']
-        data.append( (text, label))
+        if textBased:
+            features = orig['Preprocessed_Report_Text']
+        else:
+            features = {}
+            for a in typesOfAtypia:
+                features[a] = orig[a]
+
+        data.append( (features, label))
 
     random.shuffle(data)
 
@@ -179,13 +185,18 @@ def buildDataForClassifier(pairs):
     print "Num test", len(testReports)
     print "test fraction ones", sum(testLabels)*1./len(testReports)
 
-    writeFiles(trainReports, trainLabels, testReports, testLabels, "boostexer/adhoc_benignStart")
+    writeFiles(trainReports, trainLabels, testReports, testLabels, "boostexer/adhoc_benignStart", textBased)
 
 
-def writeFiles(trainReports, trainLabels, testReports, testLabels, stem):
+def writeFiles(trainReports, trainLabels, testReports, testLabels, stem, textBased):
     with open(stem+'.names','wb') as f:
         labels = '1, 0.\n'
-        features = "pathReport: text.\n"
+        if textBased:
+            features = "pathReport: text.\n"
+        else:
+            features = ""
+            for a in typesOfAtypia:
+                features += a+": 1, 0.\n"
         f.write(labels)
         f.write(features)
 
@@ -193,13 +204,30 @@ def writeFiles(trainReports, trainLabels, testReports, testLabels, stem):
 
     with open(stem+'.data','wb') as f:
         for r,l in zip(trainReports, trainLabels):
-            f.write(r + ", " + str(l) + ".\n")
+            if textBased:
+                features = r
+            else:
+                features = ""
+                for a in typesOfAtypia:
+                    feature = r[a]
+                    feature = "1" if r[a] == a or str(r[a]) == "1" else "0"
+                    features += feature+", "
+            f.write(features + str(l) + ".\n")
     
     print "Saved "+ stem+'.data'
 
     with open(stem+'.test','wb') as f:
         for r,l in zip(testReports, testLabels):
-            f.write(r + ", " + str(l) + ".\n")
+            if textBased:
+                features = r
+            else:
+                features = ""
+                for a in typesOfAtypia:
+                    feature = r[a]
+                    feature = "1" if r[a] == a or str(r[a]) == "1" else "0"
+                    features += feature+", "
+
+            f.write(features + str(l) + ".\n")
     
     print "Saved "+ stem+'.test'
 
@@ -230,6 +258,7 @@ if __name__ == "__main__":
         pairs = p.load(open(reportPairsPath, 'rb'))
 
     buildDataForClassifierBool = True
+    textBased = False
     if buildDataForClassifierBool:
-        buildDataForClassifier(pairs)
+        buildDataForClassifier(pairs, textBased)
 

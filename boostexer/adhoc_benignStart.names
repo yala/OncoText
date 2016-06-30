@@ -1,2 +1,7 @@
 1, 0.
-pathReport: text.
+ADH: 1, 0.
+ALH: 1, 0.
+FlatEpithelial: 1, 0.
+Phylodes: 1, 0.
+LobularNeoplasia: 1, 0.
+BluntAdenosis: 1, 0.
