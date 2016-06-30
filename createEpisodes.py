@@ -24,7 +24,6 @@ SIX_MONTHS = datetime.timedelta(365/2)
 
 cols = diagnoses + metaData + ['Report_Text', "Preprocessed_Report_Text"]
 
-
 # Set write to true to generate train and test files for classification. 
 # Set write to false to collace files for export
 def binarizeFilesForClassification(write = True):
@@ -187,8 +186,7 @@ def parseResultsFiles(debug = False):
     return results
 
 def getMaxDX(data):
-    for reportId in data:
-        labels = data[reportId]
+    for labels in data:
         if labels['Medullary'] == 1:
             labels['MaxDX'] = 'Medullary'
         elif labels['ILC'] == 1:
@@ -280,6 +278,8 @@ def buildEpisodes(data):
     return episodes
 
 def isNeedleBiop(report, debug = False):
+    ln = 0
+    doc = 0
     reportText = report['Preprocessed_Report_Text']
     reportTextSaysNeedleBool = "NEEDLE BIOPSY".lower() in reportText.lower()
 
@@ -293,16 +293,23 @@ def isNeedleBiop(report, debug = False):
         print reportText
         print 'reportTextSaysNeedleBool', reportTextSaysNeedleBool
         raw_input()
-    return reportTextSaysNeedleBool and noCarcinomaBool
+
+
+    if reportTextSaysNeedleBool and noCarcinomaBool:
+        ln=  len(reportText.split())
+        doc= 1
+
+    return reportTextSaysNeedleBool and noCarcinomaBool, ln, doc
 
 def isExcision(report, debug = False):
     reportText = report['Preprocessed_Report_Text']
     return not "NEEDLE BIOPSY".lower() in reportText.lower()
 
 
-def buildNeedleStartEpDB(data):
+def buildNeedleStartEpDB(data, TOTAL_LEN, NUM_DOCS):
     resDB = []
     othrDB = []
+
 
     episodes = {}
     
@@ -314,7 +321,9 @@ def buildNeedleStartEpDB(data):
 
     for epId in episodes:
         episodes[epId] = sorted( episodes[epId], key=itemgetter('Report_Date_TimePlusX') )
-        startAsNeedle = isNeedleBiop(episodes[epId][0])
+        startAsNeedle, ln, doc = isNeedleBiop(episodes[epId][0])
+        TOTAL_LEN += ln
+        NUM_DOCS  += doc
         laterExcision = False
         for rep in episodes[epId][1:]: 
             if isExcision(rep):
@@ -325,11 +334,28 @@ def buildNeedleStartEpDB(data):
         else:
             othrDB.append(episodes[epId])
 
-    return resDB, othrDB
+    return resDB, othrDB, TOTAL_LEN, NUM_DOCS
 
 def portToJSON(data):
     for report in data:    
         report['Report_Date_TimePlusX'] = report['Report_Date_TimePlusX'].isoformat()
+
+        for diag in diagnoses:
+            sample = report[diag]
+            if not (sample == 1 or sample == 0):
+                if "no_" in sample:
+                    report[diag] = 0
+                else:
+                    if diag == "BreastSide":
+                        if sample == "RIGHT":
+                            report[diag] = 1 
+                        else:
+                            report[diag] = 0
+                    elif not sample == diag:
+                        print sample, diag
+                        raw_input()
+                    report[diag] = 1
+
     jsonData = json.dumps(data)
     print "Len data to dump to JSON", len(jsonData)
     with open(JSONpath, 'wb') as f:
@@ -351,21 +377,24 @@ if __name__ == "__main__":
     else: 
         exportData = p.load(open(outPath, 'rb'))
 
-    labelMaxDXBool = False
+    labelMaxDXBool = True
     if labelMaxDXBool:
         getMaxDX(exportData)
         raw_input("Dump again? Press any key to continue")
         p.dump( exportData, open(outPath, 'wb'))
 
-    buildEpisodesBool = False
+    buildEpisodesBool = True
     if buildEpisodesBool:
         exportData = buildEpisodes(exportData)
         raw_input("Dump again? Press any key to continue")
         p.dump( exportData, open(outPath, 'wb'))
 
     buildLilysDB = False
+    TOTAL_LEN = 0
+    NUM_DOCS  = 0
     if buildLilysDB:
-        lilyDB, othrDB = buildNeedleStartEpDB(exportData)
+        lilyDB, othrDB, TOTAL_LEN, NUM_DOCS = buildNeedleStartEpDB(exportData, TOTAL_LEN, NUM_DOCS)
+        print "Avg len of needle biopsy report", TOTAL_LEN *1. / NUM_DOCS
         print "Num episodes in lilyDB", len(lilyDB)
         print "Num episodes in othrDB", len(othrDB)
         raw_input("Dump Lily's DB? Press any key to continue")

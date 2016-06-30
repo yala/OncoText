@@ -195,6 +195,8 @@ if __name__ == "__main__":
     cleanReports = [ re.sub(r"(----)+", "", d) for d in cleanReports]
     cleanReports = [ re.sub(r"(====)+", "", d) for d in cleanReports]
 
+    print "Avg num words", sum([ len(r.split()) for r in cleanReports])/len(cleanReports)
+
     filteredReport, filteredLabel = filterGold(cleanReports, labels)
 
     cleanReports = filteredReport

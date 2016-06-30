@@ -95,29 +95,29 @@ if __name__ == "__main__":
         print "truePos, falsePos, trueNeg, falseNeg:", truePos, falsePos, trueNeg, falseNeg
         print diag, "percision, recall, f1:", percision, ',', recall, ',', f1
         print diag, "sensitivity, specifcity:", sensitivity, ',', specifcity
-        print "Diag", diag, ", Num Mistakes:", (falsePos + falseNeg), ", error rate", (falsePos + falseNeg)*1./500
+        print "Diag", diag, ", Num Mistakes:", (falsePos + falseNeg), ", error rate", (falsePos + falseNeg)*1./len(gold[diag])
 
-    print "---------------------------"
-    print "Overall"
-    print "Number of gold",  sum(overallGold)
-    print "Number guessed",  sum(overallGuessed)
-    assert len(overallGold) == len(overallGuessed)
+print "---------------------------"
+print "Overall"
+print "Number of gold",  sum(overallGold)
+print "Number guessed",  sum(overallGuessed)
+assert len(overallGold) == len(overallGuessed)
 
-    truePos = sum([overallGold[i] == 1 and overallGuessed[i] == 1 for i in range(len(overallGold))])
-    falsePos = sum([overallGold[i] == 0 and overallGuessed[i] == 1 for i in range(len(overallGold))])
-    trueNeg  = sum([overallGold[i] == 0 and overallGuessed[i] == 0 for i in range(len(overallGold))])
-    falseNeg = sum([overallGold[i] == 1 and overallGuessed[i] == 0 for i in range(len(overallGold))])
+truePos = sum([overallGold[i] == 1 and overallGuessed[i] == 1 for i in range(len(overallGold))])
+falsePos = sum([overallGold[i] == 0 and overallGuessed[i] == 1 for i in range(len(overallGold))])
+trueNeg  = sum([overallGold[i] == 0 and overallGuessed[i] == 0 for i in range(len(overallGold))])
+falseNeg = sum([overallGold[i] == 1 and overallGuessed[i] == 0 for i in range(len(overallGold))])
 
 
-    percision = 1. * truePos / (truePos + falsePos) if (truePos + falsePos) > 0 else defualt
-    recall    =  1. * truePos / (truePos + falseNeg) if (truePos + falseNeg) > 0 else defualt
-    f1        =  2. * (percision * recall)  / (percision + recall) if (percision + recall) >0 else defualt
+percision = 1. * truePos / (truePos + falsePos) if (truePos + falsePos) > 0 else defualt
+recall    =  1. * truePos / (truePos + falseNeg) if (truePos + falseNeg) > 0 else defualt
+f1        =  2. * (percision * recall)  / (percision + recall) if (percision + recall) >0 else defualt
 
-    sensitivity = recall
-    specifcity = 1.* trueNeg / (trueNeg + falsePos) if (trueNeg + falsePos) >0 else defualt
-    print "truePos, falsePos, trueNeg, falseNeg:", truePos, falsePos, trueNeg, falseNeg
-    print "Overall", "percision, recall, f1:", percision, ',', recall, ',', f1
-    print "Overall", "sensitivity, specifcity:", sensitivity, ',', specifcity
-    print "Overall", "Num Mistakes:", (falsePos + falseNeg), ", error rate", (falsePos + falseNeg)*1./(truePos+falsePos+falseNeg+trueNeg)
+sensitivity = recall
+specifcity = 1.* trueNeg / (trueNeg + falsePos) if (trueNeg + falsePos) >0 else defualt
+print "truePos, falsePos, trueNeg, falseNeg:", truePos, falsePos, trueNeg, falseNeg
+print "Overall", "percision, recall, f1:", percision, ',', recall, ',', f1
+print "Overall", "sensitivity, specifcity:", sensitivity, ',', specifcity
+print "Overall", "Num Mistakes:", (falsePos + falseNeg), ", error rate", (falsePos + falseNeg)*1./(truePos+falsePos+falseNeg+trueNeg)
 
-    pickle.dump(mistakeIds, open("mistakes.p", "wb"))
+pickle.dump(mistakeIds, open("mistakes.p", "wb"))
