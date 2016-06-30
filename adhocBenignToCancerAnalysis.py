@@ -1,11 +1,16 @@
 import pickle as p
 from operator import itemgetter
+import datetime
+import random
+
+random.seed(1)
 
 
-dbPath = '../episodicDB.p'
-epsDBPath = '../episodeDbByEp.p'
-mrnDBPath = '../mrnDBPath'
-benignPath = '../benignDBPath'
+dbPath = 'episodicDB.p'
+epsDBPath = 'episodeDbByEp.p'
+mrnDBPath = 'mrnDB.p'
+benignPath = 'benignDB.p'
+reportPairsPath = 'reportPairs.p'
 
 
 typesOfCarcinoma = ["DCIS", "ILC", "IDC", "LCIS", "TubularCancer", \
@@ -41,7 +46,12 @@ def buildDBs(db):
     return eps, mrns
 
 def isBenign(report):
-    cancer = bool( sum( [report[c] == 1 for c in typesOfCarcinoma]))
+    debug = False
+    cancer = bool( sum([report[c] == c  or str(report[c]) == '1'  for c in typesOfCarcinoma]))
+    if debug:
+        print report
+        print cancer
+        raw_input()
     return not cancer
 
 #Count number of patients that start benign and have more that one report in that breast.
@@ -67,6 +77,8 @@ def devsCancer(reports):
         if not isBenign(report):
             return True
     return False
+
+
 def doBasicStats(db):
     
     numReports = 0
@@ -92,9 +104,9 @@ def doBasicStats(db):
         side = db[mrn].keys()[0]
         if devsCancer(db[mrn][side]):
             if patientNum in cancerReportCountHisto:
-                reportNumsByPatient[patientNum] += 1
+                cancerReportCountHisto[patientNum] += 1
             else:
-                reportNumsByPatient[patientNum] = 1
+                cancerReportCountHisto[patientNum] = 1
 
     print  "Number of patients that start benign", len(db)
 
@@ -107,6 +119,89 @@ def doBasicStats(db):
 
     print "num reports histogram for people that dev cancer", cancerReportCountHisto
 
+
+def makeReportPairs(db):
+    pairs = []
+    labelDist = {0:0, 1:0}
+
+    maxTimeGap = 365
+    for mrn in db:
+        for side in db[mrn]:
+            reports = db[mrn][side]
+            for i, report in enumerate(reports):
+                if i == 0:
+                    assert isBenign(report)
+                    continue
+                if isBenign(reports[i-1]):
+                    reportPair = (reports[i-1], report)
+                    staysB = isBenign(report)
+                    label  = 0 if staysB else 1
+                    labelDist[label] +=1
+                    pairs.append( (reportPair, label) )
+    print "label distribution", labelDist, "Percent dev cancer", labelDist[1]*1/len(pairs)
+    print "Num pairs", len(pairs)
+    p.dump(pairs, open(reportPairsPath, 'wb'))
+    return pairs
+
+def buildDataForClassifier(pairs):
+    data = []
+    dev = True
+    for pair, label in pairs:
+        orig = pair[0]
+        text = orig['Preprocessed_Report_Text']
+        data.append( (text, label))
+
+    random.shuffle(data)
+
+    if dev:
+        trainCut = int(len(data) * .7)
+        testCut = int(len(data) * .8)
+        
+    else:
+        trainCut = int(len(data) * .8)
+        testCut  = len(data)
+
+    trainReports = [d[0] for d in data[:trainCut]]
+    trainLabels = [d[1] for d in data[:trainCut]]
+
+    assert len(trainReports) == len(trainLabels)
+
+    testReports = [d[0] for d in data[trainCut:testCut]]
+    testLabels = [d[1] for d in data[trainCut:testCut]]
+
+    assert len(testReports) == len(testLabels)
+
+    print '================================='
+    print "Datset stats"
+    print "Num train", len(trainReports)
+    print "train fraction ones", sum(trainLabels)*1./len(trainReports)
+
+    print "Num test", len(testReports)
+    print "test fraction ones", sum(testLabels)*1./len(testReports)
+
+    writeFiles(trainReports, trainLabels, testReports, testLabels, "boostexer/adhoc_benignStart")
+
+
+def writeFiles(trainReports, trainLabels, testReports, testLabels, stem):
+    with open(stem+'.names','wb') as f:
+        labels = '1, 0.\n'
+        features = "pathReport: text.\n"
+        f.write(labels)
+        f.write(features)
+
+    print "Saved "+ stem+'.names'
+
+    with open(stem+'.data','wb') as f:
+        for r,l in zip(trainReports, trainLabels):
+            f.write(r + ", " + str(l) + ".\n")
+    
+    print "Saved "+ stem+'.data'
+
+    with open(stem+'.test','wb') as f:
+        for r,l in zip(testReports, testLabels):
+            f.write(r + ", " + str(l) + ".\n")
+    
+    print "Saved "+ stem+'.test'
 
 
 if __name__ == "__main__":
@@ -124,12 +219,17 @@ if __name__ == "__main__":
     else:
         seedSet = p.load(open(benignPath, 'rb'))
 
-    basicStatsBool = True
+    basicStatsBool = False
     if basicStatsBool:
         doBasicStats(seedSet)
 
+    makeReportPairsBool = False
+    if makeReportPairsBool:
+        pairs = makeReportPairs(seedSet)
+    else:
+        pairs = p.load(open(reportPairsPath, 'rb'))
 
+    buildDataForClassifierBool = True
+    if buildDataForClassifierBool:
+        buildDataForClassifier(pairs)
 
-
-
-    
