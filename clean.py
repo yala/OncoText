@@ -115,13 +115,13 @@ def stripDates(line):
 
 #Remove names of patients and replace with REMOVED_PATIENT_NAME
 def stripPatientName(line):
-    if "PATIENT:" in line:
-        return re.sub(nameRegex, " REMOVED_PATIENT_NAME ", line)
-    else:
-        return line
-
-    if "Patient Name" in line:
-        return " REMOVED_PATIENT_NAME "
+    result = line
+    if "PATIENT:" in result:
+        result = re.sub(nameRegex, " REMOVED_PATIENT_NAME ", result)
+    if "Patient Name" in result:
+        result = re.sub(nameRegex2, " REMOVED_PATIENT_NAME ", result)
+    
+    return result
 
 #Remove all occurances of accession number and repalce with "REMOVED_ACCESSION_ID"
 def stripAccesionNumber(line):
@@ -138,14 +138,15 @@ cmMeasurementRegex = r"[ ]+cm[ .,;:?\n]?"
 accesionNumberRegex = r"[A-Z]+[0-9]+[-]?[A-Z]*[0-9]*[-]?[A-Z]*[0-9]*"
 caseNumberRegex = r"\d{3}\d+"
 nameRegex = r"[ ]*PATIENT:[ ]+[\w]+ \w*"
-nameRegex2 = r"[ ]*Patient Name:[ ]+[\w]+ \w*"
+nameRegex2 = r"[ ]*Patient Name:[ ]*[\S]+[ ]+[\S]+"
 
 testString = "Accession Number: S0430461B                   Report Status Final\n"+\
             "Type Surginal 03\nPathology Report  S04-30465-B BREAST CORE NEEDLE\n"+\
             "Accesioned On: 05/02003\nRICHARDSON, ANDREA, K, M,D~PH.D\nPATIENT: Adam Yala\n"+\
             "Something on June first/second/third yaknow 02/25/1995 Feb, 02, 2016, 1992/02/12, 1992-02-12, 0-2-1992\n"+\
             "Case NUMBER: 425752 with report id being S04-304-61B 0.12 cm" +\
-            "PATIENT: Adam Yala other content 32cm 23 mm haha 12 mm 15 in 1.2 mm 02/1995"
+            "PATIENT: Adam Yala other content 32cm 23 mm haha 12 mm 15 in 1.2 mm 02/1995" +\
+            "Patient Name: Adam, yala roye jorce, gsdf sdfhsd fsdfh"
 
 goldString = "Accession Number: REMOVED_ACCESSION_ID                   Report Status Final\n"+\
             "Type Surginal 03\nPathology Report  REMOVED_ACCESSION_ID BREAST CORE NEEDLE\n"+\
@@ -153,8 +154,8 @@ goldString = "Accession Number: REMOVED_ACCESSION_ID                   Report St
             "Something on REMOVED_MONTH first/second/third yaknow REMOVED_DATE REMOVED_MONTH, 02, 2016, REMOVED_DATE, REMOVED_DATE, REMOVED_DATE 0.12 cm" 
 
 
-test = False
-readXmlFile = True
+test = True
+readXmlFile = False
 deanon = True
 dump = True
 
