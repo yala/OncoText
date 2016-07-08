@@ -120,6 +120,9 @@ def stripPatientName(line):
     else:
         return line
 
+    if "Patient Name" in line:
+        return " REMOVED_PATIENT_NAME "
+
 #Remove all occurances of accession number and repalce with "REMOVED_ACCESSION_ID"
 def stripAccesionNumber(line):
     cleanedLine = re.sub(accesionNumberRegex, ' REMOVED_ACCESSION_ID ', line)
@@ -135,6 +138,7 @@ cmMeasurementRegex = r"[ ]+cm[ .,;:?\n]?"
 accesionNumberRegex = r"[A-Z]+[0-9]+[-]?[A-Z]*[0-9]*[-]?[A-Z]*[0-9]*"
 caseNumberRegex = r"\d{3}\d+"
 nameRegex = r"[ ]*PATIENT:[ ]+[\w]+ \w*"
+nameRegex2 = r"[ ]*Patient Name:[ ]+[\w]+ \w*"
 
 testString = "Accession Number: S0430461B                   Report Status Final\n"+\
             "Type Surginal 03\nPathology Report  S04-30465-B BREAST CORE NEEDLE\n"+\

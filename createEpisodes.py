@@ -401,7 +401,7 @@ if __name__ == "__main__":
         p.dump(lilyDB, open(lilyYedidDBPath, 'wb'))
         p.dump(othrDB, open(allOtherReportsPath, 'wb'))
 
-    portToJSONBool = True
+    portToJSONBool = False
     if portToJSONBool:
         portToJSON(exportData)
 
