@@ -154,8 +154,8 @@ goldString = "Accession Number: REMOVED_ACCESSION_ID                   Report St
             "Something on REMOVED_MONTH first/second/third yaknow REMOVED_DATE REMOVED_MONTH, 02, 2016, REMOVED_DATE, REMOVED_DATE, REMOVED_DATE 0.12 cm" 
 
 
-test = True
-readXmlFile = False
+test = False
+readXmlFile = True
 deanon = True
 dump = True
 

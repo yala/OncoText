@@ -2,6 +2,7 @@ import pickle as p
 from operator import itemgetter
 import datetime
 import random
+from scipy.stats import pearsonr
 
 random.seed(1)
 
@@ -187,6 +188,8 @@ def buildDataForClassifier(pairs, textBased):
 
     writeFiles(trainReports, trainLabels, testReports, testLabels, "boostexer/adhoc_benignStart", textBased)
 
+    return data
+
 
 def writeFiles(trainReports, trainLabels, testReports, testLabels, stem, textBased):
     with open(stem+'.names','wb') as f:
@@ -231,10 +234,28 @@ def writeFiles(trainReports, trainLabels, testReports, testLabels, stem, textBas
     
     print "Saved "+ stem+'.test'
 
+def runPearson(data):
+    X = {}
+    Y = []
+    for features, label in data:
+        Y.append(label)
+        for name in typesOfAtypia:
+            feat = 1 if features[name] == name or str(features[name]) == "1" else 0
+            if name in X:
+                X[name].append(feat)
+            else:
+                X[name] = [feat]
+
+    for name in X:
+        print "Preason r for ", name
+        assert len(X[name]) == len(Y)
+        r, p = pearsonr(X[name], Y)
+        print "coef", r, "p", p
+
 
 if __name__ == "__main__":
 
-    getEpisodesBool = False
+    getEpisodesBool = True
     getSeedSetBool = False
 
     if getEpisodesBool:
@@ -257,8 +278,9 @@ if __name__ == "__main__":
     else:
         pairs = p.load(open(reportPairsPath, 'rb'))
 
-    buildDataForClassifierBool = True
+    buildDataForClassifierBool = False
     textBased = False
     if buildDataForClassifierBool:
-        buildDataForClassifier(pairs, textBased)
+        data = buildDataForClassifier(pairs, textBased)
+        runPearson(data)
 

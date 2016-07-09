@@ -33,6 +33,7 @@ for mrn in db:
     
     assert(len(sortedReports) > 0)
     firstRep =  sortedReports[0]
+    inst = firstRep['Institution']
     passes = filt(firstRep)
 
     # print "firstRep", firstRep
@@ -42,7 +43,7 @@ for mrn in db:
     # raw_input()
 
     if filt(firstRep):
-        results.append(mrn)
+        results.append( (mrn, inst) ) 
 
 print "Number of records", len(results)
 
