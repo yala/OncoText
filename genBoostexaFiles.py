@@ -3,7 +3,7 @@ import re
 import random
 
 random.seed(1)
-dataPath = "deidentifiedPathReports.p"
+dataPath = "deiden_AllRepsRound2.p"
 goldDataPath = 'goldPathReports.p'
 trainOutPath = "boostexer/pathology.data"
 testOutPath = "boostexer/pathology.test"
@@ -147,6 +147,7 @@ def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem):
 
                 assert not "\n" in report
                 f.write(report + ", " + label + '.\n')
+
         print "Saved", trainStem+"_"+diag+"."+trainSuf
 
     
@@ -171,7 +172,7 @@ def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem):
 
 if __name__ == "__main__":
 
-    goldData = getGoldTags()
+    goldData = getGoldTags(True)
 
     labels = []
     debug = True
@@ -181,6 +182,10 @@ if __name__ == "__main__":
         for diag in diagnoses:
             if diag == u'BreastSide' and u'BreastSide' in sample:
                 diags.append(sample[diag])
+                if not sample[diag]  in ['RIGHT', 'LEFT']:
+                    print sample[diag]
+                    print sample
+                    raw_input()
             else:
                 if diag in sample and sample[diag] == '1':
                     diags.append(diag)
