@@ -52,7 +52,6 @@ def binarizeFilesForClassification(write = True):
     trainReports, trainLabels = getLabelsAndReports(goldData, export)
     restReports,  restLabels = getLabelsAndReports(remainData, export)
 
-    assert len(trainReports) == len(trainReports)
 
     stem = "boostexer/pathology_all"
 
@@ -95,7 +94,6 @@ def buildExport(exportData, data, startIdx):
             if col == 'Report_Date_TimePlusX':
                 date = colVals[j]
                 yyyymmdd = date.split('T')[0]
-                year, mo, day = [int(d) for d in yyyymmdd.split('-')]
                 date = datetime.datetime.strptime(yyyymmdd, '%Y-%m-%d')
                 record[col] = date
             else:
@@ -128,9 +126,9 @@ def getLabelsAndReports(data, export = False):
                     diags.append("LEFT")
             else:
                 if diag in sample and sample[diag] == '1':
-                    diags.append(diag)
+                    diags.append(1)
                 else:
-                    diags.append('no_'+diag)
+                    diags.append(0)
 
         if export:
             for meta in metaData:
@@ -186,7 +184,8 @@ def parseResultsFiles(debug = False):
     return results
 
 def getMaxDX(data):
-    for labels in data:
+    for key in data:
+        labels = data[key]
         if labels['Medullary'] == 1:
             labels['MaxDX'] = 'Medullary'
         elif labels['ILC'] == 1:
@@ -217,6 +216,7 @@ def getMaxDX(data):
             labels['MaxDX'] = 'Phylodes'
         else:
             labels['MaxDX'] = 'None'
+        data[key] = labels
 
     return False
 
@@ -253,7 +253,6 @@ def buildEpisodes(data):
         else:
             mrns[data[i]['MRNPlusX']][data[i]['BreastSide']].append(data[i])
 
-    assert len(mrns) == 37729
     
     episodes = []
     episodeId = -1    
@@ -363,27 +362,28 @@ def portToJSON(data):
 
 if __name__ == "__main__":
 
-    train = True
+    train = False
     if train:
         binarizeFilesForClassification()
 
 
-    buildExportBool = False
+    buildExportBool = True
     if buildExportBool:
         print "Calling export"
         exportData = binarizeFilesForClassification(False)
-        print "dumping"
+        print "dumping to ", outPath
         p.dump( exportData, open(outPath, 'wb'))
+
     else: 
         exportData = p.load(open(outPath, 'rb'))
 
-    labelMaxDXBool = False
+    labelMaxDXBool = True
     if labelMaxDXBool:
         getMaxDX(exportData)
         raw_input("Dump again? Press any key to continue")
         p.dump( exportData, open(outPath, 'wb'))
 
-    buildEpisodesBool = False
+    buildEpisodesBool = True
     if buildEpisodesBool:
         exportData = buildEpisodes(exportData)
         raw_input("Dump again? Press any key to continue")
@@ -401,7 +401,7 @@ if __name__ == "__main__":
         p.dump(lilyDB, open(lilyYedidDBPath, 'wb'))
         p.dump(othrDB, open(allOtherReportsPath, 'wb'))
 
-    portToJSONBool = False
+    portToJSONBool = True
     if portToJSONBool:
         portToJSON(exportData)
 
