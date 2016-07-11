@@ -10,7 +10,7 @@ from operator import itemgetter
 import json
 
 random.seed(1)
-dataPath = "deidentifiedPathReports.p"
+dataPath = "deiden_AllRepsRound2.p"
 outPath = "episodicDB.p"
 goldDataPath = 'goldPathReports.p'
 lilyYedidDBPath = "EpisodesThatStartWithNeedleBiopsyAll2+Eps.p"
@@ -363,7 +363,7 @@ def portToJSON(data):
 
 if __name__ == "__main__":
 
-    train = False
+    train = True
     if train:
         binarizeFilesForClassification()
 
@@ -377,13 +377,13 @@ if __name__ == "__main__":
     else: 
         exportData = p.load(open(outPath, 'rb'))
 
-    labelMaxDXBool = True
+    labelMaxDXBool = False
     if labelMaxDXBool:
         getMaxDX(exportData)
         raw_input("Dump again? Press any key to continue")
         p.dump( exportData, open(outPath, 'wb'))
 
-    buildEpisodesBool = True
+    buildEpisodesBool = False
     if buildEpisodesBool:
         exportData = buildEpisodes(exportData)
         raw_input("Dump again? Press any key to continue")
