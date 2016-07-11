@@ -14,7 +14,7 @@ diagnoses = [ u'BreastSide', u'DCIS', u'ILC', u'Phylodes', u'CancerSuspicious', 
  u'CancerNOS', u'TubularCancer', u'IDC', u'LCIS', 'InsituNOS', \
  u'ADH', u'CancerInvInsituNOS',\
  u'ClingingCarcinoma', u'InvasiveSuspicious', u'LobularNeoplasia', u'FlatEpithelial', 
- u'BluntAdenosis', u'Medullary', u'ALH', u'ADH_DCIS', 'Borderline']
+ u'BluntAdenosis', u'Medullary', u'ALH', u'ADH_DCIS', u'Borderline']
 
 def writeNameFiles(stem):
     for diag in diagnoses:
