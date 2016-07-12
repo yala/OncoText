@@ -227,12 +227,25 @@ if __name__ == "__main__":
         testReports = [cleanReports[c] for c in idx[-500:]]
         testLabels = [labels[d] for d in idx[-500:]]
 
+    learningCurve = True
+    if learningCurve:
+        for s in [100, 500, 1000, 2000, 4000, 5000, 5500]:
+            trainReports= trainReports[:s]
+            trainLabels= trainLabels[:s]
+            print "Trainining set size", s
+            printLabelDist(trainLabels, trainReports, testLabels, testReports)
+            genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, "boostexer/learningCurve/pathology_"+str(s))    
+
     verbose = True
 
     if verbose:
         printLabelDist(trainLabels, trainReports, testLabels, testReports)
 
-    debugMistakes = True
+    write = False
+    if write:
+        genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, "boostexer/pathology")
+
+    debugMistakes = False
 
     if debugMistakes:
         print "Debug mistakes"
@@ -240,7 +253,3 @@ if __name__ == "__main__":
                         'FlatEpithelial':[166, 215, 343, 442]}#,\
                         #'ADH_DCIS':[143, 249, 255, 310, 365, 422, 472] }
         interpretMistakes(mistakesIds, testReports, testLabels)
-
-    write = False
-    if write:
-        genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, "boostexer/pathology")
