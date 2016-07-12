@@ -232,15 +232,15 @@ if __name__ == "__main__":
     if verbose:
         printLabelDist(trainLabels, trainReports, testLabels, testReports)
 
-    debugMistakes = False
+    debugMistakes = True
 
     if debugMistakes:
         print "Debug mistakes"
-        mistakesIds = { 'DCIS':[19, 36, 41, 166, 219, 365, 434],\
-                        'FlatEpithelial':[14, 188, 394, 168],\
-                        'ADH_DCIS':[143, 249, 255, 310, 365, 422, 472] }
+        mistakesIds = { #'DCIS':[19, 36, 41, 166, 219, 365, 434],\
+                        'FlatEpithelial':[166, 215, 343, 442]}#,\
+                        #'ADH_DCIS':[143, 249, 255, 310, 365, 422, 472] }
         interpretMistakes(mistakesIds, testReports, testLabels)
 
-    write = True
+    write = False
     if write:
         genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, "boostexer/pathology")

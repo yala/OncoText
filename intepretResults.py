@@ -35,7 +35,7 @@ if __name__ == "__main__":
         samples = diagSamples[diag]
         for row, sample in enumerate(samples):
 
-            skip = True
+            skip = False
 
             if skip and row in skipList:
                 continue
@@ -50,15 +50,17 @@ if __name__ == "__main__":
             goldsVec = goldsAndPredictions[:len(goldsAndPredictions)/2]
             guessedVec = [ 1 if p >= 0 else 0 for p in goldsAndPredictions[len(goldsAndPredictions)/2:]]
             assert len(goldsVec) == len(guessedVec)
-            if not goldsVec == guessedVec and (diag == "DCIS" or diag == "FlatEpithelial"\
-                or diag == "BluntAdenosis" or diag == "ADH_DCIS"):
+            if not goldsVec == guessedVec and (diag == "FlatEpithelial"):
+            #     or diag == "BluntAdenosis" or diag == "ADH_DCIS"):
                 print diag, ",",row
-                numMistakes += 1
+            #     numMistakes += 1
             
-            if diag in yalaAnnotations and row in yalaAnnotations[diag]:
-                gold[diag].append(1)
-            else:
-                gold[diag].append(goldsVec[0])
+            # if diag in yalaAnnotations and row in yalaAnnotations[diag]:
+            #     gold[diag].append(1)
+            # else:
+            #     gold[diag].append(goldsVec[0])
+
+            gold[diag].append(goldsVec[0])
 
             prediction = 1 if guessedVec[0] > 0 else 0
             guessed[diag].append(prediction)

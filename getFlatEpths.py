@@ -8,7 +8,7 @@ diagnoses = [ u'DCIS', u'ILC', u'Phylodes', u'CancerSuspicious', \
  u'ClingingCarcinoma', u'InvasiveSuspicious', u'LobularNeoplasia', 
  u'Medullary', u'ALH', u'ADH_DCIS', 'Borderline']
 
-dataPath = "mrnDB.p"
+dataPath = "reportDB.p"
 exportPath = "flatAtypExports.csv"
 
 db = p.load( open (dataPath, 'rb'))
@@ -17,23 +17,34 @@ def filt(report):
     validKeys = ['FlatEpithelial', 'Phylodes']
     for diag in diagnoses:
         if not diag in validKeys:
-            if str(report[diag]) == '1' or (diag in str(report[diag]) and not 'no_' in str(report[diag])) :
+            assert report[diag] == 1 or report[diag] == 0
+            if report[diag] == 1:
                 return False
 
-    return str(report['FlatEpithelial']) == '1' or ('FlatEpithelial' in str(report['FlatEpithelial']) and not 'no_' in str(report['FlatEpithelial']))
+    return report['FlatEpithelial'] == 1 
 
 results = []
 
-for mrn in db:
-    sides = db[mrn]
-    reports = []
-    for key in sides:
-        reports.extend(sides[key])
+mrns = {}
+
+for report in db:
+    mrn = report['MRNPlusX']
+    if mrn in mrns:
+        mrns[mrn].append(report)
+    else:
+        mrns[mrn] = [report]
+
+for mrn in mrns:
+    reports = mrns[mrn]
+    
     sortedReports = sorted( reports, key=itemgetter('Report_Date_TimePlusX') )
     
     assert(len(sortedReports) > 0)
     firstRep =  sortedReports[0]
     inst = firstRep['Institution']
+    time = firstRep['Report_Date_TimePlusX'].isoformat().split("T")[0]
+
+
     passes = filt(firstRep)
 
     # print "firstRep", firstRep
@@ -43,7 +54,9 @@ for mrn in db:
     # raw_input()
 
     if filt(firstRep):
-        results.append( (mrn, inst) ) 
+        results.append( (mrn, inst, time) ) 
+
+    assert len(set([r[0] for r in results])) == len(results)
 
 print "Number of records", len(results)
 

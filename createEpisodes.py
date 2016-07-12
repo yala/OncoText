@@ -11,11 +11,11 @@ import json
 
 random.seed(1)
 dataPath = "deiden_AllRepsRound2.p"
-outPath = "episodicDB.p"
+outPath = "reportDB.p"
+episodePath = "episodeDB.p"
 goldDataPath = 'goldPathReports.p'
-lilyYedidDBPath = "EpisodesThatStartWithNeedleBiopsyAll2+Eps.p"
-allOtherReportsPath = "OtherEpisodesForLM.p"
-JSONpath = "episodicDB.json"
+JSONReportPath = "reportDB.json"
+JSONEpisodePath = "episodeDB.json"
 
 metaData = ['Report_Date_TimePlusX', 'MRNPlusX', 'Correct', 'Institution']
 
@@ -183,42 +183,45 @@ def parseResultsFiles(debug = False):
         print 'len(results)[0]', 'len(diagnoses):', len(results[0]), len(diagnoses)
     return results
 
+#Iterate though reports in data-dict and get maxDx
 def getMaxDX(data):
     for key in data:
-        labels = data[key]
-        if labels['Medullary'] == 1:
-            labels['MaxDX'] = 'Medullary'
-        elif labels['ILC'] == 1:
-            labels['MaxDX'] = 'ILC'
-        elif labels['IDC'] == 1:
-            labels['MaxDX'] = 'IDC'
-        elif labels['TubularCancer'] == 1:
-            labels['MaxDX'] = 'TubularCancer'
-        elif labels['CancerNOS'] == 1:
-            labels['MaxDX'] = 'CancerNOS'
-        elif labels['DCIS'] == 1:
-            labels['MaxDX'] = 'DCIS'
-        elif labels['CancerInvInsituNOS'] == 1:
-            labels['MaxDX'] = 'CancerInvInsituNOS'
-        elif labels['Borderline'] == 1:
-            labels['MaxDX'] = 'Borderline'
-        elif labels['InsituNOS'] == 1:
-            labels['MaxDX'] = 'InsituNOS'
-        elif labels['LCIS'] == 1:
-            labels['MaxDX'] = 'LCIS'
-        elif labels['ALH'] == 1:
-            labels['MaxDX'] = 'ALH'
-        elif labels['LobularNeoplasia'] == 1:
-            labels['MaxDX'] = 'LobularNeoplasia'
-        elif labels['ADH'] == 1:
-            labels['MaxDX'] = 'ADH'
-        elif labels['Phylodes'] == 1:
-            labels['MaxDX'] = 'Phylodes'
-        else:
-            labels['MaxDX'] = 'None'
-        data[key] = labels
-
+        report = data[key]
+        report['MaxDX'] = getMaxDXSingleReport(labels)
+        data[key] = report
     return False
+
+def getMaxDXSingleReport(report):
+    if report['Medullary'] == 1:
+        return 'Medullary'
+    elif report['ILC'] == 1:
+        return  'ILC'
+    elif report['IDC'] == 1:
+        return  'IDC'
+    elif report['TubularCancer'] == 1:
+        return  'TubularCancer'
+    elif report['CancerNOS'] == 1:
+        return  'CancerNOS'
+    elif report['DCIS'] == 1:
+        return  'DCIS'
+    elif report['CancerInvInsituNOS'] == 1:
+        return  'CancerInvInsituNOS'
+    elif report['Borderline'] == 1:
+        return  'Borderline'
+    elif report['InsituNOS'] == 1:
+        return  'InsituNOS'
+    elif report['LCIS'] == 1:
+        return  'LCIS'
+    elif report['ALH'] == 1:
+        return  'ALH'
+    elif report['LobularNeoplasia'] == 1:
+        return  'LobularNeoplasia'
+    elif report['ADH'] == 1:
+        return  'ADH'
+    elif report['Phylodes'] == 1:
+        return  'Phylodes'
+    else:
+        return 'None'
 
 
 def multikeysort(items, debug = False):
@@ -239,7 +242,7 @@ def multikeysort(items, debug = False):
 
     return sortedItems
 
-def buildEpisodes(data):
+def buildEpisodes(data, debug = True):
 
     mrns = {}
     for i in range(len(data)):
@@ -253,28 +256,71 @@ def buildEpisodes(data):
         else:
             mrns[data[i]['MRNPlusX']][data[i]['BreastSide']].append(data[i])
 
-    
-    episodes = []
-    episodeId = -1    
+    #Structure : List of Reports with Episode IDs
+    reportsDB = []
+    episodesAggregator = {} # Use to construct episodes DB
     for mrn in mrns:
         patient = mrns[mrn]
+        episodeId = -1    
         for side in patient:
             patient[side] = sorted( patient[side], key=itemgetter('Report_Date_TimePlusX') )
             for idx, rep in enumerate(patient[side]):
                 if idx == 0:
                     episodeId += 1
-                    rep['EpisodeID'] = 'E'+str(episodeId)
+                    rep['EpisodeID'] = episodeId
                 else:
                     prevVisit = patient[side][idx - 1]
                     if rep['Report_Date_TimePlusX'] - prevVisit['Report_Date_TimePlusX'] < SIX_MONTHS:
-                        rep['EpisodeID'] = str(prevVisit['EpisodeID'])
+                        rep['EpisodeID'] = prevVisit['EpisodeID']
                     else:
                         episodeId += 1
-                        rep['EpisodeID'] = 'E'+str(episodeId)
+                        rep['EpisodeID'] = episodeId
+                aggregatorKey = mrn+"ep"+str(episodeId)
+                if aggregatorKey in episodesAggregator:
+                    episodesAggregator[aggregatorKey].append(rep)
+                else:
+                    episodesAggregator[aggregatorKey] = [rep]
 
-                episodes.append(rep)
+                patient[side][idx] = rep
 
-    return episodes
+                reportsDB.append(rep)
+
+
+    #Structure: List of Episodes where-all constituent reports are combined or-wise
+    episodeDB = []
+
+    #TODO: Combine field orwise
+    #TODO: Add field for end date
+    for aggKey in episodesAggregator:
+        episode = {}
+        reports = episodesAggregator[aggKey]
+        reports = sorted( reports, key=itemgetter('Report_Date_TimePlusX'))
+        endTime = reports[-1]['Report_Date_TimePlusX']
+
+        episode['EndEpisode_Date_TimePlusX'] = endTime
+        episode['Report_Date_TimePlusX'] = reports[0]['Report_Date_TimePlusX']
+        episode['EpisodeID'] = reports[0]['EpisodeID']
+
+        assert reports[0]['EpisodeID'] == reports[-1]['EpisodeID']
+        for label in metaData:
+            if label == 'Report_Date_TimePlusX':
+                continue
+            episode[label] = reports[0][label]
+            assert reports[0][label] == reports[-1][label]
+
+        for diag in diagnoses:
+            orResults = 0
+            for rep in reports:
+                orResults = orResults or rep[diag]
+            episode[diag] = orResults
+
+        episode['MaxDX'] = getMaxDXSingleReport(episode)
+        episode['Num_Reports'] = len(reports)
+        assert set(episode.keys()) == set(diagnoses + metaData + ['MaxDX', 'EndEpisode_Date_TimePlusX', 'Num_Reports', 'EpisodeID'])
+
+        episodeDB.append(episode)
+
+    return reportsDB, episodeDB
 
 def isNeedleBiop(report, debug = False):
     ln = 0
@@ -335,9 +381,13 @@ def buildNeedleStartEpDB(data, TOTAL_LEN, NUM_DOCS):
 
     return resDB, othrDB, TOTAL_LEN, NUM_DOCS
 
-def portToJSON(data):
+def portToJSON(data, path):
     for report in data:    
         report['Report_Date_TimePlusX'] = report['Report_Date_TimePlusX'].isoformat()
+
+        if 'EndEpisode_Date_TimePlusX' in report:
+            report['EndEpisode_Date_TimePlusX'] = report['EndEpisode_Date_TimePlusX'].isoformat()
+
 
         for diag in diagnoses:
             sample = report[diag]
@@ -357,7 +407,7 @@ def portToJSON(data):
 
     jsonData = json.dumps(data)
     print "Len data to dump to JSON", len(jsonData)
-    with open(JSONpath, 'wb') as f:
+    with open(path, 'wb') as f:
         f.write(jsonData)
 
 if __name__ == "__main__":
@@ -367,43 +417,36 @@ if __name__ == "__main__":
         binarizeFilesForClassification()
 
 
-    buildExportBool = True
+    buildExportBool = False
     if buildExportBool:
         print "Calling export"
-        exportData = binarizeFilesForClassification(False)
+        reportDB = binarizeFilesForClassification(False)
         print "dumping to ", outPath
-        p.dump( exportData, open(outPath, 'wb'))
+        p.dump( reportDB, open(outPath, 'wb'))
 
     else: 
-        exportData = p.load(open(outPath, 'rb'))
+        reportDB = p.load(open(outPath, 'rb'))
 
-    labelMaxDXBool = True
+    labelMaxDXBool = False
     if labelMaxDXBool:
-        getMaxDX(exportData)
+        getMaxDX(reportDB)
         raw_input("Dump again? Press any key to continue")
-        p.dump( exportData, open(outPath, 'wb'))
+        p.dump( reportDB, open(outPath, 'wb'))
 
     buildEpisodesBool = True
     if buildEpisodesBool:
-        exportData = buildEpisodes(exportData)
+        reportDB, episodeDB = buildEpisodes(reportDB)
         raw_input("Dump again? Press any key to continue")
-        p.dump( exportData, open(outPath, 'wb'))
-
-    buildLilysDB = False
-    TOTAL_LEN = 0
-    NUM_DOCS  = 0
-    if buildLilysDB:
-        lilyDB, othrDB, TOTAL_LEN, NUM_DOCS = buildNeedleStartEpDB(exportData, TOTAL_LEN, NUM_DOCS)
-        print "Avg len of needle biopsy report", TOTAL_LEN *1. / NUM_DOCS
-        print "Num episodes in lilyDB", len(lilyDB)
-        print "Num episodes in othrDB", len(othrDB)
-        raw_input("Dump Lily's DB? Press any key to continue")
-        p.dump(lilyDB, open(lilyYedidDBPath, 'wb'))
-        p.dump(othrDB, open(allOtherReportsPath, 'wb'))
+        p.dump( reportDB, open(outPath, 'wb'))
+        p.dump( episodeDB, open(episodePath, 'wb'))
+    else:
+        reportDB = p.load( open(outPath, 'rb'))
+        episodeDB = p.load( open(episodePath, 'rb'))
 
     portToJSONBool = True
     if portToJSONBool:
-        portToJSON(exportData)
+        portToJSON(reportDB, JSONReportPath)
+        portToJSON(episodeDB, JSONEpisodePath)
 
 
 
