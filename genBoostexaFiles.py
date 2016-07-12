@@ -230,11 +230,11 @@ if __name__ == "__main__":
     learningCurve = True
     if learningCurve:
         for s in [100, 500, 1000, 2000, 4000, 5000, 5500]:
-            trainReports= trainReports[:s]
-            trainLabels= trainLabels[:s]
+            truncTrainReport= trainReports[:s]
+            truncTrainLabels= trainLabels[:s]
             print "Trainining set size", s
-            printLabelDist(trainLabels, trainReports, testLabels, testReports)
-            genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, "boostexer/learningCurve/pathology_"+str(s))    
+            printLabelDist(truncTrainLabels, truncTrainReport, testLabels, testReports)
+            genTrainTestFiles(truncTrainReport, truncTrainLabels, testReports, testLabels, "boostexer/learningCurve/pathology_"+str(s))    
 
     verbose = True
 
