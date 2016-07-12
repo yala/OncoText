@@ -229,7 +229,7 @@ if __name__ == "__main__":
 
     learningCurve = True
     if learningCurve:
-        for s in [100, 500, 1000, 2000, 4000, 5000, 5500]:
+        for s in [10, 50, 100, 500, 1000, 2000, 4000, 5000, 5500]:
             truncTrainReport= trainReports[:s]
             truncTrainLabels= trainLabels[:s]
             print "Trainining set size", s

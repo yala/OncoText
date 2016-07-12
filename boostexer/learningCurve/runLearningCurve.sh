@@ -1,6 +1,6 @@
 #!/bin/bash
 pathTypes=(Borderline BreastSide DCIS ILC Phylodes CancerSuspicious CancerNOS TubularCancer IDC LCIS InsituNOS ADH CancerInvInsituNOS ClingingCarcinoma InvasiveSuspicious LobularNeoplasia FlatEpithelial BluntAdenosis Medullary ALH ADH_DCIS)
-size=(100 500 1000 2000 4000 5000 5500)
+size=(10 50 100 500 1000 2000 4000 5000 5500)
 stem="pathology_"
 delim="_"
 outStem="../../learningCurveResults/class_results_"

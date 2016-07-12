@@ -1,5 +1,5 @@
 #!/bin/bash
-size=(100 500 1000 2000 4000 5000 5500)
+size=(10 50 100 500 1000 2000 4000 5000 5500)
 stem="learningCurveResults/class_results_"
 delim="_"
 for num in "${size[@]}"; do
