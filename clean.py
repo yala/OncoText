@@ -127,6 +127,8 @@ def stripPatientName(line):
 def stripAccesionNumber(line):
     cleanedLine = re.sub(accesionNumberRegex, ' REMOVED_ACCESSION_ID ', line)
     cleanedLine = re.sub(caseNumberRegex, " REMOVED_CASE_ID ", cleanedLine)
+    cleanedLine = re.sub(nameRegex3, "REMOVE_PATIENT_NAME", cleanedLine)    
+    cleanedLine = re.sub(mrnRegex, "REMOVE_MRN", cleanedLine)    
 
     return cleanedLine
 
@@ -136,9 +138,12 @@ dateRegex = r"[ ]+\d+[- /.]+\d+[- /.]?\d*[ ,.;:?\n]"
 mmMeasurementRegex = r"[ ]+mm[ .,;:?\n]?"
 cmMeasurementRegex = r"[ ]+cm[ .,;:?\n]?"
 accesionNumberRegex = r"[A-Z]+[0-9]+[-]?[A-Z]*[0-9]*[-]?[A-Z]*[0-9]*"
-caseNumberRegex = r"\d{3}\d+"
+caseNumberRegex = r"\d{2}\d+"
 nameRegex = r"[ ]*PATIENT:[ ]+[\w]+ \w*"
 nameRegex2 = r"[ ]*Patient Name:[ ]*[\S]+[ ]+[\S]+"
+nameRegex3 = r"labeled \w+ \w+"
+mrnRegex = r"#\d+-\d+-\d+"
+
 
 testString = "Accession Number: S0430461B                   Report Status Final\n"+\
             "Type Surginal 03\nPathology Report  S04-30465-B BREAST CORE NEEDLE\n"+\
