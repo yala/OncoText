@@ -10,7 +10,7 @@ from operator import itemgetter
 import json
 
 random.seed(1)
-dataPath = "deiden_AllRepsRound2.p"
+dataPath = "rawPathReports7_2016.p"
 outPath = "reportDB.p"
 episodePath = "episodeDB.p"
 goldDataPath = 'goldPathReports.p'
@@ -28,23 +28,7 @@ cols = diagnoses + metaData + ['Report_Text', "Preprocessed_Report_Text"]
 # Set write to false to collace files for export
 def binarizeFilesForClassification(write = True):
     allData = p.load(open(dataPath, 'rb'))
-    goldBreastData = p.load(open(goldDataPath, 'rb'))
     goldData = [d for d in allData if 'Correct' in d]
-
-    for i in range(len(goldData)):
-        if 'BreastSide' in goldBreastData[i]:
-            goldData[i]['BreastSide'] = goldBreastData[i]['BreastSide']
-
-        for diag in diagnoses:
-            sample1 = goldData[i]
-            sample2 = goldBreastData[i]
-
-            if diag in sample1:
-                assert diag in sample2
-                assert sample2[diag] == sample1[diag]
-            else:
-                assert diag not in sample2
-
 
     remainData = [d for d in allData if not 'Correct' in d]
     
@@ -242,7 +226,7 @@ def multikeysort(items, debug = False):
 
     return sortedItems
 
-def buildEpisodes(data, debug = True):
+def buildEpisodes(data, debug = False):
 
     mrns = {}
     for i in range(len(data)):
@@ -265,6 +249,9 @@ def buildEpisodes(data, debug = True):
         for side in patient:
             patient[side] = sorted( patient[side], key=itemgetter('Report_Date_TimePlusX') )
             for idx, rep in enumerate(patient[side]):
+                #Correct labeling of Correct Flag
+                rep['Correct'] = 1 if rep['Correct'] == 'Y' else 0
+
                 if idx == 0:
                     episodeId += 1
                     rep['EpisodeID'] = episodeId
@@ -275,6 +262,7 @@ def buildEpisodes(data, debug = True):
                     else:
                         episodeId += 1
                         rep['EpisodeID'] = episodeId
+
                 aggregatorKey = mrn+"ep"+str(episodeId)
                 if aggregatorKey in episodesAggregator:
                     episodesAggregator[aggregatorKey].append(rep)
@@ -412,7 +400,7 @@ def portToJSON(data, path):
 
 if __name__ == "__main__":
 
-    train = False
+    train = True
     if train:
         binarizeFilesForClassification()
 
@@ -433,7 +421,7 @@ if __name__ == "__main__":
         raw_input("Dump again? Press any key to continue")
         p.dump( reportDB, open(outPath, 'wb'))
 
-    buildEpisodesBool = True
+    buildEpisodesBool = False
     if buildEpisodesBool:
         reportDB, episodeDB = buildEpisodes(reportDB)
         raw_input("Dump again? Press any key to continue")
@@ -443,7 +431,7 @@ if __name__ == "__main__":
         reportDB = p.load( open(outPath, 'rb'))
         episodeDB = p.load( open(episodePath, 'rb'))
 
-    portToJSONBool = True
+    portToJSONBool = False
     if portToJSONBool:
         portToJSON(reportDB, JSONReportPath)
         portToJSON(episodeDB, JSONEpisodePath)

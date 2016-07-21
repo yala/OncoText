@@ -30,13 +30,16 @@ def writeNameFiles(stem):
 
 def processLabels(labels):
     debug = False
-    result =  [lab for lab in labels if not "no_" in lab]
-    if len(result) == 0:
-        result = ['no']
 
     if debug:
         print "--------Process labels-----------"
         print labels
+    whitelist = ["RIGHT", "LEFT"]
+    result =  [lab if lab in whitelist else diagnoses[indx] for indx, lab in enumerate(labels) if lab == 1 or lab in whitelist]
+    if len(result) == 0:
+        result = ['no']
+
+    if debug:
         print result
         raw_input()
     return result
