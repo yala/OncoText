@@ -36,7 +36,6 @@ def binarizeFilesForClassification(write = True):
     trainReports, trainLabels = getLabelsAndReports(goldData, export)
     restReports,  restLabels = getLabelsAndReports(remainData, export)
 
-
     stem = "boostexer/pathology_all"
 
     if write:
@@ -171,7 +170,7 @@ def parseResultsFiles(debug = False):
 def getMaxDX(data):
     for key in data:
         report = data[key]
-        report['MaxDX'] = getMaxDXSingleReport(labels)
+        report['MaxDX'] = getMaxDXSingleReport(report)
         data[key] = report
     return False
 
@@ -291,10 +290,9 @@ def buildEpisodes(data, debug = False):
 
         assert reports[0]['EpisodeID'] == reports[-1]['EpisodeID']
         for label in metaData:
-            if label == 'Report_Date_TimePlusX':
+            if label == 'Report_Date_TimePlusX' or label == 'Institution':
                 continue
             episode[label] = reports[0][label]
-            assert reports[0][label] == reports[-1][label]
 
         for diag in diagnoses:
             orResults = 0
@@ -304,6 +302,7 @@ def buildEpisodes(data, debug = False):
 
         episode['MaxDX'] = getMaxDXSingleReport(episode)
         episode['Num_Reports'] = len(reports)
+        episode['Institution'] = reports[-1]['Institution']
         assert set(episode.keys()) == set(diagnoses + metaData + ['MaxDX', 'EndEpisode_Date_TimePlusX', 'Num_Reports', 'EpisodeID'])
 
         episodeDB.append(episode)
@@ -400,7 +399,7 @@ def portToJSON(data, path):
 
 if __name__ == "__main__":
 
-    train = True
+    train = False
     if train:
         binarizeFilesForClassification()
 
@@ -421,7 +420,7 @@ if __name__ == "__main__":
         raw_input("Dump again? Press any key to continue")
         p.dump( reportDB, open(outPath, 'wb'))
 
-    buildEpisodesBool = False
+    buildEpisodesBool = True
     if buildEpisodesBool:
         reportDB, episodeDB = buildEpisodes(reportDB)
         raw_input("Dump again? Press any key to continue")
@@ -431,7 +430,7 @@ if __name__ == "__main__":
         reportDB = p.load( open(outPath, 'rb'))
         episodeDB = p.load( open(episodePath, 'rb'))
 
-    portToJSONBool = False
+    portToJSONBool = True
     if portToJSONBool:
         portToJSON(reportDB, JSONReportPath)
         portToJSON(episodeDB, JSONEpisodePath)
