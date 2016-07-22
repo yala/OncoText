@@ -1,20 +1,11 @@
 import pickle as p
 import re
 import random
+from constants import *
+import datetime
 
 random.seed(1)
-dataPath = "deiden_AllRepsRound2.p"
-goldDataPath = 'goldPathReports.p'
-trainOutPath = "boostexer/pathology.data"
-testOutPath = "boostexer/pathology.test"
-devOutPath = "boostexer/pathology.dev"
 
-
-diagnoses = [ u'BreastSide', u'DCIS', u'ILC', u'Phylodes', u'CancerSuspicious', \
- u'CancerNOS', u'TubularCancer', u'IDC', u'LCIS', 'InsituNOS', \
- u'ADH', u'CancerInvInsituNOS',\
- u'ClingingCarcinoma', u'InvasiveSuspicious', u'LobularNeoplasia', u'FlatEpithelial', 
- u'BluntAdenosis', u'Medullary', u'ALH', u'ADH_DCIS', u'Borderline']
 
 def writeNameFiles(stem):
     for diag in diagnoses:
@@ -230,7 +221,7 @@ if __name__ == "__main__":
         testReports = [cleanReports[c] for c in idx[-500:]]
         testLabels = [labels[d] for d in idx[-500:]]
 
-    learningCurve = True
+    learningCurve = False
     if learningCurve:
         for s in [10, 50, 100, 500, 1000, 2000, 4000, 5000, 5500]:
             truncTrainReport= trainReports[:s]

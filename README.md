@@ -1,6 +1,6 @@
 # MGH Breast Cancer Pathology Report Project
 
-## clean.py
+## anonymize.py
 We read in an XML file, where raw path reports are under the key 'Report_Text', and remove all dates, 
 patient names, and report ids.
 

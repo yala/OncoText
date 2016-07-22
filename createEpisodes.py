@@ -8,22 +8,9 @@ import datetime
 import pprint
 from operator import itemgetter
 import json
+from constants import *
 
 random.seed(1)
-dataPath = "rawPathReports7_2016.p"
-outPath = "reportDB.p"
-episodePath = "episodeDB.p"
-goldDataPath = 'goldPathReports.p'
-JSONReportPath = "reportDB.json"
-JSONEpisodePath = "episodeDB.json"
-
-metaData = ['Report_Date_TimePlusX', 'MRNPlusX', 'Correct', 'Institution']
-
-SIX_MONTHS = datetime.timedelta(365/2)
-
-
-cols = diagnoses + metaData + ['Report_Text', "Preprocessed_Report_Text"]
-
 # Set write to true to generate train and test files for classification. 
 # Set write to false to collace files for export
 def binarizeFilesForClassification(write = True):
@@ -36,7 +23,7 @@ def binarizeFilesForClassification(write = True):
     trainReports, trainLabels = getLabelsAndReports(goldData, export)
     restReports,  restLabels = getLabelsAndReports(remainData, export)
 
-    stem = "boostexer/pathology_all"
+    stem = allDataStem
 
     if write:
         genTrainTestFiles(trainReports, trainLabels, restReports, restLabels, stem)
@@ -54,6 +41,14 @@ def binarizeFilesForClassification(write = True):
         assert len(exportableData) == len(trainLabels)
         buildExport(exportableData, restLabels, len(trainLabels))
         assert len(exportableData) == len(trainLabels) + len(restLabels)
+
+        for key in exportableData:
+            r = exportableData[key]
+        
+            if r['BreastSide'] == 'RIGHT':
+                r['BreastSide'] = 1
+            if r['BreastSide'] == 'LEFT':
+                r['BreastSide'] = 0
 
         return exportableData
 
@@ -137,7 +132,7 @@ def say(s):
     pprint.pprint(s)
 
 def parseResultsFiles(debug = False):
-    stem = "classification_results/class_results_all_"
+    stem = "classification_results/Breast/class_results_all_"
     results = []
     i = 0
     for diag in diagnoses:
@@ -404,17 +399,16 @@ if __name__ == "__main__":
         binarizeFilesForClassification()
 
 
-    buildExportBool = False
+    buildExportBool = True
     if buildExportBool:
         print "Calling export"
         reportDB = binarizeFilesForClassification(False)
         print "dumping to ", outPath
         p.dump( reportDB, open(outPath, 'wb'))
-
     else: 
         reportDB = p.load(open(outPath, 'rb'))
 
-    labelMaxDXBool = False
+    labelMaxDXBool = True
     if labelMaxDXBool:
         getMaxDX(reportDB)
         raw_input("Dump again? Press any key to continue")
