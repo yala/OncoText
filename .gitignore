@@ -1,9 +1,14 @@
 # large files
 *_all_*.test
-episodicDB.p
-episodicDB.json
-EpisodesThatStartWithNeedleBiopsyAll2+Eps.p
-OtherEpisodesForLM.p
+episodeDB.p
+episodeDB.json
+reportDB.p
+reportDB.json
+deiden_AllOthr*
+goldPath*
+taghian/
+rawBreastPathReport.p
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
