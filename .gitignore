@@ -8,6 +8,7 @@ deiden_AllOthr*
 goldPath*
 taghian/
 rawBreastPathReport.p
+analysis/DisagreementDict.p
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
