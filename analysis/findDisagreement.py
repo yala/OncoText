@@ -30,11 +30,15 @@ print "Num labled ML samples",len(mlDict)
 ## Task is as follows: Find disagreemnet per diag with rule based system
 
 disagreement = {}
-counts = {}
+ignoreList = ['Medullary', 'ClingingCarcinoma', 'CancerNOS', 'Borderline', 'InvasiveSuspicious', 'CancerInvInsituNOS', 'InsituNOS' ]
 numDisagreement = 0
 for diag in diagnoses:
+
+    if diag in ignoreList:
+        continue
+
     disagreement[diag] = []
-    counts[diag] = 0
+
     for text in ruleBasedDict:
 
         if diag in ruleBasedDict[text]:
@@ -43,25 +47,21 @@ for diag in diagnoses:
                 ruleLabel = 1
             elif ruleLabel == "LEFT":
                 ruleLabel = 0
-                
-            counts[diag] += 1
         else:
             continue
             
         mlLabel   = mlDict[text][diag]
      
         if not str(ruleLabel) == str(mlLabel):
-            if counts[diag] < 10:
+            if len(disagreement[diag]) < 10:
                 print diag, ruleLabel, mlLabel
             disagreement[diag].append({'text':text, 'ruleLabel':ruleLabel,\
              'mlLable':mlLabel})
-
+    print "----"
     print diag, len(disagreement[diag])
     numDisagreement += len(disagreement[diag])
 
 
 print "Total num Disagreement", numDisagreement
-print counts
-
 
 p.dump(disagreement, open("DisagreementDict.p", 'wb'))
