@@ -6,7 +6,9 @@ reportDB.p
 reportDB.json
 deiden_AllOthr*
 goldPath*
-taghian/
+*.xls*
+*.xml
+taghian/*.p
 rawBreastPathReport.p
 analysis/DisagreementDict.p
 
