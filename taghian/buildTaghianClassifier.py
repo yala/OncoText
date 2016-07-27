@@ -42,7 +42,7 @@ if __name__ == "__main__":
         print "Num test samples", len(testLabels)
 
 
-        with open(dirPath+stem+".name", 'wb') as f:
+        with open(dirPath+stem+".names", 'wb') as f:
             labels = "Positive, Negative.\n"
             features = "pathReport: text.\n"
             f.write(labels)
