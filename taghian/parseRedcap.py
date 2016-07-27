@@ -20,7 +20,15 @@ def parseXLS():
         rowDict = {}
         for indx, col in enumerate(row):
             if legendRowBool:
-                legend.append(col.value)
+                if not col.value in legend:
+                    legend.append(col.value)
+                else:
+                    counter = 2
+                    newName = str(counter) + " " + col.value
+                    while newName in legend:
+                        counter += 1
+                        newName = str(counter) + " " + col.value
+                    legend.append(newName)
             else:
                 rowDict[legend[indx]] = col.value
 
@@ -32,7 +40,7 @@ def parseXLS():
         legendRowBool = False
         
     print 'dumping'
-
+    print "legend", legend
     p.dump(data, open('redcap.p', 'wb'))
     return data
 
@@ -89,16 +97,91 @@ def findMatchingReports(db):
     return joinedDB
 
 
+def buildDB(db, baseName, path):
+    erDB = []
+    relevantEvents = ['b.Primary Tumor', 'c.Event 1', 'd.Event 2', 'e.Event 3']
+
+    #Investigative Counts
+    countEasy = 0 
+    countERs  = 0
+    countPathReps = 0
+    countRedCapEvents = 0
+    countAtLeast1 = 0
+    yetToPrintBool = True
+
+    for mrn in db:
+        pathReps =  db[mrn]['hughes']
+        redcap   =  [d for d in db[mrn]['taghian'] if d['Event Name'] in relevantEvents]
+
+        numERs = 0
+        erIndx = 1
+        newName = baseName
+        for red in redcap:
+            while newName in red and not red[newName] == None:
+                numERs += 1
+                erIndx += 1
+                newName = str(erIndx)  + " " + baseName
+        
+        
+        countPathReps += len(pathReps)
+        countRedCapEvents += len(redcap)
+        countERs += numERs
+        if numERs >0:
+            countAtLeast1 += 1
+            if yetToPrintBool:
+                print "Example"
+                print pathReps[0]
+                print redcap[0][baseName]
+                yetToPrintBool = False
+            pathReps[0][baseName] = redcap[0][baseName]
+            erDB.append(pathReps[0])
+
+        if len(pathReps) == numERs:
+            countEasy += 1
+
+    p.dump(erDB, open(path, 'wb'))
+    print "Number of ER reps and path reps equiv", countEasy
+    print "countPathReps", countPathReps
+    print "countRedCapEvents", countRedCapEvents
+    print "countERs", countERs
+    print 'countAtLeast1', countAtLeast1
+
+    print "Length of ER DB", len(erDB)
+    return erDB
 
 parseXLSBool = False
-preprocessDBBool = True
-findMatchingReportsBool = True
+preprocessDBBool = False
+findMatchingReportsBool = False
+buildERDBBool = True
+buildPRDBBool = True
+buildHer2Bool = True
 
 if __name__ == "__main__":
+   
+    if parseXLSBool:
+        redcap = parseXLS()
 
-    redcap = p.load(open('redcap.p','rb')) if not parseXLSBool else parseXLS()
-    mrnDB = preprocessDB(redcap) if preprocessDBBool else p.load(open('redcapMRNDB.p','rb'))
-    joinedDB = findMatchingReports(mrnDB) if findMatchingReportsBool else p.load(open('redcapWithPathReps.p', 'rb'))
+    if preprocessDBBool:
+        redcap = p.load(open('redcap.p', 'rb'))
+        mrnDB = preprocessDB(redcap)
+
+    if findMatchingReportsBool:
+        mrnDB = p.load(open('redcapMRNDB.p','rb'))
+        joinedDB = findMatchingReports(mrnDB)
+    
+    if buildERDBBool:
+        joinedDB =  p.load(open('redcapWithPathReps.p', 'rb'))        
+        erDB = buildDB(joinedDB, 'Estrogen Receptor - qualitative', 'erDB.p')
+
+    if buildPRDBBool:
+        joinedDB =  p.load(open('redcapWithPathReps.p', 'rb'))        
+        prDB = buildDB(joinedDB, 'Progesterone receptor - qualitative', 'prDB.p')
+
+    if buildHer2Bool:
+        joinedDB =  p.load(open('redcapWithPathReps.p', 'rb'))
+        her2DB = buildDB(joinedDB, 'Her2 (FISH)', 'her2DB.p')
+
+
 
 
 
