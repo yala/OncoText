@@ -3,24 +3,17 @@ import sys
 sys.path.append("..")
 from constants import *
 
-yalaAnnotations = { "FlatEpithelial": [14, 394], \
-                    "DCIS": [36, 41, 365]}
-
-diagToInt = {"ADH":8,\
-             "ALH":16,\
-             "DCIS":0}
-
-skipList = [188] #This report says nothing, should have been filtered out
 
 diagSamples = {}
 
-catergoryVerbose= False
-overallVerbose= False
+catergoryVerbose= True
+overallVerbose= True
 
 
 if __name__ == "__main__":
 
     stem = sys.argv[1]
+
     print "Calling interpret for ", stem
     for diag in diagnoses:
         with open(stem+diag+".txt", 'rb') as f:
@@ -55,15 +48,7 @@ if __name__ == "__main__":
             goldsVec = goldsAndPredictions[:len(goldsAndPredictions)/2]
             guessedVec = [ 1 if p >= 0 else 0 for p in goldsAndPredictions[len(goldsAndPredictions)/2:]]
             assert len(goldsVec) == len(guessedVec)
-            #if not goldsVec == guessedVec and (diag == "FlatEpithelial"):
-            #     or diag == "BluntAdenosis" or diag == "ADH_DCIS"):
-            #    print diag, ",",row
-            #     numMistakes += 1
-            
-            # if diag in yalaAnnotations and row in yalaAnnotations[diag]:
-            #     gold[diag].append(1)
-            # else:
-            #     gold[diag].append(goldsVec[0])
+
 
             gold[diag].append(goldsVec[0])
 
@@ -132,4 +117,3 @@ if overallVerbose:
     print stem, "Overall", "sensitivity, specifcity:", sensitivity, ',', specifcity
 print stem, "Overall", "Num Mistakes:", (falsePos + falseNeg), ", error rate", (falsePos + falseNeg)*1./(truePos+falsePos+falseNeg+trueNeg)
 
-p.dump(mistakeIds, open("mistakes.p", "wb"))

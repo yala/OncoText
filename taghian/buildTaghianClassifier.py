@@ -31,16 +31,20 @@ if __name__ == "__main__":
         trainLabels  = [t[key] for t in filteredDB[:-400]]
 
         print "Num train samples", len(trainLabels)
+        print "-------- Train Label Dist,",key," ----------"
+        print sum([t == "Positive" for t in trainLabels]) * 1. / len(trainLabels)
 
         assert len(trainReports) == len(trainLabels)
 
         testReports = [t['Preprocessed_Report_Text'] for t in filteredDB[-400:]]
         testLabels  = [t[key] for t in filteredDB[-400:]]
 
+
         assert len(testReports) == len(testLabels)
 
         print "Num test samples", len(testLabels)
-
+        print "-------- Test Label Dist -",key,"---------"
+        print sum([t == "Positive" for t in testLabels]) * 1. / len(testLabels)
 
         with open(dirPath+stem+".names", 'wb') as f:
             labels = "Positive, Negative.\n"

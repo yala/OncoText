@@ -1,7 +1,7 @@
 import datetime
 
 
-MODE = "Breast"
+MODE = "TAGHIAN"
 
 if MODE == "Breast":
     #Outcomes constants
@@ -10,6 +10,7 @@ if MODE == "Breast":
                  u'ADH', u'CancerInvInsituNOS',\
                  u'ClingingCarcinoma', u'InvasiveSuspicious', u'LobularNeoplasia', u'FlatEpithelial', 
                  u'BluntAdenosis', u'Medullary', u'ALH', u'ADH_DCIS', u'Borderline']
+    #Contants for creating episodes
     #Contants for creating episodes
     dataPath = "rawBreastPathReport.p"
     outPath = "reportDB.p"
@@ -33,3 +34,29 @@ if MODE == "Breast":
     devOutPath = "boostexer/pathology.dev"
 elif MODE == "ALL_CANCER":
     print "MODE IS ALL CANCER"
+
+elif MODE == "TAGHIAN":
+        #Outcomes constants
+    diagnoses = [ u'er', 'pr', 'her2']
+    #Contants for creating episodes
+    #Contants for creating episodes
+    dataPath = "rawBreastPathReport.p"
+    outPath = "reportDB.p"
+    episodePath = "episodeDB.p"
+    goldDataPath = 'goldPathReports.p'
+    JSONReportPath = "reportDB.json"
+    JSONEpisodePath = "episodeDB.json"
+    allDataStem = "boostexer/pathology_all"
+
+
+    metaData = ['Report_Date_TimePlusX', 'MRNPlusX', 'Correct', 'Institution']
+
+    SIX_MONTHS = datetime.timedelta(365/2)
+
+
+    cols = diagnoses + metaData + ['Report_Text', "Preprocessed_Report_Text"]
+
+    # Constants for genBoostexaFiles
+    trainOutPath = "boostexer/pathology.data"
+    testOutPath = "boostexer/pathology.test"
+    devOutPath = "boostexer/pathology.dev"

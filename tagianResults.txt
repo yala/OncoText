@@ -1,0 +1,32 @@
+---------------------------
+er
+Number of gold 328.0
+Number guessed 351
+truePos, falsePos, trueNeg, falseNeg: 314 37 35 14
+er percision, recall, f1: 0.894586894587 , 0.957317073171 , 0.924889543446
+er sensitivity, specifcity: 0.957317073171 , 0.486111111111
+Diag er , Num Mistakes: 51 , error rate 0.1275
+---------------------------
+pr
+Number of gold 320.0
+Number guessed 329
+truePos, falsePos, trueNeg, falseNeg: 297 32 48 23
+pr percision, recall, f1: 0.90273556231 , 0.928125 , 0.915254237288
+pr sensitivity, specifcity: 0.928125 , 0.6
+Diag pr , Num Mistakes: 55 , error rate 0.1375
+---------------------------
+her2
+Number of gold 78.0
+Number guessed 53
+truePos, falsePos, trueNeg, falseNeg: 36 17 305 42
+her2 percision, recall, f1: 0.679245283019 , 0.461538461538 , 0.549618320611
+her2 sensitivity, specifcity: 0.461538461538 , 0.947204968944
+Diag her2 , Num Mistakes: 59 , error rate 0.1475
+---------------------------
+Overall
+Number of gold 726.0
+Number guessed 733
+truePos, falsePos, trueNeg, falseNeg: 647 86 388 79
+../classification_results/Breast/class_results_ Overall percision, recall, f1: 0.882673942701 , 0.891184573003 , 0.886908841672
+../classification_results/Breast/class_results_ Overall sensitivity, specifcity: 0.891184573003 , 0.818565400844
+../classification_results/Breast/class_results_ Overall Num Mistakes: 165 , error rate 0.1375
