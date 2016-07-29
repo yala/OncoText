@@ -1,7 +1,7 @@
 import datetime
 
 
-MODE = "TAGHIAN"
+MODE = "Breast"
 
 if MODE == "Breast":
     #Outcomes constants
@@ -21,12 +21,12 @@ if MODE == "Breast":
     allDataStem = "boostexer/pathology_all"
 
 
-    metaData = ['Report_Date_TimePlusX', 'MRNPlusX', 'Correct', 'Institution']
+    metaData = ['Report_Date_TimePlusX', 'MRNPlusX', 'Correct', 'Institution', 'DOBPlusX']
 
     SIX_MONTHS = datetime.timedelta(365/2)
 
 
-    cols = diagnoses + metaData + ['Report_Text', "Preprocessed_Report_Text"]
+    cols = diagnoses + metaData + ['Report_Text', "Preprocessed_Report_Text"] 
 
     # Constants for genBoostexaFiles
     trainOutPath = "boostexer/pathology.data"

@@ -5,15 +5,26 @@ import xmltodict
 if __name__ == "__main__":
     dobs = xmltodict.parse(open('DOBmrnplusx.xml', 'rb'))['dataroot']['DOBmrnplusx']
     dobDict = {}
+    instDict = {}
 
     dobKey = 'DOB_x002B_x'
     mrnKey = 'MRN_x002B_x'
     instKey = 'MRN_Type'
 
+    countDOBdups = 0
     for d in dobs:
         if mrnKey in d:
-            dobDict[d[mrnKey]] = d[dobKey]
+            if d[mrnKey] in dobDict:
+                print d
+                print dobDict[d[mrnKey]], instDict[d[mrnKey]]
+                countDOBdups += 1
 
+
+            dobDict[d[mrnKey]] = d[dobKey]
+            instDict[d[mrnKey]] = d[instKey]
+
+
+    print "Num dups", countDOBdups
     print "Num DOB MRN pairs", len(dobDict)
     print "---------------"
 
