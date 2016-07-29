@@ -69,10 +69,7 @@ print "Number of FEAs", len(results)
 print "Number of Records", len(resultRecords)
 
 p.dump(resultRecords, open("AllRecordsForFEAs.p", "wb"))
-xml = dicttoxml(resultRecords)
-with open("AllRecordsForFEAs.xml", "wb") as outXML:
-    outXML.write(xml)
-xml = dicttoxml(resultRecords)
+
 
 keys = resultRecords[0].keys()
 with open("AllRecordsForFEAs.csv", "wb") as outCSV:
@@ -81,6 +78,3 @@ with open("AllRecordsForFEAs.csv", "wb") as outCSV:
     writer.writerows(resultRecords)
     
 
-with open(exportPath, 'wb') as myfile:
-    wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
-    wr.writerow(results)
