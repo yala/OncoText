@@ -44,6 +44,7 @@ def getGoldTags(dumpGold = False):
         goldData = p.load(open(goldDataPath, 'rb'))
     return goldData
 
+## Function throws away duplicate or meaningless reports and returns the rest
 def filterGold(reports, labels, debug = False):
     reportLabelDict = {}
     countWut = 0
