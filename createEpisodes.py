@@ -16,8 +16,10 @@ random.seed(1)
 def binarizeFilesForClassification(write = True):
     allData = p.load(open(dataPath, 'rb'))
     goldData = [d for d in allData if 'Correct' in d]
+    print "Num gold Data with DOBs", len([d for d in goldData if 'DOBPlusX' in d])
 
     remainData = [d for d in allData if not 'Correct' in d]
+    print "Num remainData with DOBs", len([d for d in remainData if 'DOBPlusX' in d])
     
     export = not write
     trainReports, trainLabels = getLabelsAndReports(goldData, export)
@@ -38,8 +40,10 @@ def binarizeFilesForClassification(write = True):
         
         print "Exporting"
         buildExport(exportableData, trainLabels, 0)
+        print "num DOBs retag train" , len([d for d in exportableData if 'DOBPlusX' in exportableData[d]])
         assert len(exportableData) == len(trainLabels)
         buildExport(exportableData, restLabels, len(trainLabels))
+        print "num DOBs retag rst" , len([d for d in exportableData if 'DOBPlusX' in exportableData[d]])
         assert len(exportableData) == len(trainLabels) + len(restLabels)
 
         for key in exportableData:
@@ -56,7 +60,7 @@ def binarizeFilesForClassification(write = True):
 
 def retagLabels(oldLabels, newLabels):
     assert len(oldLabels)== len(newLabels)
-    assert len(oldLabels[0]) == len(cols)
+    assert len(oldLabels[0]) == len(cols) or not 'DOBPlusX' in oldLabels[0]
     assert len(newLabels[0]) == len(diagnoses)
     results = []
     for i in range(len(oldLabels)):
@@ -69,11 +73,20 @@ def buildExport(exportData, data, startIdx):
         record = {}
         colVals  = data[i]
         for j, col in enumerate(cols):
-            if col == 'Report_Date_TimePlusX':
+            if col == 'Report_Date_TimePlusX' or col == 'DOBPlusX':
                 date = colVals[j]
+                if date == 0:
+                    record[col] = date
+                    continue
+
                 yyyymmdd = date.split('T')[0]
-                date = datetime.datetime.strptime(yyyymmdd, '%Y-%m-%d')
-                record[col] = date
+                try:
+                    date = datetime.datetime.strptime(yyyymmdd, '%Y-%m-%d')
+                    record[col] = date
+                except Exception, e:
+                    print yyyymmdd
+                    record[col] = yyyymmdd
+                    raw_input()
             else:
                 record[col] = colVals[j]
         exportData[startIdx+i] = record
@@ -87,6 +100,8 @@ def preprocessReports(reports):
 
     return cleanReports
 
+# Function takes [ reports ] and returns a tuple or reports, labels
+# If export is true, returns only diagnoses, if false, also returns metaData
 def getLabelsAndReports(data, export = False):
     reports = [d['Report_Text'] for d in data]
     cleanReports = preprocessReports(reports)
@@ -96,6 +111,7 @@ def getLabelsAndReports(data, export = False):
     for i in range(len(data)):
         diags = []
         sample = data[i]
+
         for diag in diagnoses:
             if diag == u'BreastSide':
                 if u'BreastSide' in sample:
@@ -110,10 +126,11 @@ def getLabelsAndReports(data, export = False):
 
         if export:
             for meta in metaData:
-                if meta == "Correct" and not meta in sample:
+                if (meta == "Correct"  or meta == "DOBPlusX") and not meta in sample:
                     diags.append(0)
-                else:    
+                else:
                     diags.append(sample[meta])
+
 
             diags.append(sample['Report_Text'])
             diags.append(cleanReports[i])
@@ -124,6 +141,7 @@ def getLabelsAndReports(data, export = False):
 
     cleanReports = filteredReport
     labels = filteredLabel
+
 
     return cleanReports, labels
 
@@ -298,7 +316,7 @@ def buildEpisodes(data, debug = False):
         episode['MaxDX'] = getMaxDXSingleReport(episode)
         episode['Num_Reports'] = len(reports)
         episode['Institution'] = reports[-1]['Institution']
-        assert set(episode.keys()) == set(diagnoses + metaData + ['MaxDX', 'EndEpisode_Date_TimePlusX', 'Num_Reports', 'EpisodeID'])
+        assert set(episode.keys() + ['DOBPlusX']) == set(diagnoses + metaData + ['MaxDX', 'EndEpisode_Date_TimePlusX', 'Num_Reports', 'EpisodeID', 'DOBPlusX'])
 
         episodeDB.append(episode)
 
@@ -370,6 +388,9 @@ def portToJSON(data, path):
         if 'EndEpisode_Date_TimePlusX' in report:
             report['EndEpisode_Date_TimePlusX'] = report['EndEpisode_Date_TimePlusX'].isoformat()
 
+        if not report['DOBPlusX'] == 0 :
+            report['DOBPlusX'] = report['DOBPlusX'].isoformat()
+
 
         for diag in diagnoses:
             sample = report[diag]
@@ -399,7 +420,7 @@ if __name__ == "__main__":
         binarizeFilesForClassification()
 
 
-    buildExportBool = True
+    buildExportBool = False
     if buildExportBool:
         print "Calling export"
         reportDB = binarizeFilesForClassification(False)
@@ -408,13 +429,13 @@ if __name__ == "__main__":
     else: 
         reportDB = p.load(open(outPath, 'rb'))
 
-    labelMaxDXBool = True
+    labelMaxDXBool = False
     if labelMaxDXBool:
         getMaxDX(reportDB)
         raw_input("Dump again? Press any key to continue")
         p.dump( reportDB, open(outPath, 'wb'))
 
-    buildEpisodesBool = True
+    buildEpisodesBool = False
     if buildEpisodesBool:
         reportDB, episodeDB = buildEpisodes(reportDB)
         raw_input("Dump again? Press any key to continue")
