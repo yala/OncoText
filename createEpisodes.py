@@ -289,8 +289,7 @@ def buildEpisodes(data, debug = False):
     #Structure: List of Episodes where-all constituent reports are combined or-wise
     episodeDB = []
 
-    #TODO: Combine field orwise
-    #TODO: Add field for end date
+
     for aggKey in episodesAggregator:
         episode = {}
         reports = episodesAggregator[aggKey]
