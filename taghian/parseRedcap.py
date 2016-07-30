@@ -169,24 +169,29 @@ if __name__ == "__main__":
         redcap = parseXLS()
 
     if preprocessDBBool:
-        redcap = p.load(open('redcap.p', 'rb'))
+        if not parseXLSBool:
+            redcap = p.load(open('redcap.p', 'rb'))
         mrnDB = preprocessDB(redcap)
 
     if findMatchingReportsBool:
-        mrnDB = p.load(open('redcapMRNDB.p','rb'))
+        if not preprocessDBBool:
+            mrnDB = p.load(open('redcapMRNDB.p','rb'))
         joinedDB = findMatchingReports(mrnDB)
     
     if buildERDBBool:
-        joinedDB =  p.load(open('redcapWithPathReps.p', 'rb'))        
+        if not findMatchingReportsBool:
+            joinedDB =  p.load(open('redcapWithPathReps.p', 'rb'))        
         erDB = buildDB(joinedDB, 'Estrogen Receptor - qualitative', 'erDB.p')
 
     if buildPRDBBool:
+        if not findMatchingReportsBool and not buildERDBBool:
         joinedDB =  p.load(open('redcapWithPathReps.p', 'rb'))        
         prDB = buildDB(joinedDB, 'Progesterone receptor - qualitative', 'prDB.p')
 
     if buildHer2Bool:
-        joinedDB =  p.load(open('redcapWithPathReps.p', 'rb'))
-        her2DB = buildDB(joinedDB, 'Her2 (FISH)', 'her2DB.p')
+        if not findMatchingReportsBool and not buildERDBBool and not buildPRDBBool:
+            joinedDB =  p.load(open('redcapWithPathReps.p', 'rb'))
+            her2DB = buildDB(joinedDB, 'Her2 (FISH)', 'her2DB.p')
 
 
 
