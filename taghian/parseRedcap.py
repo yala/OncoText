@@ -4,6 +4,9 @@ import sys
 sys.path.append("..")
 from constants import *
 
+dateFields = ['Date of Surgery', 'Date of 2nd surgery', 'Date of 3rd surgery', 'Date of 1 st surgery',\
+'Date of 2nd biopsy', 'Date of 1st biopsy', 'Date of 3rd biopsy' ]
+
 def parseXLS():
     print "loading wb"
     wb = xl.load_workbook('redcap.xlsx')
@@ -69,7 +72,7 @@ def preprocessDB(data):
             mrnDB[mrn] = [rep]
 
     print "Number of unique MRNs in recap DB", len(mrnDB)
-    p.dump(mrn, open('redcapMRNDB.p', 'wb'))
+    p.dump(mrnDB, open('redcapMRNDB.p', 'wb'))
 
     return mrnDB
 
@@ -85,8 +88,11 @@ def findMatchingReports(db):
             pathMrns[pathMRN] = [r]
 
     joinedDB = {}
+    misAlignedDates = []
     for mrn in db:
         if not mrn in pathMrns:
+            year = db[mrn]['Diagnosis date'].year
+            misAlignedDates.append(year)
             continue
 
         joinedDB[mrn] = {'hughes':pathMrns[mrn], 'taghian':db[mrn]}
@@ -94,6 +100,7 @@ def findMatchingReports(db):
     p.dump(joinedDB, open('redcapWithPathReps.p', 'wb'))
 
     print "Size of taghian hughes MRN overlap", len(joinedDB)
+    print "Avg year of misaligned ", sum(misAlignedDates)/len(mis)
     return joinedDB
 
 
@@ -150,11 +157,11 @@ def buildDB(db, baseName, path):
     return erDB
 
 parseXLSBool = False
-preprocessDBBool = False
-findMatchingReportsBool = False
-buildERDBBool = True
-buildPRDBBool = True
-buildHer2Bool = True
+preprocessDBBool = True
+findMatchingReportsBool = True
+buildERDBBool = False
+buildPRDBBool = False
+buildHer2Bool = False
 
 if __name__ == "__main__":
    
