@@ -39,10 +39,17 @@ for mrn in mrns:
     
     sortedReports = sorted( reports, key=itemgetter('Report_Date_TimePlusX') )
 
+
     assert reports == sortedReports
     
-    assert(len(sortedReports) > 0)
+    assert len(sortedReports) > 0
     firstRep =  sortedReports[0]
+
+    #TODO Make episode ID numbering chronological
+    # if not firstRep['EpisodeID'] == 0:
+    #     print firstRep['EpisodeID'], firstRep['Report_Date_TimePlusX'], firstRep['BreastSide']
+    #     print sortedReports[-1]['EpisodeID'], sortedReports[-1]['Report_Date_TimePlusX'], sortedReports[-1]['BreastSide']
+    # assert firstRep['EpisodeID'] == 0
     inst = firstRep['Institution']
     time = firstRep['Report_Date_TimePlusX'].isoformat().split("T")[0]
 

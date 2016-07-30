@@ -13,6 +13,7 @@ diagnoses = [ u'DCIS', u'ILC', u'Phylodes', u'CancerSuspicious', \
  u'Medullary', u'ALH', u'ADH_DCIS', 'Borderline', 'FlatEpithelial']
 
 
+#Return true if the report is benign
 def filt(report):
     if report['DOBPlusX'] == 0:
         return False
@@ -22,6 +23,11 @@ def filt(report):
                 return False
     return True
 
+### Main Script
+### This script opens up first records from the FEA patients, and 
+### tries to find maxControl number patients to match each one
+### Control patient has to have benign episode, be within an age Tol of 
+### age, and within a monthTol months of report date
 
 feas = p.load(open('FirstRecordsForFEAs.p', 'rb'))
 mrnDict = getMRNDB(p.load(open('../'+outPath, 'rb')))
@@ -34,6 +40,7 @@ possControls = []
 for mrn in mrnDict:
     reports = mrnDict[mrn]
     epId = reports[0]['EpisodeID']
+    ## Comperehension asserts that all reports in episode of first report is benign
     if not False in [filt(r) for r in reports if r['EpisodeID'] == epId]:
         possControls.append(mrn)
 
@@ -53,13 +60,15 @@ visited = {}
 countNoControl = 0
 controlListMRNs = []
 controlListRecords = []
+## For each fea, find certain number of controls
 for fea in feaDOBs:
     dob = fea['DOBPlusX']
     diagDate = fea['Report_Date_TimePlusX']
     feaMRN =  fea['MRNPlusX']
     controls = 0
+    #Find controls for each one
     for mrn in possControls:
-        if mrn in visited:
+        if mrn in visited: #Make sure we haven't used this control before
             continue
         possDob = mrnDict[mrn][0]['DOBPlusX']
         possDiagDate = mrnDict[mrn][0]['Report_Date_TimePlusX']
@@ -67,6 +76,7 @@ for fea in feaDOBs:
         ageDif = abs((possDob - dob).days)/365.
         diagDif = abs((possDiagDate - diagDate).days)/30.
 
+        #Control checks
         if ageDif <= ageTol and controls < maxControl and \
         diagDif <= monthTol:
             controlListMRNs.append( {'MRNPlusX': mrn , \
