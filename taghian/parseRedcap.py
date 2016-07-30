@@ -185,7 +185,7 @@ if __name__ == "__main__":
 
     if buildPRDBBool:
         if not findMatchingReportsBool and not buildERDBBool:
-        joinedDB =  p.load(open('redcapWithPathReps.p', 'rb'))        
+            joinedDB =  p.load(open('redcapWithPathReps.p', 'rb'))        
         prDB = buildDB(joinedDB, 'Progesterone receptor - qualitative', 'prDB.p')
 
     if buildHer2Bool:
