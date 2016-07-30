@@ -3,7 +3,7 @@ from operator import itemgetter
 from dicttoxml import dicttoxml
 import csv
 from csv import DictWriter
-
+from helpers import *
 
 diagnoses = [ u'DCIS', u'ILC', u'Phylodes', u'CancerSuspicious', \
  u'CancerNOS', u'TubularCancer', u'IDC', u'LCIS', 'InsituNOS', \
@@ -30,20 +30,16 @@ def filt(report):
 
 results = []
 resultRecords = []
+resultFirstRecs = []
 
-mrns = {}
-
-for report in db:
-    mrn = report['MRNPlusX']
-    if mrn in mrns:
-        mrns[mrn].append(report)
-    else:
-        mrns[mrn] = [report]
+mrns = getMRNDB(db)
 
 for mrn in mrns:
     reports = mrns[mrn]
     
     sortedReports = sorted( reports, key=itemgetter('Report_Date_TimePlusX') )
+
+    assert reports == sortedReports
     
     assert(len(sortedReports) > 0)
     firstRep =  sortedReports[0]
@@ -62,6 +58,7 @@ for mrn in mrns:
     if filt(firstRep):
         results.append( (mrn, inst, time) ) 
         resultRecords.extend(reports)
+        resultFirstRecs.append(firstRep)
 
     assert len(set([r[0] for r in results])) == len(results)
 
@@ -69,6 +66,8 @@ print "Number of FEAs", len(results)
 print "Number of Records", len(resultRecords)
 
 p.dump(resultRecords, open("AllRecordsForFEAs.p", "wb"))
+p.dump(resultFirstRecs, open("FirstRecordsForFEAs.p", "wb"))
+
 
 
 keys = resultRecords[0].keys()
