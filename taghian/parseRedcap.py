@@ -4,7 +4,7 @@ import sys
 sys.path.append("..")
 from constants import *
 
-dateFields = ['Date of Surgery', 'Date of 2nd surgery', 'Date of 3rd surgery', 'Date of 1 st surgery',\
+dateFields = ['Date of 2nd surgery', 'Date of 3rd surgery', 'Date of 1 st surgery',\
 'Date of 2nd biopsy', 'Date of 1st biopsy', 'Date of 3rd biopsy' ]
 
 def parseXLS():
@@ -80,9 +80,8 @@ def preprocessDB(data, save=False):
 
 def findMatchingReports(db, save=False):
     print "Len redcap DB", len(db)
-    if len(db)< 10:
-        print db
-        raw_input()
+
+    misAlignedDates = []
     lengthsDB = {}
     pathMrns = {}
     pathReps = p.load(open('../'+outPath, 'rb'))
@@ -107,7 +106,7 @@ def findMatchingReports(db, save=False):
         if mrn in pathMrns:
             for r in redcapReps:
                 for d in dateFields:
-                    if d in r:
+                    if d in r and not r[d] == None:
                         lengthsDB[mrn][1] += 1
             joinedDB[mrn] = {'hughes':pathMrns[mrn], 'taghian':db[mrn], 'lengths':lengthsDB[mrn]}
 
@@ -121,7 +120,7 @@ def findMatchingReports(db, save=False):
         p.dump(joinedDB, open('redcapWithPathReps.p', 'wb'))
 
     print "Size of taghian hughes MRN overlap", len(joinedDB)
-    print "Avg year of misaligned ", sum(misAlignedDates)/len(mis)
+    print "Avg year of misaligned ", sum(misAlignedDates)/len(misAlignedDatess)
     return joinedDB
 
 
