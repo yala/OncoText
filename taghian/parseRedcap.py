@@ -55,13 +55,13 @@ def normalizeMRN(mrn):
     return res
 
 
-def preprocessDB(data):
+def preprocessDB(data, save=False):
     mrnDB = {}
     for rep in data:
         try:
             mrn = normalizeMRN(rep['Registry ID'])
         except Exception, e:
-            print rep['Registry ID']
+            print rep['Registry ID'], e
             continue
 
         rep['MRNPlusX'] = mrn
@@ -72,13 +72,21 @@ def preprocessDB(data):
             mrnDB[mrn] = [rep]
 
     print "Number of unique MRNs in recap DB", len(mrnDB)
-    p.dump(mrnDB, open('redcapMRNDB.p', 'wb'))
+
+    if save:
+        p.dump(mrnDB, open('redcapMRNDB.p', 'wb'))
 
     return mrnDB
 
-def findMatchingReports(db):
+def findMatchingReports(db, save=False):
+    print "Len redcap DB", len(db)
+    if len(db)< 10:
+        print db
+        raw_input()
+    lengthsDB = {}
     pathMrns = {}
     pathReps = p.load(open('../'+outPath, 'rb'))
+
     for r in pathReps:
         pathMRN = normalizeMRN(r['MRNPlusX'])
 
@@ -87,17 +95,30 @@ def findMatchingReports(db):
         else:
             pathMrns[pathMRN] = [r]
 
+    print "Updating lengthsDB with num Path reps per patient"
+    for mrn in pathMrns:
+        lengthsDB[mrn] = [ len(pathMrns[mrn]), 0]
+
+
     joinedDB = {}
     misAlignedDates = []
     for mrn in db:
+        redcapReps = db[mrn]
+        if mrn in pathMrns:
+            for r in redcapReps:
+                for d in dateFields:
+                    if d in r:
+                        lengthsDB[mrn][1] += 1
+            joinedDB[mrn] = {'hughes':pathMrns[mrn], 'taghian':db[mrn], 'lengths':lengthsDB[mrn]}
+
         if not mrn in pathMrns:
-            year = db[mrn]['Diagnosis date'].year
-            misAlignedDates.append(year)
-            continue
-
-        joinedDB[mrn] = {'hughes':pathMrns[mrn], 'taghian':db[mrn]}
-
-    p.dump(joinedDB, open('redcapWithPathReps.p', 'wb'))
+            for rep in redcapReps:
+                if 'Diagnoisis date' in rep:
+                    year = rep['Diagnosis date'].year
+                    misAlignedDates.append(year)
+    
+    if save:
+        p.dump(joinedDB, open('redcapWithPathReps.p', 'wb'))
 
     print "Size of taghian hughes MRN overlap", len(joinedDB)
     print "Avg year of misaligned ", sum(misAlignedDates)/len(mis)
@@ -169,14 +190,18 @@ if __name__ == "__main__":
         redcap = parseXLS()
 
     if preprocessDBBool:
+        print 'Running preprocessDB'
         if not parseXLSBool:
+            print "Loading redcap file"
             redcap = p.load(open('redcap.p', 'rb'))
-        mrnDB = preprocessDB(redcap)
+        mrnDB = preprocessDB(redcap, True)
 
     if findMatchingReportsBool:
+        print "Running findMatchingReports"
         if not preprocessDBBool:
+            print "Loading redcapMRNDB.p"
             mrnDB = p.load(open('redcapMRNDB.p','rb'))
-        joinedDB = findMatchingReports(mrnDB)
+        joinedDB = findMatchingReports(mrnDB, True)
     
     if buildERDBBool:
         if not findMatchingReportsBool:
