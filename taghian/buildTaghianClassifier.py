@@ -22,7 +22,7 @@ if __name__ == "__main__":
         stem = mode[indx]
         dirPath = "../boostexer/breast/taghian/pathology_"
         print "Generating train/test for ", stem
-
+        
         validLabels = set([replaceSpaces(r[key]) for r in db if not r[key] == None])
         filteredDB = [d for d in db if d[key] in validLabels]
 
