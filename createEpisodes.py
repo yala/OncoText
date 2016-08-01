@@ -419,7 +419,7 @@ if __name__ == "__main__":
         binarizeFilesForClassification()
 
 
-    buildExportBool = False
+    buildExportBool = True
     if buildExportBool:
         print "Calling export"
         reportDB = binarizeFilesForClassification(False)
@@ -428,13 +428,13 @@ if __name__ == "__main__":
     else: 
         reportDB = p.load(open(outPath, 'rb'))
 
-    labelMaxDXBool = False
+    labelMaxDXBool = True
     if labelMaxDXBool:
         getMaxDX(reportDB)
         raw_input("Dump again? Press any key to continue")
         p.dump( reportDB, open(outPath, 'wb'))
 
-    buildEpisodesBool = False
+    buildEpisodesBool = True
     if buildEpisodesBool:
         reportDB, episodeDB = buildEpisodes(reportDB)
         raw_input("Dump again? Press any key to continue")
