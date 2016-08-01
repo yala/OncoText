@@ -14,6 +14,10 @@ if __name__ == "__main__":
 
     stem = sys.argv[1]
 
+    labels = ['Positive']
+    if len(sys.argv) > 2 and sys.argv[2]:
+        labels = sys.argv[2].split(",")
+
     print "Calling interpret for ", stem
     for diag in diagnoses:
         with open(stem+diag+".txt", 'rb') as f:
@@ -23,73 +27,66 @@ if __name__ == "__main__":
     gold = {}
     guessed = {}
     for d in diagnoses:
-        gold[d] = []
-        guessed[d] = []
-    c = 0
+        gold[d] = {}
+        guessed[d] = {}
+        for l in labels:
+            gold[d][l] = []
+            guessed[d][l] = []
 
-    numMistakes = 0
 
     for diag in diagnoses:
         samples = diagSamples[diag]
-        for row, sample in enumerate(samples):
+        for labelIndx, label in enumerate(labels):
+            for row, sample in enumerate(samples):
 
-            skip = False
+                goldsAndPredictions = [float(f) for f in sample.split()]
 
-            if skip and row in skipList:
-                continue
+                assert len(goldsAndPredictions) % 2 == 0
+                golds = []
+                guesses = []
 
-
-            goldsAndPredictions = [float(f) for f in sample.split()]
-
-            assert len(goldsAndPredictions) % 2 == 0
-            golds = []
-            guesses = []
-
-            goldsVec = goldsAndPredictions[:len(goldsAndPredictions)/2]
-            guessedVec = [ 1 if p >= 0 else 0 for p in goldsAndPredictions[len(goldsAndPredictions)/2:]]
-            assert len(goldsVec) == len(guessedVec)
+                goldsVec = goldsAndPredictions[:len(goldsAndPredictions)/2]
+                guessedVec = [ 1 if p >= 0 else 0 for p in goldsAndPredictions[len(goldsAndPredictions)/2:]]
+                assert len(goldsVec) == len(guessedVec)
 
 
-            gold[diag].append(goldsVec[0])
+                gold[diag][label].append(goldsVec[labelIndx])
 
-            prediction = 1 if guessedVec[0] > 0 else 0
-            guessed[diag].append(prediction)
+                prediction = 1 if guessedVec[labelIndx] > 0 else 0
+                guessed[diag][label].append(prediction)
 
 
     overallGold = []
     overallGuessed = []
-    mistakeIds = {}
     for diag in diagnoses:
-        # if sum(gold[diag]) == 0:
-        #     continue
-        defualt = 1
-        if catergoryVerbose:
-            print "---------------------------"
-            print diag
-            print "Number of gold",  sum(gold[diag])
-            print "Number guessed",  sum(guessed[diag])
-            assert len(guessed[diag]) == len(gold[diag])
-        overallGold.extend(gold[diag])
-        overallGuessed.extend(guessed[diag])
-        truePos = sum([guessed[diag][i] == 1 and gold[diag][i] == 1 for i in range(len(gold[diag]))])
-        falsePos = sum([guessed[diag][i] == 1 and gold[diag][i] == 0 for i in range(len(gold[diag]))])
-        trueNeg  = sum([guessed[diag][i] == 0 and gold[diag][i] == 0 for i in range(len(gold[diag]))])
-        falseNeg = sum([guessed[diag][i] == 0 and gold[diag][i] == 1 for i in range(len(gold[diag]))])
-
-        mistakeIds[diag] = [i for i in range(len(gold[diag])) if not guessed[diag][i] ==  gold[diag][i] ]
+        for label in labels:
+            defualt = 1
+            if catergoryVerbose:
+                print "---------------------------"
+                print diag, label
+                print "Number of gold",  sum(gold[diag][label])
+                print "Number guessed",  sum(guessed[diag][label])
+                assert len(guessed[diag][label]) == len(gold[diag][label])
+            overallGold.extend(gold[diag][label])
+            overallGuessed.extend(guessed[diag][label])
+            truePos = sum([guessed[diag][label][i] == 1 and gold[diag][label][i] == 1 for i in range(len(gold[diag][label]))])
+            falsePos = sum([guessed[diag][label][i] == 1 and gold[diag][label][i] == 0 for i in range(len(gold[diag][label]))])
+            trueNeg  = sum([guessed[diag][label][i] == 0 and gold[diag][label][i] == 0 for i in range(len(gold[diag][label]))])
+            falseNeg = sum([guessed[diag][label][i] == 0 and gold[diag][label][i] == 1 for i in range(len(gold[diag][label]))])
 
 
-        percision = 1. * truePos / (truePos + falsePos) if (truePos + falsePos) > 0 else defualt
-        recall    =  1. * truePos / (truePos + falseNeg) if (truePos + falseNeg) > 0 else defualt
-        f1        =  2. * (percision * recall)  / (percision + recall) if (percision + recall) >0 else defualt
+            percision = 1. * truePos / (truePos + falsePos) if (truePos + falsePos) > 0 else defualt
+            recall    =  1. * truePos / (truePos + falseNeg) if (truePos + falseNeg) > 0 else defualt
+            f1        =  2. * (percision * recall)  / (percision + recall) if (percision + recall) >0 else defualt
 
-        sensitivity = recall
-        specifcity = 1.* trueNeg / (trueNeg + falsePos) if (trueNeg + falsePos) >0 else defualt
-        if catergoryVerbose:
-            print "truePos, falsePos, trueNeg, falseNeg:", truePos, falsePos, trueNeg, falseNeg
-            print diag, "percision, recall, f1:", percision, ',', recall, ',', f1
-            print diag, "sensitivity, specifcity:", sensitivity, ',', specifcity
-            print "Diag", diag, ", Num Mistakes:", (falsePos + falseNeg), ", error rate", (falsePos + falseNeg)*1./len(gold[diag])
+            sensitivity = recall
+            specifcity = 1.* trueNeg / (trueNeg + falsePos) if (trueNeg + falsePos) >0 else defualt
+
+            if catergoryVerbose:
+                print diag, label, "truePos, falsePos, trueNeg, falseNeg:", truePos, falsePos, trueNeg, falseNeg
+                print diag, label, "percision, recall, f1:", percision, ',', recall, ',', f1
+                print diag, label, "sensitivity, specifcity:", sensitivity, ',', specifcity
+                print "Diag", diag, label, ", Num Mistakes:", (falsePos + falseNeg), ", error rate", (falsePos + falseNeg)*1./len(gold[diag][label])
 
 if overallVerbose:
     print "---------------------------"
