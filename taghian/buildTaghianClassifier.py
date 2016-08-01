@@ -9,26 +9,26 @@ import datetime
 random.seed(1)
 
 if __name__ == "__main__":
-    keys = ['Her2 (FISH)', 'Estrogen Receptor - qualitative', 'Progesterone receptor - qualitative']
     paths = ['her2DB.p', 'erDB.p', 'prDB.p']
-    outStem = ["her2", "er", "pr"]
+    mode = ["her2", "er", "pr"]
+    testSetSize = 500
 
     for indx, path in enumerate(paths):
         db = p.load(open(path, 'rb'))
-        key = keys[indx]
-        stem = outStem[indx]
+        key = mode[indx]
+        stem = mode[indx]
         dirPath = "../boostexer/breast/taghian/pathology_"
         print "Generating train/test for ", stem
 
-        validLabels = ["Negative", "Positive"]
+        validLabels = set([r[key] for r in db if not r[key] == None])
         filteredDB = [d for d in db if d[key] in validLabels]
 
         print "Len filiteredDB", len(filteredDB)
         random.shuffle(filteredDB)
 
 
-        trainReports = [t['Preprocessed_Report_Text'] for t in filteredDB[:-400]]
-        trainLabels  = [t[key] for t in filteredDB[:-400]]
+        trainReports = [t['Preprocessed_Report_Text'] for t in filteredDB[:-testSetSize]]
+        trainLabels  = [t[key] for t in filteredDB[:-testSetSize]]
 
         print "Num train samples", len(trainLabels)
         print "-------- Train Label Dist,",key," ----------"
@@ -36,8 +36,8 @@ if __name__ == "__main__":
 
         assert len(trainReports) == len(trainLabels)
 
-        testReports = [t['Preprocessed_Report_Text'] for t in filteredDB[-400:]]
-        testLabels  = [t[key] for t in filteredDB[-400:]]
+        testReports = [t['Preprocessed_Report_Text'] for t in filteredDB[-testSetSize:]]
+        testLabels  = [t[key] for t in filteredDB[-testSetSize:]]
 
 
         assert len(testReports) == len(testLabels)
@@ -47,7 +47,7 @@ if __name__ == "__main__":
         print sum([t == "Positive" for t in testLabels]) * 1. / len(testLabels)
 
         with open(dirPath+stem+".names", 'wb') as f:
-            labels = "Positive, Negative.\n"
+            labels = ", ".join(validLabels) + ".\n"
             features = "pathReport: text.\n"
             f.write(labels)
             f.write(features)

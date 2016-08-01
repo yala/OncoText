@@ -11,7 +11,7 @@ dateFieldsToIndx = {'Date of 1st biopsy':0, 'Date of 2nd biopsy':1,  'Date of 3r
 
 #Below is sequence of er/pr/her2 col names as they align to the order of biops as surgs above
 erColSeq = ['Estrogen receptors - qualitative', 'Estrogen receptors ', '2 Estrogen receptors ', '2 Estrogen receptors - qualitative', '3 Estrogen receptors - qualitative', '4 Estrogen receptors - qualitative' ]
-prColSeq = ['Progesterone receptors - qualitative', 'Progesterone receptors', '2 Progesterone receptors ', '2 Progesterone receptors - qualitative', '3 Progesterone receptors - qualitative', '4 Progesterone receptors - qualitative']
+prColSeq = ['Progesterone receptors - qualitative', 'Progesterone receptors ', '2 Progesterone receptors ', '2 Progesterone receptors - qualitative', '3 Progesterone receptors - qualitative', '4 Progesterone receptors - qualitative']
 her2ColSeq = ['Her2 (FISH)', '2 Her2 (FISH)', '3 Her2 (FISH)', '4 Her2 (FISH)', '5 Her2 (FISH)', '6 Her2 (FISH)', 'Fish Her2 (FISH)'  ]
 
 def parseXLS():
@@ -69,8 +69,6 @@ def preprocessDB(data, save=False):
         mrn = normalizeMRN(rep['Registry ID'])
  
         rep['MRNPlusX'] = mrn
-        rep['Report_Date'] = rep['Report_Date_TimePlusX'] + datetime.timedelta(-13)
-
         if mrn in mrnDB:
             mrnDB[mrn].append(rep)
         else:
@@ -86,13 +84,14 @@ def preprocessDB(data, save=False):
 def findMatchingReports(db, save=False):
     print "Len redcap DB", len(db)
 
-    misAlignedDates = []
     lengthsDB = {}
     pathMrns = {}
     pathReps = p.load(open('../'+outPath, 'rb'))
 
     for r in pathReps:
         pathMRN = normalizeMRN(r['MRNPlusX'])
+        r['Report_Date'] = r['Report_Date_TimePlusX'] + datetime.timedelta(-13)
+
 
         if pathMRN in pathMrns:
             pathMrns[pathMRN].append( r )
@@ -106,88 +105,76 @@ def findMatchingReports(db, save=False):
 
     joinedDB = {}
     misAlignedDates = []
+    countAligned = 0
     for mrn in db:
         redcapReps = db[mrn]
         if mrn in pathMrns:
-            for r in redcapReps:
-                for d in dateFields:
-                    if d in r and not r[d] == None:
-                        lengthsDB[mrn][1] += 1
+            for rowIndx, r in enumerate(redcapReps):
+                redCapDates = [r[d] for d in dateFields if not r[d] == None ]
+
+                for pathRep in pathMrns[mrn]:
+                    if pathRep['Report_Date'] in redCapDates:
+                        pathRep['taghainColIndx'] = redCapDates.index(pathRep['Report_Date'])
+                        pathRep['taghainRowIndx'] = rowIndx
+                        countAligned += 1
+
+                lengthsDB[mrn][1] += len(redCapDates)
+
             joinedDB[mrn] = {'hughes':pathMrns[mrn], 'taghian':db[mrn], 'lengths':lengthsDB[mrn]}
 
-        else:
-            for rep in redcapReps:
-                if 'Diagnosis date' in rep and not rep['Diagnosis date'] == None:
-                    year = rep['Diagnosis date'].year
-                    misAlignedDates.append(year)
     
     if save:
         p.dump(joinedDB, open('redcapWithPathReps.p', 'wb'))
 
     print "Size of taghian hughes MRN overlap", len(joinedDB)
-    print "Num mislaligned", len(misAlignedDates)
-    print "Avg year of misaligned ", sum(misAlignedDates) * 1./len(misAlignedDates) if len(misAlignedDates) > 0 else 0
+    print "Count Aligned ", countAligned
     return joinedDB
 
 
-def buildDB(db, baseName, path):
-    erDB = []
-    relevantEvents = ['b.Primary Tumor', 'c.Event 1', 'd.Event 2', 'e.Event 3']
+## Suport building dbs from path reps (aligned by taghian index in the path rep) for er/pr/her2
+## This is because I have col to index dictionaries to figure out which date led to that result
+## Input DB is joinedDB
+## Key { MRN} -> {'taghian': [recap events], 'hughes':[pathReps], 'lengths':[ countRedCapEvents, count pathReps]}
+def buildDB(db, mode, path):
+    outDB = []
+    if mode == "er":
+        colSeq = erColSeq
+    elif mode == "pr":
+        colSeq = prColSeq
+    elif mode == "her2":
+        colSeq = her2ColSeq
+    else:
+        print "ERROR: modes supported are er/pr/her2"
+
 
     #Investigative Counts
-    countEasy = 0 
-    countERs  = 0
-    countPathReps = 0
-    countRedCapEvents = 0
-    countAtLeast1 = 0
     yetToPrintBool = True
 
     for mrn in db:
         pathReps =  db[mrn]['hughes']
-        redcap   =  [d for d in db[mrn]['taghian'] if d['Event Name'] in relevantEvents]
+        redcap   =  db[mrn]['taghian']
 
-        numERs = 0
-        erIndx = 1
-        newName = baseName
-        for red in redcap:
-            while newName in red and not red[newName] == None:
-                numERs += 1
-                erIndx += 1
-                newName = str(erIndx)  + " " + baseName
-        
-        
-        countPathReps += len(pathReps)
-        countRedCapEvents += len(redcap)
-        countERs += numERs
-        if numERs >0:
-            countAtLeast1 += 1
-            if yetToPrintBool:
-                print "Example"
-                print pathReps[0]
-                print redcap[0][baseName]
-                yetToPrintBool = False
-            pathReps[0][baseName] = redcap[0][baseName]
-            erDB.append(pathReps[0])
+        for rep in pathReps:
+            if 'taghainColIndx' in rep and 'taghainRowIndx' in rep:
+                redcapIndx = rep['taghainRowIndx']
+                colField = colSeq[ rep['taghainColIndx'] ]
+                rep[mode] = redcap[redcapIndx][colField]
+                if not rep[mode] == None:
+                    outDB.append(rep)
+            else:
+                continue
 
-        if len(pathReps) == numERs:
-            countEasy += 1
+    p.dump(outDB, open(path, 'wb'))
+    print "Number of ",mode," reps and path reps equiv", len(outDB)
 
-    p.dump(erDB, open(path, 'wb'))
-    print "Number of ER reps and path reps equiv", countEasy
-    print "countPathReps", countPathReps
-    print "countRedCapEvents", countRedCapEvents
-    print "countERs", countERs
-    print 'countAtLeast1', countAtLeast1
-
-    print "Length of ER DB", len(erDB)
-    return erDB
+    return outDB
 
 parseXLSBool = False
 preprocessDBBool = False
-findMatchingReportsBool = True
-buildERDBBool = False
-buildPRDBBool = False
-buildHer2Bool = False
+findMatchingReportsBool = False
+buildERDBBool = True
+buildPRDBBool = True
+buildHer2Bool = True
 
 if __name__ == "__main__":
    
@@ -211,17 +198,17 @@ if __name__ == "__main__":
     if buildERDBBool:
         if not findMatchingReportsBool:
             joinedDB =  p.load(open('redcapWithPathReps.p', 'rb'))        
-        erDB = buildDB(joinedDB, 'Estrogen Receptor - qualitative', 'erDB.p')
+        erDB = buildDB(joinedDB, 'er', 'erDB.p')
 
     if buildPRDBBool:
         if not findMatchingReportsBool and not buildERDBBool:
             joinedDB =  p.load(open('redcapWithPathReps.p', 'rb'))        
-        prDB = buildDB(joinedDB, 'Progesterone receptor - qualitative', 'prDB.p')
+        prDB = buildDB(joinedDB, 'pr', 'prDB.p')
 
     if buildHer2Bool:
         if not findMatchingReportsBool and not buildERDBBool and not buildPRDBBool:
             joinedDB =  p.load(open('redcapWithPathReps.p', 'rb'))
-            her2DB = buildDB(joinedDB, 'Her2 (FISH)', 'her2DB.p')
+        her2DB = buildDB(joinedDB, 'her2', 'her2DB.p')
 
 
 
