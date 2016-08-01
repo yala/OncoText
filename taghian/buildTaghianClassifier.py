@@ -8,6 +8,9 @@ import datetime
 
 random.seed(1)
 
+def replaceSpaces(label):
+    return '_'.join(label.split())
+
 if __name__ == "__main__":
     paths = ['her2DB.p', 'erDB.p', 'prDB.p']
     mode = ["her2", "er", "pr"]
@@ -20,7 +23,7 @@ if __name__ == "__main__":
         dirPath = "../boostexer/breast/taghian/pathology_"
         print "Generating train/test for ", stem
 
-        validLabels = set([r[key] for r in db if not r[key] == None])
+        validLabels = set([replaceSpaces(r[key]) for r in db if not r[key] == None])
         filteredDB = [d for d in db if d[key] in validLabels]
 
         print "Len filiteredDB", len(filteredDB)
@@ -37,8 +40,9 @@ if __name__ == "__main__":
         assert len(trainReports) == len(trainLabels)
 
         testReports = [t['Preprocessed_Report_Text'] for t in filteredDB[-testSetSize:]]
-        testLabels  = [t[key] for t in filteredDB[-testSetSize:]]
+        testLabels  = [replaceSpaces(t[key]) for t in filteredDB[-testSetSize:]]
 
+        ## Remove spaces from labels
 
         assert len(testReports) == len(testLabels)
 
