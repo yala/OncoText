@@ -3,9 +3,16 @@ import openpyxl as xl
 import sys
 sys.path.append("..")
 from constants import *
+import datetime
 
-dateFields = ['Date of 2nd surgery', 'Date of 3rd surgery', 'Date of 1 st surgery',\
-'Date of 2nd biopsy', 'Date of 1st biopsy', 'Date of 3rd biopsy' ]
+dateFields = ['Date of 1st biopsy', 'Date of 2nd biopsy',  'Date of 3rd biopsy', 'Date of 1 st surgery','Date of 2nd surgery', 'Date of 3rd surgery' ]
+dateFieldsToIndx = {'Date of 1st biopsy':0, 'Date of 2nd biopsy':1,  'Date of 3rd biopsy':2, 'Date of 1 st surgery':3,'Date of 2nd surgery':4, 'Date of 3rd surgery':5 }
+
+
+#Below is sequence of er/pr/her2 col names as they align to the order of biops as surgs above
+erColSeq = ['Estrogen receptors - qualitative', 'Estrogen receptors ', '2 Estrogen receptors ', '2 Estrogen receptors - qualitative', '3 Estrogen receptors - qualitative', '4 Estrogen receptors - qualitative' ]
+prColSeq = ['Progesterone receptors - qualitative', 'Progesterone receptors', '2 Progesterone receptors ', '2 Progesterone receptors - qualitative', '3 Progesterone receptors - qualitative', '4 Progesterone receptors - qualitative']
+her2ColSeq = ['Her2 (FISH)', '2 Her2 (FISH)', '3 Her2 (FISH)', '4 Her2 (FISH)', '5 Her2 (FISH)', '6 Her2 (FISH)', 'Fish Her2 (FISH)'  ]
 
 def parseXLS():
     print "loading wb"
@@ -58,13 +65,11 @@ def normalizeMRN(mrn):
 def preprocessDB(data, save=False):
     mrnDB = {}
     for rep in data:
-        try:
-            mrn = normalizeMRN(rep['Registry ID'])
-        except Exception, e:
-            print rep['Registry ID'], e
-            continue
 
+        mrn = normalizeMRN(rep['Registry ID'])
+ 
         rep['MRNPlusX'] = mrn
+        rep['Report_Date'] = rep['Report_Date_TimePlusX'] + datetime.timedelta(-13)
 
         if mrn in mrnDB:
             mrnDB[mrn].append(rep)
@@ -110,9 +115,9 @@ def findMatchingReports(db, save=False):
                         lengthsDB[mrn][1] += 1
             joinedDB[mrn] = {'hughes':pathMrns[mrn], 'taghian':db[mrn], 'lengths':lengthsDB[mrn]}
 
-        if not mrn in pathMrns:
+        else:
             for rep in redcapReps:
-                if 'Diagnoisis date' in rep:
+                if 'Diagnosis date' in rep and not rep['Diagnosis date'] == None:
                     year = rep['Diagnosis date'].year
                     misAlignedDates.append(year)
     
@@ -120,7 +125,8 @@ def findMatchingReports(db, save=False):
         p.dump(joinedDB, open('redcapWithPathReps.p', 'wb'))
 
     print "Size of taghian hughes MRN overlap", len(joinedDB)
-    print "Avg year of misaligned ", sum(misAlignedDates)/len(misAlignedDatess)
+    print "Num mislaligned", len(misAlignedDates)
+    print "Avg year of misaligned ", sum(misAlignedDates) * 1./len(misAlignedDates) if len(misAlignedDates) > 0 else 0
     return joinedDB
 
 
@@ -177,7 +183,7 @@ def buildDB(db, baseName, path):
     return erDB
 
 parseXLSBool = False
-preprocessDBBool = True
+preprocessDBBool = False
 findMatchingReportsBool = True
 buildERDBBool = False
 buildPRDBBool = False
