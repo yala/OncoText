@@ -15,11 +15,15 @@ random.seed(1)
 # Set write to false to collace files for export
 def binarizeFilesForClassification(write = True):
     allData = p.load(open(dataPath, 'rb'))
-    goldData = [d for d in allData if 'Correct' in d]
-    print "Num gold Data with DOBs", len([d for d in goldData if 'DOBPlusX' in d])
 
-    remainData = [d for d in allData if not 'Correct' in d]
-    print "Num remainData with DOBs", len([d for d in remainData if 'DOBPlusX' in d])
+    #Old allData got corrupted so now reconstruct it by throwing away following lables.
+    superfliousLabels = ['EpisodeID',]
+
+    goldData = [d for d in allData if 'Correct' in d and not( d['Correct'] == 0)]
+    print "Num gold Data with DOBs", len([d for d in goldData if 'DOBPlusX' in d and not d['DOBPlusX'] == 0]), "/", len(goldData)
+
+    remainData = [d for d in allData if not('Correct' in d) or d['Correct'] == 0]
+    print "Num remainData with DOBs", len([d for d in remainData if 'DOBPlusX' in d and not d['DOBPlusX'] == 0]), "/", len(allData)
     
     export = not write
     trainReports, trainLabels = getLabelsAndReports(goldData, export)
@@ -73,9 +77,9 @@ def buildExport(exportData, data, startIdx):
         record = {}
         colVals  = data[i]
         for j, col in enumerate(cols):
-            if col == 'Report_Date_TimePlusX' or col == 'DOBPlusX':
+            if col in  ['Report_Date_TimePlusX', 'DOBPlusX']:
                 date = colVals[j]
-                if date == 0:
+                if date == 0 or isinstance(date, datetime.datetime):
                     record[col] = date
                     continue
 

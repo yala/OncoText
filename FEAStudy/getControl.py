@@ -60,6 +60,7 @@ visited = {}
 countNoControl = 0
 controlListMRNs = []
 controlListRecords = []
+notEnoughMRNs = []
 ## For each fea, find certain number of controls
 for fea in feaDOBs:
     dob = fea['DOBPlusX']
@@ -68,7 +69,7 @@ for fea in feaDOBs:
     controls = 0
     #Find controls for each one
     for mrn in possControls:
-        if mrn in visited: #Make sure we haven't used this control before
+        if mrn in visited or not 'breast' in mrnDict[mrn][0]['Report_Text'].lower(): #Make sure we haven't used this control before
             continue
         possDob = mrnDict[mrn][0]['DOBPlusX']
         possDiagDate = mrnDict[mrn][0]['Report_Date_TimePlusX']
@@ -106,10 +107,14 @@ for fea in feaDOBs:
 
     if controls < maxControl:
         countNoControl += 1
+        notEnoughMRNs.append(feaMRN)
+
+
 
 
 print "Len FEAS DOBs", len(feaDOBs)
-print "Count FEA mrns with no control", countNoControl
+print "Count FEA mrns with not enough control", countNoControl
+print "Those MRNs are", notEnoughMRNs
 print "Num mrns in control set", len(controlListMRNs)
 print "Num elts in control set", len(controlListRecords)
 
@@ -124,6 +129,12 @@ with open("controlGroupAllData.csv", "wb") as outCSVRecords:
     writer = DictWriter(outCSVRecords, keys)
     writer.writeheader()
     writer.writerows(controlListRecords)
+
+missingDOBFeas = [f['MRNPlusX'] for f in feas if f['DOBPlusX'] == 0]
+print "Number of missing DOBs", len(missingDOBFeas)
+with open('missingFEAMRNs.csv', 'wb') as outMissing:
+    outMissing.write(','.join(missingDOBFeas))
+
 
 
             
