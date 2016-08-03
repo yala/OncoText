@@ -8,14 +8,14 @@ import datetime
 dateFields = ['Date of 1st biopsy', 'Date of 2nd biopsy',  'Date of 3rd biopsy', 'Date of 1 st surgery','Date of 2nd surgery', 'Date of 3rd surgery' ]
 dateFieldsToIndx = {'Date of 1st biopsy':0, 'Date of 2nd biopsy':1,  'Date of 3rd biopsy':2, 'Date of 1 st surgery':3,'Date of 2nd surgery':4, 'Date of 3rd surgery':5 }
 
-lauraDictToIndx = {'Biposy 1':0, 'Biposy 2':1, 'Biopsy 3':2, 'Surgery 1':3 'Surgery 2':4, 'Surgery 3':5 }
+lauraDictToIndx = {'Biposy 1':0, 'Biposy 2':1, 'Biopsy 3':2, 'Surgery 1':3, 'Surgery 2':4, 'Surgery 3':5 }
 
 #Below is sequence of er/pr/her2 col names as they align to the order of biops as surgs above
 erColSeq = ['Estrogen receptors - qualitative', 'Estrogen receptors ', '2 Estrogen receptors ', '2 Estrogen receptors - qualitative', '3 Estrogen receptors - qualitative', '4 Estrogen receptors - qualitative' ]
 prColSeq = ['Progesterone receptors - qualitative', 'Progesterone receptors ', '2 Progesterone receptors ', '2 Progesterone receptors - qualitative', '3 Progesterone receptors - qualitative', '4 Progesterone receptors - qualitative']
 her2ColSeq = ['Her2 (FISH)', '2 Her2 (FISH)', '3 Her2 (FISH)', '4 Her2 (FISH)', '5 Her2 (FISH)', '6 Her2 (FISH)', 'Fish Her2 (FISH)'  ]
 
-def parseXLS():
+def parseRedCapXLS(legendDict):
     print "loading wb"
     wb = xl.load_workbook('redcap.xlsx')
 
@@ -53,6 +53,50 @@ def parseXLS():
     print 'dumping'
     print "legend", legend
     p.dump(data, open('redcap.p', 'wb'))
+    return data
+
+def parseMapXLS():
+    print "loading wb mp"
+    wb = xl.load_workbook('redmap.xlsx')
+
+    print "getting sheet"
+    sheet = wb.get_active_sheet()
+
+    data = {}
+
+    legendRowBool = True
+    print "Getting iterator"
+    legend = []
+    for row in sheet.iter_rows():
+        rowDict = {}
+        for indx, col in enumerate(row):
+            if legendRowBool:
+                legend.append(col.value)
+            else:
+                rowDict[legend[indx]] = col.value
+        
+        if not legendRowBool:
+            newName = rowDict['Column name']
+
+            if rowDict['Column name'] in data:
+                counter = 2
+                newName = str(counter) + " " + rowDict['Column name']
+                while newName in data:
+                    counter += 1
+                    newName = str(counter) + " " + rowDict['Column name']
+
+            
+            data[newName] = { 'event':rowDict['Mapped to '], 'extraction feild': rowDict['type'] }
+
+            assert legend == ['Column name', 'Mapped to ', 'comments', 'type']
+        else:
+            print 'processing legend row'
+
+        legendRowBool = False
+        
+    print 'dumping redmap.p'
+    print "legend", legend
+    p.dump(data, open('redmap.p', 'wb'))
     return data
 
 
@@ -170,17 +214,18 @@ def buildDB(db, mode, path):
 
     return outDB
 
-parseXLSBool = False
-preprocessDBBool = False
-findMatchingReportsBool = False
-buildERDBBool = True
-buildPRDBBool = True
-buildHer2Bool = True
+parseXLSBool = True
+preprocessDBBool = True
+findMatchingReportsBool = True
+buildERDBBool = False
+buildPRDBBool = False
+buildHer2Bool = False
 
 if __name__ == "__main__":
    
     if parseXLSBool:
-        redcap = parseXLS()
+        legendDict = parseMapXLS()
+        redcap = parseRedCapXLS(legendDict)
 
     if preprocessDBBool:
         print 'Running preprocessDB'
