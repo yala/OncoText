@@ -10,6 +10,7 @@ goldPath*
 *.xml
 taghian/*.p
 rawBreastPathReport.p
+rawBreastPathReport.bak.p
 analysis/DisagreementDict.p
 
 # Byte-compiled / optimized / DLL files

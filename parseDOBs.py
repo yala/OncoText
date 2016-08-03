@@ -1,6 +1,7 @@
 import pickle as p
 import xmltodict
 import openpyxl as xl
+from csv import DictWriter
 
 
 debugList = ['598763', '947949']
@@ -96,6 +97,23 @@ if __name__ == "__main__":
 
     print "Num mrns with no DOB", len(set([r['MRNPlusX'] for r in rawReps if (not 'DOBPlusX' in r) or r['DOBPlusX'] == 0]))
     print "Num mrns with DOB", len(set([r['MRNPlusX'] for r in rawReps if ('DOBPlusX' in r) and not r['DOBPlusX'] == 0]))
+
+
+    noDOBs = [ {'MRNPlusX':r['MRNPlusX'], 'Institution':r['Institution']} for r in rawReps\
+     if (not 'DOBPlusX' in r) or r['DOBPlusX'] == 0] 
+    noDOBInsts = set([r['Institution'] for r in noDOBs])
+    noDOBInstCounts = {}
+    for inst in noDOBInsts:
+        noDOBInstCounts[inst] = len([r for r in noDOBs if r['Institution'] == inst])
+
+    print "No DB Institution Distribution", noDOBInstCounts
+
+    keys = noDOBs[0].keys()
+    with open("FEAStudy/mrnsWithoutDOBs.csv", "wb") as outCSVRecords:
+        writer = DictWriter(outCSVRecords, keys)
+        writer.writeheader()
+        writer.writerows(noDOBs)
+
 
     raw_input("Redump rawBreastPathReps ?")
     p.dump(rawReps, open('rawBreastPathReport.p', 'wb'))

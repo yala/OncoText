@@ -8,6 +8,7 @@ import datetime
 dateFields = ['Date of 1st biopsy', 'Date of 2nd biopsy',  'Date of 3rd biopsy', 'Date of 1 st surgery','Date of 2nd surgery', 'Date of 3rd surgery' ]
 dateFieldsToIndx = {'Date of 1st biopsy':0, 'Date of 2nd biopsy':1,  'Date of 3rd biopsy':2, 'Date of 1 st surgery':3,'Date of 2nd surgery':4, 'Date of 3rd surgery':5 }
 
+lauraDictToIndx = {'Biposy 1':0, 'Biposy 2':1, 'Biopsy 3':2, 'Surgery 1':3 'Surgery 2':4, 'Surgery 3':5 }
 
 #Below is sequence of er/pr/her2 col names as they align to the order of biops as surgs above
 erColSeq = ['Estrogen receptors - qualitative', 'Estrogen receptors ', '2 Estrogen receptors ', '2 Estrogen receptors - qualitative', '3 Estrogen receptors - qualitative', '4 Estrogen receptors - qualitative' ]
