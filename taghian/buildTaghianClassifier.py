@@ -19,6 +19,7 @@ if __name__ == "__main__":
     types = set([redmap[m]['extraction feild'] for m in redmap if redmap[m]['event'] in lauraDictToIndx and not redmap[m]['extraction feild'] == None])
 
     modes = [ extraction for extraction in types if len(dB[extraction]) > 500 and extraction not in filtOutList]
+    print 'All modess', modes
 
     for mode in modes:
         db = dB[mode]
@@ -80,5 +81,5 @@ if __name__ == "__main__":
             for rep, label in zip(testReports, testLabels):
                 tsF.write(rep +", "+ str(label) + ".\n")
 
-        print "Saved testfile for", stem
+        print "Saved testfile for", stem, 'at ', (dirPath+stem)
         print "************************************"
