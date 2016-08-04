@@ -1,2 +1,2 @@
-Incisional_biopsy, Unknown, Fine_needle_aspiration_(FNA), No_breast_biopsy, Core_biopsy, Other, Needle_biopsy.
+Core_biopsy, Fine_needle_aspiration_(FNA), Incisional_biopsy, Needle_biopsy.
 pathReport: text.
