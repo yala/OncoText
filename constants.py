@@ -47,7 +47,11 @@ elif MODE == "TAGHIAN":
     JSONReportPath = "reportDB.json"
     JSONEpisodePath = "episodeDB.json"
     allDataStem = "boostexer/pathology_all"
+    lauraDictToIndx = {'Biposy 1':0, 'Biopsy 2':1, 'Biopsy 3':2, 'Surgery 1':3, 'Surgery2':4, 'Surgery 3':5 }
 
+
+    filtOutList = ['DCIS', 'LCIS', 'ILC', 'Mixed Inv Duct and Lob canc', 'IDC', 'ALH', 'hospital', 'Her2 (Fish)-val', \
+    'IDC with lobular features', 'date', 'ADH', 'Her2 (immunochem)', 'Her2 (Fish)- val']
 
     metaData = ['Report_Date_TimePlusX', 'MRNPlusX', 'Correct', 'Institution']
 
