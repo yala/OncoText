@@ -135,7 +135,6 @@ def findMatchingReports(db, save=False):
         pathMRN = normalizeMRN(r['MRNPlusX'])
         r['Report_Date'] = r['Report_Date_TimePlusX'] + datetime.timedelta(-13)
 
-
         if pathMRN in pathMrns:
             pathMrns[pathMRN].append( r )
         else:
@@ -153,7 +152,7 @@ def findMatchingReports(db, save=False):
         redcapReps = db[mrn]
         if mrn in pathMrns:
             for rowIndx, r in enumerate(redcapReps):
-                redCapDates = [r[d] for d in dateFields if not r[d] == None ]
+                redCapDates = [r[d] for d in dateFields]
 
                 for pathRep in pathMrns[mrn]:
                     if pathRep['Report_Date'] in redCapDates:
@@ -179,6 +178,7 @@ def findMatchingReports(db, save=False):
 ## Input DB is joinedDB
 ## Key { MRN} -> {'taghian': [recap events], 'hughes':[pathReps], 'lengths':[ countRedCapEvents, count pathReps]}
 def buildDB(db, redmap):
+    outDBReps = []
     outDB = {}
     types = set([redmap[m]['extraction feild'] for m in redmap if redmap[m]['event'] in lauraDictToIndx and not redmap[m]['extraction feild'] == None])
 
@@ -207,13 +207,25 @@ def buildDB(db, redmap):
 
         pathReps =  db[mrn]['hughes']
         redcap   =  db[mrn]['taghian']
-        for extraction in types:
-            colSeq =  colSeqs[extraction]
 
-            for rep in pathReps:
+        for rep in pathReps:
+
+            for extraction in types:
+                colSeq =  colSeqs[extraction]
+
                 if 'taghainColIndx' in rep and 'taghainRowIndx' in rep:
                     redcapIndx = rep['taghainRowIndx']
-                    colField = colSeq[ rep['taghainColIndx'] ]
+                    colIndx = rep['taghainColIndx'] 
+                    colField = colSeq[colIndx ]
+                    if not rep['Report_Date'] == redcap[redcapIndx][dateFields[colIndx]]:
+                        print "ERROR"
+                        print rep['Report_Date'] ,redcap[redcapIndx][dateFields[colIndx]]
+                        raw_input()
+                        print "colIndx, rowIndx:", colIndx , ",", redcapIndx
+                        print raw_input()
+                        print "Redcap[redcapIndx] is", redcap[redcapIndx]
+                        print "Redcap is", redcap
+                        raw_input()
                     ## Not all fields apply to all path reps and all surg reps
                     ## If the field is a placeholder, it means that this colIndx (ie type of report the path report it)
                     ## doesn't hold the extraction
@@ -222,9 +234,13 @@ def buildDB(db, redmap):
                     rep[extraction] = redcap[redcapIndx][colField]
                     if not rep[extraction] == None:
                         outDB[extraction].append(rep)
-                else:
-                    continue
+                    else:
+                        continue
+            rep['TaghianGold'] = 1
+            outDBReps.append(rep)
+                
 
+    p.dump(outDB, open('allExtractionReps.p', 'wb'))
     p.dump(outDB, open('allExtractionDBs.p', 'wb'))
     for extraction in types:
         print "Number of ",extraction," reps and path reps equiv", len(outDB[extraction])
@@ -238,7 +254,7 @@ def buildDB(db, redmap):
 
 parseXLSBool = False
 preprocessDBBool = False
-findMatchingReportsBool = False
+findMatchingReportsBool = True
 buildDBsBool = True
 
 if __name__ == "__main__":
@@ -264,7 +280,8 @@ if __name__ == "__main__":
     
     if buildDBsBool:
         if not findMatchingReportsBool:
-            joinedDB =  p.load(open('redcapWithPathReps.p', 'rb'))        
+            joinedDB =  p.load(open('redcapWithPathReps.p', 'rb'))
+        if not parseXLSBool:
             redmap = p.load(open('redmap.p', 'rb'))
         dBs = buildDB(joinedDB, redmap)
 
