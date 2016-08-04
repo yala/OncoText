@@ -20,6 +20,7 @@ if __name__ == "__main__":
 
     modes = [ extraction for extraction in types if len(dB[extraction]) > 500 and extraction not in filtOutList]
     print 'All modess', modes
+    raw_input()
 
     for mode in modes:
         db = dB[mode]
@@ -35,9 +36,15 @@ if __name__ == "__main__":
         print "Size of db", len(db)
         testSetSize = len(db)/5
         
-        validLabels = set([replaceSpaces(r[key]) for r in db if not r[key] == None])
-        print "Length of valid labels", len(validLabels)
-        print "validLabels", validLabels
+        validLabelsUnfiltered = set([replaceSpaces(r[key]) for r in db if not r[key] == None])
+        print "Length of valid labels unfilitered", len(validLabelsUnfiltered)
+        print "validLabelsUnfiltered", validLabelsUnfiltered
+        labelDist = {}
+        for label in validLabelsUnfiltered:
+            labelDist[label] = len([r for r in db if replaceSpaces(r[key]) == label])
+        print "Distribution", labelDist
+        validLabels = set([label for label in labelDist if labelDist[label] > 10 ])
+        print "Valid Labels", validLabels
         filteredDB = [d for d in db if replaceSpaces(d[key]) in validLabels]
 
         print "Len filiteredDB", len(filteredDB)
