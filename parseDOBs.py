@@ -40,6 +40,8 @@ if __name__ == "__main__":
                 print rowDict
                 missingDobs.append(rowDict)
 
+    p.dump(missingDobs, open('graceLatestDOBs', 'wb'))
+
     print "Num DOBs from grace", len(missingDobs)
 
     dobs = oldDobs + newDobs + missingDobs
