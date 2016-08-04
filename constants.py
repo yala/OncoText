@@ -36,8 +36,14 @@ elif MODE == "ALL_CANCER":
     print "MODE IS ALL CANCER"
 
 elif MODE == "TAGHIAN":
-        #Outcomes constants
-    diagnoses = [ u'er', 'pr', 'her2']
+    redmap = p.load(open('redmap.p', 'rb'))
+    types = set([redmap[m]['extraction feild'] for m in redmap if redmap[m]['event'] in lauraDictToIndx and not redmap[m]['extraction feild'] == None])
+    diagnoses = [ extraction for extraction in types if len(dB[extraction]) > 500 and extraction not in filtOutList]
+    diagLabelDict = {}
+    for diag in diagnoses:
+        validLabels = set(['_'.join(str(r[key]).split()) for r in db if not r[key] == None])
+        diagLabelDict[diag] = validLabels
+    #Outcomes constants
     #Contants for creating episodes
     #Contants for creating episodes
     dataPath = "rawBreastPathReport.p"

@@ -15,18 +15,20 @@ if __name__ == "__main__":
     stem = sys.argv[1]
 
     labels = ['Positive']
-    if len(sys.argv) > 2 and sys.argv[2]:
-        labels = sys.argv[2].split(",")
 
     print "Calling interpret for ", stem
     for diag in diagnoses:
-        with open(stem+diag+".txt", 'rb') as f:
+        diagFile = '_'.join(diag.split())
+        diagFile = '_'.join(diagFile.split('/'))
+        with open(stem+diagFile+".txt", 'rb') as f:
            diagSamples[diag] = f.readlines()
 
 
     gold = {}
     guessed = {}
     for d in diagnoses:
+        if MODE == "TAGHIAN":
+            labels = diagLabelDict[d]
         gold[d] = {}
         guessed[d] = {}
         for l in labels:
@@ -36,6 +38,8 @@ if __name__ == "__main__":
 
     for diag in diagnoses:
         samples = diagSamples[diag]
+        if MODE == "TAGHIAN":
+            labels = diagLabelDict[diag]
         for labelIndx, label in enumerate(labels):
             for row, sample in enumerate(samples):
 
