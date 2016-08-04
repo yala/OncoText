@@ -7,6 +7,7 @@ for name in "${pathTypes[@]}"; do
     touch $outStem$name.txt &&
     ./../../boostexter -n 1 -W 1 -N ngram -S $stem$name - V &&
     ./../../boostexter -C -S $stem$name < $stem$name.test  > $outStem$name.txt ;
+    echo "-------------------------------------"
 done
 echo "Done"
     
