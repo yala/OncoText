@@ -22,10 +22,19 @@ if __name__ == "__main__":
 
         diagLabelDict = {}
         for diag in diagnoses:
-            validLabels = set(['_'.join(str(r[diag]).split()) for r in dB[diag] if not r[diag] == None])
+            validLabelsUnfiltered = set(['_'.join(str(r[diag]).split()) for r in dB[diag] if not r[diag] == None])
+
+            labelDist = {}
+            for label in validLabelsUnfiltered:
+                labelDist[label] = len([r for r in dB[diag] if '_'.join(str(r[diag]).split()) == label])
+
+            print "Distribution", labelDist
+            validLabels = set([label for label in labelDist if labelDist[label] > 10 ])
             diagLabelDict[diag] = validLabels
+            
         types = set([redmap[m]['extraction feild'] for m in redmap if redmap[m]['event'] in lauraDictToIndx and not redmap[m]['extraction feild'] == None])
         diagnoses = [ extraction for extraction in types if len(dB[extraction]) > 500 and extraction not in filtOutList]
+
 
     print "Calling interpret for ", stem
     for diag in diagnoses:
@@ -63,7 +72,21 @@ if __name__ == "__main__":
                 goldsVec = goldsAndPredictions[:len(goldsAndPredictions)/2]
                 guessedVec = [ 1 if p >= 0 else 0 for p in goldsAndPredictions[len(goldsAndPredictions)/2:]]
                 assert len(goldsVec) == len(guessedVec)
-
+                if not diag in gold:
+                    print "ERROR1"
+                    print "Diag", diag
+                    raw_input()
+                if not label in gold[diag]:
+                    print "ERROR2"
+                    print "Label", label
+                    print "label poss", diagLabelDict[label]
+                    print 'labelIndx', labelIndx
+                    raw_input()
+                if labelIndx >= len(goldsVec):
+                    print "ERROR3", labelIndx, goldsVec
+                    print "Label", label
+                    print "Diag", diag
+                    print "expected labels", diagLabelDict[diag]
 
                 gold[diag][label].append(goldsVec[labelIndx])
 
