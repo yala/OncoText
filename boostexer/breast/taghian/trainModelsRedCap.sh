@@ -1,5 +1,5 @@
 #!/bin/bash
-pathTypes=("er" "pr" "BVI" "Comedonercrosis" "EIC" "Her2_(Fish)" "LVI" "Max_Tumor_Size" "Micopapillary" "NOS" "Other_Cancr" "Pagets" "Solid_Cribiform" "Type_of_biopsy")
+pathTypes=("ER" "PR" "BVI" "Comedonercrosis" "EIC" "Her2_(Fish)" "LVI" "Max_Tumor_Size" "Micopapillary" "NOS" "Other_Cancr" "Pagets" "Solid_Cribiform" "Type_of_biopsy")
 stem="pathology_"
 outStem="../../../classification_results/Breast/class_results_"
 for name in "${pathTypes[@]}"; do

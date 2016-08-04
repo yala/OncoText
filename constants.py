@@ -1,5 +1,5 @@
 import datetime
-
+import pickle as p
 
 MODE = "TAGHIAN"
 
@@ -37,11 +37,17 @@ elif MODE == "ALL_CANCER":
 
 elif MODE == "TAGHIAN":
     redmap = p.load(open('redmap.p', 'rb'))
+    dB  = p.load(open('allExtractionDBs.p', 'rb'))
+
+    lauraDictToIndx = {'Biposy 1':0, 'Biopsy 2':1, 'Biopsy 3':2, 'Surgery 1':3, 'Surgery2':4, 'Surgery 3':5 }
+    filtOutList = ['DCIS', 'LCIS', 'ILC', 'Mixed Inv Duct and Lob canc', 'IDC', 'ALH', 'hospital', 'Her2 (Fish)-val', \
+    'IDC with lobular features', 'date', 'ADH', 'Her2 (immunochem)', 'Her2 (Fish)- val']
+
     types = set([redmap[m]['extraction feild'] for m in redmap if redmap[m]['event'] in lauraDictToIndx and not redmap[m]['extraction feild'] == None])
     diagnoses = [ extraction for extraction in types if len(dB[extraction]) > 500 and extraction not in filtOutList]
     diagLabelDict = {}
     for diag in diagnoses:
-        validLabels = set(['_'.join(str(r[key]).split()) for r in db if not r[key] == None])
+        validLabels = set(['_'.join(str(r[diag]).split()) for r in dB[diag] if not r[diag] == None])
         diagLabelDict[diag] = validLabels
     #Outcomes constants
     #Contants for creating episodes
@@ -53,11 +59,6 @@ elif MODE == "TAGHIAN":
     JSONReportPath = "reportDB.json"
     JSONEpisodePath = "episodeDB.json"
     allDataStem = "boostexer/pathology_all"
-    lauraDictToIndx = {'Biposy 1':0, 'Biopsy 2':1, 'Biopsy 3':2, 'Surgery 1':3, 'Surgery2':4, 'Surgery 3':5 }
-
-
-    filtOutList = ['DCIS', 'LCIS', 'ILC', 'Mixed Inv Duct and Lob canc', 'IDC', 'ALH', 'hospital', 'Her2 (Fish)-val', \
-    'IDC with lobular features', 'date', 'ADH', 'Her2 (immunochem)', 'Her2 (Fish)- val']
 
     metaData = ['Report_Date_TimePlusX', 'MRNPlusX', 'Correct', 'Institution']
 
