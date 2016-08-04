@@ -3,6 +3,7 @@ pathTypes=("Are_there_positive_LN?" "Type_of_sampled_LN_(choice=None)" "Pagets" 
 stem="pathology_"
 outStem="../../../classification_results/Breast/class_results_"
 for name in "${pathTypes[@]}"; do
+    echo $stem$name 
     touch $outStem$name.txt &&
     ./../../boostexter -n 1 -W 1 -N ngram -S $stem$name - V &&
     ./../../boostexter -C -S $stem$name < $stem$name.test  > $outStem$name.txt ;
