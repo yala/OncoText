@@ -6,7 +6,7 @@ import random
 from constants import *
 import datetime
 
-random.seed(1)
+random.seed(0)
 
 def replaceSpaces(label):
     return '_'.join(str(label).split())
@@ -31,6 +31,7 @@ if __name__ == "__main__":
         print "************************************"
         print "Generating train/test for ", stem
 
+
         print "Size of db", len(db)
         testSetSize = len(db)/5
         
@@ -40,16 +41,21 @@ if __name__ == "__main__":
         filteredDB = [d for d in db if replaceSpaces(d[key]) in validLabels]
 
         print "Len filiteredDB", len(filteredDB)
+
+        balanced = False
+        # Reshuffle DB until there is some amount of each label on each side
+        print "shuffle"
         random.shuffle(filteredDB)
 
-
         trainReports = [t['Preprocessed_Report_Text'] for t in filteredDB[:-testSetSize]]
-        trainLabels  = [t[key] for t in filteredDB[:-testSetSize]]
+        trainLabels  = [replaceSpaces(t[key])  for t in filteredDB[:-testSetSize]]
 
         print "Num train samples", len(trainLabels)
         print "-------- Train Label Dist,",key," ----------"
-        print sum([t == list(validLabels)[0] for t in trainLabels]) * 1. / len(trainLabels)
-
+        for label in validLabels:
+            count = sum([t == label for t in trainLabels]) 
+            print "Label", label, count ,",", count * 1. / len(trainLabels)
+            assert count > 0
         assert len(trainReports) == len(trainLabels)
 
         testReports = [t['Preprocessed_Report_Text'] for t in filteredDB[-testSetSize:]]
@@ -61,7 +67,10 @@ if __name__ == "__main__":
 
         print "Num test samples", len(testLabels)
         print "-------- Test Label Dist -",key,"---------"
-        print sum([t == list(validLabels)[0] for t in testLabels]) * 1. / len(testLabels)
+        for label in validLabels:
+            count = sum([t == label for t in testLabels])
+            print "Label", label, count, ',', count * 1. / len(testLabels)
+
 
         with open(dirPath+stem+".names", 'wb') as f:
             labels = ", ".join(validLabels) + ".\n"
