@@ -1,0 +1,1154 @@
+Distribution {'Yes': 1526, 'No': 5775}
+Distribution {'Checked': 728, 'Unchecked': 6909}
+Distribution {'pleomorphic_type': 1, 'IDC_with_endocrine_features': 1, 'Checked': 10, "PAGET'S_DISEASE_OF_NIPPLE": 1, 'MICROPAPILLARY': 1, 'comedonecrosis_and_calcifications': 1, 'micropapillary_growth_pattern': 1, 'Unchecked': 4718}
+Distribution {'Extensive': 107, 'Focal': 140, 'NOS': 401}
+Distribution {'11': 1, '1': 236, '0': 651, '3': 28, '2': 53, '5': 3, '4': 13, '7': 1, '6': 2, '9': 1, '8': 1}
+Distribution {'Checked': 376, 'Unchecked': 9183}
+Distribution {'Yes': 287, 'No': 662, 'Not_Reported': 16}
+Distribution {'Multifocal': 323, 'Multifocal_(multiple_within_same_quadrant)': 855, 'Multicentric_(multiple_in_different_quadrant)': 281, 'Multicentric': 40, 'Not_reported': 40, 'Unifocal': 3511}
+Distribution {'10': 1, '13': 1, '1': 1464, '0': 3, '3': 333, '2': 750, '5': 78, '4': 167, '7': 11, '6': 29, '9': 5, '8': 15}
+Distribution {'Positive': 4174, 'Negative': 1248, 'Not_Done': 494, 'Unknown': 186}
+Distribution {'Checked': 115, 'Unchecked': 9444}
+Distribution {'Elective_(prophylactic)': 69, 'Diagnosis_(if_excisional_biopsy)': 25, 'Salvage': 24, 'Primary': 2291, 'primary': 418, 'elective_(prophylactic)': 4, 'Diagnosis_(only_if_excisional_biopsy)': 863, 'Primary_(If_case_diagnosed)': 3906, 'salvage': 18}
+Distribution {'Checked': 375, 'Unchecked': 7262}
+Distribution {'Checked': 2854, 'Unchecked': 4783}
+Distribution {'Checked': 145, 'Unchecked': 9414}
+Distribution {'Checked': 2, 'Unchecked': 7635}
+Distribution {'Excisional_biopsy_(Lumpectomy)': 1513, '1st_Re-Excision': 343, 'Mastectomy': 919, 'bilateral_reduction_mammoplasty': 1, '2nd_Re-Excision': 31}
+Distribution {'Checked': 1123, 'Unchecked': 6514}
+Distribution {'Incisional_biopsy': 29, 'Fine_needle_aspiration_(FNA)': 56, 'No_breast_biopsy': 1, 'Core_biopsy': 1822, 'Other': 3, 'Needle_biopsy': 11}
+Distribution {'Checked': 248, 'Unchecked': 7389}
+Distribution {'Yes': 756, 'Checked': 133, 'Unchecked': 4595, 'No': 584}
+Distribution {'Unknown': 141, 'Negative': 1870, 'Not_Done': 748, 'Positive': 409}
+Distribution {'Checked': 605, 'Unchecked': 7032}
+Distribution {'Horizontal_radial': 46, 'Unknown': 71, 'Extension_of_previous_incision': 18, 'Other': 123, 'Periareolar': 620, 'Inferior_radial': 10, 'Inferolateral_IMF_(inframammary_fold)': 186}
+Distribution {'No': 4016, 'Yes': 984, 'Suspicious': 158, 'Not_reported': 1244}
+Distribution {'Positive': 4475, 'Negative': 977, 'Not_Done': 493, 'Unknown': 179}
+Distribution {'Checked': 348, 'Unchecked': 9211}
+Distribution {'Checked': 403, 'Unchecked': 7234}
+Distribution {'Focally_close_(<_2mm)': 48, 'Unknown': 18, 'Negative': 5448, 'Grossly_close_(multifocal/_broad_front)': 478, 'Focally_positive': 255, 'Focally_close_(<_1mm)': 97, 'Grossly_positive': 637, 'Focally_close': 290}
+Distribution {'Checked': 606, 'Unchecked': 7031}
+Distribution {'Checked': 308, 'Unchecked': 7329}
+Distribution {'1': 669, '0': 2013, '3': 22, '2': 139, '5': 3, '4': 8}
+Distribution {'Checked': 108, 'Unchecked': 7529}
+Distribution {'Checked': 2010, 'Unchecked': 5627}
+Distribution {'Yes': 47, 'No': 405, 'Not_reported': 76}
+Distribution {'24': 4, '25': 1, '26': 3, '27': 1, '20': 6, '21': 3, '22': 1, '23': 3, '46': 1, '1': 285, '0': 1151, '3': 100, '2': 157, '5': 42, '4': 48, '7': 29, '6': 37, '9': 22, '8': 26, '13': 7, '12': 8, '11': 20, '10': 10, '39': 1, '38': 1, '15': 9, '14': 12, '17': 7, '16': 5, '19': 4, '18': 2, '31': 2, '50': 1, '32': 1}
+Distribution {'No': 5017, 'Yes': 74, 'Suspicious': 24, 'Not_reported': 1931}
+Distribution {'Checked': 911, 'Unchecked': 6726}
+Distribution {'Checked': 140, 'Unchecked': 7497}
+Distribution {'Checked': 327, 'Unchecked': 9232}
+Calling interpret for  ../classification_results/Breast/class_results_
+---------------------------
+Are there positive LN? Yes
+Number of gold 298.0
+Number guessed 306
+Are there positive LN? Yes truePos, falsePos, trueNeg, falseNeg: 277 29 1133 21
+Are there positive LN? Yes percision, recall, f1: 0.90522875817 , 0.929530201342 , 0.917218543046
+Are there positive LN? Yes sensitivity, specifcity: 0.929530201342 , 0.97504302926
+Diag Are there positive LN? Yes , Num Mistakes: 50 , error rate 0.0342465753425
+---------------------------
+Are there positive LN? No
+Number of gold 1162.0
+Number guessed 1154
+Are there positive LN? No truePos, falsePos, trueNeg, falseNeg: 1133 21 277 29
+Are there positive LN? No percision, recall, f1: 0.981802426343 , 0.97504302926 , 0.978411053541
+Are there positive LN? No sensitivity, specifcity: 0.97504302926 , 0.929530201342
+Diag Are there positive LN? No , Num Mistakes: 50 , error rate 0.0342465753425
+---------------------------
+Type of sampled LN (choice=None) Checked
+Number of gold 136.0
+Number guessed 85
+Type of sampled LN (choice=None) Checked truePos, falsePos, trueNeg, falseNeg: 37 48 1343 99
+Type of sampled LN (choice=None) Checked percision, recall, f1: 0.435294117647 , 0.272058823529 , 0.334841628959
+Type of sampled LN (choice=None) Checked sensitivity, specifcity: 0.272058823529 , 0.965492451474
+Diag Type of sampled LN (choice=None) Checked , Num Mistakes: 147 , error rate 0.0962671905697
+---------------------------
+Type of sampled LN (choice=None) Unchecked
+Number of gold 1391.0
+Number guessed 1442
+Type of sampled LN (choice=None) Unchecked truePos, falsePos, trueNeg, falseNeg: 1343 99 37 48
+Type of sampled LN (choice=None) Unchecked percision, recall, f1: 0.931345353675 , 0.965492451474 , 0.948111542534
+Type of sampled LN (choice=None) Unchecked sensitivity, specifcity: 0.965492451474 , 0.272058823529
+Diag Type of sampled LN (choice=None) Unchecked , Num Mistakes: 147 , error rate 0.0962671905697
+---------------------------
+Pagets Unchecked
+Number of gold 946.0
+Number guessed 946
+Pagets Unchecked truePos, falsePos, trueNeg, falseNeg: 946 0 0 0
+Pagets Unchecked percision, recall, f1: 1.0 , 1.0 , 1.0
+Pagets Unchecked sensitivity, specifcity: 1.0 , 1
+Diag Pagets Unchecked , Num Mistakes: 0 , error rate 0.0
+---------------------------
+Lymphovascular invasion Extensive
+Number of gold 20.0
+Number guessed 13
+Lymphovascular invasion Extensive truePos, falsePos, trueNeg, falseNeg: 10 3 106 10
+Lymphovascular invasion Extensive percision, recall, f1: 0.769230769231 , 0.5 , 0.606060606061
+Lymphovascular invasion Extensive sensitivity, specifcity: 0.5 , 0.97247706422
+Diag Lymphovascular invasion Extensive , Num Mistakes: 13 , error rate 0.100775193798
+---------------------------
+Lymphovascular invasion Focal
+Number of gold 31.0
+Number guessed 24
+Lymphovascular invasion Focal truePos, falsePos, trueNeg, falseNeg: 15 9 89 16
+Lymphovascular invasion Focal percision, recall, f1: 0.625 , 0.483870967742 , 0.545454545455
+Lymphovascular invasion Focal sensitivity, specifcity: 0.483870967742 , 0.908163265306
+Diag Lymphovascular invasion Focal , Num Mistakes: 25 , error rate 0.193798449612
+---------------------------
+Lymphovascular invasion NOS
+Number of gold 78.0
+Number guessed 85
+Lymphovascular invasion NOS truePos, falsePos, trueNeg, falseNeg: 65 20 31 13
+Lymphovascular invasion NOS percision, recall, f1: 0.764705882353 , 0.833333333333 , 0.79754601227
+Lymphovascular invasion NOS sensitivity, specifcity: 0.833333333333 , 0.607843137255
+Diag Lymphovascular invasion NOS , Num Mistakes: 33 , error rate 0.255813953488
+---------------------------
+Number of LN with 0.02- 0.2 cm 1
+Number of gold 38.0
+Number guessed 36
+Number of LN with 0.02- 0.2 cm 1 truePos, falsePos, trueNeg, falseNeg: 30 6 154 8
+Number of LN with 0.02- 0.2 cm 1 percision, recall, f1: 0.833333333333 , 0.789473684211 , 0.810810810811
+Number of LN with 0.02- 0.2 cm 1 sensitivity, specifcity: 0.789473684211 , 0.9625
+Diag Number of LN with 0.02- 0.2 cm 1 , Num Mistakes: 14 , error rate 0.0707070707071
+---------------------------
+Number of LN with 0.02- 0.2 cm 0
+Number of gold 134.0
+Number guessed 141
+Number of LN with 0.02- 0.2 cm 0 truePos, falsePos, trueNeg, falseNeg: 127 14 50 7
+Number of LN with 0.02- 0.2 cm 0 percision, recall, f1: 0.900709219858 , 0.94776119403 , 0.923636363636
+Number of LN with 0.02- 0.2 cm 0 sensitivity, specifcity: 0.94776119403 , 0.78125
+Diag Number of LN with 0.02- 0.2 cm 0 , Num Mistakes: 21 , error rate 0.106060606061
+---------------------------
+Number of LN with 0.02- 0.2 cm 3
+Number of gold 7.0
+Number guessed 6
+Number of LN with 0.02- 0.2 cm 3 truePos, falsePos, trueNeg, falseNeg: 6 0 191 1
+Number of LN with 0.02- 0.2 cm 3 percision, recall, f1: 1.0 , 0.857142857143 , 0.923076923077
+Number of LN with 0.02- 0.2 cm 3 sensitivity, specifcity: 0.857142857143 , 1.0
+Diag Number of LN with 0.02- 0.2 cm 3 , Num Mistakes: 1 , error rate 0.00505050505051
+---------------------------
+Number of LN with 0.02- 0.2 cm 2
+Number of gold 16.0
+Number guessed 8
+Number of LN with 0.02- 0.2 cm 2 truePos, falsePos, trueNeg, falseNeg: 8 0 182 8
+Number of LN with 0.02- 0.2 cm 2 percision, recall, f1: 1.0 , 0.5 , 0.666666666667
+Number of LN with 0.02- 0.2 cm 2 sensitivity, specifcity: 0.5 , 1.0
+Diag Number of LN with 0.02- 0.2 cm 2 , Num Mistakes: 8 , error rate 0.040404040404
+---------------------------
+Number of LN with 0.02- 0.2 cm 4
+Number of gold 3.0
+Number guessed 3
+Number of LN with 0.02- 0.2 cm 4 truePos, falsePos, trueNeg, falseNeg: 3 0 195 0
+Number of LN with 0.02- 0.2 cm 4 percision, recall, f1: 1.0 , 1.0 , 1.0
+Number of LN with 0.02- 0.2 cm 4 sensitivity, specifcity: 1.0 , 1.0
+Diag Number of LN with 0.02- 0.2 cm 4 , Num Mistakes: 0 , error rate 0.0
+---------------------------
+EIC Checked
+Number of gold 74.0
+Number guessed 43
+EIC Checked truePos, falsePos, trueNeg, falseNeg: 30 13 1824 44
+EIC Checked percision, recall, f1: 0.697674418605 , 0.405405405405 , 0.512820512821
+EIC Checked sensitivity, specifcity: 0.405405405405 , 0.99292324442
+Diag EIC Checked , Num Mistakes: 57 , error rate 0.0298273155416
+---------------------------
+EIC Unchecked
+Number of gold 1837.0
+Number guessed 1868
+EIC Unchecked truePos, falsePos, trueNeg, falseNeg: 1824 44 30 13
+EIC Unchecked percision, recall, f1: 0.976445396146 , 0.99292324442 , 0.984615384615
+EIC Unchecked sensitivity, specifcity: 0.99292324442 , 0.405405405405
+Diag EIC Unchecked , Num Mistakes: 57 , error rate 0.0298273155416
+---------------------------
+ITC  Yes
+Number of gold 49.0
+Number guessed 45
+ITC  Yes truePos, falsePos, trueNeg, falseNeg: 37 8 136 12
+ITC  Yes percision, recall, f1: 0.822222222222 , 0.755102040816 , 0.787234042553
+ITC  Yes sensitivity, specifcity: 0.755102040816 , 0.944444444444
+Diag ITC  Yes , Num Mistakes: 20 , error rate 0.103626943005
+---------------------------
+ITC  Not_Reported
+Number of gold 0.0
+Number guessed 0
+ITC  Not_Reported truePos, falsePos, trueNeg, falseNeg: 0 0 193 0
+ITC  Not_Reported percision, recall, f1: 1 , 1 , 1.0
+ITC  Not_Reported sensitivity, specifcity: 1 , 1.0
+Diag ITC  Not_Reported , Num Mistakes: 0 , error rate 0.0
+---------------------------
+ITC  No
+Number of gold 144.0
+Number guessed 143
+ITC  No truePos, falsePos, trueNeg, falseNeg: 133 10 39 11
+ITC  No percision, recall, f1: 0.93006993007 , 0.923611111111 , 0.926829268293
+ITC  No sensitivity, specifcity: 0.923611111111 , 0.795918367347
+Diag ITC  No , Num Mistakes: 21 , error rate 0.108808290155
+---------------------------
+Focality Multifocal
+Number of gold 56.0
+Number guessed 32
+Focality Multifocal truePos, falsePos, trueNeg, falseNeg: 13 19 935 43
+Focality Multifocal percision, recall, f1: 0.40625 , 0.232142857143 , 0.295454545455
+Focality Multifocal sensitivity, specifcity: 0.232142857143 , 0.980083857442
+Diag Focality Multifocal , Num Mistakes: 62 , error rate 0.0613861386139
+---------------------------
+Focality Multifocal_(multiple_within_same_quadrant)
+Number of gold 175.0
+Number guessed 114
+Focality Multifocal_(multiple_within_same_quadrant) truePos, falsePos, trueNeg, falseNeg: 60 54 781 115
+Focality Multifocal_(multiple_within_same_quadrant) percision, recall, f1: 0.526315789474 , 0.342857142857 , 0.415224913495
+Focality Multifocal_(multiple_within_same_quadrant) sensitivity, specifcity: 0.342857142857 , 0.935329341317
+Diag Focality Multifocal_(multiple_within_same_quadrant) , Num Mistakes: 169 , error rate 0.167326732673
+---------------------------
+Focality Multicentric_(multiple_in_different_quadrant)
+Number of gold 53.0
+Number guessed 35
+Focality Multicentric_(multiple_in_different_quadrant) truePos, falsePos, trueNeg, falseNeg: 16 19 938 37
+Focality Multicentric_(multiple_in_different_quadrant) percision, recall, f1: 0.457142857143 , 0.301886792453 , 0.363636363636
+Focality Multicentric_(multiple_in_different_quadrant) sensitivity, specifcity: 0.301886792453 , 0.980146290491
+Diag Focality Multicentric_(multiple_in_different_quadrant) , Num Mistakes: 56 , error rate 0.0554455445545
+---------------------------
+Focality Multicentric
+Number of gold 13.0
+Number guessed 2
+Focality Multicentric truePos, falsePos, trueNeg, falseNeg: 1 1 996 12
+Focality Multicentric percision, recall, f1: 0.5 , 0.0769230769231 , 0.133333333333
+Focality Multicentric sensitivity, specifcity: 0.0769230769231 , 0.998996990973
+Diag Focality Multicentric , Num Mistakes: 13 , error rate 0.0128712871287
+---------------------------
+Focality Not_reported
+Number of gold 6.0
+Number guessed 0
+Focality Not_reported truePos, falsePos, trueNeg, falseNeg: 0 0 1004 6
+Focality Not_reported percision, recall, f1: 1 , 0.0 , 0.0
+Focality Not_reported sensitivity, specifcity: 0.0 , 1.0
+Diag Focality Not_reported , Num Mistakes: 6 , error rate 0.00594059405941
+---------------------------
+Focality Unifocal
+Number of gold 707.0
+Number guessed 765
+Focality Unifocal truePos, falsePos, trueNeg, falseNeg: 648 117 186 59
+Focality Unifocal percision, recall, f1: 0.847058823529 , 0.916548797737 , 0.880434782609
+Focality Unifocal sensitivity, specifcity: 0.916548797737 , 0.613861386139
+Diag Focality Unifocal , Num Mistakes: 176 , error rate 0.174257425743
+---------------------------
+Sentinel LN (# Sampled) 1
+Number of gold 297.0
+Number guessed 298
+Sentinel LN (# Sampled) 1 truePos, falsePos, trueNeg, falseNeg: 268 30 244 29
+Sentinel LN (# Sampled) 1 percision, recall, f1: 0.89932885906 , 0.902356902357 , 0.900840336134
+Sentinel LN (# Sampled) 1 sensitivity, specifcity: 0.902356902357 , 0.890510948905
+Diag Sentinel LN (# Sampled) 1 , Num Mistakes: 59 , error rate 0.103327495622
+---------------------------
+Sentinel LN (# Sampled) 3
+Number of gold 73.0
+Number guessed 53
+Sentinel LN (# Sampled) 3 truePos, falsePos, trueNeg, falseNeg: 35 18 480 38
+Sentinel LN (# Sampled) 3 percision, recall, f1: 0.660377358491 , 0.479452054795 , 0.555555555556
+Sentinel LN (# Sampled) 3 sensitivity, specifcity: 0.479452054795 , 0.963855421687
+Diag Sentinel LN (# Sampled) 3 , Num Mistakes: 56 , error rate 0.0980735551664
+---------------------------
+Sentinel LN (# Sampled) 2
+Number of gold 130.0
+Number guessed 126
+Sentinel LN (# Sampled) 2 truePos, falsePos, trueNeg, falseNeg: 90 36 405 40
+Sentinel LN (# Sampled) 2 percision, recall, f1: 0.714285714286 , 0.692307692308 , 0.703125
+Sentinel LN (# Sampled) 2 sensitivity, specifcity: 0.692307692308 , 0.918367346939
+Diag Sentinel LN (# Sampled) 2 , Num Mistakes: 76 , error rate 0.133099824869
+---------------------------
+Sentinel LN (# Sampled) 5
+Number of gold 21.0
+Number guessed 7
+Sentinel LN (# Sampled) 5 truePos, falsePos, trueNeg, falseNeg: 5 2 548 16
+Sentinel LN (# Sampled) 5 percision, recall, f1: 0.714285714286 , 0.238095238095 , 0.357142857143
+Sentinel LN (# Sampled) 5 sensitivity, specifcity: 0.238095238095 , 0.996363636364
+Diag Sentinel LN (# Sampled) 5 , Num Mistakes: 18 , error rate 0.031523642732
+---------------------------
+Sentinel LN (# Sampled) 4
+Number of gold 39.0
+Number guessed 15
+Sentinel LN (# Sampled) 4 truePos, falsePos, trueNeg, falseNeg: 11 4 528 28
+Sentinel LN (# Sampled) 4 percision, recall, f1: 0.733333333333 , 0.282051282051 , 0.407407407407
+Sentinel LN (# Sampled) 4 sensitivity, specifcity: 0.282051282051 , 0.992481203008
+Diag Sentinel LN (# Sampled) 4 , Num Mistakes: 32 , error rate 0.0560420315236
+---------------------------
+Sentinel LN (# Sampled) 7
+Number of gold 3.0
+Number guessed 1
+Sentinel LN (# Sampled) 7 truePos, falsePos, trueNeg, falseNeg: 0 1 567 3
+Sentinel LN (# Sampled) 7 percision, recall, f1: 0.0 , 0.0 , 1
+Sentinel LN (# Sampled) 7 sensitivity, specifcity: 0.0 , 0.99823943662
+Diag Sentinel LN (# Sampled) 7 , Num Mistakes: 4 , error rate 0.00700525394046
+---------------------------
+Sentinel LN (# Sampled) 6
+Number of gold 6.0
+Number guessed 0
+Sentinel LN (# Sampled) 6 truePos, falsePos, trueNeg, falseNeg: 0 0 565 6
+Sentinel LN (# Sampled) 6 percision, recall, f1: 1 , 0.0 , 0.0
+Sentinel LN (# Sampled) 6 sensitivity, specifcity: 0.0 , 1.0
+Diag Sentinel LN (# Sampled) 6 , Num Mistakes: 6 , error rate 0.0105078809107
+---------------------------
+Sentinel LN (# Sampled) 8
+Number of gold 2.0
+Number guessed 0
+Sentinel LN (# Sampled) 8 truePos, falsePos, trueNeg, falseNeg: 0 0 569 2
+Sentinel LN (# Sampled) 8 percision, recall, f1: 1 , 0.0 , 0.0
+Sentinel LN (# Sampled) 8 sensitivity, specifcity: 0.0 , 1.0
+Diag Sentinel LN (# Sampled) 8 , Num Mistakes: 2 , error rate 0.00350262697023
+---------------------------
+PR Positive
+Number of gold 845.0
+Number guessed 838
+PR Positive truePos, falsePos, trueNeg, falseNeg: 808 30 345 37
+PR Positive percision, recall, f1: 0.964200477327 , 0.956213017751 , 0.960190136661
+PR Positive sensitivity, specifcity: 0.956213017751 , 0.92
+Diag PR Positive , Num Mistakes: 67 , error rate 0.0549180327869
+---------------------------
+PR Negative
+Number of gold 258.0
+Number guessed 243
+PR Negative truePos, falsePos, trueNeg, falseNeg: 231 12 950 27
+PR Negative percision, recall, f1: 0.950617283951 , 0.895348837209 , 0.922155688623
+PR Negative sensitivity, specifcity: 0.895348837209 , 0.987525987526
+Diag PR Negative , Num Mistakes: 39 , error rate 0.0319672131148
+---------------------------
+PR Not_Done
+Number of gold 90.0
+Number guessed 102
+PR Not_Done truePos, falsePos, trueNeg, falseNeg: 75 27 1103 15
+PR Not_Done percision, recall, f1: 0.735294117647 , 0.833333333333 , 0.78125
+PR Not_Done sensitivity, specifcity: 0.833333333333 , 0.97610619469
+Diag PR Not_Done , Num Mistakes: 42 , error rate 0.0344262295082
+---------------------------
+PR Unknown
+Number of gold 27.0
+Number guessed 19
+PR Unknown truePos, falsePos, trueNeg, falseNeg: 8 11 1182 19
+PR Unknown percision, recall, f1: 0.421052631579 , 0.296296296296 , 0.347826086957
+PR Unknown sensitivity, specifcity: 0.296296296296 , 0.99077954736
+Diag PR Unknown , Num Mistakes: 30 , error rate 0.0245901639344
+---------------------------
+Comedonercrosis Checked
+Number of gold 28.0
+Number guessed 3
+Comedonercrosis Checked truePos, falsePos, trueNeg, falseNeg: 3 0 1883 25
+Comedonercrosis Checked percision, recall, f1: 1.0 , 0.107142857143 , 0.193548387097
+Comedonercrosis Checked sensitivity, specifcity: 0.107142857143 , 1.0
+Diag Comedonercrosis Checked , Num Mistakes: 25 , error rate 0.0130821559393
+---------------------------
+Comedonercrosis Unchecked
+Number of gold 1883.0
+Number guessed 1908
+Comedonercrosis Unchecked truePos, falsePos, trueNeg, falseNeg: 1883 25 3 0
+Comedonercrosis Unchecked percision, recall, f1: 0.986897274633 , 1.0 , 0.993405433922
+Comedonercrosis Unchecked sensitivity, specifcity: 1.0 , 0.107142857143
+Diag Comedonercrosis Unchecked , Num Mistakes: 25 , error rate 0.0130821559393
+---------------------------
+Purpose of surgey Diagnosis_(if_excisional_biopsy)
+Number of gold 5.0
+Number guessed 0
+Purpose of surgey Diagnosis_(if_excisional_biopsy) truePos, falsePos, trueNeg, falseNeg: 0 0 1518 5
+Purpose of surgey Diagnosis_(if_excisional_biopsy) percision, recall, f1: 1 , 0.0 , 0.0
+Purpose of surgey Diagnosis_(if_excisional_biopsy) sensitivity, specifcity: 0.0 , 1.0
+Diag Purpose of surgey Diagnosis_(if_excisional_biopsy) , Num Mistakes: 5 , error rate 0.00328299409061
+---------------------------
+Purpose of surgey salvage
+Number of gold 6.0
+Number guessed 0
+Purpose of surgey salvage truePos, falsePos, trueNeg, falseNeg: 0 0 1517 6
+Purpose of surgey salvage percision, recall, f1: 1 , 0.0 , 0.0
+Purpose of surgey salvage sensitivity, specifcity: 0.0 , 1.0
+Diag Purpose of surgey salvage , Num Mistakes: 6 , error rate 0.00393959290873
+---------------------------
+Purpose of surgey Primary
+Number of gold 460.0
+Number guessed 442
+Purpose of surgey Primary truePos, falsePos, trueNeg, falseNeg: 353 89 974 107
+Purpose of surgey Primary percision, recall, f1: 0.798642533937 , 0.767391304348 , 0.782705099778
+Purpose of surgey Primary sensitivity, specifcity: 0.767391304348 , 0.916274694262
+Diag Purpose of surgey Primary , Num Mistakes: 196 , error rate 0.128693368352
+---------------------------
+Purpose of surgey primary
+Number of gold 92.0
+Number guessed 45
+Purpose of surgey primary truePos, falsePos, trueNeg, falseNeg: 18 27 1404 74
+Purpose of surgey primary percision, recall, f1: 0.4 , 0.195652173913 , 0.262773722628
+Purpose of surgey primary sensitivity, specifcity: 0.195652173913 , 0.981132075472
+Diag Purpose of surgey primary , Num Mistakes: 101 , error rate 0.0663164806303
+---------------------------
+Purpose of surgey Elective_(prophylactic)
+Number of gold 13.0
+Number guessed 6
+Purpose of surgey Elective_(prophylactic) truePos, falsePos, trueNeg, falseNeg: 2 4 1506 11
+Purpose of surgey Elective_(prophylactic) percision, recall, f1: 0.333333333333 , 0.153846153846 , 0.210526315789
+Purpose of surgey Elective_(prophylactic) sensitivity, specifcity: 0.153846153846 , 0.997350993377
+Diag Purpose of surgey Elective_(prophylactic) , Num Mistakes: 15 , error rate 0.00984898227183
+---------------------------
+Purpose of surgey Diagnosis_(only_if_excisional_biopsy)
+Number of gold 173.0
+Number guessed 174
+Purpose of surgey Diagnosis_(only_if_excisional_biopsy) truePos, falsePos, trueNeg, falseNeg: 111 63 1287 62
+Purpose of surgey Diagnosis_(only_if_excisional_biopsy) percision, recall, f1: 0.637931034483 , 0.64161849711 , 0.63976945245
+Purpose of surgey Diagnosis_(only_if_excisional_biopsy) sensitivity, specifcity: 0.64161849711 , 0.953333333333
+Diag Purpose of surgey Diagnosis_(only_if_excisional_biopsy) , Num Mistakes: 125 , error rate 0.0820748522653
+---------------------------
+Purpose of surgey Primary_(If_case_diagnosed)
+Number of gold 771.0
+Number guessed 789
+Purpose of surgey Primary_(If_case_diagnosed) truePos, falsePos, trueNeg, falseNeg: 656 133 619 115
+Purpose of surgey Primary_(If_case_diagnosed) percision, recall, f1: 0.831432192649 , 0.85084306096 , 0.841025641026
+Purpose of surgey Primary_(If_case_diagnosed) sensitivity, specifcity: 0.85084306096 , 0.823138297872
+Diag Purpose of surgey Primary_(If_case_diagnosed) , Num Mistakes: 248 , error rate 0.162836506894
+---------------------------
+Purpose of surgey Salvage
+Number of gold 3.0
+Number guessed 0
+Purpose of surgey Salvage truePos, falsePos, trueNeg, falseNeg: 0 0 1520 3
+Purpose of surgey Salvage percision, recall, f1: 1 , 0.0 , 0.0
+Purpose of surgey Salvage sensitivity, specifcity: 0.0 , 1.0
+Diag Purpose of surgey Salvage , Num Mistakes: 3 , error rate 0.00196979645437
+---------------------------
+SLN staining (if positive) (choice=Frozen Section) Checked
+Number of gold 73.0
+Number guessed 57
+SLN staining (if positive) (choice=Frozen Section) Checked truePos, falsePos, trueNeg, falseNeg: 46 11 1443 27
+SLN staining (if positive) (choice=Frozen Section) Checked percision, recall, f1: 0.80701754386 , 0.630136986301 , 0.707692307692
+SLN staining (if positive) (choice=Frozen Section) Checked sensitivity, specifcity: 0.630136986301 , 0.992434662999
+Diag SLN staining (if positive) (choice=Frozen Section) Checked , Num Mistakes: 38 , error rate 0.0248853962017
+---------------------------
+SLN staining (if positive) (choice=Frozen Section) Unchecked
+Number of gold 1454.0
+Number guessed 1470
+SLN staining (if positive) (choice=Frozen Section) Unchecked truePos, falsePos, trueNeg, falseNeg: 1443 27 46 11
+SLN staining (if positive) (choice=Frozen Section) Unchecked percision, recall, f1: 0.981632653061 , 0.992434662999 , 0.987004103967
+SLN staining (if positive) (choice=Frozen Section) Unchecked sensitivity, specifcity: 0.992434662999 , 0.630136986301
+Diag SLN staining (if positive) (choice=Frozen Section) Unchecked , Num Mistakes: 38 , error rate 0.0248853962017
+---------------------------
+Type of sampled LN (choice=SLNB (Sentinel LN Biopsy)) Checked
+Number of gold 547.0
+Number guessed 547
+Type of sampled LN (choice=SLNB (Sentinel LN Biopsy)) Checked truePos, falsePos, trueNeg, falseNeg: 529 18 962 18
+Type of sampled LN (choice=SLNB (Sentinel LN Biopsy)) Checked percision, recall, f1: 0.967093235832 , 0.967093235832 , 0.967093235832
+Type of sampled LN (choice=SLNB (Sentinel LN Biopsy)) Checked sensitivity, specifcity: 0.967093235832 , 0.981632653061
+Diag Type of sampled LN (choice=SLNB (Sentinel LN Biopsy)) Checked , Num Mistakes: 36 , error rate 0.0235756385069
+---------------------------
+Type of sampled LN (choice=SLNB (Sentinel LN Biopsy)) Unchecked
+Number of gold 980.0
+Number guessed 980
+Type of sampled LN (choice=SLNB (Sentinel LN Biopsy)) Unchecked truePos, falsePos, trueNeg, falseNeg: 962 18 529 18
+Type of sampled LN (choice=SLNB (Sentinel LN Biopsy)) Unchecked percision, recall, f1: 0.981632653061 , 0.981632653061 , 0.981632653061
+Type of sampled LN (choice=SLNB (Sentinel LN Biopsy)) Unchecked sensitivity, specifcity: 0.981632653061 , 0.967093235832
+Diag Type of sampled LN (choice=SLNB (Sentinel LN Biopsy)) Unchecked , Num Mistakes: 36 , error rate 0.0235756385069
+---------------------------
+Other Cancr Checked
+Number of gold 25.0
+Number guessed 7
+Other Cancr Checked truePos, falsePos, trueNeg, falseNeg: 1 6 1880 24
+Other Cancr Checked percision, recall, f1: 0.142857142857 , 0.04 , 0.0625
+Other Cancr Checked sensitivity, specifcity: 0.04 , 0.996818663839
+Diag Other Cancr Checked , Num Mistakes: 30 , error rate 0.0156985871272
+---------------------------
+Other Cancr Unchecked
+Number of gold 1886.0
+Number guessed 1904
+Other Cancr Unchecked truePos, falsePos, trueNeg, falseNeg: 1880 24 1 6
+Other Cancr Unchecked percision, recall, f1: 0.987394957983 , 0.996818663839 , 0.992084432718
+Other Cancr Unchecked sensitivity, specifcity: 0.996818663839 , 0.04
+Diag Other Cancr Unchecked , Num Mistakes: 30 , error rate 0.0156985871272
+---------------------------
+Radical Mastectomy Unchecked
+Number of gold 1527.0
+Number guessed 1527
+Radical Mastectomy Unchecked truePos, falsePos, trueNeg, falseNeg: 1527 0 0 0
+Radical Mastectomy Unchecked percision, recall, f1: 1.0 , 1.0 , 1.0
+Radical Mastectomy Unchecked sensitivity, specifcity: 1.0 , 1
+Diag Radical Mastectomy Unchecked , Num Mistakes: 0 , error rate 0.0
+---------------------------
+Type of Surgery Excisional_biopsy_(Lumpectomy)
+Number of gold 297.0
+Number guessed 324
+Type of Surgery Excisional_biopsy_(Lumpectomy) truePos, falsePos, trueNeg, falseNeg: 267 57 207 30
+Type of Surgery Excisional_biopsy_(Lumpectomy) percision, recall, f1: 0.824074074074 , 0.89898989899 , 0.859903381643
+Type of Surgery Excisional_biopsy_(Lumpectomy) sensitivity, specifcity: 0.89898989899 , 0.784090909091
+Diag Type of Surgery Excisional_biopsy_(Lumpectomy) , Num Mistakes: 87 , error rate 0.155080213904
+---------------------------
+Type of Surgery 1st_Re-Excision
+Number of gold 71.0
+Number guessed 40
+Type of Surgery 1st_Re-Excision truePos, falsePos, trueNeg, falseNeg: 15 25 465 56
+Type of Surgery 1st_Re-Excision percision, recall, f1: 0.375 , 0.211267605634 , 0.27027027027
+Type of Surgery 1st_Re-Excision sensitivity, specifcity: 0.211267605634 , 0.948979591837
+Diag Type of Surgery 1st_Re-Excision , Num Mistakes: 81 , error rate 0.144385026738
+---------------------------
+Type of Surgery Mastectomy
+Number of gold 189.0
+Number guessed 188
+Type of Surgery Mastectomy truePos, falsePos, trueNeg, falseNeg: 186 2 370 3
+Type of Surgery Mastectomy percision, recall, f1: 0.989361702128 , 0.984126984127 , 0.986737400531
+Type of Surgery Mastectomy sensitivity, specifcity: 0.984126984127 , 0.994623655914
+Diag Type of Surgery Mastectomy , Num Mistakes: 5 , error rate 0.00891265597148
+---------------------------
+Type of Surgery 2nd_Re-Excision
+Number of gold 4.0
+Number guessed 1
+Type of Surgery 2nd_Re-Excision truePos, falsePos, trueNeg, falseNeg: 0 1 556 4
+Type of Surgery 2nd_Re-Excision percision, recall, f1: 0.0 , 0.0 , 1
+Type of Surgery 2nd_Re-Excision sensitivity, specifcity: 0.0 , 0.998204667864
+Diag Type of Surgery 2nd_Re-Excision , Num Mistakes: 5 , error rate 0.00891265597148
+---------------------------
+Simple Mastectomy Checked
+Number of gold 237.0
+Number guessed 236
+Simple Mastectomy Checked truePos, falsePos, trueNeg, falseNeg: 213 23 1267 24
+Simple Mastectomy Checked percision, recall, f1: 0.902542372881 , 0.898734177215 , 0.900634249471
+Simple Mastectomy Checked sensitivity, specifcity: 0.898734177215 , 0.982170542636
+Diag Simple Mastectomy Checked , Num Mistakes: 47 , error rate 0.0307793058284
+---------------------------
+Simple Mastectomy Unchecked
+Number of gold 1290.0
+Number guessed 1291
+Simple Mastectomy Unchecked truePos, falsePos, trueNeg, falseNeg: 1267 24 213 23
+Simple Mastectomy Unchecked percision, recall, f1: 0.981409759876 , 0.982170542636 , 0.981790003874
+Simple Mastectomy Unchecked sensitivity, specifcity: 0.982170542636 , 0.898734177215
+Diag Simple Mastectomy Unchecked , Num Mistakes: 47 , error rate 0.0307793058284
+---------------------------
+Type of biopsy Core_biopsy
+Number of gold 364.0
+Number guessed 369
+Type of biopsy Core_biopsy truePos, falsePos, trueNeg, falseNeg: 362 7 13 2
+Type of biopsy Core_biopsy percision, recall, f1: 0.981029810298 , 0.994505494505 , 0.987721691678
+Type of biopsy Core_biopsy sensitivity, specifcity: 0.994505494505 , 0.65
+Diag Type of biopsy Core_biopsy , Num Mistakes: 9 , error rate 0.0234375
+---------------------------
+Type of biopsy Fine_needle_aspiration_(FNA)
+Number of gold 16.0
+Number guessed 9
+Type of biopsy Fine_needle_aspiration_(FNA) truePos, falsePos, trueNeg, falseNeg: 8 1 367 8
+Type of biopsy Fine_needle_aspiration_(FNA) percision, recall, f1: 0.888888888889 , 0.5 , 0.64
+Type of biopsy Fine_needle_aspiration_(FNA) sensitivity, specifcity: 0.5 , 0.997282608696
+Diag Type of biopsy Fine_needle_aspiration_(FNA) , Num Mistakes: 9 , error rate 0.0234375
+---------------------------
+Type of biopsy Incisional_biopsy
+Number of gold 3.0
+Number guessed 4
+Type of biopsy Incisional_biopsy truePos, falsePos, trueNeg, falseNeg: 2 2 379 1
+Type of biopsy Incisional_biopsy percision, recall, f1: 0.5 , 0.666666666667 , 0.571428571429
+Type of biopsy Incisional_biopsy sensitivity, specifcity: 0.666666666667 , 0.994750656168
+Diag Type of biopsy Incisional_biopsy , Num Mistakes: 3 , error rate 0.0078125
+---------------------------
+Type of biopsy Needle_biopsy
+Number of gold 1.0
+Number guessed 0
+Type of biopsy Needle_biopsy truePos, falsePos, trueNeg, falseNeg: 0 0 383 1
+Type of biopsy Needle_biopsy percision, recall, f1: 1 , 0.0 , 0.0
+Type of biopsy Needle_biopsy sensitivity, specifcity: 0.0 , 1.0
+Diag Type of biopsy Needle_biopsy , Num Mistakes: 1 , error rate 0.00260416666667
+---------------------------
+No malignancy Checked
+Number of gold 50.0
+Number guessed 19
+No malignancy Checked truePos, falsePos, trueNeg, falseNeg: 10 9 1468 40
+No malignancy Checked percision, recall, f1: 0.526315789474 , 0.2 , 0.289855072464
+No malignancy Checked sensitivity, specifcity: 0.2 , 0.993906567366
+Diag No malignancy Checked , Num Mistakes: 49 , error rate 0.0320890635232
+---------------------------
+No malignancy Unchecked
+Number of gold 1477.0
+Number guessed 1508
+No malignancy Unchecked truePos, falsePos, trueNeg, falseNeg: 1468 40 10 9
+No malignancy Unchecked percision, recall, f1: 0.973474801061 , 0.993906567366 , 0.983584589615
+No malignancy Unchecked sensitivity, specifcity: 0.993906567366 , 0.2
+Diag No malignancy Unchecked , Num Mistakes: 49 , error rate 0.0320890635232
+---------------------------
+Solid/Cribiform Yes
+Number of gold 137.0
+Number guessed 138
+Solid/Cribiform Yes truePos, falsePos, trueNeg, falseNeg: 100 38 1038 37
+Solid/Cribiform Yes percision, recall, f1: 0.724637681159 , 0.729927007299 , 0.727272727273
+Solid/Cribiform Yes sensitivity, specifcity: 0.729927007299 , 0.96468401487
+Diag Solid/Cribiform Yes , Num Mistakes: 75 , error rate 0.0618301731245
+---------------------------
+Solid/Cribiform Checked
+Number of gold 23.0
+Number guessed 12
+Solid/Cribiform Checked truePos, falsePos, trueNeg, falseNeg: 8 4 1186 15
+Solid/Cribiform Checked percision, recall, f1: 0.666666666667 , 0.347826086957 , 0.457142857143
+Solid/Cribiform Checked sensitivity, specifcity: 0.347826086957 , 0.996638655462
+Diag Solid/Cribiform Checked , Num Mistakes: 19 , error rate 0.0156636438582
+---------------------------
+Solid/Cribiform Unchecked
+Number of gold 903.0
+Number guessed 914
+Solid/Cribiform Unchecked truePos, falsePos, trueNeg, falseNeg: 869 45 265 34
+Solid/Cribiform Unchecked percision, recall, f1: 0.950765864333 , 0.96234772979 , 0.95652173913
+Solid/Cribiform Unchecked sensitivity, specifcity: 0.96234772979 , 0.854838709677
+Diag Solid/Cribiform Unchecked , Num Mistakes: 79 , error rate 0.0651277823578
+---------------------------
+Solid/Cribiform No
+Number of gold 150.0
+Number guessed 122
+Solid/Cribiform No truePos, falsePos, trueNeg, falseNeg: 100 22 1041 50
+Solid/Cribiform No percision, recall, f1: 0.819672131148 , 0.666666666667 , 0.735294117647
+Solid/Cribiform No sensitivity, specifcity: 0.666666666667 , 0.979303857008
+Diag Solid/Cribiform No , Num Mistakes: 72 , error rate 0.0593569661995
+---------------------------
+Her2 (Fish) Unknown
+Number of gold 29.0
+Number guessed 7
+Her2 (Fish) Unknown truePos, falsePos, trueNeg, falseNeg: 3 4 600 26
+Her2 (Fish) Unknown percision, recall, f1: 0.428571428571 , 0.103448275862 , 0.166666666667
+Her2 (Fish) Unknown sensitivity, specifcity: 0.103448275862 , 0.993377483444
+Diag Her2 (Fish) Unknown , Num Mistakes: 30 , error rate 0.0473933649289
+---------------------------
+Her2 (Fish) Negative
+Number of gold 367.0
+Number guessed 362
+Her2 (Fish) Negative truePos, falsePos, trueNeg, falseNeg: 348 14 252 19
+Her2 (Fish) Negative percision, recall, f1: 0.961325966851 , 0.948228882834 , 0.954732510288
+Her2 (Fish) Negative sensitivity, specifcity: 0.948228882834 , 0.947368421053
+Diag Her2 (Fish) Negative , Num Mistakes: 33 , error rate 0.0521327014218
+---------------------------
+Her2 (Fish) Not_Done
+Number of gold 158.0
+Number guessed 181
+Her2 (Fish) Not_Done truePos, falsePos, trueNeg, falseNeg: 143 38 437 15
+Her2 (Fish) Not_Done percision, recall, f1: 0.790055248619 , 0.905063291139 , 0.843657817109
+Her2 (Fish) Not_Done sensitivity, specifcity: 0.905063291139 , 0.92
+Diag Her2 (Fish) Not_Done , Num Mistakes: 53 , error rate 0.0837282780411
+---------------------------
+Her2 (Fish) Positive
+Number of gold 79.0
+Number guessed 61
+Her2 (Fish) Positive truePos, falsePos, trueNeg, falseNeg: 61 0 554 18
+Her2 (Fish) Positive percision, recall, f1: 1.0 , 0.772151898734 , 0.871428571429
+Her2 (Fish) Positive sensitivity, specifcity: 0.772151898734 , 1.0
+Diag Her2 (Fish) Positive , Num Mistakes: 18 , error rate 0.0284360189573
+---------------------------
+SLN staining (if positive) (choice=Keratin) Checked
+Number of gold 112.0
+Number guessed 102
+SLN staining (if positive) (choice=Keratin) Checked truePos, falsePos, trueNeg, falseNeg: 80 22 1393 32
+SLN staining (if positive) (choice=Keratin) Checked percision, recall, f1: 0.78431372549 , 0.714285714286 , 0.747663551402
+SLN staining (if positive) (choice=Keratin) Checked sensitivity, specifcity: 0.714285714286 , 0.98445229682
+Diag SLN staining (if positive) (choice=Keratin) Checked , Num Mistakes: 54 , error rate 0.0353634577603
+---------------------------
+SLN staining (if positive) (choice=Keratin) Unchecked
+Number of gold 1415.0
+Number guessed 1425
+SLN staining (if positive) (choice=Keratin) Unchecked truePos, falsePos, trueNeg, falseNeg: 1393 32 80 22
+SLN staining (if positive) (choice=Keratin) Unchecked percision, recall, f1: 0.977543859649 , 0.98445229682 , 0.980985915493
+SLN staining (if positive) (choice=Keratin) Unchecked sensitivity, specifcity: 0.98445229682 , 0.714285714286
+Diag SLN staining (if positive) (choice=Keratin) Unchecked , Num Mistakes: 54 , error rate 0.0353634577603
+---------------------------
+Mastectomy incision Horizontal_radial
+Number of gold 6.0
+Number guessed 2
+Mastectomy incision Horizontal_radial truePos, falsePos, trueNeg, falseNeg: 0 2 206 6
+Mastectomy incision Horizontal_radial percision, recall, f1: 0.0 , 0.0 , 1
+Mastectomy incision Horizontal_radial sensitivity, specifcity: 0.0 , 0.990384615385
+Diag Mastectomy incision Horizontal_radial , Num Mistakes: 8 , error rate 0.0373831775701
+---------------------------
+Mastectomy incision Unknown
+Number of gold 13.0
+Number guessed 2
+Mastectomy incision Unknown truePos, falsePos, trueNeg, falseNeg: 1 1 200 12
+Mastectomy incision Unknown percision, recall, f1: 0.5 , 0.0769230769231 , 0.133333333333
+Mastectomy incision Unknown sensitivity, specifcity: 0.0769230769231 , 0.995024875622
+Diag Mastectomy incision Unknown , Num Mistakes: 13 , error rate 0.0607476635514
+---------------------------
+Mastectomy incision Extension_of_previous_incision
+Number of gold 4.0
+Number guessed 0
+Mastectomy incision Extension_of_previous_incision truePos, falsePos, trueNeg, falseNeg: 0 0 210 4
+Mastectomy incision Extension_of_previous_incision percision, recall, f1: 1 , 0.0 , 0.0
+Mastectomy incision Extension_of_previous_incision sensitivity, specifcity: 0.0 , 1.0
+Diag Mastectomy incision Extension_of_previous_incision , Num Mistakes: 4 , error rate 0.018691588785
+---------------------------
+Mastectomy incision Other
+Number of gold 23.0
+Number guessed 10
+Mastectomy incision Other truePos, falsePos, trueNeg, falseNeg: 3 7 184 20
+Mastectomy incision Other percision, recall, f1: 0.3 , 0.130434782609 , 0.181818181818
+Mastectomy incision Other sensitivity, specifcity: 0.130434782609 , 0.96335078534
+Diag Mastectomy incision Other , Num Mistakes: 27 , error rate 0.126168224299
+---------------------------
+Mastectomy incision Periareolar
+Number of gold 128.0
+Number guessed 129
+Mastectomy incision Periareolar truePos, falsePos, trueNeg, falseNeg: 93 36 50 35
+Mastectomy incision Periareolar percision, recall, f1: 0.720930232558 , 0.7265625 , 0.72373540856
+Mastectomy incision Periareolar sensitivity, specifcity: 0.7265625 , 0.581395348837
+Diag Mastectomy incision Periareolar , Num Mistakes: 71 , error rate 0.331775700935
+---------------------------
+Mastectomy incision Inferolateral_IMF_(inframammary_fold)
+Number of gold 40.0
+Number guessed 25
+Mastectomy incision Inferolateral_IMF_(inframammary_fold) truePos, falsePos, trueNeg, falseNeg: 19 6 168 21
+Mastectomy incision Inferolateral_IMF_(inframammary_fold) percision, recall, f1: 0.76 , 0.475 , 0.584615384615
+Mastectomy incision Inferolateral_IMF_(inframammary_fold) sensitivity, specifcity: 0.475 , 0.965517241379
+Diag Mastectomy incision Inferolateral_IMF_(inframammary_fold) , Num Mistakes: 27 , error rate 0.126168224299
+---------------------------
+LVI Yes
+Number of gold 183.0
+Number guessed 172
+LVI Yes truePos, falsePos, trueNeg, falseNeg: 154 18 1079 29
+LVI Yes percision, recall, f1: 0.895348837209 , 0.841530054645 , 0.867605633803
+LVI Yes sensitivity, specifcity: 0.841530054645 , 0.983591613491
+Diag LVI Yes , Num Mistakes: 47 , error rate 0.03671875
+---------------------------
+LVI Suspicious
+Number of gold 31.0
+Number guessed 25
+LVI Suspicious truePos, falsePos, trueNeg, falseNeg: 20 5 1244 11
+LVI Suspicious percision, recall, f1: 0.8 , 0.645161290323 , 0.714285714286
+LVI Suspicious sensitivity, specifcity: 0.645161290323 , 0.995996797438
+Diag LVI Suspicious , Num Mistakes: 16 , error rate 0.0125
+---------------------------
+LVI Not_reported
+Number of gold 243.0
+Number guessed 265
+LVI Not_reported truePos, falsePos, trueNeg, falseNeg: 173 92 945 70
+LVI Not_reported percision, recall, f1: 0.652830188679 , 0.711934156379 , 0.681102362205
+LVI Not_reported sensitivity, specifcity: 0.711934156379 , 0.911282545805
+Diag LVI Not_reported , Num Mistakes: 162 , error rate 0.1265625
+---------------------------
+LVI No
+Number of gold 823.0
+Number guessed 803
+LVI No truePos, falsePos, trueNeg, falseNeg: 721 82 375 102
+LVI No percision, recall, f1: 0.897882938979 , 0.876063183475 , 0.886838868389
+LVI No sensitivity, specifcity: 0.876063183475 , 0.82056892779
+Diag LVI No , Num Mistakes: 184 , error rate 0.14375
+---------------------------
+ER Positive
+Number of gold 892.0
+Number guessed 891
+ER Positive truePos, falsePos, trueNeg, falseNeg: 866 25 307 26
+ER Positive percision, recall, f1: 0.971941638608 , 0.970852017937 , 0.971396522715
+ER Positive sensitivity, specifcity: 0.970852017937 , 0.924698795181
+Diag ER Positive , Num Mistakes: 51 , error rate 0.0416666666667
+---------------------------
+ER Negative
+Number of gold 193.0
+Number guessed 187
+ER Negative truePos, falsePos, trueNeg, falseNeg: 177 10 1021 16
+ER Negative percision, recall, f1: 0.946524064171 , 0.917098445596 , 0.931578947368
+ER Negative sensitivity, specifcity: 0.917098445596 , 0.990300678952
+Diag ER Negative , Num Mistakes: 26 , error rate 0.0212418300654
+---------------------------
+ER Not_Done
+Number of gold 105.0
+Number guessed 109
+ER Not_Done truePos, falsePos, trueNeg, falseNeg: 80 29 1090 25
+ER Not_Done percision, recall, f1: 0.733944954128 , 0.761904761905 , 0.747663551402
+ER Not_Done sensitivity, specifcity: 0.761904761905 , 0.974084003575
+Diag ER Not_Done , Num Mistakes: 54 , error rate 0.0441176470588
+---------------------------
+ER Unknown
+Number of gold 34.0
+Number guessed 19
+ER Unknown truePos, falsePos, trueNeg, falseNeg: 12 7 1183 22
+ER Unknown percision, recall, f1: 0.631578947368 , 0.352941176471 , 0.452830188679
+ER Unknown sensitivity, specifcity: 0.352941176471 , 0.994117647059
+Diag ER Unknown , Num Mistakes: 29 , error rate 0.0236928104575
+---------------------------
+Micopapillary Checked
+Number of gold 61.0
+Number guessed 50
+Micopapillary Checked truePos, falsePos, trueNeg, falseNeg: 43 7 1843 18
+Micopapillary Checked percision, recall, f1: 0.86 , 0.704918032787 , 0.774774774775
+Micopapillary Checked sensitivity, specifcity: 0.704918032787 , 0.996216216216
+Diag Micopapillary Checked , Num Mistakes: 25 , error rate 0.0130821559393
+---------------------------
+Micopapillary Unchecked
+Number of gold 1850.0
+Number guessed 1861
+Micopapillary Unchecked truePos, falsePos, trueNeg, falseNeg: 1843 18 43 7
+Micopapillary Unchecked percision, recall, f1: 0.990327780763 , 0.996216216216 , 0.993263271355
+Micopapillary Unchecked sensitivity, specifcity: 0.996216216216 , 0.704918032787
+Diag Micopapillary Unchecked , Num Mistakes: 25 , error rate 0.0130821559393
+---------------------------
+Skin sparing Mastectomy Checked
+Number of gold 84.0
+Number guessed 43
+Skin sparing Mastectomy Checked truePos, falsePos, trueNeg, falseNeg: 20 23 1420 64
+Skin sparing Mastectomy Checked percision, recall, f1: 0.46511627907 , 0.238095238095 , 0.314960629921
+Skin sparing Mastectomy Checked sensitivity, specifcity: 0.238095238095 , 0.984060984061
+Diag Skin sparing Mastectomy Checked , Num Mistakes: 87 , error rate 0.056974459725
+---------------------------
+Skin sparing Mastectomy Unchecked
+Number of gold 1443.0
+Number guessed 1484
+Skin sparing Mastectomy Unchecked truePos, falsePos, trueNeg, falseNeg: 1420 64 20 23
+Skin sparing Mastectomy Unchecked percision, recall, f1: 0.956873315364 , 0.984060984061 , 0.970276733857
+Skin sparing Mastectomy Unchecked sensitivity, specifcity: 0.984060984061 , 0.238095238095
+Diag Skin sparing Mastectomy Unchecked , Num Mistakes: 87 , error rate 0.056974459725
+---------------------------
+Invasive Focally_close_(<_2mm)
+Number of gold 6.0
+Number guessed 2
+Invasive Focally_close_(<_2mm) truePos, falsePos, trueNeg, falseNeg: 0 2 1446 6
+Invasive Focally_close_(<_2mm) percision, recall, f1: 0.0 , 0.0 , 1
+Invasive Focally_close_(<_2mm) sensitivity, specifcity: 0.0 , 0.99861878453
+Diag Invasive Focally_close_(<_2mm) , Num Mistakes: 8 , error rate 0.00550206327373
+---------------------------
+Invasive Unknown
+Number of gold 3.0
+Number guessed 0
+Invasive Unknown truePos, falsePos, trueNeg, falseNeg: 0 0 1451 3
+Invasive Unknown percision, recall, f1: 1 , 0.0 , 0.0
+Invasive Unknown sensitivity, specifcity: 0.0 , 1.0
+Diag Invasive Unknown , Num Mistakes: 3 , error rate 0.00206327372765
+---------------------------
+Invasive Negative
+Number of gold 1061.0
+Number guessed 1108
+Invasive Negative truePos, falsePos, trueNeg, falseNeg: 985 123 270 76
+Invasive Negative percision, recall, f1: 0.888989169675 , 0.928369462771 , 0.908252650991
+Invasive Negative sensitivity, specifcity: 0.928369462771 , 0.687022900763
+Diag Invasive Negative , Num Mistakes: 199 , error rate 0.136863823934
+---------------------------
+Invasive Grossly_close_(multifocal/_broad_front)
+Number of gold 117.0
+Number guessed 53
+Invasive Grossly_close_(multifocal/_broad_front) truePos, falsePos, trueNeg, falseNeg: 26 27 1310 91
+Invasive Grossly_close_(multifocal/_broad_front) percision, recall, f1: 0.490566037736 , 0.222222222222 , 0.305882352941
+Invasive Grossly_close_(multifocal/_broad_front) sensitivity, specifcity: 0.222222222222 , 0.979805534779
+Diag Invasive Grossly_close_(multifocal/_broad_front) , Num Mistakes: 118 , error rate 0.0811554332875
+---------------------------
+Invasive Focally_positive
+Number of gold 56.0
+Number guessed 13
+Invasive Focally_positive truePos, falsePos, trueNeg, falseNeg: 6 7 1391 50
+Invasive Focally_positive percision, recall, f1: 0.461538461538 , 0.107142857143 , 0.173913043478
+Invasive Focally_positive sensitivity, specifcity: 0.107142857143 , 0.994992846924
+Diag Invasive Focally_positive , Num Mistakes: 57 , error rate 0.0392022008253
+---------------------------
+Invasive Focally_close_(<_1mm)
+Number of gold 25.0
+Number guessed 4
+Invasive Focally_close_(<_1mm) truePos, falsePos, trueNeg, falseNeg: 0 4 1425 25
+Invasive Focally_close_(<_1mm) percision, recall, f1: 0.0 , 0.0 , 1
+Invasive Focally_close_(<_1mm) sensitivity, specifcity: 0.0 , 0.997200839748
+Diag Invasive Focally_close_(<_1mm) , Num Mistakes: 29 , error rate 0.0199449793673
+---------------------------
+Invasive Grossly_positive
+Number of gold 132.0
+Number guessed 110
+Invasive Grossly_positive truePos, falsePos, trueNeg, falseNeg: 68 42 1280 64
+Invasive Grossly_positive percision, recall, f1: 0.618181818182 , 0.515151515152 , 0.561983471074
+Invasive Grossly_positive sensitivity, specifcity: 0.515151515152 , 0.968229954614
+Diag Invasive Grossly_positive , Num Mistakes: 106 , error rate 0.0729023383769
+---------------------------
+Invasive Focally_close
+Number of gold 54.0
+Number guessed 46
+Invasive Focally_close truePos, falsePos, trueNeg, falseNeg: 11 35 1365 43
+Invasive Focally_close percision, recall, f1: 0.239130434783 , 0.203703703704 , 0.22
+Invasive Focally_close sensitivity, specifcity: 0.203703703704 , 0.975
+Diag Invasive Focally_close , Num Mistakes: 78 , error rate 0.0536451169188
+---------------------------
+SLN staining (if positive) (choice=H & E) Checked
+Number of gold 101.0
+Number guessed 106
+SLN staining (if positive) (choice=H & E) Checked truePos, falsePos, trueNeg, falseNeg: 75 31 1395 26
+SLN staining (if positive) (choice=H & E) Checked percision, recall, f1: 0.707547169811 , 0.742574257426 , 0.724637681159
+SLN staining (if positive) (choice=H & E) Checked sensitivity, specifcity: 0.742574257426 , 0.978260869565
+Diag SLN staining (if positive) (choice=H & E) Checked , Num Mistakes: 57 , error rate 0.0373280943026
+---------------------------
+SLN staining (if positive) (choice=H & E) Unchecked
+Number of gold 1426.0
+Number guessed 1421
+SLN staining (if positive) (choice=H & E) Unchecked truePos, falsePos, trueNeg, falseNeg: 1395 26 75 31
+SLN staining (if positive) (choice=H & E) Unchecked percision, recall, f1: 0.981703026038 , 0.978260869565 , 0.979978925184
+SLN staining (if positive) (choice=H & E) Unchecked sensitivity, specifcity: 0.978260869565 , 0.742574257426
+Diag SLN staining (if positive) (choice=H & E) Unchecked , Num Mistakes: 57 , error rate 0.0373280943026
+---------------------------
+Type of sampled LN (choice=Non SLN (Non Sentinel LN)) Checked
+Number of gold 65.0
+Number guessed 33
+Type of sampled LN (choice=Non SLN (Non Sentinel LN)) Checked truePos, falsePos, trueNeg, falseNeg: 25 8 1454 40
+Type of sampled LN (choice=Non SLN (Non Sentinel LN)) Checked percision, recall, f1: 0.757575757576 , 0.384615384615 , 0.510204081633
+Type of sampled LN (choice=Non SLN (Non Sentinel LN)) Checked sensitivity, specifcity: 0.384615384615 , 0.994528043776
+Diag Type of sampled LN (choice=Non SLN (Non Sentinel LN)) Checked , Num Mistakes: 48 , error rate 0.0314341846758
+---------------------------
+Type of sampled LN (choice=Non SLN (Non Sentinel LN)) Unchecked
+Number of gold 1462.0
+Number guessed 1494
+Type of sampled LN (choice=Non SLN (Non Sentinel LN)) Unchecked truePos, falsePos, trueNeg, falseNeg: 1454 40 25 8
+Type of sampled LN (choice=Non SLN (Non Sentinel LN)) Unchecked percision, recall, f1: 0.973226238286 , 0.994528043776 , 0.983761840325
+Type of sampled LN (choice=Non SLN (Non Sentinel LN)) Unchecked sensitivity, specifcity: 0.994528043776 , 0.384615384615
+Diag Type of sampled LN (choice=Non SLN (Non Sentinel LN)) Unchecked , Num Mistakes: 48 , error rate 0.0314341846758
+---------------------------
+Sentinel LN (# Malignant) 1
+Number of gold 117.0
+Number guessed 133
+Sentinel LN (# Malignant) 1 truePos, falsePos, trueNeg, falseNeg: 97 36 417 20
+Sentinel LN (# Malignant) 1 percision, recall, f1: 0.729323308271 , 0.82905982906 , 0.776
+Sentinel LN (# Malignant) 1 sensitivity, specifcity: 0.82905982906 , 0.920529801325
+Diag Sentinel LN (# Malignant) 1 , Num Mistakes: 56 , error rate 0.0982456140351
+---------------------------
+Sentinel LN (# Malignant) 0
+Number of gold 409.0
+Number guessed 412
+Sentinel LN (# Malignant) 0 truePos, falsePos, trueNeg, falseNeg: 392 20 141 17
+Sentinel LN (# Malignant) 0 percision, recall, f1: 0.95145631068 , 0.958435207824 , 0.954933008526
+Sentinel LN (# Malignant) 0 sensitivity, specifcity: 0.958435207824 , 0.875776397516
+Diag Sentinel LN (# Malignant) 0 , Num Mistakes: 37 , error rate 0.0649122807018
+---------------------------
+Sentinel LN (# Malignant) 3
+Number of gold 8.0
+Number guessed 0
+Sentinel LN (# Malignant) 3 truePos, falsePos, trueNeg, falseNeg: 0 0 562 8
+Sentinel LN (# Malignant) 3 percision, recall, f1: 1 , 0.0 , 0.0
+Sentinel LN (# Malignant) 3 sensitivity, specifcity: 0.0 , 1.0
+Diag Sentinel LN (# Malignant) 3 , Num Mistakes: 8 , error rate 0.0140350877193
+---------------------------
+Sentinel LN (# Malignant) 2
+Number of gold 36.0
+Number guessed 14
+Sentinel LN (# Malignant) 2 truePos, falsePos, trueNeg, falseNeg: 13 1 533 23
+Sentinel LN (# Malignant) 2 percision, recall, f1: 0.928571428571 , 0.361111111111 , 0.52
+Sentinel LN (# Malignant) 2 sensitivity, specifcity: 0.361111111111 , 0.998127340824
+Diag Sentinel LN (# Malignant) 2 , Num Mistakes: 24 , error rate 0.0421052631579
+---------------------------
+Nipple sparing Mastectomy Checked
+Number of gold 14.0
+Number guessed 11
+Nipple sparing Mastectomy Checked truePos, falsePos, trueNeg, falseNeg: 10 1 1512 4
+Nipple sparing Mastectomy Checked percision, recall, f1: 0.909090909091 , 0.714285714286 , 0.8
+Nipple sparing Mastectomy Checked sensitivity, specifcity: 0.714285714286 , 0.999339061467
+Diag Nipple sparing Mastectomy Checked , Num Mistakes: 5 , error rate 0.00327439423707
+---------------------------
+Nipple sparing Mastectomy Unchecked
+Number of gold 1513.0
+Number guessed 1516
+Nipple sparing Mastectomy Unchecked truePos, falsePos, trueNeg, falseNeg: 1512 4 10 1
+Nipple sparing Mastectomy Unchecked percision, recall, f1: 0.997361477573 , 0.999339061467 , 0.998349290195
+Nipple sparing Mastectomy Unchecked sensitivity, specifcity: 0.999339061467 , 0.714285714286
+Diag Nipple sparing Mastectomy Unchecked , Num Mistakes: 5 , error rate 0.00327439423707
+---------------------------
+Type of sampled LN (choice=ALND (Axillary LN Dissection)) Checked
+Number of gold 404.0
+Number guessed 390
+Type of sampled LN (choice=ALND (Axillary LN Dissection)) Checked truePos, falsePos, trueNeg, falseNeg: 365 25 1098 39
+Type of sampled LN (choice=ALND (Axillary LN Dissection)) Checked percision, recall, f1: 0.935897435897 , 0.903465346535 , 0.919395465995
+Type of sampled LN (choice=ALND (Axillary LN Dissection)) Checked sensitivity, specifcity: 0.903465346535 , 0.977738201247
+Diag Type of sampled LN (choice=ALND (Axillary LN Dissection)) Checked , Num Mistakes: 64 , error rate 0.0419122462344
+---------------------------
+Type of sampled LN (choice=ALND (Axillary LN Dissection)) Unchecked
+Number of gold 1123.0
+Number guessed 1137
+Type of sampled LN (choice=ALND (Axillary LN Dissection)) Unchecked truePos, falsePos, trueNeg, falseNeg: 1098 39 365 25
+Type of sampled LN (choice=ALND (Axillary LN Dissection)) Unchecked percision, recall, f1: 0.965699208443 , 0.977738201247 , 0.971681415929
+Type of sampled LN (choice=ALND (Axillary LN Dissection)) Unchecked sensitivity, specifcity: 0.977738201247 , 0.903465346535
+Diag Type of sampled LN (choice=ALND (Axillary LN Dissection)) Unchecked , Num Mistakes: 64 , error rate 0.0419122462344
+---------------------------
+Skin Yes
+Number of gold 14.0
+Number guessed 7
+Skin Yes truePos, falsePos, trueNeg, falseNeg: 6 1 90 8
+Skin Yes percision, recall, f1: 0.857142857143 , 0.428571428571 , 0.571428571429
+Skin Yes sensitivity, specifcity: 0.428571428571 , 0.989010989011
+Diag Skin Yes , Num Mistakes: 9 , error rate 0.0857142857143
+---------------------------
+Skin Not_reported
+Number of gold 8.0
+Number guessed 11
+Skin Not_reported truePos, falsePos, trueNeg, falseNeg: 6 5 92 2
+Skin Not_reported percision, recall, f1: 0.545454545455 , 0.75 , 0.631578947368
+Skin Not_reported sensitivity, specifcity: 0.75 , 0.948453608247
+Diag Skin Not_reported , Num Mistakes: 7 , error rate 0.0666666666667
+---------------------------
+Skin No
+Number of gold 83.0
+Number guessed 87
+Skin No truePos, falsePos, trueNeg, falseNeg: 77 10 12 6
+Skin No percision, recall, f1: 0.885057471264 , 0.927710843373 , 0.905882352941
+Skin No sensitivity, specifcity: 0.927710843373 , 0.545454545455
+Diag Skin No , Num Mistakes: 16 , error rate 0.152380952381
+---------------------------
+ALND (#malignant) 11
+Number of gold 2.0
+Number guessed 1
+ALND (#malignant) 11 truePos, falsePos, trueNeg, falseNeg: 0 1 399 2
+ALND (#malignant) 11 percision, recall, f1: 0.0 , 0.0 , 1
+ALND (#malignant) 11 sensitivity, specifcity: 0.0 , 0.9975
+Diag ALND (#malignant) 11 , Num Mistakes: 3 , error rate 0.00746268656716
+---------------------------
+ALND (#malignant) 14
+Number of gold 2.0
+Number guessed 0
+ALND (#malignant) 14 truePos, falsePos, trueNeg, falseNeg: 0 0 400 2
+ALND (#malignant) 14 percision, recall, f1: 1 , 0.0 , 0.0
+ALND (#malignant) 14 sensitivity, specifcity: 0.0 , 1.0
+Diag ALND (#malignant) 14 , Num Mistakes: 2 , error rate 0.00497512437811
+---------------------------
+ALND (#malignant) 1
+Number of gold 66.0
+Number guessed 37
+ALND (#malignant) 1 truePos, falsePos, trueNeg, falseNeg: 30 7 329 36
+ALND (#malignant) 1 percision, recall, f1: 0.810810810811 , 0.454545454545 , 0.582524271845
+ALND (#malignant) 1 sensitivity, specifcity: 0.454545454545 , 0.979166666667
+Diag ALND (#malignant) 1 , Num Mistakes: 43 , error rate 0.106965174129
+---------------------------
+ALND (#malignant) 0
+Number of gold 240.0
+Number guessed 250
+ALND (#malignant) 0 truePos, falsePos, trueNeg, falseNeg: 230 20 142 10
+ALND (#malignant) 0 percision, recall, f1: 0.92 , 0.958333333333 , 0.938775510204
+ALND (#malignant) 0 sensitivity, specifcity: 0.958333333333 , 0.876543209877
+Diag ALND (#malignant) 0 , Num Mistakes: 30 , error rate 0.0746268656716
+---------------------------
+ALND (#malignant) 3
+Number of gold 24.0
+Number guessed 16
+ALND (#malignant) 3 truePos, falsePos, trueNeg, falseNeg: 12 4 374 12
+ALND (#malignant) 3 percision, recall, f1: 0.75 , 0.5 , 0.6
+ALND (#malignant) 3 sensitivity, specifcity: 0.5 , 0.989417989418
+Diag ALND (#malignant) 3 , Num Mistakes: 16 , error rate 0.0398009950249
+---------------------------
+ALND (#malignant) 2
+Number of gold 31.0
+Number guessed 28
+ALND (#malignant) 2 truePos, falsePos, trueNeg, falseNeg: 21 7 364 10
+ALND (#malignant) 2 percision, recall, f1: 0.75 , 0.677419354839 , 0.71186440678
+ALND (#malignant) 2 sensitivity, specifcity: 0.677419354839 , 0.981132075472
+Diag ALND (#malignant) 2 , Num Mistakes: 17 , error rate 0.0422885572139
+---------------------------
+ALND (#malignant) 5
+Number of gold 8.0
+Number guessed 6
+ALND (#malignant) 5 truePos, falsePos, trueNeg, falseNeg: 4 2 392 4
+ALND (#malignant) 5 percision, recall, f1: 0.666666666667 , 0.5 , 0.571428571429
+ALND (#malignant) 5 sensitivity, specifcity: 0.5 , 0.994923857868
+Diag ALND (#malignant) 5 , Num Mistakes: 6 , error rate 0.0149253731343
+---------------------------
+ALND (#malignant) 4
+Number of gold 6.0
+Number guessed 2
+ALND (#malignant) 4 truePos, falsePos, trueNeg, falseNeg: 1 1 395 5
+ALND (#malignant) 4 percision, recall, f1: 0.5 , 0.166666666667 , 0.25
+ALND (#malignant) 4 sensitivity, specifcity: 0.166666666667 , 0.997474747475
+Diag ALND (#malignant) 4 , Num Mistakes: 6 , error rate 0.0149253731343
+---------------------------
+ALND (#malignant) 7
+Number of gold 6.0
+Number guessed 1
+ALND (#malignant) 7 truePos, falsePos, trueNeg, falseNeg: 1 0 396 5
+ALND (#malignant) 7 percision, recall, f1: 1.0 , 0.166666666667 , 0.285714285714
+ALND (#malignant) 7 sensitivity, specifcity: 0.166666666667 , 1.0
+Diag ALND (#malignant) 7 , Num Mistakes: 5 , error rate 0.0124378109453
+---------------------------
+ALND (#malignant) 6
+Number of gold 8.0
+Number guessed 2
+ALND (#malignant) 6 truePos, falsePos, trueNeg, falseNeg: 2 0 394 6
+ALND (#malignant) 6 percision, recall, f1: 1.0 , 0.25 , 0.4
+ALND (#malignant) 6 sensitivity, specifcity: 0.25 , 1.0
+Diag ALND (#malignant) 6 , Num Mistakes: 6 , error rate 0.0149253731343
+---------------------------
+ALND (#malignant) 9
+Number of gold 5.0
+Number guessed 0
+ALND (#malignant) 9 truePos, falsePos, trueNeg, falseNeg: 0 0 397 5
+ALND (#malignant) 9 percision, recall, f1: 1 , 0.0 , 0.0
+ALND (#malignant) 9 sensitivity, specifcity: 0.0 , 1.0
+Diag ALND (#malignant) 9 , Num Mistakes: 5 , error rate 0.0124378109453
+---------------------------
+ALND (#malignant) 8
+Number of gold 4.0
+Number guessed 1
+ALND (#malignant) 8 truePos, falsePos, trueNeg, falseNeg: 1 0 398 3
+ALND (#malignant) 8 percision, recall, f1: 1.0 , 0.25 , 0.4
+ALND (#malignant) 8 sensitivity, specifcity: 0.25 , 1.0
+Diag ALND (#malignant) 8 , Num Mistakes: 3 , error rate 0.00746268656716
+---------------------------
+BVI Yes
+Number of gold 15.0
+Number guessed 8
+BVI Yes truePos, falsePos, trueNeg, falseNeg: 7 1 1393 8
+BVI Yes percision, recall, f1: 0.875 , 0.466666666667 , 0.608695652174
+BVI Yes sensitivity, specifcity: 0.466666666667 , 0.999282639885
+Diag BVI Yes , Num Mistakes: 9 , error rate 0.00638750887154
+---------------------------
+BVI Suspicious
+Number of gold 9.0
+Number guessed 3
+BVI Suspicious truePos, falsePos, trueNeg, falseNeg: 3 0 1400 6
+BVI Suspicious percision, recall, f1: 1.0 , 0.333333333333 , 0.5
+BVI Suspicious sensitivity, specifcity: 0.333333333333 , 1.0
+Diag BVI Suspicious , Num Mistakes: 6 , error rate 0.00425833924769
+---------------------------
+BVI Not_reported
+Number of gold 378.0
+Number guessed 396
+BVI Not_reported truePos, falsePos, trueNeg, falseNeg: 301 95 936 77
+BVI Not_reported percision, recall, f1: 0.760101010101 , 0.796296296296 , 0.777777777778
+BVI Not_reported sensitivity, specifcity: 0.796296296296 , 0.907856450048
+Diag BVI Not_reported , Num Mistakes: 172 , error rate 0.122072391767
+---------------------------
+BVI No
+Number of gold 1007.0
+Number guessed 997
+BVI No truePos, falsePos, trueNeg, falseNeg: 909 88 314 98
+BVI No percision, recall, f1: 0.911735205617 , 0.90268123138 , 0.907185628743
+BVI No sensitivity, specifcity: 0.90268123138 , 0.781094527363
+Diag BVI No , Num Mistakes: 186 , error rate 0.132008516678
+---------------------------
+Modified radical Mastectomy Checked
+Number of gold 177.0
+Number guessed 176
+Modified radical Mastectomy Checked truePos, falsePos, trueNeg, falseNeg: 156 20 1330 21
+Modified radical Mastectomy Checked percision, recall, f1: 0.886363636364 , 0.881355932203 , 0.883852691218
+Modified radical Mastectomy Checked sensitivity, specifcity: 0.881355932203 , 0.985185185185
+Diag Modified radical Mastectomy Checked , Num Mistakes: 41 , error rate 0.0268500327439
+---------------------------
+Modified radical Mastectomy Unchecked
+Number of gold 1350.0
+Number guessed 1351
+Modified radical Mastectomy Unchecked truePos, falsePos, trueNeg, falseNeg: 1330 21 156 20
+Modified radical Mastectomy Unchecked percision, recall, f1: 0.984455958549 , 0.985185185185 , 0.984820436875
+Modified radical Mastectomy Unchecked sensitivity, specifcity: 0.985185185185 , 0.881355932203
+Diag Modified radical Mastectomy Unchecked , Num Mistakes: 41 , error rate 0.0268500327439
+---------------------------
+Type of sampled LN (choice=Intraparynchemal) Checked
+Number of gold 36.0
+Number guessed 16
+Type of sampled LN (choice=Intraparynchemal) Checked truePos, falsePos, trueNeg, falseNeg: 11 5 1486 25
+Type of sampled LN (choice=Intraparynchemal) Checked percision, recall, f1: 0.6875 , 0.305555555556 , 0.423076923077
+Type of sampled LN (choice=Intraparynchemal) Checked sensitivity, specifcity: 0.305555555556 , 0.996646545942
+Diag Type of sampled LN (choice=Intraparynchemal) Checked , Num Mistakes: 30 , error rate 0.0196463654224
+---------------------------
+Type of sampled LN (choice=Intraparynchemal) Unchecked
+Number of gold 1491.0
+Number guessed 1511
+Type of sampled LN (choice=Intraparynchemal) Unchecked truePos, falsePos, trueNeg, falseNeg: 1486 25 11 5
+Type of sampled LN (choice=Intraparynchemal) Unchecked percision, recall, f1: 0.983454665784 , 0.996646545942 , 0.990006662225
+Type of sampled LN (choice=Intraparynchemal) Unchecked sensitivity, specifcity: 0.996646545942 , 0.305555555556
+Diag Type of sampled LN (choice=Intraparynchemal) Unchecked , Num Mistakes: 30 , error rate 0.0196463654224
+---------------------------
+NOS Checked
+Number of gold 68.0
+Number guessed 46
+NOS Checked truePos, falsePos, trueNeg, falseNeg: 35 11 1832 33
+NOS Checked percision, recall, f1: 0.760869565217 , 0.514705882353 , 0.614035087719
+NOS Checked sensitivity, specifcity: 0.514705882353 , 0.994031470429
+Diag NOS Checked , Num Mistakes: 44 , error rate 0.0230245944532
+---------------------------
+NOS Unchecked
+Number of gold 1843.0
+Number guessed 1865
+NOS Unchecked truePos, falsePos, trueNeg, falseNeg: 1832 33 35 11
+NOS Unchecked percision, recall, f1: 0.982305630027 , 0.994031470429 , 0.988133764833
+NOS Unchecked sensitivity, specifcity: 0.994031470429 , 0.514705882353
+Diag NOS Unchecked , Num Mistakes: 44 , error rate 0.0230245944532
+---------------------------
+Overall
+Number of gold 47632.0
+Number guessed 47068
+truePos, falsePos, trueNeg, falseNeg: 44248 2820 90552 3384
+../classification_results/Breast/class_results_ Overall percision, recall, f1: 0.940086683097 , 0.928955324152 , 0.934487856389
+../classification_results/Breast/class_results_ Overall sensitivity, specifcity: 0.928955324152 , 0.969798226449
+../classification_results/Breast/class_results_ Overall Num Mistakes: 6204 , error rate 0.0439987518085
+Done
