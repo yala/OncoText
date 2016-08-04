@@ -16,6 +16,17 @@ if __name__ == "__main__":
 
     labels = ['Positive']
 
+    if MODE == "TAGHIAN":
+        redmap = p.load(open('../taghian/redmap.p', 'rb'))
+        dB  = p.load(open('../taghian/allExtractionDBs.p', 'rb'))
+
+        diagLabelDict = {}
+        for diag in diagnoses:
+            validLabels = set(['_'.join(str(r[diag]).split()) for r in dB[diag] if not r[diag] == None])
+            diagLabelDict[diag] = validLabels
+        types = set([redmap[m]['extraction feild'] for m in redmap if redmap[m]['event'] in lauraDictToIndx and not redmap[m]['extraction feild'] == None])
+        diagnoses = [ extraction for extraction in types if len(dB[extraction]) > 500 and extraction not in filtOutList]
+
     print "Calling interpret for ", stem
     for diag in diagnoses:
         diagFile = '_'.join(diag.split())
@@ -63,6 +74,8 @@ if __name__ == "__main__":
     overallGold = []
     overallGuessed = []
     for diag in diagnoses:
+        if MODE == "TAGHIAN":
+            labels = diagLabelDict[diag]
         for label in labels:
             defualt = 1
             if catergoryVerbose:
