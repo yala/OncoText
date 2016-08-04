@@ -4,6 +4,8 @@ sys.path.append("..")
 from constants import *
 from helpers import *
 from csv import DictWriter
+import xmltodict
+
 
 
 diagnoses = [ u'DCIS', u'ILC', u'Phylodes', u'CancerSuspicious', \
@@ -31,9 +33,14 @@ def filt(report):
 
 feas = p.load(open('FirstRecordsForFEAs.p', 'rb'))
 mrnDict = getMRNDB(p.load(open('../'+outPath, 'rb')))
+oldDobs1 = xmltodict.parse(open('DOBmrnplusx.xml', 'rb'))['dataroot']['DOBmrnplusx']
+oldDobs2 = xmltodict.parse( open('DataForAdamOn2010_2016WithDOB.xml', 'rb') )['dataroot']['DataForAdamOn2010_2016']
+newDobs = p.load(open('graceLatestDOBs.p', 'rb'))   
 
 print "Len FEAS", len(feas)
 feaDOBs = [f for f in feas if not f['DOBPlusX'] == 0]
+feaNoDOBs = [f['MRNPlusX'] for f in feas if  f['DOBPlusX'] == 0]
+print 'FEA NO DOBS', feaNoDOBs
 print "Len FEAS DOBs", len(feaDOBs)
 
 possControls = []
@@ -69,7 +76,7 @@ for fea in feaDOBs:
     controls = 0
     #Find controls for each one
     for mrn in possControls:
-        if mrn in visited or not 'breast' in mrnDict[mrn][0]['Report_Text'].lower(): #Make sure we haven't used this control before
+        if mrn in visited:# or not 'breast' in mrnDict[mrn][0]['Report_Text'].lower(): #Make sure we haven't used this control before
             continue
         possDob = mrnDict[mrn][0]['DOBPlusX']
         possDiagDate = mrnDict[mrn][0]['Report_Date_TimePlusX']
@@ -103,6 +110,7 @@ for fea in feaDOBs:
                 print "DOBs", dob,  possDob, ageDif
                 print "diag", diagDate, possDiagDate, diagDif
                 j += 1
+
     print dob.year, "Controls: ", controls
 
     if controls < maxControl:
@@ -110,7 +118,22 @@ for fea in feaDOBs:
         notEnoughMRNs.append(feaMRN)
 
 
+newestControls = []
+newestMRNs = [ (f['MRNPlusX'],f['MRN_Type']) for f in newDobs]
+oldMRNs1 =   [ (f['MRN_x002B_x'], f['MRN_Type']) for f in oldDobs1 if 'MRN_x002B_x' in f and 'MRN_Type' in f ]
+oldMRNs2 = [ (f['MRNPlusX'],f['MRN_Type']) for f in oldDobs2 if 'MRNPlusX' in f and 'MRN_Type' in f]
+oldMRNs = oldMRNs1 + oldMRNs2
 
+newestControls = [r for r in controlListRecords if (r['ControlForMRN'], r['ControlForInst']) in newestMRNs  and not (r['ControlForMRN'], r['ControlForInst']) in oldMRNs]
+print 'len(newDobs)', len(newDobs)
+print 'len(newestControls MRNS)', len(set([r['ControlForMRN'] for r in newestControls]))
+print 'len(newestControls)', len(newestControls)
+
+keys = newestControls[0].keys()
+with open("controlGroupAllData_newestOnly.csv", "wb") as newestCSVRecords:
+    writer = DictWriter(newestCSVRecords, keys)
+    writer.writeheader()
+    writer.writerows(newestControls)
 
 print "Len FEAS DOBs", len(feaDOBs)
 print "Count FEA mrns with not enough control", countNoControl
