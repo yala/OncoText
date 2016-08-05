@@ -141,6 +141,9 @@ print "Those MRNs are", notEnoughMRNs
 print "Num mrns in control set", len(controlListMRNs)
 print "Num elts in control set", len(controlListRecords)
 
+print "Controls cover", len(set([(r['ControlForMRN'], r['ControlForInst']) for r in controlListRecords]))
+
+
 mrnKeys = ['MRNPlusX', 'Institution', 'ControlForMRN', 'ControlForInst']
 with open("controlGroupMRN_Inst_ControlFor.csv", "wb") as outCSVMrn:
     writer = DictWriter(outCSVMrn, mrnKeys)
