@@ -19,7 +19,6 @@ if __name__ == "__main__":
     if MODE == "TAGHIAN":
         redmap = p.load(open('../taghian/redmap.p', 'rb'))
         dB  = p.load(open('../taghian/allExtractionDBs.p', 'rb'))
-
         diagLabelDict = {}
         for diag in diagnoses:
             validLabelsUnfiltered = set(['_'.join(str(r[diag]).split()) for r in dB[diag] if not r[diag] == None])
@@ -28,13 +27,9 @@ if __name__ == "__main__":
             for label in validLabelsUnfiltered:
                 labelDist[label] = len([r for r in dB[diag] if '_'.join(str(r[diag]).split()) == label])
 
-            print "Distribution", labelDist
+            print "Distribution [ ",diag,"]", labelDist
             validLabels = set([label for label in labelDist if labelDist[label] > 10 ])
             diagLabelDict[diag] = validLabels
-            
-        types = set([redmap[m]['extraction feild'] for m in redmap if redmap[m]['event'] in lauraDictToIndx and not redmap[m]['extraction feild'] == None])
-        diagnoses = [ extraction for extraction in types if len(dB[extraction]) > 500 and extraction not in filtOutList]
-
 
     print "Calling interpret for ", stem
     for diag in diagnoses:
