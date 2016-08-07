@@ -16,9 +16,6 @@ random.seed(1)
 def binarizeFilesForClassification(write = True):
     allData = p.load(open(dataPath, 'rb'))
 
-    #Old allData got corrupted so now reconstruct it by throwing away following lables.
-    superfliousLabels = ['EpisodeID',]
-
     goldData = [d for d in allData if 'Correct' in d and not( d['Correct'] == 0)]
     print "Num gold Data with DOBs", len([d for d in goldData if 'DOBPlusX' in d and not d['DOBPlusX'] == 0]), "/", len(goldData)
 
@@ -418,12 +415,12 @@ def portToJSON(data, path):
 
 if __name__ == "__main__":
 
-    train = False
+    train = True
     if train:
         binarizeFilesForClassification()
 
 
-    buildExportBool = True
+    buildExportBool = False
     if buildExportBool:
         print "Calling export"
         reportDB = binarizeFilesForClassification(False)
@@ -432,13 +429,13 @@ if __name__ == "__main__":
     else: 
         reportDB = p.load(open(outPath, 'rb'))
 
-    labelMaxDXBool = True
+    labelMaxDXBool = False
     if labelMaxDXBool:
         getMaxDX(reportDB)
         raw_input("Dump again? Press any key to continue")
         p.dump( reportDB, open(outPath, 'wb'))
 
-    buildEpisodesBool = True
+    buildEpisodesBool = False
     if buildEpisodesBool:
         reportDB, episodeDB = buildEpisodes(reportDB)
         raw_input("Dump again? Press any key to continue")
@@ -448,7 +445,7 @@ if __name__ == "__main__":
         reportDB = p.load( open(outPath, 'rb'))
         episodeDB = p.load( open(episodePath, 'rb'))
 
-    portToJSONBool = True
+    portToJSONBool = False
     if portToJSONBool:
         portToJSON(reportDB, JSONReportPath)
         portToJSON(episodeDB, JSONEpisodePath)

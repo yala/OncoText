@@ -240,7 +240,7 @@ def buildDB(db, redmap):
             outDBReps.append(rep)
                 
 
-    p.dump(outDB, open('allExtractionReps.p', 'wb'))
+    p.dump(outDBReps, open('allExtractionReps.p', 'wb'))
     p.dump(outDB, open('allExtractionDBs.p', 'wb'))
     for extraction in types:
         print "Number of ",extraction," reps and path reps equiv", len(outDB[extraction])
@@ -252,10 +252,37 @@ def buildDB(db, redmap):
 
     return outDB
 
+
+## redReps: Paths aligned with redcap. All pathreps should have tahianGold = 1
+## pathReps: all 100k pathreps
+## Objective redump (ReportsDB) and essentially merge redReps with pathReps
+def exportRepDB(redReps, pathReps):
+    ## First build Dict of redReps counting on aligning MRN, Inst, Report_Text, Date, Breaside
+    ## Enforce no dups
+    ## go thoguh path reps, if find something in dict, replace and edump
+
+    #Build Dict
+    redDict = {}
+    for red in redReps:
+        repId = red['ReportID']
+        redDict[repId] = red
+
+    for indx, path in enumerate(pathReps):
+        pathId = path['ReportID']
+        if pathId in redDict:
+            pathReps[indx] = redDict[pathId]
+
+    assert len(redReps) == len( [r for r in pathReps if 'TaghianGold' in r and r['TaghianGold'] == 1])
+
+    p.dump(pathReps, open('../reportDB+red.p','wb'))    
+    
+
+
 parseXLSBool = False
 preprocessDBBool = False
-findMatchingReportsBool = True
-buildDBsBool = True
+findMatchingReportsBool = False
+buildDBsBool = False
+exportToRepsDBBool= True
 
 if __name__ == "__main__":
    
@@ -284,6 +311,11 @@ if __name__ == "__main__":
         if not parseXLSBool:
             redmap = p.load(open('redmap.p', 'rb'))
         dBs = buildDB(joinedDB, redmap)
+
+    if exportToRepsDBBool:
+        redReps =     p.load(open('allExtractionReps.p', 'rb'))
+        pathReps = p.load(open('../reportDB.p', 'rb'))
+        exportRepDB(redReps, pathReps)
 
 
 
