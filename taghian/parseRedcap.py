@@ -179,6 +179,7 @@ def findMatchingReports(db, save=False):
 ## Key { MRN} -> {'taghian': [recap events], 'hughes':[pathReps], 'lengths':[ countRedCapEvents, count pathReps]}
 def buildDB(db, redmap):
     outDBReps = []
+    outDBRepIds = set([])
     outDB = {}
     types = set([redmap[m]['extraction feild'] for m in redmap if redmap[m]['event'] in lauraDictToIndx and not redmap[m]['extraction feild'] == None])
 
@@ -234,10 +235,17 @@ def buildDB(db, redmap):
                     rep[extraction] = redcap[redcapIndx][colField]
                     if not rep[extraction] == None:
                         outDB[extraction].append(rep)
+                        outDBRepIds.add(rep['ReportID'])
                     else:
                         continue
+            
+
+    
+    for rep in allPathReps:
+        if rep['ReportID'] in outDBRepIds:
             rep['TaghianGold'] = 1
-            outDBReps.append(rep)
+            assert 'TaghianGold' in rep and rep['TaghianGold'] == 1
+            outDBReps.append( rep )
                 
 
     p.dump(outDBReps, open('allExtractionReps.p', 'wb'))
@@ -246,9 +254,10 @@ def buildDB(db, redmap):
         print "Number of ",extraction," reps and path reps equiv", len(outDB[extraction])
     print "Num extractions", len(outDB)
     print "num extractions over 500 reps", len([ extraction for extraction in types if len(outDB[extraction]) > 500 and extraction not in filtOutList])
-    print [ (extraction, len(outDB[extraction])) for extraction in types if len(outDB[extraction]) > 500 and extraction not in filtOutList]
-
-    print [ extraction for extraction in types if len(outDB[extraction]) > 500 and extraction not in filtOutList]
+    print "Num path reps", len(outDBReps)
+    print "Num path rep IDs", len(outDBRepIds)
+    assert len(outDBReps) > 5000
+    assert len(outDBRepIds) > 5000
 
     return outDB
 
@@ -272,6 +281,9 @@ def exportRepDB(redReps, pathReps):
         if pathId in redDict:
             pathReps[indx] = redDict[pathId]
 
+    if not len(redReps)  == len( [r for r in pathReps if 'TaghianGold' in r and r['TaghianGold'] == 1]):
+        print 'len(redReps)', len(redReps)
+        print "len( [r for r in pathReps if 'TaghianGold' in r and r['TaghianGold'] == 1])", len( [r for r in pathReps if 'TaghianGold' in r and r['TaghianGold'] == 1])
     assert len(redReps) == len( [r for r in pathReps if 'TaghianGold' in r and r['TaghianGold'] == 1])
 
     p.dump(pathReps, open('../reportDB+red.p','wb'))    
@@ -281,11 +293,12 @@ def exportRepDB(redReps, pathReps):
 parseXLSBool = False
 preprocessDBBool = False
 findMatchingReportsBool = False
-buildDBsBool = False
+buildDBsBool = True
 exportToRepsDBBool= True
 
 if __name__ == "__main__":
-   
+    allPathReps = p.load(open('../reportDB.p', 'rb'))
+
     if parseXLSBool:
         redmap = parseMapXLS()
         redcap = parseRedCapXLS()
@@ -314,8 +327,7 @@ if __name__ == "__main__":
 
     if exportToRepsDBBool:
         redReps =     p.load(open('allExtractionReps.p', 'rb'))
-        pathReps = p.load(open('../reportDB.p', 'rb'))
-        exportRepDB(redReps, pathReps)
+        exportRepDB(redReps, allPathReps)
 
 
 
