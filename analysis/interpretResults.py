@@ -19,17 +19,7 @@ if __name__ == "__main__":
     if MODE == "TAGHIAN":
         redmap = p.load(open('../taghian/redmap.p', 'rb'))
         dB  = p.load(open('../taghian/allExtractionDBs.p', 'rb'))
-        diagLabelDict = {}
-        for diag in diagnoses:
-            validLabelsUnfiltered = set(['_'.join(str(r[diag]).split()) for r in dB[diag] if not r[diag] == None])
-
-            labelDist = {}
-            for label in validLabelsUnfiltered:
-                labelDist[label] = len([r for r in dB[diag] if '_'.join(str(r[diag]).split()) == label])
-
-            print "Distribution [ ",diag,"]", labelDist
-            validLabels = set([label for label in labelDist if labelDist[label] > 10 ])
-            diagLabelDict[diag] = validLabels
+        diagLabelDict = constantValidLabelDict
 
     print "Calling interpret for ", stem
     for diag in diagnoses:
@@ -55,8 +45,9 @@ if __name__ == "__main__":
         samples = diagSamples[diag]
         if MODE == "TAGHIAN":
             labels = diagLabelDict[diag]
-        for labelIndx, label in enumerate(labels):
-            for row, sample in enumerate(samples):
+
+        for row, sample in enumerate(samples):
+            for labelIndx, label in enumerate(labels):
 
                 goldsAndPredictions = [float(f) for f in sample.split()]
 
@@ -65,27 +56,20 @@ if __name__ == "__main__":
                 guesses = []
 
                 goldsVec = goldsAndPredictions[:len(goldsAndPredictions)/2]
-                guessedVec = [ 1 if p >= 0 else 0 for p in goldsAndPredictions[len(goldsAndPredictions)/2:]]
+                
+                guessedVec = goldsAndPredictions[len(goldsAndPredictions)/2:]
+
                 assert len(goldsVec) == len(guessedVec)
-                if not diag in gold:
-                    print "ERROR1"
-                    print "Diag", diag
-                    raw_input()
-                if not label in gold[diag]:
-                    print "ERROR2"
-                    print "Label", label
-                    print "label poss", diagLabelDict[label]
-                    print 'labelIndx', labelIndx
-                    raw_input()
-                if labelIndx >= len(goldsVec):
-                    print "ERROR3", labelIndx, goldsVec
-                    print "Label", label
-                    print "Diag", diag
-                    print "expected labels", diagLabelDict[diag]
+               
 
                 gold[diag][label].append(goldsVec[labelIndx])
 
-                prediction = 1 if guessedVec[labelIndx] > 0 else 0
+                predictionIndx = guessedVec.index(max(guessedVec))
+                if labelIndx == predictionIndx:
+                    prediction = 1
+                else:
+                    prediction = 0
+
                 guessed[diag][label].append(prediction)
 
 
