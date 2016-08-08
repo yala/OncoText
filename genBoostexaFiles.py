@@ -12,7 +12,7 @@ if MODE == "TAGHIAN":
 
 def writeNameFiles(stem):
     for diag in diagnoses:
-        with open(stem+"_"+diag+".names", "wb") as f:
+        with open(stem+"_"+replaceSpaces(diag)+".names", "wb") as f:
             if MODE == "Breast":
                 if diag == u'BreastSide':
                     labels = "RIGHT, LEFT.\n"
@@ -134,7 +134,7 @@ def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem):
     for indx, diag in enumerate(diagnoses):
         trainStem, trainSuf = trainOutPath.split('.')
         trainStem = stem
-        with open(trainStem+"_"+diag+"."+trainSuf, "wb") as f: 
+        with open(trainStem+"_"+replaceSpaces(diag)+"."+trainSuf, "wb") as f: 
             for a in range(len(trainReports)):
                 if MODE == "Breast":
                     if diag == u'BreastSide':
@@ -161,7 +161,7 @@ def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem):
     
         testStem, testSuf = testOutPath.split('.')
         testStem = stem
-        with open(testStem+"_"+diag+"."+testSuf, "wb") as f: 
+        with open(testStem+"_"+replaceSpaces(diag)+"."+testSuf, "wb") as f: 
             for b in range(len(testReports)):
                 if MODE == "Breast":
                     if diag == u'BreastSide':

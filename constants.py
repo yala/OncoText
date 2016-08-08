@@ -11,6 +11,9 @@ goldDataPath = 'goldPathReports.p'
 JSONReportPath = "reportDB.json"
 JSONEpisodePath = "episodeDB.json"
 
+def replaceSpaces(label):
+    return '_'.join(str(label).split())
+
 metaData = ['Report_Date_TimePlusX', 'MRNPlusX', 'Correct', 'Institution', 'DOBPlusX']
 
 SIX_MONTHS = datetime.timedelta(365/2)

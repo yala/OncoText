@@ -114,9 +114,6 @@ def preprocessReports(reports):
 
     return cleanReports
 
-def replaceSpaces(label):
-    return '_'.join(str(label).split())
-
 # Function takes [ reports ] and returns a tuple or reports, labels
 # If export is true, returns only diagnoses, if false, also returns metaData
 def getLabelsAndReports(data, export = False):
