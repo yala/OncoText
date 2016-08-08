@@ -12,6 +12,7 @@ taghian/*.p
 rawBreastPathReport.p
 rawBreastPathReport.bak.p
 analysis/DisagreementDict.p
+boostexer/breast/unlabled/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
