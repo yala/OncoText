@@ -382,7 +382,7 @@ def portToJSON(data, path):
 
 if __name__ == "__main__":
 
-    train = True
+    train = False
     if train:
         binarizeFilesForClassification()
 
