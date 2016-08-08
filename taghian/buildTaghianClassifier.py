@@ -17,8 +17,10 @@ if __name__ == "__main__":
     redmap = p.load(open('redmap.p', 'rb'))
     dB  = p.load(open('allExtractionDBs.p', 'rb'))
     types = set([redmap[m]['extraction feild'] for m in redmap if redmap[m]['event'] in lauraDictToIndx and not redmap[m]['extraction feild'] == None])
-
+    validLabelDict = {}
+    allLabelDict = {}
     modes = [ extraction for extraction in types if len(dB[extraction]) > 500 and extraction not in filtOutList]
+    modes = diagnoses    
     print 'All modess', modes
     raw_input()
 
@@ -37,13 +39,15 @@ if __name__ == "__main__":
         testSetSize = len(db)/5
         
         validLabelsUnfiltered = set([replaceSpaces(r[key]) for r in db if not r[key] == None])
+        allLabelDict[mode] = validLabelsUnfiltered
         print "Length of valid labels unfilitered", len(validLabelsUnfiltered)
         print "validLabelsUnfiltered", validLabelsUnfiltered
         labelDist = {}
         for label in validLabelsUnfiltered:
             labelDist[label] = len([r for r in db if replaceSpaces(r[key]) == label])
         print "Distribution", labelDist
-        validLabels = set([label for label in labelDist if labelDist[label] > 10 ])
+        validLabels = set([label for label in labelDist if labelDist[label] > 4 ])
+        validLabelDict[mode] = validLabels
         print "Valid Labels", validLabels
         filteredDB = [d for d in db if replaceSpaces(d[key]) in validLabels]
 
@@ -99,3 +103,7 @@ if __name__ == "__main__":
 
         print "Saved testfile for", stem, 'at ', (dirPath+stem)
         print "************************************"
+    print "Dumping validLabel dict"
+    p.dump(validLabelDict, open("../redLabelDict.p", 'wb'))
+    p.dump(allLabelDict, open("../allRedLabelsAllDict.p", "wb"))
+    print "Fin"
