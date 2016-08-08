@@ -6,14 +6,20 @@ import datetime
 
 random.seed(1)
 
+if MODE == "TAGHIAN":
+    labelDict = p.load(open('redLabelDict.p', 'rb'))
+
 
 def writeNameFiles(stem):
     for diag in diagnoses:
         with open(stem+"_"+diag+".names", "wb") as f:
-            if diag == u'BreastSide':
-                labels = "RIGHT, LEFT.\n"
-            else:
-                labels = diag + ", " + "no_"+diag+".\n"
+            if MODE == "Breast":
+                if diag == u'BreastSide':
+                    labels = "RIGHT, LEFT.\n"
+                else:
+                    labels = diag + ", " + "no_"+diag+".\n"
+            elif MODE == "TAGHIAN":
+                labels = ", ".join(labelDict[diag])+".\n"
             features = "pathReport : text.\n"
             f.write(labels)
             f.write(features)
@@ -130,14 +136,21 @@ def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem):
         trainStem = stem
         with open(trainStem+"_"+diag+"."+trainSuf, "wb") as f: 
             for a in range(len(trainReports)):
-                if diag == u'BreastSide':
-                    if 'RIGHT' in processLabels(trainLabels[a]):
-                        label = 'RIGHT'
+                if MODE == "Breast":
+                    if diag == u'BreastSide':
+                        if 'RIGHT' in processLabels(trainLabels[a]):
+                            label = 'RIGHT'
+                        else:
+                            assert 'LEFT' in trainLabels[a]
+                            label = 'LEFT'
                     else:
-                        assert 'LEFT' in trainLabels[a]
-                        label = 'LEFT'
-                else:
-                    label = diag if diag in processLabels( trainLabels[a]) else "no_"+diag
+                        label = diag if diag in processLabels( trainLabels[a]) else "no_"+diag
+                elif MODE == "TAGHIAN":
+                    if trainLabels[a] in labelDict[diag]:
+                        label = trainLabels[a]
+                    else:
+                        continue
+
                 report = trainReports[a]
 
                 assert not "\n" in report
@@ -150,14 +163,20 @@ def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem):
         testStem = stem
         with open(testStem+"_"+diag+"."+testSuf, "wb") as f: 
             for b in range(len(testReports)):
-                
-                if diag == u'BreastSide':
-                    if 'RIGHT' in processLabels(testLabels[b]):
-                        label = 'RIGHT'
+                if MODE == "Breast":
+                    if diag == u'BreastSide':
+                        if 'RIGHT' in processLabels(testLabels[b]):
+                            label = 'RIGHT'
+                        else:
+                            label = 'LEFT'
                     else:
-                        label = 'LEFT'
-                else:
-                    label =  diag if diag in processLabels(testLabels[b]) else "no_"+diag
+                        label =  diag if diag in processLabels(testLabels[b]) else "no_"+diag
+                elif MODE == "TAGHIAN":
+                    if trainLabels[a] in labelDict[diag]:
+                        label = trainLabels[a]
+                    else:
+                        continue
+
                 report = testReports[b]
 
                 assert not "\n" in report

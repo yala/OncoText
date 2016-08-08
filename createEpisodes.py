@@ -11,12 +11,25 @@ import json
 from constants import *
 
 random.seed(1)
+if MODE == "TAGHIAN":
+    labelDict = p.load(open('redLabelDict.p', 'rb'))
+
 # Set write to true to generate train and test files for classification. 
 # Set write to false to collace files for export
 def binarizeFilesForClassification(write = True):
     allData = p.load(open(dataPath, 'rb'))
 
-    goldData = [d for d in allData if 'Correct' in d and not( d['Correct'] == 0)]
+    if MODE == "Breast":
+        goldKey = 'Correct' 
+        ## This datapath contains rule based generated anotations for diagnoses
+        allData = p.load(open(dataPath, 'rb'))
+    elif MODE == 'TAGHIAN':
+        ## This datapath contains ML generated anotations for diagnoses
+        allData = p.load(open(redRawDBPath, 'rb'))
+        goldKey = 'TaghianGold'
+
+    goldData = [d for d in allData if goldKey in d and not( d[goldKey] == 0)]
+
     print "Num gold Data with DOBs", len([d for d in goldData if 'DOBPlusX' in d and not d['DOBPlusX'] == 0]), "/", len(goldData)
 
     remainData = [d for d in allData if not('Correct' in d) or d['Correct'] == 0]
@@ -101,6 +114,9 @@ def preprocessReports(reports):
 
     return cleanReports
 
+def replaceSpaces(label):
+    return '_'.join(str(label).split())
+
 # Function takes [ reports ] and returns a tuple or reports, labels
 # If export is true, returns only diagnoses, if false, also returns metaData
 def getLabelsAndReports(data, export = False):
@@ -114,16 +130,27 @@ def getLabelsAndReports(data, export = False):
         sample = data[i]
 
         for diag in diagnoses:
-            if diag == u'BreastSide':
-                if u'BreastSide' in sample:
+            if MODE == "Breast":
+                if diag == u'BreastSide':
+                    if u'BreastSide' in sample:
+                        diags.append(sample[diag])
+                    else:
+                        diags.append("LEFT")
+                else:
+                    if diag in sample and sample[diag] == '1':
+                        diags.append(1)
+                    else:
+                        diags.append(0)
+            elif MODE == 'TAGHIAN':
+                if diag in sample and not sample[diag] == None:
                     diags.append(sample[diag])
+                    if not replaceSpaces(sample[diag]) in labelDict[diag]:
+                        print "sample[ ",diag," ]", replaceSpaces(sample[diag])
+                        print "labelDict[ ",diag," ]", labelDict[diag]
+                        print "----------------"
+
                 else:
-                    diags.append("LEFT")
-            else:
-                if diag in sample and sample[diag] == '1':
-                    diags.append(1)
-                else:
-                    diags.append(0)
+                    diags.append(list(labelDict[diag])[0] )
 
         if export:
             for meta in metaData:
