@@ -2,8 +2,8 @@
 *_all_*.test
 episodeDB.p
 episodeDB.json
-reportDB.p
-reportDB.json
+
+reportDB*
 deiden_AllOthr*
 goldPath*
 *.xls*
@@ -12,7 +12,9 @@ taghian/*.p
 rawBreastPathReport.p
 rawBreastPathReport.bak.p
 analysis/DisagreementDict.p
-boostexer/breast/unlabled/*
+boostexer/breast/unlabled/*.names
+boostexer/breast/unlabled/*.data
+boostexer/breast/unlabled/*.test
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
