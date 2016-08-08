@@ -12,7 +12,7 @@ from constants import *
 
 random.seed(1)
 if MODE == "TAGHIAN":
-    labelDict = p.load(open('redLabelDict.p', 'rb'))
+    labelDict = constantValidLabelDict
 
 # Set write to true to generate train and test files for classification. 
 # Set write to false to collace files for export

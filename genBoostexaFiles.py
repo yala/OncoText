@@ -7,8 +7,7 @@ import datetime
 random.seed(1)
 
 if MODE == "TAGHIAN":
-    labelDict = p.load(open('redLabelDict.p', 'rb'))
-
+    labelDict = constantValidLabelDict
 
 def writeNameFiles(stem):
     for diag in diagnoses:

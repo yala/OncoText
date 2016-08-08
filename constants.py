@@ -62,6 +62,20 @@ elif MODE == "TAGHIAN":
 
     }
 
+    constantValidLabelDict = {'Are there positive LN?': {'No', 'Yes'},
+      'ECE': {'No','Not_Reported','Yes','Yes_(Macro)','Yes_(Micro)'},
+      'ER': {'Negative', 'Positive', 'Unknown'},
+      'Her2 (Fish)': {'Negative', 'Positive', 'Unknown'},
+      'ITC ': {'No', 'Not_Reported', 'Yes'},
+      'Nipple sparing Mastectomy': {'Checked', 'Unchecked'},
+      'PR': {'Negative', 'Positive', 'Unknown'},
+      'Simple Mastectomy': {'Checked', 'Unchecked'},
+      'Type of Surgery': {'1st_Re-Excision', '2nd_Re-Excision', 'Excisional_biopsy_(Lumpectomy)','Mastectomy', 'not_surgery'},
+      'Type of biopsy': {'Core_biopsy', 'Fine_needle_aspiration_(FNA)', 'Incisional_biopsy', 'Needle_biopsy','No_breast_biopsy', 'Other'},
+      'Type of sampled LN (choice=ALND (Axillary LN Dissection))': {'Checked', 'Unchecked'},
+      'Type of sampled LN (choice=None)': {'Checked', 'Unchecked'},
+      'Type of sampled LN (choice=SLNB (Sentinel LN Biopsy))': {'Checked', 'Unchecked'}}
+
     cols = diagnoses + metaData + ['Report_Text', "Preprocessed_Report_Text"]
 
         # Constants for genBoostexaFiles
