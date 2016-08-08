@@ -32,8 +32,8 @@ def binarizeFilesForClassification(write = True):
 
     print "Num gold Data with DOBs", len([d for d in goldData if 'DOBPlusX' in d and not d['DOBPlusX'] == 0]), "/", len(goldData)
 
-    remainData = [d for d in allData if not('Correct' in d) or d['Correct'] == 0]
-    print "Num remainData with DOBs", len([d for d in remainData if 'DOBPlusX' in d and not d['DOBPlusX'] == 0]), "/", len(allData)
+    remainData = [d for d in allData if not(goldKey in d) or d[goldKey] == 0]
+    print "Num remainData with DOBs", len([d for d in remainData if 'DOBPlusX' in d and not d['DOBPlusX'] == 0]), "/", len(remainData)
     
     export = not write
     trainReports, trainLabels = getLabelsAndReports(goldData, export)
@@ -150,7 +150,7 @@ def getLabelsAndReports(data, export = False):
                         print "----------------"
 
                 else:
-                    diags.append(list(labelDict[diag])[0] )
+                    diags.append(defaultLabelDict[diag] )
 
         if export:
             for meta in metaData:

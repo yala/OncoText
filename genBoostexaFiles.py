@@ -131,7 +131,7 @@ def interpretMistakes(mistakesIds, reports, labels):
 
 def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem):
     writeNameFiles(stem)
-    for diag in diagnoses:
+    for indx, diag in enumerate(diagnoses):
         trainStem, trainSuf = trainOutPath.split('.')
         trainStem = stem
         with open(trainStem+"_"+diag+"."+trainSuf, "wb") as f: 
@@ -146,8 +146,8 @@ def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem):
                     else:
                         label = diag if diag in processLabels( trainLabels[a]) else "no_"+diag
                 elif MODE == "TAGHIAN":
-                    if trainLabels[a] in labelDict[diag]:
-                        label = trainLabels[a]
+                    if trainLabels[a][indx] in labelDict[diag]:
+                        label = trainLabels[a][indx]
                     else:
                         continue
 
@@ -172,10 +172,10 @@ def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem):
                     else:
                         label =  diag if diag in processLabels(testLabels[b]) else "no_"+diag
                 elif MODE == "TAGHIAN":
-                    if trainLabels[a] in labelDict[diag]:
-                        label = trainLabels[a]
+                    if testLabels[b][indx] in labelDict[diag]:
+                        label = testLabels[b][indx]
                     else:
-                        continue
+                        label = defaultLabelDict[diag]
 
                 report = testReports[b]
 

@@ -10,7 +10,6 @@ episodePath = "episodeDB.p"
 goldDataPath = 'goldPathReports.p'
 JSONReportPath = "reportDB.json"
 JSONEpisodePath = "episodeDB.json"
-allDataStem = "boostexer/pathology_all"
 
 metaData = ['Report_Date_TimePlusX', 'MRNPlusX', 'Correct', 'Institution', 'DOBPlusX']
 
@@ -29,9 +28,12 @@ if MODE == "Breast":
     cols = diagnoses + metaData + ['Report_Text', "Preprocessed_Report_Text"] 
 
     # Constants for genBoostexaFiles
-    trainOutPath = "boostexer/pathology.data"
-    testOutPath = "boostexer/pathology.test"
-    devOutPath = "boostexer/pathology.dev"
+    trainOutPath = "boostexer/breast/labled/pathology.data"
+    testOutPath = "boostexer/breast/labled/pathology.test"
+    devOutPath = "boostexer/breast/labled/pathology.dev"
+
+    allDataStem = "boostexer/breast/unlabled/pathology_all"
+
 
 elif MODE == "ALL_CANCER":
     print "MODE IS ALL CANCER"
@@ -50,7 +52,7 @@ elif MODE == "TAGHIAN":
 
     redRawDBPath = 'reportDB+red+clean.p'
 
-    defaultLabelDict = { 'Are there positive LN?': 'No', 'Type of sampled LN (choice=None)':'Unchecked', 'ITC':'Not_Reported', 'PR':'Unknown',
+    defaultLabelDict = { 'Are there positive LN?': 'No', 'Type of sampled LN (choice=None)':'Unchecked', 'ITC ':'Not_Reported', 'PR':'Unknown',
         'Type of sampled LN (choice=SLNB (Sentinel LN Biopsy))': 'Unchecked', 'Type of Surgery':'not_surgery', 'Type of biopsy':'No_breast_biopsy',
         'Simple Mastectomy':'Unchecked', 'Her2 (Fish)':'Unknown', 'ER': 'Unknown', 'Nipple sparing Mastectomy':'Unchecked',
         'Type of sampled LN (choice=ALND (Axillary LN Dissection))':'Unchecked', 'ECE':'Not_Reported'
@@ -60,9 +62,11 @@ elif MODE == "TAGHIAN":
     cols = diagnoses + metaData + ['Report_Text', "Preprocessed_Report_Text"]
 
         # Constants for genBoostexaFiles
-    trainOutPath = "boostexer/red.data"
-    testOutPath = "boostexer/red.test"
-    devOutPath = "boostexer/red.dev"
+    trainOutPath = "boostexer/breast/taghian/red.data"
+    testOutPath = "boostexer/breast/taghian/red.test"
+    devOutPath = "boostexer/breast/taghian/red.dev"
+
+    allDataStem = "boostexer/breast/unlabled/red_all"
 
 elif MODE == "both":
 
