@@ -1,2 +1,2 @@
-Positive, Negative, Not_Done, Unknown.
+Unknown, Negative, Positive.
 pathReport: text.
