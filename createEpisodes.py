@@ -48,7 +48,11 @@ def binarizeFilesForClassification(write = True):
         exportableData = {}
 
         print "Parse Result Files"
-        classifierLabels = parseResultsFiles()
+        if MODE == "Breast":
+            classifierLabels = parseResultsFiles( "classification_results/Breast/class_results_all_")
+        elif MODE == "TAGHIAN":
+            classifierLabels = parseResultsFiles( "classification_results/Breast/red_class_results_all_")
+
         print "Retag Labels"
         restLabels = retagLabels(restLabels, classifierLabels)
         
@@ -141,13 +145,10 @@ def getLabelsAndReports(data, export = False):
             elif MODE == 'TAGHIAN':
                 if diag in sample and not sample[diag] == None:
                     diags.append(sample[diag])
-                    if not replaceSpaces(sample[diag]) in labelDict[diag]:
-                        print "sample[ ",diag," ]", replaceSpaces(sample[diag])
-                        print "labelDict[ ",diag," ]", labelDict[diag]
-                        print "----------------"
-
+                    assert replaceSpaces(sample[diag]) in labelDict[diag]
                 else:
-                    diags.append(defaultLabelDict[diag] )
+                    diags.append('PLACEHOLDER')
+
 
         if export:
             for meta in metaData:
@@ -174,8 +175,7 @@ def getLabelsAndReports(data, export = False):
 def say(s):
     pprint.pprint(s)
 
-def parseResultsFiles(debug = False):
-    stem = "classification_results/Breast/class_results_all_"
+def parseResultsFiles(stem, debug = False):
     results = []
     i = 0
     for diag in diagnoses:
@@ -346,64 +346,7 @@ def buildEpisodes(data, debug = False):
 
     return reportsDB, episodeDB
 
-def isNeedleBiop(report, debug = False):
-    ln = 0
-    doc = 0
-    reportText = report['Preprocessed_Report_Text']
-    reportTextSaysNeedleBool = "NEEDLE BIOPSY".lower() in reportText.lower()
 
-    typesOfCarcinoma = ["DCIS", "ILC", "IDC", "LCIS", "TubularCancer", \
-                            "CancerNOS", "InsituNOS", "CancerInvInsituNOS",\
-                            "ClingingCarcinoma", "Medullary", "ADH_DCIS"] 
-    noCarcinomaBool  = not bool( sum( [report[c] == 1 for c in typesOfCarcinoma]))
-    
-    if debug:    
-        print 'noCarcinomaBool', noCarcinomaBool
-        print reportText
-        print 'reportTextSaysNeedleBool', reportTextSaysNeedleBool
-        raw_input()
-
-
-    if reportTextSaysNeedleBool and noCarcinomaBool:
-        ln=  len(reportText.split())
-        doc= 1
-
-    return reportTextSaysNeedleBool and noCarcinomaBool, ln, doc
-
-def isExcision(report, debug = False):
-    reportText = report['Preprocessed_Report_Text']
-    return not "NEEDLE BIOPSY".lower() in reportText.lower()
-
-
-def buildNeedleStartEpDB(data, TOTAL_LEN, NUM_DOCS):
-    resDB = []
-    othrDB = []
-
-
-    episodes = {}
-    
-    for rep in data:
-        if rep['EpisodeID'] in episodes:
-            episodes[rep['EpisodeID']].append(rep)
-        else:
-            episodes[rep['EpisodeID']] = [rep]
-
-    for epId in episodes:
-        episodes[epId] = sorted( episodes[epId], key=itemgetter('Report_Date_TimePlusX') )
-        startAsNeedle, ln, doc = isNeedleBiop(episodes[epId][0])
-        TOTAL_LEN += ln
-        NUM_DOCS  += doc
-        laterExcision = False
-        for rep in episodes[epId][1:]: 
-            if isExcision(rep):
-                laterExcision = True
-                break
-        if startAsNeedle and len(episodes[epId]) > 1:# laterExcision:
-            resDB.append(episodes[epId])
-        else:
-            othrDB.append(episodes[epId])
-
-    return resDB, othrDB, TOTAL_LEN, NUM_DOCS
 
 def portToJSON(data, path):
     for report in data:    

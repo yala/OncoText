@@ -179,7 +179,7 @@ def findMatchingReports(db, save=False):
 ## Key { MRN} -> {'taghian': [recap events], 'hughes':[pathReps], 'lengths':[ countRedCapEvents, count pathReps]}
 def buildDB(db, redmap):
     outDBReps = []
-    outDBRepIds = set([])
+    outDBRepIds = {}
     outDB = {}
     types = set([redmap[m]['extraction feild'] for m in redmap if redmap[m]['event'] in lauraDictToIndx and not redmap[m]['extraction feild'] == None])
 
@@ -235,7 +235,9 @@ def buildDB(db, redmap):
                     rep[extraction] = redcap[redcapIndx][colField]
                     if not rep[extraction] == None:
                         outDB[extraction].append(rep)
-                        outDBRepIds.add(rep['ReportID'])
+                        if not rep['ReportID'] in outDBRepIds:
+                            outDBRepIds[rep['ReportID']] = {}    
+                        outDBRepIds[rep['ReportID']][extraction] = rep[extraction]
                     else:
                         continue
             
@@ -244,7 +246,10 @@ def buildDB(db, redmap):
     for rep in allPathReps:
         if rep['ReportID'] in outDBRepIds:
             rep['TaghianGold'] = 1
+            for diag in outDBRepIds[rep['ReportID']]:
+                rep[diag] = outDBRepIds[rep['ReportID']][diag]
             assert 'TaghianGold' in rep and rep['TaghianGold'] == 1
+            assert len( [t for t in types if t in rep ] ) > 0
             outDBReps.append( rep )
                 
 
