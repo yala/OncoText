@@ -105,7 +105,7 @@ if __name__ == "__main__":
                 print diag, label, "truePos, falsePos, trueNeg, falseNeg:", truePos, falsePos, trueNeg, falseNeg
                 print diag, label, "percision, recall, f1:", percision, ',', recall, ',', f1
                 print diag, label, "sensitivity, specifcity:", sensitivity, ',', specifcity
-                print "Diag", diag, label, ", Num Mistakes:", (falsePos + falseNeg), ", error rate", (falsePos + falseNeg)*1./len(gold[diag][label])
+                print "Diag", diag, label, ", Num Mistakes:", (falsePos + falseNeg), ", error rate", (falsePos + falseNeg)*1./ (len(gold[diag][label]) if len(gold[diag][label]) > 0 else defualt)
 
 if overallVerbose:
     print "---------------------------"
