@@ -82,7 +82,14 @@ def retagLabels(oldLabels, newLabels):
     assert len(newLabels[0]) == len(diagnoses)
     results = []
     for i in range(len(oldLabels)):
-        results.append( newLabels[i] + oldLabels[i][len(diagnoses):] )
+        combinedLabels = newLabels[i] + oldLabels[i][len(diagnoses):]
+        if 'PLACEHOLDER' in combinedLabels:
+            print "newLabels", zip(cols,newLabels)
+            print "old Labels", zip(cols, oldLabels)
+            print "oldSupPart", zip(cols, oldLabels)[len(diagnoses):]
+            raw_input()
+        assert not 'PLACEHOLDER' in combinedLabels
+        results.append( combinedLabels)
     return results
 
 
@@ -145,6 +152,7 @@ def getLabelsAndReports(data, export = False):
             elif MODE == 'TAGHIAN':
                 if diag in sample and not sample[diag] == None:
                     diags.append(sample[diag])
+
                     assert replaceSpaces(sample[diag]) in labelDict[diag]
                 else:
                     diags.append('PLACEHOLDER')
@@ -175,20 +183,30 @@ def getLabelsAndReports(data, export = False):
 def say(s):
     pprint.pprint(s)
 
-def parseResultsFiles(stem, debug = False):
+def parseResultsFiles(stem, debug = True):
     results = []
     i = 0
     for diag in diagnoses:
-        with open(stem+diag+".txt", "rb") as f:
+        with open(stem+replaceSpaces(diag)+".txt", "rb") as f:
             samples = f.readlines()
         if i == 0:
             for k in range(len(samples)):
                 results.append([])
 
-        labels = [int(float(s.split()[2]) > 0) for s in samples]
+        if MODE == "Breast":
+            labels = [int(float(s.split()[2]) > 0) for s in samples]
+        elif MODE == "TAGHIAN":
+            labels = []
+            for sample in samples:
+                rawProbs = [float(s) for s in sample.split()]
+                rawGuessProbs = rawProbs[len(rawProbs)/2:]
+                guessIndx = rawGuessProbs.index(max(rawGuessProbs))
+                guessText = labelDict[diag][guessIndx]
+                labels.append(guessText)
 
         if debug:
             numExamples  = 10
+            print "Diag", diag
             print "Raw class results"
             say(samples[:numExamples])
             print "Resulting labels"
@@ -213,33 +231,33 @@ def getMaxDX(data):
     return False
 
 def getMaxDXSingleReport(report):
-    if report['Medullary'] == 1:
+    if 'Medullary' in report and report['Medullary'] == 1:
         return 'Medullary'
-    elif report['ILC'] == 1:
+    elif 'ILC' in report and report['ILC'] == 1:
         return  'ILC'
-    elif report['IDC'] == 1:
+    elif 'IDC' in report and report['IDC'] == 1:
         return  'IDC'
-    elif report['TubularCancer'] == 1:
+    elif 'TubularCancer' in report and report['TubularCancer'] == 1:
         return  'TubularCancer'
-    elif report['CancerNOS'] == 1:
+    elif 'CancerNOS' in report and report['CancerNOS'] == 1:
         return  'CancerNOS'
     elif report['DCIS'] == 1:
         return  'DCIS'
-    elif report['CancerInvInsituNOS'] == 1:
+    elif 'CancerInvInsituNOS' in report and report['CancerInvInsituNOS'] == 1:
         return  'CancerInvInsituNOS'
-    elif report['Borderline'] == 1:
+    elif 'Borderline' in report and report['Borderline'] == 1:
         return  'Borderline'
-    elif report['InsituNOS'] == 1:
+    elif 'InsituNOS' in report and report['InsituNOS'] == 1:
         return  'InsituNOS'
-    elif report['LCIS'] == 1:
+    elif 'LCIS' in report and report['LCIS'] == 1:
         return  'LCIS'
-    elif report['ALH'] == 1:
+    elif 'ALH' in report and report['ALH'] == 1:
         return  'ALH'
-    elif report['LobularNeoplasia'] == 1:
+    elif 'LobularNeoplasia' in report and report['LobularNeoplasia'] == 1:
         return  'LobularNeoplasia'
-    elif report['ADH'] == 1:
+    elif 'ADH' in report and report['ADH'] == 1:
         return  'ADH'
-    elif report['Phylodes'] == 1:
+    elif 'Phylodes' in report and report['Phylodes'] == 1:
         return  'Phylodes'
     else:
         return 'None'
@@ -280,9 +298,12 @@ def buildEpisodes(data, debug = False):
     #Structure : List of Reports with Episode IDs
     reportsDB = []
     episodesAggregator = {} # Use to construct episodes DB
+    episodeDateDict = {} ## Use this to store Date -> episode Id for each MRN. use this to reorder episodes by date
+    episodeRelabelDict = {} ## Use this to store episoideID to new Episode ID
     for mrn in mrns:
         patient = mrns[mrn]
         episodeId = -1    
+        episodeDateDict[mrn] = []
         for side in patient:
             patient[side] = sorted( patient[side], key=itemgetter('Report_Date_TimePlusX') )
             for idx, rep in enumerate(patient[side]):
@@ -291,14 +312,16 @@ def buildEpisodes(data, debug = False):
 
                 if idx == 0:
                     episodeId += 1
-                    rep['EpisodeID'] = episodeId
+                    rep['EpisodeID'] = 't'+str(episodeId)
+                    episodeDateDict[mrn].append( {'EpStartTime':rep['Report_Date_TimePlusX'], 'epID':'t'+str(episodeId) })
                 else:
                     prevVisit = patient[side][idx - 1]
                     if rep['Report_Date_TimePlusX'] - prevVisit['Report_Date_TimePlusX'] < SIX_MONTHS:
                         rep['EpisodeID'] = prevVisit['EpisodeID']
                     else:
                         episodeId += 1
-                        rep['EpisodeID'] = episodeId
+                        rep['EpisodeID'] = 't'+str(episodeId)
+                        episodeDateDict[mrn].append( {'EpStartTime':rep['Report_Date_TimePlusX'], 'epID':'t'+str(episodeId) })
 
                 aggregatorKey = mrn+"ep"+str(episodeId)
                 if aggregatorKey in episodesAggregator:
@@ -311,9 +334,28 @@ def buildEpisodes(data, debug = False):
                 reportsDB.append(rep)
 
 
+    ## Relabel MRNs with better chronological episode numbers
+    for mrn in mrns:
+        patient = mrns[mrn]
+        episodeRelabelDict[mrn] = {}
+        epDates = sorted( episodeDateDict[mrn], key=itemgetter('EpStartTime') )
+        for indx, dateDict in enumerate(epDates):
+            epID = dateDict['epID']
+            episodeRelabelDict[mrn][epID] = indx
+
+        assert len(episodeDateDict[mrn]) == len(epDates)
+    assert len(episodeRelabelDict) == len(mrns)
+
+
+    for rep in reportsDB:
+        oldID = rep['EpisodeID']
+        newID = episodeRelabelDict[rep['MRNPlusX']][oldID]
+        rep['EpisodeID'] = newID
+        assert isinstance(rep['EpisodeID'] , int)
+        
+
     #Structure: List of Episodes where-all constituent reports are combined or-wise
     episodeDB = []
-
 
     for aggKey in episodesAggregator:
         episode = {}
@@ -375,10 +417,12 @@ def portToJSON(data, path):
                         raw_input()
                     report[diag] = 1
 
-    jsonData = json.dumps(data)
-    print "Len data to dump to JSON", len(jsonData)
-    with open(path, 'wb') as f:
-        f.write(jsonData)
+    chunkLen = len(data)/10
+    for i in range(10):    
+        jsonData = json.dumps(data[i* chunkLen : (i+1)*chunkLen])
+        print "Len data to dump to JSON", len(jsonData)
+        with open(path.split('.')[0]+'_'+str(i)+".json", 'wb') as f:
+            f.write(jsonData)
 
 if __name__ == "__main__":
 
