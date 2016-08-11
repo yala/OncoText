@@ -17,7 +17,12 @@ if MODE == "TAGHIAN":
 # Set write to true to generate train and test files for classification. 
 # Set write to false to collace files for export
 def binarizeFilesForClassification(write = True):
-    allData = p.load(open(dataPath, 'rb'))
+    allDataPath = redRawDBPath if MODE == "TAGHIAN" else dataPath
+    allData = p.load(open(allDataPath, 'rb'))
+
+    #valid input db isn't corrupted
+    print "Validate source allData array from", allDataPath
+    validateRepsDB(allData, flex= True)
 
     if MODE == "Breast":
         goldKey = 'Correct' 
@@ -25,19 +30,23 @@ def binarizeFilesForClassification(write = True):
         allData = p.load(open(dataPath, 'rb'))
     elif MODE == 'TAGHIAN':
         ## This datapath contains ML generated anotations for diagnoses
-        allData = p.load(open(redRawDBPath, 'rb'))
         goldKey = 'TaghianGold'
 
     goldData = [d for d in allData if goldKey in d and not( d[goldKey] == 0)]
 
     print "Num gold Data with DOBs", len([d for d in goldData if 'DOBPlusX' in d and not d['DOBPlusX'] == 0]), "/", len(goldData)
-
     remainData = [d for d in allData if not(goldKey in d) or d[goldKey] == 0]
+
+    # For taghian, because TaghianGold has a different number of things annotated per diagnosis in gold
+    # Using gold labels by themselves would be a pain, so we will re-annotate the whole thing.
+    # Since the training error is ~0, this wont hurt us.
+    if MODE == "TAGHIAN":
+        remainData = allData
     print "Num remainData with DOBs", len([d for d in remainData if 'DOBPlusX' in d and not d['DOBPlusX'] == 0]), "/", len(remainData)
     
     export = not write
     trainReports, trainLabels = getLabelsAndReports(goldData, export)
-    restReports,  restLabels = getLabelsAndReports(remainData, export)
+    restReports,  restLabels =  getLabelsAndReports(remainData, export)
 
     stem = allDataStem
 
@@ -57,12 +66,23 @@ def binarizeFilesForClassification(write = True):
         restLabels = retagLabels(restLabels, classifierLabels)
         
         print "Exporting"
-        buildExport(exportableData, trainLabels, 0)
-        print "num DOBs retag train" , len([d for d in exportableData if 'DOBPlusX' in exportableData[d]])
-        assert len(exportableData) == len(trainLabels)
-        buildExport(exportableData, restLabels, len(trainLabels))
+        if MODE == "Breast":
+            buildExport(exportableData, trainLabels, 0)
+            print "num DOBs retag train" , len([d for d in exportableData if 'DOBPlusX' in exportableData[d]])
+            assert len(exportableData) == len(trainLabels)
+
+        if MODE == "TAGHIAN":
+            assert len(exportableData) == 0
+
+        buildExport(exportableData, restLabels, len(exportableData))
         print "num DOBs retag rst" , len([d for d in exportableData if 'DOBPlusX' in exportableData[d]])
-        assert len(exportableData) == len(trainLabels) + len(restLabels)
+
+        validateRepsDB([exportableData[k] for k in exportableData], flex=True)
+
+        if MODE == "Breast":
+            assert len(exportableData) == len(trainLabels) + len(restLabels)
+        else:
+            assert len(exportableData) == len(restLabels)
 
         for key in exportableData:
             r = exportableData[key]
@@ -79,9 +99,9 @@ def binarizeFilesForClassification(write = True):
 def retagLabels(oldLabels, newLabels):
     assert len(oldLabels)== len(newLabels)
     assert len(oldLabels[0]) == len(cols) or not 'DOBPlusX' in oldLabels[0]
-    assert len(newLabels[0]) == len(diagnoses)
     results = []
     for i in range(len(oldLabels)):
+        assert len(newLabels[i]) == len(diagnoses)
         combinedLabels = newLabels[i] + oldLabels[i][len(diagnoses):]
         if 'PLACEHOLDER' in combinedLabels:
             print "newLabels", zip(cols,newLabels)
@@ -157,12 +177,16 @@ def getLabelsAndReports(data, export = False):
                 else:
                     diags.append('PLACEHOLDER')
 
-
         if export:
             for meta in metaData:
                 if (meta == "Correct"  or meta == "DOBPlusX") and not meta in sample:
                     diags.append(0)
                 else:
+                    if MODE == "TAGHIAN" and meta in hueLabels:
+                        if not( sample[meta] in [0,1]):
+                            print "meta", meta
+                            print sample[meta]
+                            assert False
                     diags.append(sample[meta])
 
 
@@ -263,23 +287,34 @@ def getMaxDXSingleReport(report):
         return 'None'
 
 
-def multikeysort(items, debug = False):
-    sortedItems = []
-    for i in range(len(items)):
-        items[i]['ReportID'] = i
-        sortedItems.append(items[i])
-    if debug:
-        print " items pre"
-        say(sortedItems)
-        raw_input('Press any key to continue')
-    for c in columns:
-        sortedItems = sorted(sortedItems, key=itemgetter(c))
-        if debug:
-            print "Sorted by ", c
-            say(sortedItems)
-            raw_input('Press any key to continue')
+## Flex (for flexible) flag means we runs asserts on a label only if it is present in the sample
+## We don't enforce that all labels are present. this is useful for pre-complete dbs
+def validateRepsDB(reps, flex = False, dirty = False):
+    print "Calling validateRepsDB"
+    for r in reps:
+        checks = diagnoses + hueLabels if MODE == "TAGHIAN" else diagnoses
+    
+        for c in checks:
+            assert flex or c in r
 
-    return sortedItems
+            if MODE == "TAGHIAN":
+                if c in diagnoses:
+                    if flex:
+                        if c in r and not( replaceSpaces(r[c]) in labelDict[c] or dirty):
+                            print 'r[c]',  r[c]
+                            print 'c', c
+                            print labelDict[c]
+                        assert not (c in r) or replaceSpaces(r[c]) in labelDict[c] or dirty
+                    else:
+                        assert c in r and (replaceSpaces(r[c]) in labelDict[c] or dirty)
+                else:
+                    assert c in hueLabels
+                    if c in r and not (r[c] in [0,1,'RIGHT','LEFT', '0', '1']):
+                        print "C", c
+                        print "r[c]", r[c]
+                        assert False
+
+
 
 def buildEpisodes(data, debug = False):
 
@@ -353,9 +388,14 @@ def buildEpisodes(data, debug = False):
         rep['EpisodeID'] = newID
         assert isinstance(rep['EpisodeID'] , int)
         
+    #Run assert to makesure report DB is what we expect
+    validateRepsDB(reportsDB)
 
     #Structure: List of Episodes where-all constituent reports are combined or-wise
     episodeDB = []
+    countWeird = {}
+    for diag in labelsForEpisodes:
+        countWeird[diag] = 0
 
     for aggKey in episodesAggregator:
         episode = {}
@@ -372,17 +412,57 @@ def buildEpisodes(data, debug = False):
             if label == 'Report_Date_TimePlusX' or label == 'Institution':
                 continue
             episode[label] = reports[0][label]
+        
+        if MODE == "HUGHES":
+            for diag in diagnoses:
+                orResults = 0
+                for rep in reports:
+                    orResults = orResults or rep[diag]
+                episode[diag] = orResults
 
-        for diag in diagnoses:
-            orResults = 0
-            for rep in reports:
-                orResults = orResults or rep[diag]
-            episode[diag] = orResults
+        if MODE == "TAGHIAN":
+            for diag in hueLabels:
+                orResults = 0
+                for rep in reports:
+                    orResults = orResults or rep[diag]
+                episode[diag] = orResults
+
+
+            for diag in labelsForEpisodes:
+                res = defaultLabelDict[diag]
+                lastRep = ''
+                for rep in reports:
+                    assert rep[diag] in labelDict[diag]
+                    if rep[diag] not in defaultLabelDict[diag]:
+                        if not(res == defaultLabelDict[diag] or res == rep[diag]):
+                            countWeird[diag] +=1
+                            if countWeird[diag] < 5 and debug:
+                                print "DIAG", diag
+                                print "Former", res
+                                print 'formerText', lastRep
+                                print "Current", rep[diag]
+                                print "current text", rep['Report_Text']
+                                raw_input()
+                            lastRep = rep['Report_Text']
+                            res += ', ' + rep[diag]
+                        else:
+                            res = rep[diag]
+                if not res in labelDict[diag] and debug:
+                    print "Diag", diag, "is", res
+                episode[diag] = res
+
+    for diag in labelsForEpisodes:
+        print "count double label in ", countWeird[diag], "for diag", diag
 
         episode['MaxDX'] = getMaxDXSingleReport(episode)
         episode['Num_Reports'] = len(reports)
         episode['Institution'] = reports[-1]['Institution']
-        assert set(episode.keys() + ['DOBPlusX']) == set(diagnoses + metaData + ['MaxDX', 'EndEpisode_Date_TimePlusX', 'Num_Reports', 'EpisodeID', 'DOBPlusX'])
+
+        if MODE == "Breast":
+            assert set(episode.keys() + ['DOBPlusX']) == set(diagnoses + metaData + ['MaxDX', 'EndEpisode_Date_TimePlusX', 'Num_Reports', 'EpisodeID', 'DOBPlusX'])
+        
+        if MODE == "TAGHIAN":
+            assert set(episode.keys() + ['DOBPlusX']) == set(labelsForEpisodes + hueLabels + metaData + ['MaxDX', 'EndEpisode_Date_TimePlusX', 'Num_Reports', 'EpisodeID', 'DOBPlusX'])
 
         episodeDB.append(episode)
 
@@ -390,18 +470,25 @@ def buildEpisodes(data, debug = False):
 
 
 
-def portToJSON(data, path):
-    for report in data:    
-        report['Report_Date_TimePlusX'] = report['Report_Date_TimePlusX'].isoformat()
+def portToJSON(data, path, episodeMode = False):
+    for report in data:
+        if not isinstance(report['Report_Date_TimePlusX'], str):
+            report['Report_Date_TimePlusX'] = report['Report_Date_TimePlusX'].isoformat()
 
         if 'EndEpisode_Date_TimePlusX' in report:
-            report['EndEpisode_Date_TimePlusX'] = report['EndEpisode_Date_TimePlusX'].isoformat()
+            if not isinstance(report['Report_Date_TimePlusX'], str):
+                report['EndEpisode_Date_TimePlusX'] = report['EndEpisode_Date_TimePlusX'].isoformat()
 
-        if not report['DOBPlusX'] == 0 :
+        if not report['DOBPlusX'] == 0  and not( isinstance(report['DOBPlusX'], str)):
             report['DOBPlusX'] = report['DOBPlusX'].isoformat()
 
 
-        for diag in diagnoses:
+        if MODE == "Breast":
+            breastLabels = diagnoses
+        if MODE == "TAGHIAN":
+            breastLabels = hueLabels
+    
+        for diag in breastLabels:
             sample = report[diag]
             if not (sample == 1 or sample == 0):
                 if "no_" in sample:
@@ -416,6 +503,15 @@ def portToJSON(data, path):
                         print sample, diag
                         raw_input()
                     report[diag] = 1
+
+        if MODE == "TAGHIAN":
+            if episodeMode:
+                redLabels = labelsForEpisodes
+            else:
+                redLabels = diagnoses
+            for label in redLabels:
+                if report[label] in JSONLabelDict:
+                    report[label] = JSONLabelDict[report[label]]
 
     chunkLen = len(data)/10
     for i in range(10):    
@@ -442,12 +538,14 @@ if __name__ == "__main__":
 
     labelMaxDXBool = False
     if labelMaxDXBool:
+        print "Calling labelMaxDXBool"
         getMaxDX(reportDB)
         raw_input("Dump again? Press any key to continue")
         p.dump( reportDB, open(outPath, 'wb'))
 
     buildEpisodesBool = False
     if buildEpisodesBool:
+        print "Calling build episode"
         reportDB, episodeDB = buildEpisodes(reportDB)
         raw_input("Dump again? Press any key to continue")
         p.dump( reportDB, open(outPath, 'wb'))
@@ -456,10 +554,12 @@ if __name__ == "__main__":
         reportDB = p.load( open(outPath, 'rb'))
         episodeDB = p.load( open(episodePath, 'rb'))
 
-    portToJSONBool = False
+    portToJSONBool = True
     if portToJSONBool:
+        print "Dumping ReportDB"
         portToJSON(reportDB, JSONReportPath)
-        portToJSON(episodeDB, JSONEpisodePath)
+        print "Dumping EpisodeDB"
+        portToJSON(episodeDB, JSONEpisodePath, True)
 
 
 
