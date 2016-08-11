@@ -451,20 +451,24 @@ def buildEpisodes(data, debug = False):
                     print "Diag", diag, "is", res
                 episode[diag] = res
 
+
+            episode['MaxDX'] = getMaxDXSingleReport(episode)
+            episode['Num_Reports'] = len(reports)
+            episode['Institution'] = reports[-1]['Institution']
+
+            if MODE == "Breast":
+                assert set(episode.keys() + ['DOBPlusX']) == set(diagnoses + metaData + ['MaxDX', 'EndEpisode_Date_TimePlusX', 'Num_Reports', 'EpisodeID', 'DOBPlusX'])
+            
+            if MODE == "TAGHIAN":
+                assert set(episode.keys() + ['DOBPlusX']) == set(labelsForEpisodes + hueLabels + metaData + ['MaxDX', 'EndEpisode_Date_TimePlusX', 'Num_Reports', 'EpisodeID', 'DOBPlusX'])
+
+            episodeDB.append(episode)
+
     for diag in labelsForEpisodes:
         print "count double label in ", countWeird[diag], "for diag", diag
 
-        episode['MaxDX'] = getMaxDXSingleReport(episode)
-        episode['Num_Reports'] = len(reports)
-        episode['Institution'] = reports[-1]['Institution']
-
-        if MODE == "Breast":
-            assert set(episode.keys() + ['DOBPlusX']) == set(diagnoses + metaData + ['MaxDX', 'EndEpisode_Date_TimePlusX', 'Num_Reports', 'EpisodeID', 'DOBPlusX'])
-        
-        if MODE == "TAGHIAN":
-            assert set(episode.keys() + ['DOBPlusX']) == set(labelsForEpisodes + hueLabels + metaData + ['MaxDX', 'EndEpisode_Date_TimePlusX', 'Num_Reports', 'EpisodeID', 'DOBPlusX'])
-
-        episodeDB.append(episode)
+    print "Num Reps", len(reportsDB)
+    print "Num Epis", len(episodeDB)
 
     return reportsDB, episodeDB
 
@@ -476,7 +480,7 @@ def portToJSON(data, path, episodeMode = False):
             report['Report_Date_TimePlusX'] = report['Report_Date_TimePlusX'].isoformat()
 
         if 'EndEpisode_Date_TimePlusX' in report:
-            if not isinstance(report['Report_Date_TimePlusX'], str):
+            if not isinstance(report['EndEpisode_Date_TimePlusX'], str):
                 report['EndEpisode_Date_TimePlusX'] = report['EndEpisode_Date_TimePlusX'].isoformat()
 
         if not report['DOBPlusX'] == 0  and not( isinstance(report['DOBPlusX'], str)):
@@ -512,6 +516,13 @@ def portToJSON(data, path, episodeMode = False):
             for label in redLabels:
                 if report[label] in JSONLabelDict:
                     report[label] = JSONLabelDict[report[label]]
+
+                #Replace spaces in label name because otherwise website will breast
+                if label in JSONLabelNameDict:
+                    temp = report[label]
+                    del report[label]
+                    report[ JSONLabelNameDict[label] ] = temp
+
 
     chunkLen = len(data)/10
     for i in range(10):    

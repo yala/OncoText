@@ -86,6 +86,16 @@ elif MODE == "TAGHIAN":
     'Positive':1,
     'Negative': 0
   }
+
+  JSONLabelNameDict = {
+    'Her2 (Fish)': 'Her2',
+    'Type of Surgery':'Type_of_Surgery',
+    'Type of biopsy': 'Type_of_Biopsy',
+    'Type of sampled LN (choice=ALND (Axillary LN Dissection))': 'Axillary_LN_Dissection',
+    'Type of sampled LN (choice=None)': 'No_Sampled_LN',
+    'Type of sampled LN (choice=SLNB (Sentinel LN Biopsy))': 'Sentinel_LN_Biopsy',
+    'ITC ': 'ITC'
+  }
   labelsForEpisodes = ['ITC ', 'ER', 'Her2 (Fish)', 'PR']
 
   hueLabels = [ u'BreastSide', u'DCIS', u'ILC', u'Phylodes', 
