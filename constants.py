@@ -78,6 +78,16 @@ elif MODE == "TAGHIAN":
     'Type of sampled LN (choice=SLNB (Sentinel LN Biopsy))': ['Checked', 'Unchecked']}
 
 
+  JSONLabelDict = {
+    'Checked':1,
+    'Unchecked':0,
+    'Yes': 1,
+    'No':0,
+    'Positive':1,
+    'Negative': 0
+  }
+  labelsForEpisodes = ['ITC ', 'ER', 'Her2 (Fish)', 'PR']
+
   hueLabels = [ u'BreastSide', u'DCIS', u'ILC', u'Phylodes', 
                u'IDC', u'LCIS', 
                u'ADH', u'LobularNeoplasia', u'FlatEpithelial', 
@@ -87,6 +97,7 @@ elif MODE == "TAGHIAN":
   trainOutPath = "boostexer/breast/taghian/red.data"
   testOutPath = "boostexer/breast/taghian/red.test"
   devOutPath = "boostexer/breast/taghian/red.dev"
+
 
   allDataStem = "boostexer/breast/unlabled/red_all"
 
@@ -103,6 +114,11 @@ elif MODE == "TAGHIAN":
   metaData = hueLabels + metaData
 
   cols = diagnoses + metaData + ['Report_Text', "Preprocessed_Report_Text"]
+
+  outPath = "reportDB+new.p"
+  episodePath = "episodeDB+new.p"
+  JSONReportPath = "reportDB+red.json"
+  JSONEpisodePath = "episodeDB+red.json"
 
 
 
