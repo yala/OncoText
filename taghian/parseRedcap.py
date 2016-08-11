@@ -4,6 +4,7 @@ import sys
 sys.path.append("..")
 from constants import *
 import datetime
+from createEpisodes import validateRepsDB
 
 dateFields = ['Date of 1st biopsy', 'Date of 2nd biopsy',  'Date of 3rd biopsy', 'Date of 1 st surgery','Date of 2nd surgery', 'Date of 3rd surgery' ]
 dateFieldsToIndx = {'Date of 1st biopsy':0, 'Date of 2nd biopsy':1,  'Date of 3rd biopsy':2, 'Date of 1 st surgery':3,'Date of 2nd surgery':4, 'Date of 3rd surgery':5 }
@@ -221,12 +222,11 @@ def buildDB(db, redmap):
                     if not rep['Report_Date'] == redcap[redcapIndx][dateFields[colIndx]]:
                         print "ERROR"
                         print rep['Report_Date'] ,redcap[redcapIndx][dateFields[colIndx]]
-                        raw_input()
                         print "colIndx, rowIndx:", colIndx , ",", redcapIndx
-                        print raw_input()
                         print "Redcap[redcapIndx] is", redcap[redcapIndx]
                         print "Redcap is", redcap
-                        raw_input()
+                        assert False
+
                     ## Not all fields apply to all path reps and all surg reps
                     ## If the field is a placeholder, it means that this colIndx (ie type of report the path report it)
                     ## doesn't hold the extraction
@@ -245,11 +245,22 @@ def buildDB(db, redmap):
     
     for rep in allPathReps:
         if rep['ReportID'] in outDBRepIds:
+            print "Validate before red-ing the rep"
+            validateRepsDB( [rep], True )
+            if rep['DCIS'] == 'Checked':
+                assert False
+
             rep['TaghianGold'] = 1
-            for diag in outDBRepIds[rep['ReportID']]:
-                rep[diag] = outDBRepIds[rep['ReportID']][diag]
+            for extraction in outDBRepIds[rep['ReportID']]:
+                assert MODE == "TAGHIAN" and extraction in types
+                if extraction in rep: ## This is to catch things like DCIS which are both in Taghian and Hughes dB
+                    continue
+                rep[extraction] = outDBRepIds[rep['ReportID']][extraction]
+
             assert 'TaghianGold' in rep and rep['TaghianGold'] == 1
             assert len( [t for t in types if t in rep ] ) > 0
+            print "Validate after red-ing the rep"
+            validateRepsDB( [rep], True, True )
             outDBReps.append( rep )
                 
 
@@ -264,7 +275,7 @@ def buildDB(db, redmap):
     assert len(outDBReps) > 5000
     assert len(outDBRepIds) > 5000
 
-    return outDB
+    return outDB, outDBReps
 
 
 ## redReps: Paths aligned with redcap. All pathreps should have tahianGold = 1
@@ -303,6 +314,9 @@ exportToRepsDBBool= True
 
 if __name__ == "__main__":
     allPathReps = p.load(open('../reportDB.p', 'rb'))
+    print "Validate all path", '../reportDB.p'
+    validateRepsDB(allPathReps, True)
+
 
     if parseXLSBool:
         redmap = parseMapXLS()
@@ -328,10 +342,13 @@ if __name__ == "__main__":
             joinedDB =  p.load(open('redcapWithPathReps.p', 'rb'))
         if not parseXLSBool:
             redmap = p.load(open('redmap.p', 'rb'))
-        dBs = buildDB(joinedDB, redmap)
+        dBs, redReps = buildDB(joinedDB, redmap)
 
     if exportToRepsDBBool:
-        redReps =     p.load(open('allExtractionReps.p', 'rb'))
+        if not buildDBsBool:
+            redReps =     p.load(open('allExtractionReps.p', 'rb'))
+        print "Validate red path reps", 'allExtractionReps.p'
+        validateRepsDB(redReps, True, True)
         exportRepDB(redReps, allPathReps)
 
 
