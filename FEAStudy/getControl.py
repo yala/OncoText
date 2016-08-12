@@ -5,6 +5,7 @@ from constants import *
 from helpers import *
 from csv import DictWriter
 import xmltodict
+import openpyxl as xl
 
 
 
@@ -25,6 +26,56 @@ def filt(report):
                 return False
     return True
 
+def makeAlreadyExportedDict(feas, possControls):
+    visited = set()
+    controlled = set()
+    feaMRNs = [f['MRNPlusX'] for f in feas]
+    wb = xl.load_workbook('FEAControlGroupFromAdam_8.2.2016.xlsx')
+    sheet = wb.get_active_sheet()
+    legend = []
+    legendBool = True
+    for row in sheet.iter_rows():
+        if legendBool:
+            for indx, col in enumerate(row):
+                legend.append(col.value)
+            legendBool = False
+            print "Legend is", legend
+        else:
+            rowDict = {}
+            for indx, col in enumerate(row):
+                ## Use makes mrns into strings and leave dates alone
+                rowDict[legend[indx]] = str(col.value) if indx == 0 else col.value
+
+            visited.add(str(rowDict['MRNPlusX']))
+            controlled.add(str(rowDict['ControlForMRNActualPatientInStudyFEA+x']))
+    assert '2069287' in controlled
+    assert '20913633' in controlled
+
+    return visited, controlled
+
+def getExtraControls():
+    mrnToExtraDict= {}
+    wb = xl.load_workbook('NeedMoreControlsForTheseMRNsAdam.xlsx')
+    sheet = wb.get_active_sheet()
+    legend = []
+    legendBool = True
+    for row in sheet.iter_rows():
+        if legendBool:
+            for indx, col in enumerate(row):
+                legend.append(col.value)
+            legendBool = False
+            print "Legend is", legend
+        else:
+            rowDict = {}
+            for indx, col in enumerate(row):
+                ## Use makes mrns into strings and leave dates alone
+                rowDict[legend[indx]] = str(col.value) if indx == 0 else col.value
+            mrn = str(rowDict['MRNCaseFEAStudyPlusX'])
+            num = rowDict['NumberNewControlsNeeded']
+
+            mrnToExtraDict[mrn] = num
+    return mrnToExtraDict
+
 ### Main Script
 ### This script opens up first records from the FEA patients, and 
 ### tries to find maxControl number patients to match each one
@@ -40,6 +91,7 @@ newDobs = p.load(open('graceLatestDOBs.p', 'rb'))
 print "Len FEAS", len(feas)
 feaDOBs = [f for f in feas if not f['DOBPlusX'] == 0]
 feaNoDOBs = [f['MRNPlusX'] for f in feas if  f['DOBPlusX'] == 0]
+feaMRNs = [f['MRNPlusX'] for f in feaDOBs]
 print 'FEA NO DOBS', feaNoDOBs
 print "Len FEAS DOBs", len(feaDOBs)
 
@@ -63,7 +115,33 @@ i = 0
 numNegExamples = 0
 j= 0
 
-visited = {}
+getNewestBool = True
+visited = set()
+controlled = set()
+
+if getNewestBool:
+    visited, controlled = makeAlreadyExportedDict(feaDOBs, possControls)
+    extraExtracts = getExtraControls()
+
+    print "Len visited in prev set", len(visited)
+    for extra in extraExtracts:
+        assert extra in controlled
+        assert extra in feaMRNs
+
+## This has number of controls we need per MRN, lets us get extra controls selectively
+## For things that are controlled, that sould be 0
+maxControlDict = {}
+
+
+for mrn in feaMRNs:
+    if getNewestBool and mrn in controlled:
+        if mrn in extraExtracts:
+            maxControlDict[mrn] = extraExtracts[mrn]
+        else:
+            maxControlDict[mrn] = 0
+    else:
+        maxControlDict[mrn] = maxControl
+
 countNoControl = 0
 controlListMRNs = []
 controlListRecords = []
@@ -85,7 +163,7 @@ for fea in feaDOBs:
         diagDif = abs((possDiagDate - diagDate).days)/30.
 
         #Control checks
-        if ageDif <= ageTol and controls < maxControl and \
+        if ageDif <= ageTol and controls < maxControlDict[feaMRN] and \
         diagDif <= monthTol:
             controlListMRNs.append( {'MRNPlusX': mrn , \
             'Institution': mrnDict[mrn][0]['Institution'],\
@@ -97,7 +175,7 @@ for fea in feaDOBs:
 
             controlListRecords.extend(mrnDict[mrn])
             controls += 1
-            visited[mrn] = True
+            visited.add(mrn)
 
             if i < numPosExamples:
                 print "POS"
@@ -113,27 +191,11 @@ for fea in feaDOBs:
 
     print dob.year, "Controls: ", controls
 
-    if controls < maxControl:
+    if controls < maxControlDict[feaMRN]:
         countNoControl += 1
         notEnoughMRNs.append(feaMRN)
 
 
-newestControls = []
-newestMRNs = [ (f['MRNPlusX'],f['MRN_Type']) for f in newDobs]
-oldMRNs1 =   [ (f['MRN_x002B_x'], f['MRN_Type']) for f in oldDobs1 if 'MRN_x002B_x' in f and 'MRN_Type' in f ]
-oldMRNs2 = [ (f['MRNPlusX'],f['MRN_Type']) for f in oldDobs2 if 'MRNPlusX' in f and 'MRN_Type' in f]
-oldMRNs = oldMRNs1 + oldMRNs2
-
-newestControls = [r for r in controlListRecords if (r['ControlForMRN'], r['ControlForInst']) in newestMRNs  and not (r['ControlForMRN'], r['ControlForInst']) in oldMRNs]
-print 'len(newDobs)', len(newDobs)
-print 'len(newestControls MRNS)', len(set([r['ControlForMRN'] for r in newestControls]))
-print 'len(newestControls)', len(newestControls)
-
-keys = newestControls[0].keys()
-with open("controlGroupAllData_newestOnly.csv", "wb") as newestCSVRecords:
-    writer = DictWriter(newestCSVRecords, keys)
-    writer.writeheader()
-    writer.writerows(newestControls)
 
 print "Len FEAS DOBs", len(feaDOBs)
 print "Count FEA mrns with not enough control", countNoControl
@@ -143,18 +205,22 @@ print "Num elts in control set", len(controlListRecords)
 
 print "Controls cover", len(set([(r['ControlForMRN'], r['ControlForInst']) for r in controlListRecords]))
 
+writeSimple = False
+if writeSimple:
+    mrnKeys = ['MRNPlusX', 'Institution', 'ControlForMRN', 'ControlForInst']
+    with open("controlGroupMRN_Inst_ControlFor.csv", "wb") as outCSVMrn:
+        writer = DictWriter(outCSVMrn, mrnKeys)
+        writer.writeheader()
+        writer.writerows(controlListMRNs)
 
-mrnKeys = ['MRNPlusX', 'Institution', 'ControlForMRN', 'ControlForInst']
-with open("controlGroupMRN_Inst_ControlFor.csv", "wb") as outCSVMrn:
-    writer = DictWriter(outCSVMrn, mrnKeys)
-    writer.writeheader()
-    writer.writerows(controlListMRNs)
-
-keys = controlListRecords[0].keys()
-with open("controlGroupAllData.csv", "wb") as outCSVRecords:
-    writer = DictWriter(outCSVRecords, keys)
-    writer.writeheader()
-    writer.writerows(controlListRecords)
+writeAll = True
+writeAllPath = "controlGroupAllData8_11.csv" if getNewestBool else "controlGroupAllData.csv"  
+if writeAll:
+    keys = controlListRecords[0].keys()
+    with open(writeAllPath, "wb") as outCSVRecords:
+        writer = DictWriter(outCSVRecords, keys)
+        writer.writeheader()
+        writer.writerows(controlListRecords)
 
 missingDOBFeas = [f['MRNPlusX'] for f in feas if f['DOBPlusX'] == 0]
 print "Number of missing DOBs", len(missingDOBFeas)
