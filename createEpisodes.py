@@ -394,8 +394,10 @@ def buildEpisodes(data, debug = False):
     #Structure: List of Episodes where-all constituent reports are combined or-wise
     episodeDB = []
     countWeird = {}
-    for diag in labelsForEpisodes:
-        countWeird[diag] = 0
+
+    if MODE == "TAGHIAN":
+        for diag in labelsForEpisodes:
+            countWeird[diag] = 0
 
     for aggKey in episodesAggregator:
         episode = {}
@@ -413,7 +415,7 @@ def buildEpisodes(data, debug = False):
                 continue
             episode[label] = reports[0][label]
         
-        if MODE == "HUGHES":
+        if MODE == "Breast":
             for diag in diagnoses:
                 orResults = 0
                 for rep in reports:
@@ -462,10 +464,11 @@ def buildEpisodes(data, debug = False):
             if MODE == "TAGHIAN":
                 assert set(episode.keys() + ['DOBPlusX']) == set(labelsForEpisodes + hueLabels + metaData + ['MaxDX', 'EndEpisode_Date_TimePlusX', 'Num_Reports', 'EpisodeID', 'DOBPlusX'])
 
-            episodeDB.append(episode)
+        episodeDB.append(episode)
 
-    for diag in labelsForEpisodes:
-        print "count double label in ", countWeird[diag], "for diag", diag
+    if MODE == "TAGHIAN":
+        for diag in labelsForEpisodes:
+            print "count double label in ", countWeird[diag], "for diag", diag
 
     print "Num Reps", len(reportsDB)
     print "Num Epis", len(episodeDB)
@@ -533,12 +536,14 @@ def portToJSON(data, path, episodeMode = False):
 
 if __name__ == "__main__":
 
+    verbose = False
+
     train = False
     if train:
         binarizeFilesForClassification()
 
 
-    buildExportBool = False
+    buildExportBool = True
     if buildExportBool:
         print "Calling export"
         reportDB = binarizeFilesForClassification(False)
@@ -547,25 +552,31 @@ if __name__ == "__main__":
     else: 
         reportDB = p.load(open(outPath, 'rb'))
 
-    labelMaxDXBool = False
+    labelMaxDXBool = True
     if labelMaxDXBool:
         print "Calling labelMaxDXBool"
         getMaxDX(reportDB)
-        raw_input("Dump again? Press any key to continue")
+        if verbose:
+            raw_input("Dump again? Press any key to continue")
+        else:
+            print "Dumping report db after max dx labeling"
         p.dump( reportDB, open(outPath, 'wb'))
 
-    buildEpisodesBool = False
+    buildEpisodesBool = True
     if buildEpisodesBool:
         print "Calling build episode"
         reportDB, episodeDB = buildEpisodes(reportDB)
-        raw_input("Dump again? Press any key to continue")
+        if verbose:
+            raw_input("Dump again? Press any key to continue")
+        else:
+            print "Dumping build episode"
         p.dump( reportDB, open(outPath, 'wb'))
         p.dump( episodeDB, open(episodePath, 'wb'))
     else:
         reportDB = p.load( open(outPath, 'rb'))
         episodeDB = p.load( open(episodePath, 'rb'))
 
-    portToJSONBool = True
+    portToJSONBool = False
     if portToJSONBool:
         print "Dumping ReportDB"
         portToJSON(reportDB, JSONReportPath)
