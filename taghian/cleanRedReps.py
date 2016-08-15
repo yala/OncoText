@@ -29,12 +29,14 @@ for r in redReps:
                 r[d] = defaultLabelDict[d]
 
         if 'ECE' in r:
-            if r['ECE'] in ['Yes, (macroscopic)', 'Yes (macroscopic)']:
-                r['ECE'] = 'Yes (Macro)'
+            if r['ECE'] in ['Yes, (macroscopic)', 'Yes (macroscopic)', 'Yes, (microscopic)', 'Yes (microscopic)']:
+                r['ECE'] = 'Yes'
                 countDif += 1
-            if r['ECE'] in ['Yes, (microscopic)', 'Yes (microscopic)']:
-                r['ECE'] = 'Yes (Micro)'
-                countDif += 1
+
+        if 'TumorGrade' in r:
+            if r['TumorGrade'] == 'Undifferentiated':
+                r['TumorGrade'] = 'Poor (grade III)'
+
 
 print "Count gold", countGold
 print "countDif", countDif
