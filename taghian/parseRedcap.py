@@ -7,12 +7,13 @@ import datetime
 from createEpisodes import validateRepsDB
 
 dateFields = ['Date of 1st biopsy', 'Date of 2nd biopsy',  'Date of 3rd biopsy', 'Date of 1 st surgery','Date of 2nd surgery', 'Date of 3rd surgery' ]
-dateFieldsToIndx = {'Date of 1st biopsy':0, 'Date of 2nd biopsy':1,  'Date of 3rd biopsy':2, 'Date of 1 st surgery':3,'Date of 2nd surgery':4, 'Date of 3rd surgery':5 }
+dateFieldsToIndx = {'Date of 1st biopsy':0, 'Date of 2nd biopsy':1,  'Date of 3rd biopsy':2, 'Date of 1 st surgery':3,'Date of 2nd surgery':4, 'Date of 3rd surgery':5}
 
 #Below is sequence of er/pr/her2 col names as they align to the order of biops as surgs above
 erColSeq = ['Estrogen receptors - qualitative', 'Estrogen receptors ', '2 Estrogen receptors ', '2 Estrogen receptors - qualitative', '3 Estrogen receptors - qualitative', '4 Estrogen receptors - qualitative' ]
 prColSeq = ['Progesterone receptors - qualitative', 'Progesterone receptors ', '2 Progesterone receptors ', '2 Progesterone receptors - qualitative', '3 Progesterone receptors - qualitative', '4 Progesterone receptors - qualitative']
 her2ColSeq = ['Her2 (FISH)', '2 Her2 (FISH)', '3 Her2 (FISH)', '4 Her2 (FISH)', '5 Her2 (FISH)', '6 Her2 (FISH)']
+gradeColSeq = ['Final Tumor Grade']
 
 def parseRedCapXLS():
     print "loading wb"
@@ -174,6 +175,22 @@ def findMatchingReports(db, save=False):
     return joinedDB
 
 
+## Take dict of {extract} -> [ reports ]
+## Print label dist with count of each label
+def printLabelDist(db):
+    for extraction in db:
+        if 'date' in extraction.lower():
+            continue
+        print "--------------------------------------"
+        print "Extraction", extraction
+        reps = db[extraction]
+        possLabels = set([r[extraction] for r in reps])
+        labelCounts = {}
+        for label in possLabels:
+            labelCounts[label] = len([ r for r in reps if r[extraction] == label ])
+        print labelCounts
+    print "*******************************************"
+
 ## Suport building dbs from path reps (aligned by taghian index in the path rep) for er/pr/her2
 ## This is because I have col to index dictionaries to figure out which date led to that result
 ## Input DB is joinedDB
@@ -182,25 +199,36 @@ def buildDB(db, redmap):
     outDBReps = []
     outDBRepIds = {}
     outDB = {}
-    types = set([redmap[m]['extraction feild'] for m in redmap if redmap[m]['event'] in lauraDictToIndx and not redmap[m]['extraction feild'] == None])
+    labelDist = {}
+    ## Get list of extractions under my name. Similar to diagnoses pre-filtering
+    types = set([redmap[m]['extraction feild'] for m in redmap if (redmap[m]['event'] in lauraDictToIndx or redmap[m]['event'] in maxedOutDictToIndx)
+        and not redmap[m]['extraction feild'] == None]) 
 
     assert not None in types
     for extract in types:
         outDB[extract] = []
     print "Types are", types
 
+    ## Note Structure of redmap is as follows: "Col in Redcape " -> ['Event': which biop or surgery is this. is it maxed out?, 'ExtractionFeild': My name for this extraction. 
+    ## Allows to collapse different names to a single type]
+
     colSeqs = {}
     for extract in types:
-        colSeqs[extract] = ['Placeholder'] * len(lauraDictToIndx)
-        relevantCols = [ (m, redmap[m]['event']) for m in redmap if redmap[m]['extraction feild'] == extract]
-        for col, target in relevantCols:
-            indx = lauraDictToIndx[target]
-            colSeqs[extract][indx] = col
+        if extract in maxedOutList:
+            colSeqs[extract] = [ m for m in redmap if redmap[m]['extraction feild'] == extract ]
+            assert len(colSeqs[extract]) == 1
+        else:
+            colSeqs[extract] = ['Placeholder'] * len(lauraDictToIndx)
+            relevantCols = [ (m, redmap[m]['event']) for m in redmap if redmap[m]['extraction feild'] == extract]
+            for col, target in relevantCols:
+                indx = lauraDictToIndx[target]
+                colSeqs[extract][indx] = col
 
 
     assert colSeqs['ER'] == erColSeq
     assert colSeqs['PR'] == prColSeq
     assert colSeqs['Her2 (Fish)'] == her2ColSeq
+    assert colSeqs['TumorGrade'] == gradeColSeq
 
     #Investigative Counts
     yetToPrintBool = True
@@ -210,39 +238,61 @@ def buildDB(db, redmap):
         pathReps =  db[mrn]['hughes']
         redcap   =  db[mrn]['taghian']
 
+        ## For normal extractions that line up to a specific report,
+        ## we iterate through reps, find corresponding col for that extraction
+        ## for that report and produce DB
         for rep in pathReps:
-
             for extraction in types:
                 colSeq =  colSeqs[extraction]
 
                 if 'taghainColIndx' in rep and 'taghainRowIndx' in rep:
                     redcapIndx = rep['taghainRowIndx']
                     colIndx = rep['taghainColIndx'] 
-                    colField = colSeq[colIndx ]
-                    if not rep['Report_Date'] == redcap[redcapIndx][dateFields[colIndx]]:
-                        print "ERROR"
-                        print rep['Report_Date'] ,redcap[redcapIndx][dateFields[colIndx]]
-                        print "colIndx, rowIndx:", colIndx , ",", redcapIndx
-                        print "Redcap[redcapIndx] is", redcap[redcapIndx]
-                        print "Redcap is", redcap
-                        assert False
-
-                    ## Not all fields apply to all path reps and all surg reps
-                    ## If the field is a placeholder, it means that this colIndx (ie type of report the path report it)
-                    ## doesn't hold the extraction
-                    if colField == 'Placeholder':
+                    if extraction in maxedOutList:
                         continue
-                    rep[extraction] = redcap[redcapIndx][colField]
-                    if not rep[extraction] == None:
-                        outDB[extraction].append(rep)
-                        if not rep['ReportID'] in outDBRepIds:
-                            outDBRepIds[rep['ReportID']] = {}    
-                        outDBRepIds[rep['ReportID']][extraction] = rep[extraction]
                     else:
-                        continue
-            
+                        colField = colSeq[colIndx ]
+                        if not rep['Report_Date'] == redcap[redcapIndx][dateFields[colIndx]]:
+                            print "ERROR"
+                            print rep['Report_Date'] ,redcap[redcapIndx][dateFields[colIndx]]
+                            print "colIndx, rowIndx:", colIndx , ",", redcapIndx
+                            print "Redcap[redcapIndx] is", redcap[redcapIndx]
+                            print "Redcap is", redcap
+                            assert False
 
-    
+                        ## Not all fields apply to all path reps and all surg reps
+                        ## If the field is a placeholder, it means that this colIndx (ie type of report the path report it)
+                        ## doesn't hold the extraction
+                        if colField == 'Placeholder':
+                            continue
+                        rep[extraction] = redcap[redcapIndx][colField]
+                        if not rep[extraction] == None:
+                            outDB[extraction].append(rep)
+                            if not rep['ReportID'] in outDBRepIds:
+                                outDBRepIds[rep['ReportID']] = {}    
+                            outDBRepIds[rep['ReportID']][extraction] = rep[extraction]
+                        else:
+                            continue
+
+        ## For maxed out extractions. We simply take last rep avaliable and assume it
+        ## contains what we are looking for, find corresponding col and export to DB
+        for  extraction in maxedOutList:
+            rep = pathReps[-1]
+            ## This is making sure the report actually aligns with something
+            if 'taghainColIndx' in rep and 'taghainRowIndx' in rep:
+                rowIndx = rep['taghainRowIndx']
+                assert len(colSeqs[extraction]) == 1
+                col  = colSeqs[extraction][0]
+                if not redcap[rowIndx][col] == None:
+                    rep[extraction] = redcap[rowIndx][col]
+                    outDB[extraction].append(rep)
+                    if not rep['ReportID'] in outDBRepIds:
+                        outDBRepIds[rep['ReportID']] = {}    
+                    outDBRepIds[rep['ReportID']][extraction] = rep[extraction]
+
+    ## Now we print label distrubtions for generating maps and in constants
+    printLabelDist(outDB)
+                
     for rep in allPathReps:
         if rep['ReportID'] in outDBRepIds:
             print "Validate before red-ing the rep"
