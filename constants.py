@@ -27,6 +27,7 @@ if MODE == "Breast":
                  u'ADH', u'CancerInvInsituNOS',\
                  u'ClingingCarcinoma', u'InvasiveSuspicious', u'LobularNeoplasia', u'FlatEpithelial', 
                  u'BluntAdenosis', u'Medullary', u'ALH', u'ADH_DCIS', u'Borderline']
+
     #Contants for creating episodes
 
     cols = diagnoses + metaData + ['Report_Text', "Preprocessed_Report_Text"] 
@@ -44,24 +45,34 @@ elif MODE == "ALL_CANCER":
 
 elif MODE == "TAGHIAN":
 
-  lauraDictToIndx = {'Biposy 1':0, 'Biopsy 2':1, 'Biopsy 3':2, 'Surgery 1':3, 'Surgery2':4, 'Surgery 3':5 }
+  lauraDictToIndx = {'Biposy 1':0, 'Biopsy 2':1, 'Biopsy 3':2, 'Surgery 1':3, 'Surgery2':4, 'Surgery 3':5}
+  maxedOutDictToIndx = {'Max of tumor grade ':-1 }  
+  maxedOutList = ['TumorGrade']  
+
   filtOutList = ['DCIS', 'LCIS', 'ILC', 'Mixed Inv Duct and Lob canc', 'IDC', 'ALH', 'hospital', 'Her2 (Fish)-val', \
-  'IDC with lobular features', 'date', 'ADH', 'Her2 (immunochem)', 'Her2 (Fish)- val', 'Max Tumor Size', 'ALND (#sampled)', 'Number of LN with > 0.2 cm', 'ECE', 'Micro or Gross',
+  'IDC with lobular features', 'date', 'ADH', 'Her2 (immunochem)', 'Her2 (Fish)- val', 'ALND (#sampled)', 'Number of LN with > 0.2 cm', 'Micro or Gross',
   'Number of LN with < =0.02 cm', 'Method size', 'Radical Mastectomy']
   # TODO Remove ECE and debug why bad class name    Micro or Gross   Number of LN with < =0.02 cm Method size
 
-  diagnoses = [u'Are there positive LN?', u'Type of sampled LN (choice=None)', u'ITC ', u'PR',  
-  u'Type of sampled LN (choice=SLNB (Sentinel LN Biopsy))', u'Type of Surgery',  u'Type of biopsy', u'Simple Mastectomy',
-  u'Her2 (Fish)', u'ER',u'Nipple sparing Mastectomy', u'Type of sampled LN (choice=ALND (Axillary LN Dissection))']#, 'ECE']
+  diagnoses = [u'Are there positive LN?', u'ITC ', u'PR',  
+  u'Type of Surgery',  u'Type of biopsy',
+  u'Her2 (Fish)', u'ER', 'ECE', 'LVI', 'BVI', 'TumorGrade']
 
   redRawDBPath = 'reportDB+red+clean.p'
 
   defaultLabelDict = { 'Are there positive LN?': 'No', 'Type of sampled LN (choice=None)':'Unchecked', 'ITC ':'Not_Reported', 'PR':'Unknown',
       'Type of sampled LN (choice=SLNB (Sentinel LN Biopsy))': 'Unchecked', 'Type of Surgery':'not_surgery', 'Type of biopsy':'No_breast_biopsy',
       'Simple Mastectomy':'Unchecked', 'Her2 (Fish)':'Unknown', 'ER': 'Unknown', 'Nipple sparing Mastectomy':'Unchecked',
-      'Type of sampled LN (choice=ALND (Axillary LN Dissection))':'Unchecked'#, 'ECE':'Not_Reported'
+      'Type of sampled LN (choice=ALND (Axillary LN Dissection))':'Unchecked', 'ECE':'Not_Reported', 
+      'LVI': 'Not_reported', 'BVI': 'Not_reported', 'TumorGrade': 'Not_assessed'}
 
-  }
+
+  extractions = [u'Max Tumor Size']
+
+##TODO
+##  getList = ['LVI','ECE', 'BVI' , 'Grade', Max Tumor Size, num lymph node pos vs neg, ]
+##  Make Interface labels clearer
+## Support categorical filtering
 
   constantValidLabelDict = {'Are there positive LN?': ['Yes', 'No'],
     'ECE': ['Yes','Yes_(Micro)', 'No', 'Yes_(Macro)', 'Not_Reported'],
@@ -75,8 +86,12 @@ elif MODE == "TAGHIAN":
     'Type of biopsy': ['Incisional_biopsy',  'Fine_needle_aspiration_(FNA)', 'No_breast_biopsy', 'Core_biopsy',  'Other', 'Needle_biopsy'],
     'Type of sampled LN (choice=ALND (Axillary LN Dissection))': ['Checked', 'Unchecked'],
     'Type of sampled LN (choice=None)': ['Checked', 'Unchecked'],
-    'Type of sampled LN (choice=SLNB (Sentinel LN Biopsy))': ['Checked', 'Unchecked']}
-
+    'Type of sampled LN (choice=SLNB (Sentinel LN Biopsy))': ['Checked', 'Unchecked'],
+    'ECE': ['Yes', 'No', 'Not_Reported' ],
+    'LVI': ['Yes', 'No', 'Suspicious', 'Not_reported'],
+    'BVI': ['Yes', 'No', 'Suspicious', 'Not_reported'],
+    'TumorGrade': ['Well_differentiated_(grade_I)', 'Moderate_(grade_II)', 'Poor_(grade_III)', 'Not_assessed'  ]
+    }
 
   JSONLabelDict = {
     'Checked':1,
