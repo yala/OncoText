@@ -1,5 +1,5 @@
 #!/bin/bash
-pathTypes=(Borderline BreastSide DCIS ILC Phylodes CancerSuspicious CancerNOS TubularCancer IDC LCIS InsituNOS ADH CancerInvInsituNOS ClingingCarcinoma InvasiveSuspicious LobularNeoplasia FlatEpithelial BluntAdenosis Medullary ALH ADH_DCIS)
+pathTypes=(BreastSide DCIS ILC IDC LCIS ADH LobularNeoplasia FlatEpithelial BluntAdenosis ALH)
 stem="unlabeled/pathology_all_"
 outStem="../classification_results/Breast/class_results_"
 for name in "${pathTypes[@]}"; do
