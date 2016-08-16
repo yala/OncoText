@@ -126,12 +126,11 @@ def preprocessDB(data, save=False):
 
     return mrnDB
 
-def findMatchingReports(db, save=False):
+def findMatchingReports(db, pathReps, save=False):
     print "Len redcap DB", len(db)
 
     lengthsDB = {}
     pathMrns = {}
-    pathReps = p.load(open('../'+outPath, 'rb'))
 
     for r in pathReps:
         pathMRN = normalizeMRN(r['MRNPlusX'])
@@ -195,11 +194,17 @@ def printLabelDist(db):
 ## This is because I have col to index dictionaries to figure out which date led to that result
 ## Input DB is joinedDB
 ## Key { MRN} -> {'taghian': [recap events], 'hughes':[pathReps], 'lengths':[ countRedCapEvents, count pathReps]}
-def buildDB(db, redmap):
+def buildDB(db, redmap, allPathReps, debug = False):
     outDBReps = []
     outDBRepIds = {}
     outDB = {}
     labelDist = {}
+    ## Use this for debugging
+    seen = {}
+    toSee = ['TumorGrade']
+    for s in toSee:
+        seen[s] = 0
+
     ## Get list of extractions under my name. Similar to diagnoses pre-filtering
     types = set([redmap[m]['extraction feild'] for m in redmap if (redmap[m]['event'] in lauraDictToIndx or redmap[m]['event'] in maxedOutDictToIndx)
         and not redmap[m]['extraction feild'] == None]) 
@@ -269,17 +274,29 @@ def buildDB(db, redmap):
                         if not rep[extraction] == None:
                             outDB[extraction].append(rep)
                             if not rep['ReportID'] in outDBRepIds:
-                                outDBRepIds[rep['ReportID']] = {}    
+                                outDBRepIds[rep['ReportID']] = {} 
+
+                            assert not extraction  in outDBRepIds[rep['ReportID']]  
                             outDBRepIds[rep['ReportID']][extraction] = rep[extraction]
+
+                            if extraction in toSee and seen[extraction] < 10:
+                                 seen[extraction] += 1
+                                 print '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
+                                 print "Extraction type", extraction
+                                 print rep[reportTextKey]
+                                 print rep[extraction]
+                                 raw_input()
+
                         else:
                             continue
 
         ## For maxed out extractions. We simply take last rep avaliable and assume it
         ## contains what we are looking for, find corresponding col and export to DB
         for  extraction in maxedOutList:
-            rep = pathReps[-1]
-            ## This is making sure the report actually aligns with something
-            if 'taghainColIndx' in rep and 'taghainRowIndx' in rep:
+            relevantReps = [r for r in pathReps if 'taghainColIndx' in r and 'taghianRowIndx']
+            if len(relevantReps) > 0:
+                rep = relevantReps[0]
+
                 rowIndx = rep['taghainRowIndx']
                 assert len(colSeqs[extraction]) == 1
                 col  = colSeqs[extraction][0]
@@ -287,31 +304,46 @@ def buildDB(db, redmap):
                     rep[extraction] = redcap[rowIndx][col]
                     outDB[extraction].append(rep)
                     if not rep['ReportID'] in outDBRepIds:
-                        outDBRepIds[rep['ReportID']] = {}    
+                        outDBRepIds[rep['ReportID']] = {} 
+                    assert not extraction  in outDBRepIds[rep['ReportID']]
                     outDBRepIds[rep['ReportID']][extraction] = rep[extraction]
+
+                    if extraction in toSee and seen[extraction] < 10:
+                                 seen[extraction] += 1
+                                 print '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
+                                 print "Extraction type", extraction
+                                 print rep[reportTextKey]
+                                 print rep[extraction]
+                                 raw_input()
+            else:
+                continue
 
     ## Now we print label distrubtions for generating maps and in constants
     printLabelDist(outDB)
+    assert len(outDBReps) == 0
                 
-    for rep in allPathReps:
-        if rep['ReportID'] in outDBRepIds:
-            print "Validate before red-ing the rep"
-            validateRepsDB( [rep], True )
-            if rep['DCIS'] == 'Checked':
+    for report in allPathReps:
+        if report['ReportID'] in outDBRepIds:
+            validateRepsDB( [report], True )
+            if report['DCIS'] == 'Checked':
                 assert False
 
-            rep['TaghianGold'] = 1
-            for extraction in outDBRepIds[rep['ReportID']]:
+            report['TaghianGold'] = 1
+            for extraction in outDBRepIds[report['ReportID']]:
                 assert MODE == "TAGHIAN" and extraction in types
-                if extraction in rep: ## This is to catch things like DCIS which are both in Taghian and Hughes dB
+                if extraction in report: ## This is to catch things like DCIS which are both in Taghian and Hughes dB
                     continue
-                rep[extraction] = outDBRepIds[rep['ReportID']][extraction]
+                report[extraction] = outDBRepIds[report['ReportID']][extraction]
 
-            assert 'TaghianGold' in rep and rep['TaghianGold'] == 1
-            assert len( [t for t in types if t in rep ] ) > 0
-            print "Validate after red-ing the rep"
-            validateRepsDB( [rep], True, True )
-            outDBReps.append( rep )
+
+
+                # assert report['Report_Text'] in [r['Report_Text'] for r in  outDB[extraction]]
+
+
+            assert 'TaghianGold' in report and report['TaghianGold'] == 1
+            assert len( [t for t in types if t in report ] ) > 0
+            validateRepsDB( [report], True, True )
+            outDBReps.append( report )
                 
 
     p.dump(outDBReps, open('allExtractionReps.p', 'wb'))
@@ -358,9 +390,9 @@ def exportRepDB(redReps, pathReps):
 
 parseXLSBool = False
 preprocessDBBool = False
-findMatchingReportsBool = False
-buildDBsBool = True
-exportToRepsDBBool= True
+findMatchingReportsBool = True
+buildDBsBool = False
+exportToRepsDBBool= False
 
 if __name__ == "__main__":
     allPathReps = p.load(open('../reportDB.p', 'rb'))
@@ -385,14 +417,16 @@ if __name__ == "__main__":
         if not preprocessDBBool:
             print "Loading redcapMRNDB.p"
             mrnDB = p.load(open('redcapMRNDB.p','rb'))
-        joinedDB = findMatchingReports(mrnDB, True)
+        joinedDB = findMatchingReports(mrnDB, allPathReps, True)
     
     if buildDBsBool:
+        assert not findMatchingReportsBool ## Running findMatchingReports pullutes all path reps and sets off alarms
+
         if not findMatchingReportsBool:
             joinedDB =  p.load(open('redcapWithPathReps.p', 'rb'))
         if not parseXLSBool:
             redmap = p.load(open('redmap.p', 'rb'))
-        dBs, redReps = buildDB(joinedDB, redmap)
+        dBs, redReps = buildDB(joinedDB, redmap, allPathReps,  True)
 
     if exportToRepsDBBool:
         if not buildDBsBool:

@@ -31,7 +31,7 @@ def processLabels(labels):
         print "--------Process labels-----------"
         print labels
     whitelist = ["RIGHT", "LEFT"]
-    result =  [lab if lab in whitelist else diagnoses[indx] for indx, lab in enumerate(labels) if lab == 1 or lab in whitelist]
+    result =  [lab if lab in whitelist else lab for indx, lab in enumerate(labels) if lab == 1 or lab in whitelist or lab in diagnoses]
     if len(result) == 0:
         result = ['no']
 
@@ -188,7 +188,7 @@ if __name__ == "__main__":
     goldData = getGoldTags(True)
 
     labels = []
-    debug = True
+    debug = False
     for i in range(len(goldData)):
         diags = []
         sample = goldData[i]
@@ -206,7 +206,7 @@ if __name__ == "__main__":
                     diags.append('no_'+diag)
         labels.append(diags)
 
-    reports = [d['Report_Text'] for d in goldData]
+    reports = [d[reportTextKey] for d in goldData]
 
     cleanReports = [ re.sub(r"\W", " ", d) for d in reports]
     cleanReports = [ ' '.join(d.split('\n')) for d in cleanReports]
@@ -254,9 +254,9 @@ if __name__ == "__main__":
     if verbose:
         printLabelDist(trainLabels, trainReports, testLabels, testReports)
 
-    write = False
+    write = True
     if write:
-        genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, "boostexer/pathology")
+        genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, "boostexer/breast/labeled/pathology")
 
     debugMistakes = False
 

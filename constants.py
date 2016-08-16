@@ -1,7 +1,7 @@
 import datetime
 import pickle as p
 
-MODE = "TAGHIAN"
+MODE = "Breast"
 submode = "no"
 
 #Shared constants for creating episodes
@@ -21,16 +21,16 @@ SIX_MONTHS = datetime.timedelta(365/2)
 
 
 if MODE == "Breast":
+    reportTextKey = "Report_Text_Segmented"
     #Outcomes constants
-    diagnoses = [ u'BreastSide', u'DCIS', u'ILC', u'Phylodes', u'CancerSuspicious', \
-                 u'CancerNOS', u'TubularCancer', u'IDC', u'LCIS', 'InsituNOS', \
-                 u'ADH', u'CancerInvInsituNOS',\
-                 u'ClingingCarcinoma', u'InvasiveSuspicious', u'LobularNeoplasia', u'FlatEpithelial', 
-                 u'BluntAdenosis', u'Medullary', u'ALH', u'ADH_DCIS', u'Borderline']
+    diagnoses = [ u'BreastSide', u'DCIS', u'ILC', u'IDC', u'LCIS', \
+                 u'ADH',\
+                 u'LobularNeoplasia', u'FlatEpithelial', 
+                 u'BluntAdenosis',  u'ALH']
 
     #Contants for creating episodes
 
-    cols = diagnoses + metaData + ['Report_Text', "Preprocessed_Report_Text"] 
+    cols = diagnoses + metaData + ['Report_Text_Segmented', 'Report_Text', "Preprocessed_Report_Text"] 
 
     # Constants for genBoostexaFiles
     trainOutPath = "boostexer/breast/labled/pathology.data"
@@ -44,6 +44,7 @@ elif MODE == "ALL_CANCER":
     print "MODE IS ALL CANCER"
 
 elif MODE == "TAGHIAN":
+  reportTextKey = "Report_Text"
 
   lauraDictToIndx = {'Biposy 1':0, 'Biopsy 2':1, 'Biopsy 3':2, 'Surgery 1':3, 'Surgery2':4, 'Surgery 3':5}
   maxedOutDictToIndx = {'Max of tumor grade ':-1 }  
@@ -55,8 +56,8 @@ elif MODE == "TAGHIAN":
   # TODO Remove ECE and debug why bad class name    Micro or Gross   Number of LN with < =0.02 cm Method size
 
   diagnoses = [u'Are there positive LN?', u'ITC ', u'PR',  
-  u'Type of Surgery',  u'Type of biopsy',
-  u'Her2 (Fish)', u'ER', 'ECE', 'LVI', 'BVI', 'TumorGrade']
+  # u'Type of Surgery',  u'Type of biopsy',
+  u'Her2 (Fish)', u'ER', 'ECE', 'LVI', 'BVI']#, 'TumorGrade']
 
   redRawDBPath = 'reportDB+red+clean.p'
 
@@ -67,7 +68,7 @@ elif MODE == "TAGHIAN":
       'LVI': 'Not_reported', 'BVI': 'Not_reported', 'TumorGrade': 'Not_assessed'}
 
 
-  extractions = [u'Max Tumor Size']
+  extractions = [u'Max Tumor Size', 'Non Sentinel LN (# Malignant)', 'Sentinel LN (# Sampled)']
 
 ##TODO
 ##  getList = ['LVI','ECE', 'BVI' , 'Grade', Max Tumor Size, num lymph node pos vs neg, ]
@@ -75,7 +76,7 @@ elif MODE == "TAGHIAN":
 ## Support categorical filtering
 
   constantValidLabelDict = {'Are there positive LN?': ['Yes', 'No'],
-    'ECE': ['Yes','Yes_(Micro)', 'No', 'Yes_(Macro)', 'Not_Reported'],
+    'ECE': ['Yes', 'No'],
     'ER': ['Unknown', 'Negative', 'Positive'],
     'Her2 (Fish)': ['Unknown', 'Negative', 'Positive'],
     'ITC ': ['Yes', 'No', 'Not_Reported'],
@@ -83,13 +84,13 @@ elif MODE == "TAGHIAN":
     'PR': ['Unknown', 'Negative', 'Positive'],
     'Simple Mastectomy': ['Checked', 'Unchecked'],
     'Type of Surgery': ['Mastectomy',  '2nd_Re-Excision', 'not_surgery', '1st_Re-Excision', 'Excisional_biopsy_(Lumpectomy)'],
-    'Type of biopsy': ['Incisional_biopsy',  'Fine_needle_aspiration_(FNA)', 'No_breast_biopsy', 'Core_biopsy',  'Other', 'Needle_biopsy'],
+    'Type of biopsy': ['Incisional_biopsy',  'Fine_needle_aspiration_(FNA)', 'No_breast_biopsy', 'Core_biopsy', 'Needle_biopsy'],
     'Type of sampled LN (choice=ALND (Axillary LN Dissection))': ['Checked', 'Unchecked'],
     'Type of sampled LN (choice=None)': ['Checked', 'Unchecked'],
     'Type of sampled LN (choice=SLNB (Sentinel LN Biopsy))': ['Checked', 'Unchecked'],
     'ECE': ['Yes', 'No', 'Not_Reported' ],
-    'LVI': ['Yes', 'No', 'Suspicious', 'Not_reported'],
-    'BVI': ['Yes', 'No', 'Suspicious', 'Not_reported'],
+    'LVI': ['Yes', 'No', 'Not_reported'],
+    'BVI': ['Yes', 'No', 'Not_reported'],
     'TumorGrade': ['Well_differentiated_(grade_I)', 'Moderate_(grade_II)', 'Poor_(grade_III)', 'Not_assessed'  ]
     }
 
@@ -113,10 +114,10 @@ elif MODE == "TAGHIAN":
   }
   labelsForEpisodes = ['ITC ', 'ER', 'Her2 (Fish)', 'PR']
 
-  hueLabels = [ u'BreastSide', u'DCIS', u'ILC', u'Phylodes', 
-               u'IDC', u'LCIS', 
-               u'ADH', u'LobularNeoplasia', u'FlatEpithelial', 
-               u'BluntAdenosis', u'ALH']
+  hueLabels = [ u'BreastSide', u'DCIS', u'ILC', u'IDC', u'LCIS', \
+                 u'ADH',\
+                 u'LobularNeoplasia', u'FlatEpithelial', 
+                 u'BluntAdenosis',  u'ALH']
 
       # Constants for genBoostexaFiles
   trainOutPath = "boostexer/breast/taghian/red.data"
@@ -138,7 +139,7 @@ elif MODE == "TAGHIAN":
 
   metaData = hueLabels + metaData
 
-  cols = diagnoses + metaData + ['Report_Text', "Preprocessed_Report_Text"]
+  cols = diagnoses + metaData + ['Report_Text_Segmented', 'Report_Text', "Preprocessed_Report_Text"]
 
   outPath = "reportDB+new.p"
   episodePath = "episodeDB+new.p"

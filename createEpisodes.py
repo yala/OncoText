@@ -97,6 +97,7 @@ def binarizeFilesForClassification(write = True):
     return "NOT EXPORTING"
 
 def retagLabels(oldLabels, newLabels):
+    print  len(oldLabels), len(newLabels)
     assert len(oldLabels)== len(newLabels)
     assert len(oldLabels[0]) == len(cols) or not 'DOBPlusX' in oldLabels[0]
     results = []
@@ -148,7 +149,7 @@ def preprocessReports(reports):
 # Function takes [ reports ] and returns a tuple or reports, labels
 # If export is true, returns only diagnoses, if false, also returns metaData
 def getLabelsAndReports(data, export = False):
-    reports = [d['Report_Text'] for d in data]
+    reports = [d[reportTextKey] for d in data]
     cleanReports = preprocessReports(reports)
 
     labels = []
@@ -165,7 +166,7 @@ def getLabelsAndReports(data, export = False):
                     else:
                         diags.append("LEFT")
                 else:
-                    if diag in sample and sample[diag] == '1':
+                    if diag in sample and str(sample[diag]) == '1':
                         diags.append(1)
                     else:
                         diags.append(0)
@@ -189,7 +190,7 @@ def getLabelsAndReports(data, export = False):
                             assert False
                     diags.append(sample[meta])
 
-
+            diags.append(['Report_Text_Segmented'])
             diags.append(sample['Report_Text'])
             diags.append(cleanReports[i])
 
@@ -207,7 +208,7 @@ def getLabelsAndReports(data, export = False):
 def say(s):
     pprint.pprint(s)
 
-def parseResultsFiles(stem, debug = True):
+def parseResultsFiles(stem, debug = False):
     results = []
     i = 0
     for diag in diagnoses:
@@ -290,7 +291,6 @@ def getMaxDXSingleReport(report):
 ## Flex (for flexible) flag means we runs asserts on a label only if it is present in the sample
 ## We don't enforce that all labels are present. this is useful for pre-complete dbs
 def validateRepsDB(reps, flex = False, dirty = False):
-    print "Calling validateRepsDB"
     for r in reps:
         checks = diagnoses + hueLabels if MODE == "TAGHIAN" else diagnoses
     
@@ -443,9 +443,9 @@ def buildEpisodes(data, debug = False):
                                 print "Former", res
                                 print 'formerText', lastRep
                                 print "Current", rep[diag]
-                                print "current text", rep['Report_Text']
+                                print "current text", rep[reportTextKey]
                                 raw_input()
-                            lastRep = rep['Report_Text']
+                            lastRep = rep[reportTextKey]
                             res += ', ' + rep[diag]
                         else:
                             res = rep[diag]
