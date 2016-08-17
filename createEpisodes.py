@@ -45,8 +45,10 @@ def binarizeFilesForClassification(write = True):
     print "Num remainData with DOBs", len([d for d in remainData if 'DOBPlusX' in d and not d['DOBPlusX'] == 0]), "/", len(remainData)
     
     export = not write
+
     trainReports, trainLabels = getLabelsAndReports(goldData, export)
     restReports,  restLabels =  getLabelsAndReports(remainData, export)
+    assert len(restReports) == len(remainData)
 
     stem = allDataStem
 
@@ -97,7 +99,7 @@ def binarizeFilesForClassification(write = True):
     return "NOT EXPORTING"
 
 def retagLabels(oldLabels, newLabels):
-    print  len(oldLabels), len(newLabels)
+    print  "db labels, classifier labels", len(oldLabels), len(newLabels)
     assert len(oldLabels)== len(newLabels)
     assert len(oldLabels[0]) == len(cols) or not 'DOBPlusX' in oldLabels[0]
     results = []
@@ -190,17 +192,11 @@ def getLabelsAndReports(data, export = False):
                             assert False
                     diags.append(sample[meta])
 
-            diags.append(['Report_Text_Segmented'])
+            diags.append(sample['Report_Text_Segmented'])
             diags.append(sample['Report_Text'])
             diags.append(cleanReports[i])
 
         labels.append(diags)
-
-    filteredReport, filteredLabel = filterGold(cleanReports, labels)
-
-    cleanReports = filteredReport
-    labels = filteredLabel
-
 
     return cleanReports, labels
 
@@ -576,7 +572,7 @@ if __name__ == "__main__":
         reportDB = p.load( open(outPath, 'rb'))
         episodeDB = p.load( open(episodePath, 'rb'))
 
-    portToJSONBool = False
+    portToJSONBool = True
     if portToJSONBool:
         print "Dumping ReportDB"
         portToJSON(reportDB, JSONReportPath)
