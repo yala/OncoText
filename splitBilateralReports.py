@@ -39,7 +39,7 @@ if __name__ == "__main__":
 
     seen = 0
     seenStrg = 0
-    maxStrg = 10
+    maxStrg = -1
     maxSeen = -1
     
     for rep in allData:
@@ -59,16 +59,16 @@ if __name__ == "__main__":
             if 'BreastSide' in rep:
 
                 relevantSideText = newTexts[rep['BreastSide']]
-                rep['Report_Text'] = relevantSideText
+                rep['Report_Text_Segmented'] = relevantSideText
 
                 newData.append(rep)
 
             else:
                 for side in ["RIGHT", "LEFT"]:
                     newRep = copy.deepcopy(rep)
-                    newRep['Report_Text'] =  newTexts[side]
+                    newRep['Report_Text_Segmented'] =  newTexts[side]
 
-                    newData.append(newRep)
+                    newData.append(copy.deepcopy(newRep))
 
                     if seen < maxSeen:
                         seen +=1 
@@ -78,10 +78,13 @@ if __name__ == "__main__":
                         raw_input()
 
         else:
+            rep['Report_Text_Segmented'] = rep['Report_Text']
             newData.append(rep)
 
 
     
+    for rep in newData:
+        assert not( "right" in rep['Report_Text_Segmented'].lower() and "left" in rep['Report_Text_Segmented'].lower())
 
 
     print "New Data has len", len(newData), "As compared to", len(allData)
