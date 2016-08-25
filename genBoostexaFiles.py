@@ -93,20 +93,24 @@ def printLabelDist(trainLabels, trainReports, testLabels, testReports):
     assert numTestSamples   == len(testLabels)
 
     for z in diagnoses:
-        trainDist = sum([z in l  for l in trainLabels]) * 1. / numTrainSamples
-        testDist  = sum([z in l  for l in testLabels]) * 1. / numTestSamples
+        if z == "BreastSide":
+            trainNum = sum(["RIGHT" in l  for l in trainLabels])
+            trainDist = trainNum * 1. / numTrainSamples
+            testNum = sum(["RIGHT" in l  for l in testLabels])
+            testDist  = testNum * 1. / numTestSamples
+        else:
+            trainNum = sum([z in l  for l in trainLabels])
+            trainDist = trainNum * 1. / numTrainSamples
+            testNum = sum([z in l  for l in testLabels])
+            testDist  = testNum * 1. / numTestSamples
         print 'diag', z
-        print "TRAIN:", trainDist
-        print "TEST:", testDist
+        print "TRAIN:", trainNum, "(", trainDist, ")"
+        print "TEST:", testNum, "(", testDist, ")"
+        print "Overall", trainNum+testNum, (numTestSamples+numTrainSamples) - (trainNum+testNum),  (numTestSamples+numTrainSamples) , (trainNum+testNum)*1./(numTestSamples+numTrainSamples) *100, 100 - ((trainNum+testNum)*1./(numTestSamples+numTrainSamples)*100)
         print "---------------------"
         sumTrain += trainDist
         sumTest  += testDist
     #Print no diagnosis case
-    trainDist = sum([processLabels(l) == ["no"] for l in trainLabels]) * 1. / numTrainSamples
-    testDist  = sum([processLabels(l) == ["no"] for l in testLabels]) * 1. / numTestSamples
-    print 'diag', "none"
-    print "TRAIN:", trainDist 
-    print "TEST:" , testDist
     print "---------------------"
     print numTrainSamples, numTestSamples
     sumTrain += trainDist
