@@ -1,7 +1,7 @@
 # large files
 *_all_*.test
 episodeDB.p
-episodeDB.*
+episodeDB*
 tmp.*
 reportDB*
 deiden_AllOthr*
