@@ -1,8 +1,12 @@
 import datetime
 import pickle as p
 
-MODE = "Breast"
-submode = "no"
+MODE = "TAGHIAN"
+analyzeBoth = True
+if analyzeBoth:
+  submode = "Analyze both"
+else:
+  submode = "no"
 
 #Shared constants for creating episodes
 dataPath = "rawBreastPathReport.p"
@@ -19,14 +23,20 @@ metaData = ['Report_Date_TimePlusX', 'MRNPlusX', 'Correct', 'Institution', 'DOBP
 
 SIX_MONTHS = datetime.timedelta(365/2)
 
-
+hueLabels = []
 if MODE == "Breast":
     reportTextKey = "Report_Text_Segmented"
     #Outcomes constants
     diagnoses = [ u'BreastSide', u'DCIS', u'ILC', u'IDC', u'LCIS', \
                  u'ADH',\
                  u'LobularNeoplasia', u'FlatEpithelial', 
-                 u'BluntAdenosis',  u'ALH']
+                 u'BluntAdenosis',  u'ALH', 'cancer', 'atypia']
+
+    if analyzeBoth:
+      diagnoses = [ u'BreastSide', u'Red_DCIS', u'Red_ILC', u'Red_IDC', u'Red_LCIS', \
+                 u'Red_ADH',\
+                 u'LobularNeoplasia', u'FlatEpithelial', 
+                 u'BluntAdenosis',  u'Red_ALH']
 
     #Contants for creating episodes
 
@@ -55,16 +65,27 @@ elif MODE == "TAGHIAN":
   'Number of LN with < =0.02 cm', 'Method size', 'Radical Mastectomy']
   # TODO Remove ECE and debug why bad class name    Micro or Gross   Number of LN with < =0.02 cm Method size
 
-  diagnoses = [u'Are there positive LN?', u'ITC ', u'PR',  
+  diagnoses = [#'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 'Red ADH',
+  u'Are there positive LN?', u'ITC ', u'PR',  
   # u'Type of Surgery',  u'Type of biopsy',
-  u'Her2 (Fish)', u'ER', 'ECE', 'LVI', 'BVI']#, 'TumorGrade']
+  u'Her2 (Fish)', u'ER', 'ECE', 'LVI', 'BVI', #'TumorGrade']
+  'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 'Red ADH']
+
+  HueAnotationSource= ['DCIS', 'LCIS', 'IDC', 'ILC', 'ALH', 'ADH']
+  diagSkip = ['ALH', 'ILC']
+  BiopAnotationSource= [a + " Biop" for a in HueAnotationSource  if not a in diagSkip]
+  SurgAnotationSource= [a + " Surg" for a in HueAnotationSource  if not a in diagSkip]
+
+
+  MixedAnotations= ['Red DCIS', 'Red LCIS', 'Red IDC', 'Red ILC', 'Red ALH', 'Red ADH']
+
 
   redRawDBPath = 'reportDB+red+clean.p'
 
-  defaultLabelDict = { 'Are there positive LN?': 'No', 'Type of sampled LN (choice=None)':'Unchecked', 'ITC ':'Not_Reported', 'PR':'Unknown',
+  defaultLabelDict = { 'Are there positive LN?': 'No', 'Type of sampled LN (choice=None)':'Unchecked', 'ITC ':'No', 'PR':'Unknown',
       'Type of sampled LN (choice=SLNB (Sentinel LN Biopsy))': 'Unchecked', 'Type of Surgery':'not_surgery', 'Type of biopsy':'No_breast_biopsy',
       'Simple Mastectomy':'Unchecked', 'Her2 (Fish)':'Unknown', 'ER': 'Unknown', 'Nipple sparing Mastectomy':'Unchecked',
-      'Type of sampled LN (choice=ALND (Axillary LN Dissection))':'Unchecked', 'ECE':'Not_Reported', 
+      'Type of sampled LN (choice=ALND (Axillary LN Dissection))':'Unchecked', 'ECE':'No', 
       'LVI': 'Not_reported', 'BVI': 'Not_reported', 'TumorGrade': 'Not_assessed'}
 
 
@@ -79,7 +100,7 @@ elif MODE == "TAGHIAN":
     'ECE': ['Yes', 'No'],
     'ER': ['Unknown', 'Negative', 'Positive'],
     'Her2 (Fish)': ['Unknown', 'Negative', 'Positive'],
-    'ITC ': ['Yes', 'No', 'Not_Reported'],
+    'ITC ': ['Yes', 'No'],
     'Nipple sparing Mastectomy': ['Checked', 'Unchecked'],
     'PR': ['Unknown', 'Negative', 'Positive'],
     'Simple Mastectomy': ['Checked', 'Unchecked'],
@@ -88,10 +109,16 @@ elif MODE == "TAGHIAN":
     'Type of sampled LN (choice=ALND (Axillary LN Dissection))': ['Checked', 'Unchecked'],
     'Type of sampled LN (choice=None)': ['Checked', 'Unchecked'],
     'Type of sampled LN (choice=SLNB (Sentinel LN Biopsy))': ['Checked', 'Unchecked'],
-    'ECE': ['Yes', 'No', 'Not_Reported' ],
+    'ECE': ['Yes', 'No'],
     'LVI': ['Yes', 'No', 'Not_reported'],
     'BVI': ['Yes', 'No', 'Not_reported'],
-    'TumorGrade': ['Well_differentiated_(grade_I)', 'Moderate_(grade_II)', 'Poor_(grade_III)', 'Not_assessed'  ]
+    'TumorGrade': ['Well_differentiated_(grade_I)', 'Moderate_(grade_II)', 'Poor_(grade_III)', 'Not_assessed'  ],
+    'Red DCIS':  ['Present','Absent'], 
+    'Red LCIS': ['Present','Absent'], 
+    'Red IDC': ['Present','Absent'], 
+    'Red ILC': ['Present','Absent'], 
+    'Red ALH': ['Present','Absent'], 
+    'Red ADH': ['Present','Absent']
     }
 
   JSONLabelDict = {
@@ -114,10 +141,7 @@ elif MODE == "TAGHIAN":
   }
   labelsForEpisodes = ['ITC ', 'ER', 'Her2 (Fish)', 'PR']
 
-  hueLabels = [ u'BreastSide', u'DCIS', u'ILC', u'IDC', u'LCIS', \
-                 u'ADH',\
-                 u'LobularNeoplasia', u'FlatEpithelial', 
-                 u'BluntAdenosis',  u'ALH']
+  hueLabels = [ u'BreastSide', u'LobularNeoplasia', u'FlatEpithelial', u'BluntAdenosis']
 
       # Constants for genBoostexaFiles
   trainOutPath = "boostexer/breast/taghian/red.data"
@@ -132,9 +156,11 @@ elif MODE == "TAGHIAN":
     redLabels = diagnoses    
 
     for label in hueLabels:
-      constantValidLabelDict[label] = {1, 0}
+      if not label in constantValidLabelDict:
+        constantValidLabelDict[label] = [1, 0]
 
     diagnoses = redLabels + hueLabels
+    print "len(diag), diag", len(diagnoses), diagnoses
 
 
   metaData = hueLabels + metaData
