@@ -4,6 +4,7 @@ import pickle as p
 import re
 import random
 from constants import *
+from createEpisodes import preprocessReports
 import datetime
 
 random.seed(0)
@@ -12,6 +13,8 @@ def replaceSpaces(label):
     return '_'.join(str(label).split())
 
 if __name__ == "__main__":
+
+    assert MODE == "TAGHIAN"
 
     buildLabelDictsBool = False
 
@@ -36,9 +39,11 @@ if __name__ == "__main__":
         print "************************************"
         print "Generating train/test for ", stem
 
+      
+        textKey = reportTextKey
 
         print "Size of db", len(db)
-        testSetSize = len(db)/5
+        testSetSize = min(int(len(db) * .15 ), 500)
         
         if buildLabelDictsBool:
             validLabelsUnfiltered = set([replaceSpaces(r[key]) for r in db if not r[key] == None])
@@ -64,7 +69,7 @@ if __name__ == "__main__":
         print "shuffle"
         random.shuffle(filteredDB)
 
-        trainReports = [t['Preprocessed_Report_Text'] for t in filteredDB[:-testSetSize]]
+        trainReports = [preprocessReports([t[textKey]])[0] for t in filteredDB[:-testSetSize]]
         trainLabels  = [replaceSpaces(t[key])  for t in filteredDB[:-testSetSize]]
 
         print "Num train samples", len(trainLabels)
@@ -75,7 +80,7 @@ if __name__ == "__main__":
             assert count > 0
         assert len(trainReports) == len(trainLabels)
 
-        testReports = [t['Preprocessed_Report_Text'] for t in filteredDB[-testSetSize:]]
+        testReports = [preprocessReports([t[textKey]])[0] for t in filteredDB[-testSetSize:]]
         testLabels  = [replaceSpaces(t[key]) for t in filteredDB[-testSetSize:]]
 
         ## Remove spaces from labels
@@ -87,6 +92,13 @@ if __name__ == "__main__":
         for label in validLabels:
             count = sum([t == label for t in testLabels])
             print "Label", label, count, ',', count * 1. / len(testLabels)
+
+        print "Num OVERALL samples", len(testLabels)
+        print "-------- OVERALL Label Dist -",key,"---------"
+        print "LEN", len(trainLabels + testLabels)
+        for label in validLabels:
+            count = sum([t == label for t in trainLabels+testLabels])
+            print "Label", label, count, ',', count * 1. / len(trainLabels+testLabels) * 100
 
 
         with open(dirPath+stem+".names", 'wb') as f:

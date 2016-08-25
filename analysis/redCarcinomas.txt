@@ -1,0 +1,61 @@
+Calling interpret for  ../classification_results/Breast/class_results_
+---------------------------
+
+---------------------------
+Red ILC Present
+Number of gold 7.0
+Number guessed 5
+Red ILC Present truePos, falsePos, trueNeg, falseNeg: 5 0 493 2
+Red ILC Present percision, recall, f1: 1.0 , 0.714285714286 , 0.833333333333
+Red ILC Present sensitivity, specifcity: 0.714285714286 , 1.0
+Diag Red ILC Present , Num Mistakes: 2 , error rate 0.004
+---------------------------
+Red ALH Present
+Number of gold 86.0
+Number guessed 83
+Red ALH Present truePos, falsePos, trueNeg, falseNeg: 82 1 413 4
+Red ALH Present percision, recall, f1: 0.987951807229 , 0.953488372093 , 0.970414201183
+Red ALH Present sensitivity , specifcity: 0.953488372093 , 0.997584541063
+Diag Red ALH Present , Num Mistakes: 5 , error rate 0.01
+---------------------------
+Red DCIS Present
+Number of gold 198.0
+Number guessed 205
+Red DCIS Present truePos, falsePos, trueNeg, falseNeg: 189 16 286 9
+Red DCIS Present percision, recall, f1: 0.921951219512 , 0.954545454545 , 0.937965260546
+Red DCIS Present sensitivity, specifcity: 0.954545454545 , 0.94701986755
+Diag Red DCIS Present , Num Mistakes: 25 , error rate 0.05
+---------------------------
+Red LCIS Present
+Number of gold 81.0
+Number guessed 79
+Red LCIS Present truePos, falsePos, trueNeg, falseNeg: 75 4 415 6
+Red LCIS Present percision, recall, f1: 0.949367088608 , 0.925925925926 , 0.9375
+Red LCIS Present sensitivity, specifcity: 0.925925925926 , 0.990453460621
+Diag Red LCIS Present , Num Mistakes: 10 , error rate 0.02
+---------------------------
+Red IDC Present
+Number of gold 201.0
+Number guessed 196
+Red IDC Present truePos, falsePos, trueNeg, falseNeg: 191 5 294 10
+Red IDC Present percision, recall, f1: 0.974489795918 , 0.950248756219 , 0.962216624685
+Red IDC Present sensitivity, specifcity: 0.950248756219 , 0.983277591973
+Diag Red IDC Present , Num Mistakes: 15 , error rate 0.03
+---------------------------
+Red ADH Present
+Number of gold 148.0
+Number guessed 145
+Red ADH Present truePos, falsePos, trueNeg, falseNeg: 136 9 343 12
+Red ADH Present percision, recall, f1: 0.937931034483 , 0.918918918919 , 0.928327645051
+Red ADH Present sensitivity, specifcity: 0.918918918919 , 0.974431818182
+Diag Red ADH Present , Num Mistakes: 21 , error rate 0.042
+---------------------------
+Overall
+Number of gold 6374.0
+Number guessed 6374
+truePos, falsePos, trueNeg, falseNeg: 6071 303 8571 303
+../classification_results/Breast/class_results_ Overall percision, recall, f1: 0.952463131472 , 0.952463131472 , 0.952463131472
+../classification_results/Breast/class_results_ Overall sensitivity, specifcity: 0.952463131472 , 0.96585530764
+../classification_results/Breast/class_results_ Overall Num Mistakes: 606 , error rate 0.0397429171039
+Average F1 vs aggregated one: 0.914790821302 0.952463131472
+writing to a file

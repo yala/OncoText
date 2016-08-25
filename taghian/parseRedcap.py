@@ -32,7 +32,8 @@ def parseRedCapXLS():
         for indx, col in enumerate(row):
             if legendRowBool:
                 if not col.value in legend:
-                    legend.append(col.value)
+                    newName = col.value
+                    legend.append(newName)
                 else:
                     counter = 2
                     newName = str(counter) + " " + col.value
@@ -77,7 +78,6 @@ def parseMapXLS():
         
         if not legendRowBool:
             newName = rowDict['Column name']
-
             if rowDict['Column name'] in data:
                 counter = 2
                 newName = str(counter) + " " + rowDict['Column name']
@@ -88,7 +88,10 @@ def parseMapXLS():
             
             data[newName] = { 'event':rowDict['Mapped to '], 'extraction feild': rowDict['type'] }
 
-            assert legend == ['Column name', 'Mapped to ', 'comments', 'type']
+            if not legend == ['Column name', 'Mapped to ', 'comments', 'type']:
+                print legend
+                raw_input()
+
         else:
             print 'processing legend row'
 
@@ -201,7 +204,7 @@ def buildDB(db, redmap, allPathReps, debug = False):
     labelDist = {}
     ## Use this for debugging
     seen = {}
-    toSee = ['TumorGrade']
+    toSee = ['TumorGrade', "Red DCIS"]
     for s in toSee:
         seen[s] = 0
 
@@ -333,7 +336,8 @@ def buildDB(db, redmap, allPathReps, debug = False):
                 assert MODE == "TAGHIAN" and extraction in types
                 if extraction in report: ## This is to catch things like DCIS which are both in Taghian and Hughes dB
                     continue
-                report[extraction] = outDBRepIds[report['ReportID']][extraction]
+                else:
+                    report[extraction] = outDBRepIds[report['ReportID']][extraction]
 
 
 
@@ -388,8 +392,8 @@ def exportRepDB(redReps, pathReps):
     
 
 
-parseXLSBool = False
-preprocessDBBool = False
+parseXLSBool = True
+preprocessDBBool = True
 findMatchingReportsBool = True
 buildDBsBool = False
 exportToRepsDBBool= False

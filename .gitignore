@@ -1,8 +1,8 @@
 # large files
 *_all_*.test
 episodeDB.p
-episodeDB.json
-
+episodeDB.*
+tmp.*
 reportDB*
 deiden_AllOthr*
 goldPath*
