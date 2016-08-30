@@ -244,6 +244,11 @@ if __name__ == "__main__":
         testReports = [cleanReports[c] for c in idx[-500:]]
         testLabels = [labels[d] for d in idx[-500:]]
 
+    print "dumping ",reportTextKey, "list for test set."
+    p.dump([reports[i] for i in idx[-500:]], open('genBoostexaTestReportDump.p', 'wb'))
+    p.dump([goldData[i]['Report_Text'] for i in idx[-500:]], open('genBoostexaFullTestReportDump.p', 'wb'))
+
+
     learningCurve = False
     if learningCurve:
         for s in [10, 50, 100, 500, 1000, 2000, 4000, 5000, 5500]:
