@@ -15,9 +15,11 @@ prColSeq = ['Progesterone receptors - qualitative', 'Progesterone receptors ', '
 her2ColSeq = ['Her2 (FISH)', '2 Her2 (FISH)', '3 Her2 (FISH)', '4 Her2 (FISH)', '5 Her2 (FISH)', '6 Her2 (FISH)']
 gradeColSeq = ['Final Tumor Grade']
 
-def parseRedCapXLS():
+
+
+def parseXLS(inp, out):
     print "loading wb"
-    wb = xl.load_workbook('redcap.xlsx')
+    wb = xl.load_workbook(inp)
 
     print "getting sheet"
     sheet = wb.get_active_sheet()
@@ -53,8 +55,27 @@ def parseRedCapXLS():
         
     print 'dumping'
     print "legend", legend
-    p.dump(data, open('redcap.p', 'wb'))
+    p.dump(data, open(out, 'wb'))
     return data
+
+def parseRedCapXLS():
+    return parseXLS('redcap.xlsx', 'redcap.p')
+   
+def parseGradesLS():
+    grades =  parseXLS('../externalDataSources/Grades.xlsx', 'gradesXls.p')
+
+    print "preprocessing grades db"
+    textToGrade = {}
+    print len(grades)
+    for row in grades:
+        textToGrade[row['Report_Text'] ] = row['TumorGrade']
+
+    print len(textToGrade)
+
+    p.dump(textToGrade, open('grades.p','wb'))
+
+    return textToGrade
+
 
 def parseMapXLS():
     print "loading wb mp"
@@ -148,7 +169,6 @@ def findMatchingReports(db, pathReps, save=False):
     for mrn in pathMrns:
         lengthsDB[mrn] = [ len(pathMrns[mrn]), 0]
 
-
     joinedDB = {}
     misAlignedDates = []
     countAligned = 0
@@ -197,7 +217,7 @@ def printLabelDist(db):
 ## This is because I have col to index dictionaries to figure out which date led to that result
 ## Input DB is joinedDB
 ## Key { MRN} -> {'taghian': [recap events], 'hughes':[pathReps], 'lengths':[ countRedCapEvents, count pathReps]}
-def buildDB(db, redmap, allPathReps, debug = False):
+def buildDB(db, grades, redmap, allPathReps, debug = False):
     outDBReps = []
     outDBRepIds = {}
     outDB = {}
@@ -213,9 +233,13 @@ def buildDB(db, redmap, allPathReps, debug = False):
         and not redmap[m]['extraction feild'] == None]) 
 
     assert not None in types
+
     for extract in types:
         outDB[extract] = []
     print "Types are", types
+
+    for extract in externalList:
+        outDB[extract] = []
 
     ## Note Structure of redmap is as follows: "Col in Redcape " -> ['Event': which biop or surgery is this. is it maxed out?, 'ExtractionFeild': My name for this extraction. 
     ## Allows to collapse different names to a single type]
@@ -236,7 +260,6 @@ def buildDB(db, redmap, allPathReps, debug = False):
     assert colSeqs['ER'] == erColSeq
     assert colSeqs['PR'] == prColSeq
     assert colSeqs['Her2 (Fish)'] == her2ColSeq
-    assert colSeqs['TumorGrade'] == gradeColSeq
 
     #Investigative Counts
     yetToPrintBool = True
@@ -293,33 +316,16 @@ def buildDB(db, redmap, allPathReps, debug = False):
                         else:
                             continue
 
-        ## For maxed out extractions. We simply take last rep avaliable and assume it
-        ## contains what we are looking for, find corresponding col and export to DB
-        for  extraction in maxedOutList:
-            relevantReps = [r for r in pathReps if 'taghainColIndx' in r and 'taghianRowIndx']
-            if len(relevantReps) > 0:
-                rep = relevantReps[0]
+    for rep in allPathReps:
+        ## Now we merge in external data, like grade
+        if rep['Report_Text'] in grades:
+            grade = grades[rep['Report_Text']].strip()[0].upper() + grades[rep['Report_Text']].strip()[1:]
+            rep['TumorGrade'] = grade
+            outDB['TumorGrade'].append(rep)
+            if not rep['ReportID'] in outDBRepIds:
+                outDBRepIds[rep['ReportID']] = {}
+            outDBRepIds[rep['ReportID']]['TumorGrade'] = rep['TumorGrade']
 
-                rowIndx = rep['taghainRowIndx']
-                assert len(colSeqs[extraction]) == 1
-                col  = colSeqs[extraction][0]
-                if not redcap[rowIndx][col] == None:
-                    rep[extraction] = redcap[rowIndx][col]
-                    outDB[extraction].append(rep)
-                    if not rep['ReportID'] in outDBRepIds:
-                        outDBRepIds[rep['ReportID']] = {} 
-                    assert not extraction  in outDBRepIds[rep['ReportID']]
-                    outDBRepIds[rep['ReportID']][extraction] = rep[extraction]
-
-                    if extraction in toSee and seen[extraction] < 10:
-                                 seen[extraction] += 1
-                                 print '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
-                                 print "Extraction type", extraction
-                                 print rep[reportTextKey]
-                                 print rep[extraction]
-                                 raw_input()
-            else:
-                continue
 
     ## Now we print label distrubtions for generating maps and in constants
     printLabelDist(outDB)
@@ -333,7 +339,7 @@ def buildDB(db, redmap, allPathReps, debug = False):
 
             report['TaghianGold'] = 1
             for extraction in outDBRepIds[report['ReportID']]:
-                assert MODE == "TAGHIAN" and extraction in types
+                assert MODE == "TAGHIAN" and (extraction in types or extraction in externalList)
                 if extraction in report: ## This is to catch things like DCIS which are both in Taghian and Hughes dB
                     continue
                 else:
@@ -345,14 +351,14 @@ def buildDB(db, redmap, allPathReps, debug = False):
 
 
             assert 'TaghianGold' in report and report['TaghianGold'] == 1
-            assert len( [t for t in types if t in report ] ) > 0
+            assert len( [t for t in list(types)+externalList if t in report ] ) > 0
             validateRepsDB( [report], True, True )
             outDBReps.append( report )
                 
 
     p.dump(outDBReps, open('allExtractionReps.p', 'wb'))
     p.dump(outDB, open('allExtractionDBs.p', 'wb'))
-    for extraction in types:
+    for extraction in outDB:
         print "Number of ",extraction," reps and path reps equiv", len(outDB[extraction])
     print "Num extractions", len(outDB)
     print "num extractions over 500 reps", len([ extraction for extraction in types if len(outDB[extraction]) > 500 and extraction not in filtOutList])
@@ -392,11 +398,12 @@ def exportRepDB(redReps, pathReps):
     
 
 
-parseXLSBool = True
-preprocessDBBool = True
-findMatchingReportsBool = True
-buildDBsBool = False
-exportToRepsDBBool= False
+parseXLSBool = False
+parseExternal = True
+preprocessDBBool = False
+findMatchingReportsBool = False
+buildDBsBool = True
+exportToRepsDBBool= True
 
 if __name__ == "__main__":
     allPathReps = p.load(open('../reportDB.p', 'rb'))
@@ -407,6 +414,9 @@ if __name__ == "__main__":
     if parseXLSBool:
         redmap = parseMapXLS()
         redcap = parseRedCapXLS()
+
+    if parseExternal:
+        grades = parseGradesLS()
 
     if preprocessDBBool:
         print 'Running preprocessDB'
@@ -430,7 +440,9 @@ if __name__ == "__main__":
             joinedDB =  p.load(open('redcapWithPathReps.p', 'rb'))
         if not parseXLSBool:
             redmap = p.load(open('redmap.p', 'rb'))
-        dBs, redReps = buildDB(joinedDB, redmap, allPathReps,  True)
+        if not parseExternal:
+            grades = p.load(open('grades.p','rb'))
+        dBs, redReps = buildDB(joinedDB, grades, redmap, allPathReps,  True)
 
     if exportToRepsDBBool:
         if not buildDBsBool:
