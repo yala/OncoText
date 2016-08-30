@@ -141,7 +141,7 @@ accesionNumberRegex = r"[A-Z]+[0-9]+[-]?[A-Z]*[0-9]*[-]?[A-Z]*[0-9]*"
 caseNumberRegex = r"\d{2}\d+"
 nameRegex = r"[ ]*PATIENT:[ ]+[\w]+ \w*"
 nameRegex2 = r"[ ]*Patient Name:[ ]*[\S]+[ ]+[\S]+"
-nameRegex3 = r"labeled \w+ \w+"
+nameRegex3 = r"labeled \"?\w+ \w+"
 mrnRegex = r"#\d+-\d+-\d+"
 
 
@@ -168,7 +168,7 @@ dump = True
 xmlPath = "/c/Users/ksh1/Desktop/ReportDiagnosesByMRNDateSideMaxDXAll.xml"
 outPath = "deidentifiedPathReports.p"
 reportKey = "Report_Text"
-numExamples = 3
+numExamples = 2
 
 
 if __name__ == '__main__':
