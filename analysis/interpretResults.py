@@ -189,18 +189,31 @@ if __name__ == "__main__":
 
         numRowMistakes = 0
         numRows = len(gold[diagNames[0]][gold[diagNames[0]].keys()[0]] )
+        offenders = {}
+        offenderRows = {}
+        #This is my correcting hand annotations
+        corrections = [('Red_DCIS', 67), ('FlatEpithelial', 7), ('Red_ILC', 467), ('Red_ALH', 434)]
+
         for i in range(numRows):
             incorrect = False
             for d in diagNames:
                 for l in gold[d]:
-                    if not guessed[d][l][i] == gold[d][l][i]:
+                    if not guessed[d][l][i] == gold[d][l][i] and not incorrect and (d,i) not in corrections:
+                        if not d in offenders:
+                            offenders[d] = 0
+                            offenderRows[d] = []
+                        mistake = {}
+                        mistake['row'] = i
+                        mistake['gold']=  gold[d][l][i]
+                        mistake['pred']=  guessed[d][l][i]
+                        offenderRows[d].append(mistake)
+                        offenders[d] += 1
                         numRowMistakes +=1
                         incorrect = True
-                        break
-                    if incorrect:
-                        break
 
         print "Row level", numRowMistakes, numRows, numRowMistakes *1. / numRows, 1- numRowMistakes *1. / numRows
+        print offenders
+        p.dump(offenderRows, open('mistake.p', 'wb'))
 
     print "writing to a file"
     keys = ['Name', 'num gold', 'num geussed', 'percision', 'recall', 'f1', 'sensitivity','specifcity', 'numMistakes', 'errorRate']
