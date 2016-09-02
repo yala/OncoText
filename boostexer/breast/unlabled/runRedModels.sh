@@ -1,5 +1,5 @@
 #!/bin/bash
-pathTypes=("Are_there_positive_LN?"  "ITC" "PR"  "Her2_(Fish)" "ER" "ECE" "LVI" "BVI" "TumorGrade")
+pathTypes=("Red_DCIS" "Red_LCIS" "Red_IDC" "Red_ILC" "Red_ALH" "Red_ADH" "Are_there_positive_LN?"  "ITC" "PR"  "Her2_(Fish)" "ER" "ECE" "LVI" "BVI" "TumorGrade")
 stem="red_all_"
 outStem="../../../classification_results/Breast/red_class_results_all_"
 for name in "${pathTypes[@]}"; do
