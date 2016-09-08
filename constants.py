@@ -2,7 +2,7 @@ import datetime
 import pickle as p
 
 MODE = "TAGHIAN"
-analyzeBoth = True
+analyzeBoth = False
 if analyzeBoth:
   submode = "Analyze both"
 else:
@@ -30,12 +30,12 @@ if MODE == "Breast":
     diagnoses = [ u'BreastSide', u'DCIS', u'ILC', u'IDC', u'LCIS', \
                  u'ADH',\
                  u'LobularNeoplasia', u'FlatEpithelial', 
-                 u'BluntAdenosis',  u'ALH', 'cancer', 'atypia']
+                 u'BluntAdenosis',  u'ALH', 'cancer', 'atypia']#, 'ADH_DCIS', 'Phylodes']
 
     if analyzeBoth:
       diagnoses = [ u'BreastSide', u'Red_DCIS', u'Red_ILC', u'Red_IDC', u'Red_LCIS', \
                  u'Red_ADH',\
-                 u'LobularNeoplasia', u'FlatEpithelial', 
+                 u'LobularNeoplasia', u'FlatEpithelial',  
                  u'BluntAdenosis',  u'Red_ALH']
 
     #Contants for creating episodes
@@ -57,8 +57,9 @@ elif MODE == "TAGHIAN":
   reportTextKey = "Report_Text"
 
   lauraDictToIndx = {'Biposy 1':0, 'Biopsy 2':1, 'Biopsy 3':2, 'Surgery 1':3, 'Surgery2':4, 'Surgery 3':5}
-  maxedOutDictToIndx = {'Max of tumor grade ':-1 }  
-  maxedOutList = ['TumorGrade']  
+  maxedOutDictToIndx = {'Oncotype score':-1, 'Oncotype date':-1}  
+  maxedOutList = ['Oncotype score', 'Oncotype date']
+  externalList = ['TumorGrade']  
 
   filtOutList = ['DCIS', 'LCIS', 'ILC', 'Mixed Inv Duct and Lob canc', 'IDC', 'ALH', 'hospital', 'Her2 (Fish)-val', \
   'IDC with lobular features', 'date', 'ADH', 'Her2 (immunochem)', 'Her2 (Fish)- val', 'ALND (#sampled)', 'Number of LN with > 0.2 cm', 'Micro or Gross',
@@ -68,8 +69,10 @@ elif MODE == "TAGHIAN":
   diagnoses = [#'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 'Red ADH',
   u'Are there positive LN?', u'ITC ', u'PR',  
   # u'Type of Surgery',  u'Type of biopsy',
-  u'Her2 (Fish)', u'ER', 'ECE', 'LVI', 'BVI', #'TumorGrade']
-  'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 'Red ADH']
+  u'Her2 (Fish)', u'ER', 'ECE', 'LVI', 'BVI',
+  'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 'Red ADH', 'Oncotype score']
+
+  # diagnoses = ['Oncotype score']
 
   HueAnotationSource= ['DCIS', 'LCIS', 'IDC', 'ILC', 'ALH', 'ADH']
   diagSkip = ['ALH', 'ILC']
@@ -86,7 +89,8 @@ elif MODE == "TAGHIAN":
       'Type of sampled LN (choice=SLNB (Sentinel LN Biopsy))': 'Unchecked', 'Type of Surgery':'not_surgery', 'Type of biopsy':'No_breast_biopsy',
       'Simple Mastectomy':'Unchecked', 'Her2 (Fish)':'Unknown', 'ER': 'Unknown', 'Nipple sparing Mastectomy':'Unchecked',
       'Type of sampled LN (choice=ALND (Axillary LN Dissection))':'Unchecked', 'ECE':'No', 
-      'LVI': 'Not_reported', 'BVI': 'Not_reported', 'TumorGrade': 'Not_assessed'}
+      'LVI': 'Not_reported', 'BVI': 'Not_reported', 'TumorGrade': 'Not_assessed', 'Red DCIS':'Absent', 'Red LCIS':'Absent', 'Red IDC':'Absent', 'Red ILC':'Absent',
+      'Red ALH':'Absent', 'Red ADH':'Absent', 'Oncotype score':'Low_risk'}
 
 
   extractions = [u'Max Tumor Size', 'Non Sentinel LN (# Malignant)', 'Sentinel LN (# Sampled)']
@@ -112,14 +116,38 @@ elif MODE == "TAGHIAN":
     'ECE': ['Yes', 'No'],
     'LVI': ['Yes', 'No', 'Not_reported'],
     'BVI': ['Yes', 'No', 'Not_reported'],
-    'TumorGrade': ['Well_differentiated_(grade_I)', 'Moderate_(grade_II)', 'Poor_(grade_III)', 'Not_assessed'  ],
+    'TumorGrade': ['Well_differentiated_(grade_I)', 'Moderate_(grade_II)', 'Poor_(grade_III)_Undifferentiated', 'Not_assessed'],
     'Red DCIS':  ['Present','Absent'], 
     'Red LCIS': ['Present','Absent'], 
     'Red IDC': ['Present','Absent'], 
     'Red ILC': ['Present','Absent'], 
     'Red ALH': ['Present','Absent'], 
-    'Red ADH': ['Present','Absent']
+    'Red ADH': ['Present','Absent'],
+    'cancer': ['cancer','no_cancer'],
+    'atypia': ['atypia','no_atypia'],
+    'Oncotype score': ['Low_risk', 'Mid_risk', 'High_risk']
     }
+
+  analysisLabelDict = {'Are there positive LN?': ['Yes', 'No'],
+    'ECE': ['Yes', 'No'],
+    'ER': ['Unknown', 'Negative', 'Positive'],
+    'Her2 (Fish)': ['Unknown', 'Negative', 'Positive'],
+    'ITC ': ['Yes', 'No'],
+    'PR': ['Unknown', 'Negative', 'Positive'],    
+    'ECE': ['Yes', 'No'],
+    'LVI': ['Yes', 'No', 'Not_reported'],
+    'BVI': ['Yes', 'No', 'Not_reported'],
+    'TumorGrade': ['Well_differentiated_(grade_I)', 'Moderate_(grade_II)', 'Poor_(grade_III)_Undifferentiated'],
+    'Red DCIS':  ['Present','Absent'], 
+    'Red LCIS': ['Present','Absent'], 
+    'Red IDC': ['Present','Absent'], 
+    'Red ILC': ['Present','Absent'], 
+    'Red ALH': ['Present','Absent'], 
+    'Red ADH': ['Present','Absent'],
+    'cancer': ['cancer','no_cancer'],
+    'atypia': ['atypia','no_atypia']
+    }
+
 
   JSONLabelDict = {
     'Checked':1,
@@ -159,9 +187,8 @@ elif MODE == "TAGHIAN":
       if not label in constantValidLabelDict:
         constantValidLabelDict[label] = [1, 0]
 
-    diagnoses = redLabels + hueLabels
+    diagnoses = redLabels + hueLabels + ['cancer', 'atypia']
     print "len(diag), diag", len(diagnoses), diagnoses
-
 
   metaData = hueLabels + metaData
 

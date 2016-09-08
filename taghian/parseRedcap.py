@@ -62,8 +62,9 @@ def parseRedCapXLS():
     return parseXLS('redcap.xlsx', 'redcap.p')
    
 def parseGradesLS():
-    grades =  parseXLS('../externalDataSources/Grades.xlsx', 'gradesXls.p')
-
+    grades1 =  parseXLS('../externalDataSources/Grades.xlsx', 'gradesXls.p')
+    grades2 =  parseXLS('../externalDataSources/Grades_2.xlsx', 'gradesXls2.p')
+    grades = grades1 + grades2
     print "preprocessing grades db"
     textToGrade = {}
     print len(grades)
@@ -108,6 +109,9 @@ def parseMapXLS():
 
             
             data[newName] = { 'event':rowDict['Mapped to '], 'extraction feild': rowDict['type'] }
+
+            if newName == 'Oncotype score':
+                assert rowDict['Mapped to '] == 'Oncotype'
 
             if not legend == ['Column name', 'Mapped to ', 'comments', 'type']:
                 print legend
@@ -213,25 +217,13 @@ def printLabelDist(db):
         print labelCounts
     print "*******************************************"
 
-## Suport building dbs from path reps (aligned by taghian index in the path rep) for er/pr/her2
-## This is because I have col to index dictionaries to figure out which date led to that result
-## Input DB is joinedDB
-## Key { MRN} -> {'taghian': [recap events], 'hughes':[pathReps], 'lengths':[ countRedCapEvents, count pathReps]}
-def buildDB(db, grades, redmap, allPathReps, debug = False):
-    outDBReps = []
-    outDBRepIds = {}
-    outDB = {}
-    labelDist = {}
-    ## Use this for debugging
-    seen = {}
-    toSee = ['TumorGrade', "Red DCIS"]
-    for s in toSee:
-        seen[s] = 0
-
+def getColSeqs(redmap, outDB):
     ## Get list of extractions under my name. Similar to diagnoses pre-filtering
-    types = set([redmap[m]['extraction feild'] for m in redmap if (redmap[m]['event'] in lauraDictToIndx or redmap[m]['event'] in maxedOutDictToIndx)
+    types = set([redmap[m]['extraction feild'] for m in redmap 
+        if (redmap[m]['event'] in lauraDictToIndx or redmap[m]['extraction feild'] in maxedOutDictToIndx)
         and not redmap[m]['extraction feild'] == None]) 
 
+    assert 'Oncotype score' in types
     assert not None in types
 
     for extract in types:
@@ -260,10 +252,9 @@ def buildDB(db, grades, redmap, allPathReps, debug = False):
     assert colSeqs['ER'] == erColSeq
     assert colSeqs['PR'] == prColSeq
     assert colSeqs['Her2 (Fish)'] == her2ColSeq
+    return colSeqs, types
 
-    #Investigative Counts
-    yetToPrintBool = True
-
+def processRedcapData(db, colSeqs, types, outDB, outDBRepIds, toSee, seen):
     for mrn in db:
 
         pathReps =  db[mrn]['hughes']
@@ -315,7 +306,21 @@ def buildDB(db, grades, redmap, allPathReps, debug = False):
 
                         else:
                             continue
+    return False
 
+def parseOncoScore(score):
+    if score < 18:
+        return 'Low risk'
+    elif score <= 30:
+        return 'Mid risk'
+    else: 
+        return 'High risk'
+## Suport building dbs from path reps (aligned by taghian index in the path rep) for er/pr/her2
+## This is because I have col to index dictionaries to figure out which date led to that result
+## Input DB is joinedDB
+## Key { MRN} -> {'taghian': [recap events], 'hughes':[pathReps], 'lengths':[ countRedCapEvents, count pathReps]}
+
+def processGradeData(grades, allPathReps, outDB, outDBRepIds):
     for rep in allPathReps:
         ## Now we merge in external data, like grade
         if rep['Report_Text'] in grades:
@@ -325,7 +330,79 @@ def buildDB(db, grades, redmap, allPathReps, debug = False):
             if not rep['ReportID'] in outDBRepIds:
                 outDBRepIds[rep['ReportID']] = {}
             outDBRepIds[rep['ReportID']]['TumorGrade'] = rep['TumorGrade']
+    return False
 
+def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen ):
+    for mrn in db:
+
+        pathReps =  db[mrn]['hughes']
+        redcap   =  db[mrn]['taghian']
+
+        ## For normal extractions that line up to a specific report,
+        ## we iterate through reps, find corresponding col for that extraction
+        ## for that report and produce DB
+        for rep in reversed(pathReps):
+            for extraction in maxedOutList:
+                if not extraction == 'Oncotype score':
+                    continue
+
+                colSeq =  colSeqs[extraction]
+
+                if not ('taghainColIndx' in rep and 'taghainRowIndx' in rep):
+                    continue
+
+                redcapIndx = rep['taghainRowIndx']
+                    
+                colField = colSeq[0] ## maxed out reps have length one lists
+
+                if redcap[redcapIndx][colField] == None:
+                    continue
+
+                if redcap[redcapIndx]['Oncotype date'] == None or rep['Report_Date_TimePlusX'] > redcap[redcapIndx]['Oncotype date']:
+                    continue
+
+                rep[extraction] = parseOncoScore(redcap[redcapIndx][colField])
+
+
+                ##For oncoscore, assert that report is a lumpectomy
+                
+                outDB[extraction].append(rep)
+                if not rep['ReportID'] in outDBRepIds:
+                    outDBRepIds[rep['ReportID']] = {} 
+
+                assert not extraction  in outDBRepIds[rep['ReportID']]  
+                outDBRepIds[rep['ReportID']][extraction] = rep[extraction]
+
+                if extraction in toSee and seen[extraction] < 10:
+                     seen[extraction] += 1
+                     print '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
+                     print "Extraction type", extraction
+                     print rep[reportTextKey]
+                     print rep[extraction]
+                     raw_input()
+
+    return False
+
+def buildDB(db, grades, redmap, allPathReps, debug = False):
+    outDBReps = []
+    outDBRepIds = {}
+    outDB = {}
+    labelDist = {}
+    ## Use this for debugging
+    seen = {}
+    toSee = ['Oncotype score']
+    for s in toSee:
+        seen[s] = 0
+
+    colSeqs, types = getColSeqs(redmap, outDB)
+
+    #Investigative Counts
+    yetToPrintBool = True
+
+
+    processRedcapData(db, colSeqs, types, outDB, outDBRepIds, toSee, seen)
+    processGradeData(grades, allPathReps, outDB, outDBRepIds)
+    processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen )
 
     ## Now we print label distrubtions for generating maps and in constants
     printLabelDist(outDB)
@@ -399,7 +476,8 @@ def exportRepDB(redReps, pathReps):
 
 
 parseXLSBool = False
-parseExternal = True
+parseMapBool = False
+parseExternal = False
 preprocessDBBool = False
 findMatchingReportsBool = False
 buildDBsBool = True
@@ -412,8 +490,11 @@ if __name__ == "__main__":
 
 
     if parseXLSBool:
-        redmap = parseMapXLS()
         redcap = parseRedCapXLS()
+
+    if parseMapBool:
+        redmap = parseMapXLS()
+
 
     if parseExternal:
         grades = parseGradesLS()

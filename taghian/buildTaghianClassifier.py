@@ -34,6 +34,7 @@ if __name__ == "__main__":
     testSets = {}
 
     for mode in modes:
+        print "mode", mode
         db = [d for d in dB if mode in d and not d[mode] == None]
         key = mode
         stem = '_'.join(mode.split())
