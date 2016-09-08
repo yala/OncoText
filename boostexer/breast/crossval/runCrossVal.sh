@@ -7,8 +7,8 @@ outStem="../../../classification_results/Breast/class_results_"
 for name in "${pathTypes[@]}"; do
     for num in `seq 0 165` ; do
         touch $outStem$name.txt &&
-        ./../../boostexter -n 30 -W 3 -N ngram -S $stem$name$delim$size - V &&
-        ./../../boostexter -C -S $stem$name$delim$size < $stem$name$delim$size.test  >> $outStem$name.txt;
+        ./../../boostexter -n 30 -W 3 -N ngram -S $stem$name$delim$num - V &&
+        ./../../boostexter -C -S $stem$name$delim$num < $stem$name$delim$num.test  >> $outStem$name.txt;
     done
 done
 echo "Done"
