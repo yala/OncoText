@@ -3,7 +3,7 @@ pathTypes=(Oncotype_score)
 size=(10 50 100 500 1000 2000 4000 5000 5500)
 stem="pathology_"
 delim="_"
-outStem="../../learningCurveResults/class_results_"
+outStem="../../../classification_results/Breast/pathology_"
 for name in "${pathTypes[@]}"; do
     for num in `seq 0 165` ; do
         touch $outStem$name.txt &&
