@@ -80,14 +80,6 @@ if __name__ == "__main__":
             trainReports = [preprocessReports([t[textKey]])[0] for t in filteredDB[:-testSetSize]]
             trainLabels  = [replaceSpaces(t[key])  for t in filteredDB[:-testSetSize]]
 
-            print "Num train samples", len(trainLabels)
-            print "-------- Train Label Dist,",key," ----------"
-            for label in validLabels:
-                count = sum([t == label for t in trainLabels]) 
-                print "Label", label, count ,",", count * 1. / len(trainLabels)
-                assert count > 0
-            assert len(trainReports) == len(trainLabels)
-
             testReports = [preprocessReports([t[textKey]])[0] for t in filteredDB[-testSetSize:]]
             testLabels  = [replaceSpaces(t[key]) for t in filteredDB[-testSetSize:]]
 
@@ -111,6 +103,13 @@ if __name__ == "__main__":
             testReports, testLabels = [t[0] for t in test], [t[1] for t in test]
             print 'aligning done'
 
+        print "Num train samples", len(trainLabels)
+        print "-------- Train Label Dist,",key," ----------"
+        for label in validLabels:
+            count = sum([t == label for t in trainLabels]) 
+            print "Label", label, count ,",", count * 1. / len(trainLabels)
+            assert count > 0
+        assert len(trainReports) == len(trainLabels)
 
         ## Remove spaces from labels
 
