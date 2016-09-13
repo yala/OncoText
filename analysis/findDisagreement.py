@@ -2,7 +2,10 @@ import pickle as p
 import sys
 sys.path.append("..")
 from constants import *
+import random
+from csv import DictWriter
 
+random.seed(1)
 
 ruleBasedData = p.load(open('../'+dataPath, 'rb'))
 mlData = p.load(open('../'+outPath, 'rb'))
@@ -17,10 +20,12 @@ def buildDict(data, debug = False):
             print 'DCIS' in rep and 'ILC' in rep
             raw_input()
         # This is done to filter out unlabled reports
-        if 'DCIS' in rep and 'ILC' in rep:
+        if ('DCIS' in rep and 'ILC' in rep )or ('Red DCIS' in rep and 'Red ILC' in rep):
             resultDict[text] = rep
     return resultDict
 
+print "len rule data", len(ruleBasedData)
+print "len ml data", len(mlData)
 
 ruleBasedDict = buildDict(ruleBasedData)
 print "Num labled rule samples",len(ruleBasedDict)
@@ -36,7 +41,7 @@ ignoreList = ['Medullary', 'ClingingCarcinoma', 'CancerNOS', 'Borderline', 'Inva
 
 numDisagreement = 0
 countsDetecs = {}
-for diag in diagnoses:
+for diag in hueLabels + HueAnotationSource:
 
     if diag in ignoreList:
         continue
@@ -56,9 +61,12 @@ for diag in diagnoses:
                 ruleLabel = 0
         else:
             continue
-            
-        mlLabel   = mlDict[text][diag]
-     
+        
+        if diag in HueAnotationSource:
+            mlLabel   = 1 if mlDict[text]['Red '+diag] == 'Present' else 0
+        else:
+            mlLabel   = mlDict[text][diag]
+
         if not str(ruleLabel) == str(mlLabel):
             disaArticles.add(text)
             if numPrinted < 0 and str(ruleLabel) == '0':
@@ -81,8 +89,24 @@ for diag in diagnoses:
 
 print "Total num Disagreement", numDisagreement
 print "% /disagree on a label Level", numDisagreement * 1. / (len(ruleBasedDict) * len(disagreement))
-print "Total ratio rulePos/All", sum([countsDetecs[diag] for diag in countsDetecs]) *1. / numDisagreement
+print "Total ratio rulePosAndML_Negative/All", sum([countsDetecs[diag] for diag in countsDetecs]) *1. / numDisagreement
 print "Total num Articles", len(disaArticles)
 print "% /diasgree on a report Level", len(disaArticles) *1. / len(ruleBasedDict)
 
 p.dump(disagreement, open("DisagreementDict.p", 'wb'))
+
+for diag in disagreement:
+    if  diag == "BreastSide":
+        continue
+    exportAll = disagreement[diag]
+    random.shuffle(exportAll)
+    export = exportAll[:15]
+    path = "disagreementsForMolly/disagreement_on_"+diag+".csv"
+    keys = export[0].keys()
+    with open(path, "wb") as outCSV:
+        writer = DictWriter(outCSV, keys)
+        writer.writeheader()
+        writer.writerows(export)
+    
+
+

@@ -23,6 +23,7 @@ if __name__ == "__main__":
         diagLabelDict = constantValidLabelDict
 
     print "Calling interpret for ", stem
+    print "diagnoses", diagnoses
     for diag in diagnoses:
         diagFile = '_'.join(diag.split())
         diagFile = '_'.join(diagFile.split('/'))
@@ -40,6 +41,8 @@ if __name__ == "__main__":
         for l in labels:
             gold[d][l] = []
             guessed[d][l] = []
+        gold[d]['overall'] = []
+        guessed[d]['overall'] = []
 
 
     for diag in diagnoses:
@@ -64,7 +67,8 @@ if __name__ == "__main__":
                
 
                 gold[diag][label].append(goldsVec[labelIndx])
-
+                gold[diag]['overall'].append(goldsVec[labelIndx])
+    
                 predictionIndx = guessedVec.index(max(guessedVec))
                 if labelIndx == predictionIndx:
                     prediction = 1
@@ -72,6 +76,7 @@ if __name__ == "__main__":
                     prediction = 0
 
                 guessed[diag][label].append(prediction)
+                guessed[diag]['overall'].append(prediction)
 
 
     results = []
@@ -80,10 +85,10 @@ if __name__ == "__main__":
     for diag in diagnoses:
         if MODE == "TAGHIAN":
             labels = diagLabelDict[diag]
-        for label in labels:
+        for label in labels +['overall'] if True else ['overall']:
             if len(labels) == 2 and label == labels[-1] and False: 
                 continue
-            if submode == "Analyze both" and diag in hueLabels and label == 0:
+            if submode == "Analyze both" and diag in hueLabels and label == 0 and False:
                 continue
             resultDict = {}
             resultDict['Name'] = diag + " " + str(label)
@@ -198,7 +203,11 @@ if __name__ == "__main__":
             incorrect = False
             for d in diagNames:
                 for l in gold[d]:
-                    if not guessed[d][l][i] == gold[d][l][i] and not incorrect and (d,i) not in corrections:
+                    if not l in analysisLabelDict[d]:
+                        continue
+                    if (d,i) in corrections:
+                        print "Noom"
+                    if not guessed[d][l][i] == gold[d][l][i] and not incorrect and not (d,i) in corrections:
                         if not d in offenders:
                             offenders[d] = 0
                             offenderRows[d] = []
@@ -211,7 +220,7 @@ if __name__ == "__main__":
                         numRowMistakes +=1
                         incorrect = True
 
-        print "Row level", numRowMistakes, numRows, numRowMistakes *1. / numRows, 1- numRowMistakes *1. / numRows
+        print "Rowz level", numRowMistakes, numRows, numRowMistakes *1. / numRows, 1- numRowMistakes *1. / numRows
         print offenders
         p.dump(offenderRows, open('mistake.p', 'wb'))
 
