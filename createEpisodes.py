@@ -104,6 +104,7 @@ def retagLabels(oldLabels, newLabels):
     assert len(oldLabels[0]) == len(cols) or not 'DOBPlusX' in oldLabels[0]
     results = []
     for i in range(len(oldLabels)):
+        print len(newLabels[i]) , len(diagnoses)
         assert len(newLabels[i]) == len(diagnoses)
         combinedLabels = newLabels[i] + oldLabels[i][len(diagnoses):]
         if 'PLACEHOLDER' in combinedLabels:
@@ -312,7 +313,7 @@ def validateRepsDB(reps, flex = False, dirty = False):
 
 
 
-def buildEpisodes(data, debug = False):
+def buildEpisodes(data, labelMaxDXBool, debug = False):
 
     mrns = {}
     for i in range(len(data)):
@@ -449,16 +450,16 @@ def buildEpisodes(data, debug = False):
                     print "Diag", diag, "is", res
                 episode[diag] = res
 
-
-            episode['MaxDX'] = getMaxDXSingleReport(episode)
+            if labelMaxDXBool:
+                episode['MaxDX'] = getMaxDXSingleReport(episode)
             episode['Num_Reports'] = len(reports)
             episode['Institution'] = reports[-1]['Institution']
 
             if MODE == "Breast":
-                assert set(episode.keys() + ['DOBPlusX']) == set(diagnoses + metaData + ['MaxDX', 'EndEpisode_Date_TimePlusX', 'Num_Reports', 'EpisodeID', 'DOBPlusX'])
+                assert set(episode.keys() + ['DOBPlusX']) == set(diagnoses + metaData + (['MaxDX'] if labelMaxDXBool else [] )+['EndEpisode_Date_TimePlusX', 'Num_Reports', 'EpisodeID', 'DOBPlusX'])
             
             if MODE == "TAGHIAN":
-                assert set(episode.keys() + ['DOBPlusX']) == set(labelsForEpisodes + hueLabels + metaData + ['MaxDX', 'EndEpisode_Date_TimePlusX', 'Num_Reports', 'EpisodeID', 'DOBPlusX'])
+                assert set(episode.keys() + ['DOBPlusX']) == set(labelsForEpisodes + hueLabels + metaData + (['MaxDX'] if labelMaxDXBool else [] )+['EndEpisode_Date_TimePlusX', 'Num_Reports', 'EpisodeID', 'DOBPlusX'])
 
         episodeDB.append(episode)
 
@@ -548,7 +549,7 @@ if __name__ == "__main__":
     else: 
         reportDB = p.load(open(outPath, 'rb'))
 
-    labelMaxDXBool = True
+    labelMaxDXBool = False
     if labelMaxDXBool:
         print "Calling labelMaxDXBool"
         getMaxDX(reportDB)
@@ -561,7 +562,7 @@ if __name__ == "__main__":
     buildEpisodesBool = True
     if buildEpisodesBool:
         print "Calling build episode"
-        reportDB, episodeDB = buildEpisodes(reportDB)
+        reportDB, episodeDB = buildEpisodes(reportDB, labelMaxDXBool)
         if verbose:
             raw_input("Dump again? Press any key to continue")
         else:

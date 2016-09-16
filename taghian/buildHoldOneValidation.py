@@ -57,11 +57,16 @@ if __name__ == "__main__":
 
         print "Len filiteredDB", len(filteredDB)
 
+        print "-------- Overall Label Dist ----------"
+        for label in validLabels:
+            count = sum([replaceSpaces(t[key]) == label for t in filteredDB])
+            print "Label", label, count, ',', count * 1. / len(filteredDB)
+        raw_input()
         balanced = False
         
         for i in range(len(filteredDB)):
             # Reshuffle DB until there is some amount of each label on each side
-            
+            print i
             trainReports = [preprocessReports([t[textKey]])[0] for t in filteredDB[0:i]+filteredDB[i+1:]]
             trainLabels  = [replaceSpaces(t[key])  for t in filteredDB[0:i]+filteredDB[i+1:]]
 

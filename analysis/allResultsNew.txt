@@ -1,0 +1,341 @@
+len(diag), diag 20 [u'Are there positive LN?', u'ITC ', u'PR', u'Her2 (Fish)', u'ER', 'ECE', 'LVI', 'BVI', 'Red ILC', 'Red ALH', 'Red DCIS', 'Red LCIS', 'Red IDC', 'Red ADH', u'BreastSide', u'LobularNeoplasia', u'FlatEpithelial', u'BluntAdenosis', 'cancer', 'atypia']
+Calling interpret for  ../classification_results/Breast/class_results_
+---------------------------
+Are there positive LN? Yes
+Number of gold 109.0
+Number guessed 108
+Are there positive LN? Yes truePos, falsePos, trueNeg, falseNeg: 101 7 384 8
+Are there positive LN? Yes percision, recall, f1: 0.935185185185 , 0.926605504587 , 0.930875576037
+Are there positive LN? Yes sensitivity, specifcity: 0.926605504587 , 0.982097186701
+Diag Are there positive LN? Yes , Num Mistakes: 15 , error rate 0.03
+---------------------------
+Are there positive LN? No
+Number of gold 391.0
+Number guessed 392
+Are there positive LN? No truePos, falsePos, trueNeg, falseNeg: 384 8 101 7
+Are there positive LN? No percision, recall, f1: 0.979591836735 , 0.982097186701 , 0.980842911877
+Are there positive LN? No sensitivity, specifcity: 0.982097186701 , 0.926605504587
+Diag Are there positive LN? No , Num Mistakes: 15 , error rate 0.03
+---------------------------
+ITC  Yes
+Number of gold 50.0
+Number guessed 44
+ITC  Yes truePos, falsePos, trueNeg, falseNeg: 42 2 119 8
+ITC  Yes percision, recall, f1: 0.954545454545 , 0.84 , 0.893617021277
+ITC  Yes sensitivity, specifcity: 0.84 , 0.98347107438
+Diag ITC  Yes , Num Mistakes: 10 , error rate 0.0584795321637
+---------------------------
+ITC  No
+Number of gold 121.0
+Number guessed 127
+ITC  No truePos, falsePos, trueNeg, falseNeg: 119 8 42 2
+ITC  No percision, recall, f1: 0.937007874016 , 0.98347107438 , 0.959677419355
+ITC  No sensitivity, specifcity: 0.98347107438 , 0.84
+Diag ITC  No , Num Mistakes: 10 , error rate 0.0584795321637
+---------------------------
+PR Unknown
+Number of gold 63.0
+Number guessed 68
+PR Unknown truePos, falsePos, trueNeg, falseNeg: 61 7 430 2
+PR Unknown percision, recall, f1: 0.897058823529 , 0.968253968254 , 0.931297709924
+PR Unknown sensitivity, specifcity: 0.968253968254 , 0.983981693364
+Diag PR Unknown , Num Mistakes: 9 , error rate 0.018
+---------------------------
+PR Negative
+Number of gold 109.0
+Number guessed 106
+PR Negative truePos, falsePos, trueNeg, falseNeg: 98 8 383 11
+PR Negative percision, recall, f1: 0.924528301887 , 0.899082568807 , 0.911627906977
+PR Negative sensitivity, specifcity: 0.899082568807 , 0.979539641944
+Diag PR Negative , Num Mistakes: 19 , error rate 0.038
+---------------------------
+PR Positive
+Number of gold 328.0
+Number guessed 326
+PR Positive truePos, falsePos, trueNeg, falseNeg: 316 10 162 12
+PR Positive percision, recall, f1: 0.969325153374 , 0.963414634146 , 0.966360856269
+PR Positive sensitivity, specifcity: 0.963414634146 , 0.941860465116
+Diag PR Positive , Num Mistakes: 22 , error rate 0.044
+---------------------------
+Her2 (Fish) Unknown
+Number of gold 141.0
+Number guessed 146
+Her2 (Fish) Unknown truePos, falsePos, trueNeg, falseNeg: 134 12 347 7
+Her2 (Fish) Unknown percision, recall, f1: 0.917808219178 , 0.950354609929 , 0.933797909408
+Her2 (Fish) Unknown sensitivity, specifcity: 0.950354609929 , 0.966573816156
+Diag Her2 (Fish) Unknown , Num Mistakes: 19 , error rate 0.038
+---------------------------
+Her2 (Fish) Negative
+Number of gold 286.0
+Number guessed 286
+Her2 (Fish) Negative truePos, falsePos, trueNeg, falseNeg: 276 10 204 10
+Her2 (Fish) Negative percision, recall, f1: 0.965034965035 , 0.965034965035 , 0.965034965035
+Her2 (Fish) Negative sensitivity, specifcity: 0.965034965035 , 0.953271028037
+Diag Her2 (Fish) Negative , Num Mistakes: 20 , error rate 0.04
+---------------------------
+Her2 (Fish) Positive
+Number of gold 73.0
+Number guessed 68
+Her2 (Fish) Positive truePos, falsePos, trueNeg, falseNeg: 64 4 423 9
+Her2 (Fish) Positive percision, recall, f1: 0.941176470588 , 0.876712328767 , 0.90780141844
+Her2 (Fish) Positive sensitivity, specifcity: 0.876712328767 , 0.990632318501
+Diag Her2 (Fish) Positive , Num Mistakes: 13 , error rate 0.026
+---------------------------
+ER Unknown
+Number of gold 67.0
+Number guessed 71
+ER Unknown truePos, falsePos, trueNeg, falseNeg: 63 8 425 4
+ER Unknown percision, recall, f1: 0.887323943662 , 0.940298507463 , 0.913043478261
+ER Unknown sensitivity, specifcity: 0.940298507463 , 0.981524249423
+Diag ER Unknown , Num Mistakes: 12 , error rate 0.024
+---------------------------
+ER Negative
+Number of gold 77.0
+Number guessed 73
+ER Negative truePos, falsePos, trueNeg, falseNeg: 70 3 420 7
+ER Negative percision, recall, f1: 0.958904109589 , 0.909090909091 , 0.933333333333
+ER Negative sensitivity, specifcity: 0.909090909091 , 0.992907801418
+Diag ER Negative , Num Mistakes: 10 , error rate 0.02
+---------------------------
+ER Positive
+Number of gold 356.0
+Number guessed 356
+ER Positive truePos, falsePos, trueNeg, falseNeg: 347 9 135 9
+ER Positive percision, recall, f1: 0.974719101124 , 0.974719101124 , 0.974719101124
+ER Positive sensitivity, specifcity: 0.974719101124 , 0.9375
+Diag ER Positive , Num Mistakes: 18 , error rate 0.036
+---------------------------
+ECE Yes
+Number of gold 97.0
+Number guessed 91
+ECE Yes truePos, falsePos, trueNeg, falseNeg: 87 4 102 10
+ECE Yes percision, recall, f1: 0.956043956044 , 0.896907216495 , 0.925531914894
+ECE Yes sensitivity, specifcity: 0.896907216495 , 0.962264150943
+Diag ECE Yes , Num Mistakes: 14 , error rate 0.0689655172414
+---------------------------
+ECE No
+Number of gold 106.0
+Number guessed 112
+ECE No truePos, falsePos, trueNeg, falseNeg: 102 10 87 4
+ECE No percision, recall, f1: 0.910714285714 , 0.962264150943 , 0.935779816514
+ECE No sensitivity, specifcity: 0.962264150943 , 0.896907216495
+Diag ECE No , Num Mistakes: 14 , error rate 0.0689655172414
+---------------------------
+LVI Yes
+Number of gold 77.0
+Number guessed 69
+LVI Yes truePos, falsePos, trueNeg, falseNeg: 64 5 418 13
+LVI Yes percision, recall, f1: 0.927536231884 , 0.831168831169 , 0.876712328767
+LVI Yes sensitivity, specifcity: 0.831168831169 , 0.988179669031
+Diag LVI Yes , Num Mistakes: 18 , error rate 0.036
+---------------------------
+LVI No
+Number of gold 343.0
+Number guessed 346
+LVI No truePos, falsePos, trueNeg, falseNeg: 317 29 128 26
+LVI No percision, recall, f1: 0.916184971098 , 0.924198250729 , 0.920174165457
+LVI No sensitivity, specifcity: 0.924198250729 , 0.815286624204
+Diag LVI No , Num Mistakes: 55 , error rate 0.11
+---------------------------
+LVI Not_reported
+Number of gold 80.0
+Number guessed 85
+LVI Not_reported truePos, falsePos, trueNeg, falseNeg: 63 22 398 17
+LVI Not_reported percision, recall, f1: 0.741176470588 , 0.7875 , 0.763636363636
+LVI Not_reported sensitivity, specifcity: 0.7875 , 0.947619047619
+Diag LVI Not_reported , Num Mistakes: 39 , error rate 0.078
+---------------------------
+BVI Yes
+Number of gold 4.0
+Number guessed 1
+BVI Yes truePos, falsePos, trueNeg, falseNeg: 1 0 496 3
+BVI Yes percision, recall, f1: 1.0 , 0.25 , 0.4
+BVI Yes sensitivity, specifcity: 0.25 , 1.0
+Diag BVI Yes , Num Mistakes: 3 , error rate 0.006
+---------------------------
+BVI No
+Number of gold 368.0
+Number guessed 354
+BVI No truePos, falsePos, trueNeg, falseNeg: 332 22 110 36
+BVI No percision, recall, f1: 0.937853107345 , 0.902173913043 , 0.919667590028
+BVI No sensitivity, specifcity: 0.902173913043 , 0.833333333333
+Diag BVI No , Num Mistakes: 58 , error rate 0.116
+---------------------------
+BVI Not_reported
+Number of gold 128.0
+Number guessed 145
+BVI Not_reported truePos, falsePos, trueNeg, falseNeg: 108 37 335 20
+BVI Not_reported percision, recall, f1: 0.744827586207 , 0.84375 , 0.791208791209
+BVI Not_reported sensitivity, specifcity: 0.84375 , 0.900537634409
+Diag BVI Not_reported , Num Mistakes: 57 , error rate 0.114
+---------------------------
+Red ILC Present
+Number of gold 3.0
+Number guessed 3
+Red ILC Present truePos, falsePos, trueNeg, falseNeg: 2 1 496 1
+Red ILC Present percision, recall, f1: 0.666666666667 , 0.666666666667 , 0.666666666667
+Red ILC Present sensitivity, specifcity: 0.666666666667 , 0.997987927565
+Diag Red ILC Present , Num Mistakes: 2 , error rate 0.004
+---------------------------
+Red ILC Absent
+Number of gold 497.0
+Number guessed 497
+Red ILC Absent truePos, falsePos, trueNeg, falseNeg: 496 1 2 1
+Red ILC Absent percision, recall, f1: 0.997987927565 , 0.997987927565 , 0.997987927565
+Red ILC Absent sensitivity, specifcity: 0.997987927565 , 0.666666666667
+Diag Red ILC Absent , Num Mistakes: 2 , error rate 0.004
+---------------------------
+Red ALH Present
+Number of gold 102.0
+Number guessed 104
+Red ALH Present truePos, falsePos, trueNeg, falseNeg: 98 6 392 4
+Red ALH Present percision, recall, f1: 0.942307692308 , 0.960784313725 , 0.95145631068
+Red ALH Present sensitivity, specifcity: 0.960784313725 , 0.984924623116
+Diag Red ALH Present , Num Mistakes: 10 , error rate 0.02
+---------------------------
+Red ALH Absent
+Number of gold 398.0
+Number guessed 396
+Red ALH Absent truePos, falsePos, trueNeg, falseNeg: 392 4 98 6
+Red ALH Absent percision, recall, f1: 0.989898989899 , 0.984924623116 , 0.987405541562
+Red ALH Absent sensitivity, specifcity: 0.984924623116 , 0.960784313725
+Diag Red ALH Absent , Num Mistakes: 10 , error rate 0.02
+---------------------------
+Red DCIS Present
+Number of gold 31.0
+Number guessed 30
+Red DCIS Present truePos, falsePos, trueNeg, falseNeg: 28 2 467 3
+Red DCIS Present percision, recall, f1: 0.933333333333 , 0.903225806452 , 0.918032786885
+Red DCIS Present sensitivity, specifcity: 0.903225806452 , 0.995735607676
+Diag Red DCIS Present , Num Mistakes: 5 , error rate 0.01
+---------------------------
+Red DCIS Absent
+Number of gold 469.0
+Number guessed 470
+Red DCIS Absent truePos, falsePos, trueNeg, falseNeg: 467 3 28 2
+Red DCIS Absent percision, recall, f1: 0.993617021277 , 0.995735607676 , 0.994675186368
+Red DCIS Absent sensitivity, specifcity: 0.995735607676 , 0.903225806452
+Diag Red DCIS Absent , Num Mistakes: 5 , error rate 0.01
+---------------------------
+Red LCIS Present
+Number of gold 89.0
+Number guessed 89
+Red LCIS Present truePos, falsePos, trueNeg, falseNeg: 89 0 411 0
+Red LCIS Present percision, recall, f1: 1.0 , 1.0 , 1.0
+Red LCIS Present sensitivity, specifcity: 1.0 , 1.0
+Diag Red LCIS Present , Num Mistakes: 0 , error rate 0.0
+---------------------------
+Red LCIS Absent
+Number of gold 411.0
+Number guessed 411
+Red LCIS Absent truePos, falsePos, trueNeg, falseNeg: 411 0 89 0
+Red LCIS Absent percision, recall, f1: 1.0 , 1.0 , 1.0
+Red LCIS Absent sensitivity, specifcity: 1.0 , 1.0
+Diag Red LCIS Absent , Num Mistakes: 0 , error rate 0.0
+---------------------------
+Red IDC Present
+Number of gold 14.0
+Number guessed 13
+Red IDC Present truePos, falsePos, trueNeg, falseNeg: 13 0 486 1
+Red IDC Present percision, recall, f1: 1.0 , 0.928571428571 , 0.962962962963
+Red IDC Present sensitivity, specifcity: 0.928571428571 , 1.0
+Diag Red IDC Present , Num Mistakes: 1 , error rate 0.002
+---------------------------
+Red IDC Absent
+Number of gold 486.0
+Number guessed 487
+Red IDC Absent truePos, falsePos, trueNeg, falseNeg: 486 1 13 0
+Red IDC Absent percision, recall, f1: 0.99794661191 , 1.0 , 0.998972250771
+Red IDC Absent sensitivity, specifcity: 1.0 , 0.928571428571
+Diag Red IDC Absent , Num Mistakes: 1 , error rate 0.002
+---------------------------
+Red ADH Present
+Number of gold 178.0
+Number guessed 190
+Red ADH Present truePos, falsePos, trueNeg, falseNeg: 168 22 300 10
+Red ADH Present percision, recall, f1: 0.884210526316 , 0.943820224719 , 0.913043478261
+Red ADH Present sensitivity, specifcity: 0.943820224719 , 0.931677018634
+Diag Red ADH Present , Num Mistakes: 32 , error rate 0.064
+---------------------------
+Red ADH Absent
+Number of gold 322.0
+Number guessed 310
+Red ADH Absent truePos, falsePos, trueNeg, falseNeg: 300 10 168 22
+Red ADH Absent percision, recall, f1: 0.967741935484 , 0.931677018634 , 0.949367088608
+Red ADH Absent sensitivity, specifcity: 0.931677018634 , 0.943820224719
+Diag Red ADH Absent , Num Mistakes: 32 , error rate 0.064
+---------------------------
+BreastSide 1
+Number of gold 236.0
+Number guessed 236
+BreastSide 1 truePos, falsePos, trueNeg, falseNeg: 236 0 264 0
+BreastSide 1 percision, recall, f1: 1.0 , 1.0 , 1.0
+BreastSide 1 sensitivity, specifcity: 1.0 , 1.0
+Diag BreastSide 1 , Num Mistakes: 0 , error rate 0.0
+---------------------------
+LobularNeoplasia 1
+Number of gold 81.0
+Number guessed 77
+LobularNeoplasia 1 truePos, falsePos, trueNeg, falseNeg: 74 3 416 7
+LobularNeoplasia 1 percision, recall, f1: 0.961038961039 , 0.913580246914 , 0.936708860759
+LobularNeoplasia 1 sensitivity, specifcity: 0.913580246914 , 0.992840095465
+Diag LobularNeoplasia 1 , Num Mistakes: 10 , error rate 0.02
+---------------------------
+FlatEpithelial 1
+Number of gold 18.0
+Number guessed 19
+FlatEpithelial 1 truePos, falsePos, trueNeg, falseNeg: 18 1 481 0
+FlatEpithelial 1 percision, recall, f1: 0.947368421053 , 1.0 , 0.972972972973
+FlatEpithelial 1 sensitivity, specifcity: 1.0 , 0.997925311203
+Diag FlatEpithelial 1 , Num Mistakes: 1 , error rate 0.002
+---------------------------
+BluntAdenosis 1
+Number of gold 1.0
+Number guessed 1
+BluntAdenosis 1 truePos, falsePos, trueNeg, falseNeg: 1 0 499 0
+BluntAdenosis 1 percision, recall, f1: 1.0 , 1.0 , 1.0
+BluntAdenosis 1 sensitivity, specifcity: 1.0 , 1.0
+Diag BluntAdenosis 1 , Num Mistakes: 0 , error rate 0.0
+---------------------------
+cancer cancer
+Number of gold 104.0
+Number guessed 107
+cancer cancer truePos, falsePos, trueNeg, falseNeg: 100 7 389 4
+cancer cancer percision, recall, f1: 0.934579439252 , 0.961538461538 , 0.947867298578
+cancer cancer sensitivity, specifcity: 0.961538461538 , 0.982323232323
+Diag cancer cancer , Num Mistakes: 11 , error rate 0.022
+---------------------------
+cancer no_cancer
+Number of gold 396.0
+Number guessed 393
+cancer no_cancer truePos, falsePos, trueNeg, falseNeg: 389 4 100 7
+cancer no_cancer percision, recall, f1: 0.989821882952 , 0.982323232323 , 0.986058301648
+cancer no_cancer sensitivity, specifcity: 0.982323232323 , 0.961538461538
+Diag cancer no_cancer , Num Mistakes: 11 , error rate 0.022
+---------------------------
+atypia atypia
+Number of gold 304.0
+Number guessed 298
+atypia atypia truePos, falsePos, trueNeg, falseNeg: 282 16 180 22
+atypia atypia percision, recall, f1: 0.946308724832 , 0.927631578947 , 0.936877076412
+atypia atypia sensitivity, specifcity: 0.927631578947 , 0.918367346939
+Diag atypia atypia , Num Mistakes: 38 , error rate 0.076
+---------------------------
+atypia no_atypia
+Number of gold 196.0
+Number guessed 202
+atypia no_atypia truePos, falsePos, trueNeg, falseNeg: 180 22 282 16
+atypia no_atypia percision, recall, f1: 0.891089108911 , 0.918367346939 , 0.904522613065
+atypia no_atypia sensitivity, specifcity: 0.918367346939 , 0.927631578947
+Diag atypia no_atypia , Num Mistakes: 38 , error rate 0.076
+---------------------------
+Overall
+Number of gold 7710.0
+Number guessed 7707
+truePos, falsePos, trueNeg, falseNeg: 7379 328 11210 331
+../classification_results/Breast/class_results_ Overall percision, recall, f1: 0.957441287142 , 0.957068741894 , 0.957254978271
+../classification_results/Breast/class_results_ Overall sensitivity, specifcity: 0.957068741894 , 0.971572196221
+../classification_results/Breast/class_results_ Overall Num Mistakes: 659 , error rate 0.0342373233583
+Average F1 vs aggregated one: 0.920983363453 0.957254978271
+writing to a file
+Done

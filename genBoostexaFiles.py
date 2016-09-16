@@ -159,7 +159,7 @@ def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem):
                 assert not "\n" in report
                 f.write(report + ", " + label + '.\n')
 
-        print "Saved", trainStem+"_"+diag+"."+trainSuf
+        print "Saved", trainStem+"_"+replaceSpaces(diag)+"."+trainSuf
 
     
         testStem, testSuf = testOutPath.split('.')
@@ -185,7 +185,7 @@ def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem):
                 assert not "\n" in report
                 f.write(report + ", " + label + '.\n')
 
-        print "Saved", testStem+"_"+diag+"."+testSuf
+        print "Saved", testStem+"_"+replaceSpaces(diag)+"."+testSuf
 
 if __name__ == "__main__":
 
