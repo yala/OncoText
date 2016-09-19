@@ -255,15 +255,15 @@ def getMaxDX(data):
 def getMaxDXSingleReport(report):
     if 'Medullary' in report and report['Medullary'] == 1:
         return 'Medullary'
-    elif 'ILC' in report and report['ILC'] == 1:
+    elif ('ILC' in report and report['ILC'] == 1) or ('Red ILC' in report and report['Red ILC'] == 'Present'):
         return  'ILC'
-    elif 'IDC' in report and report['IDC'] == 1:
+    elif ('IDC' in report and report['IDC'] == 1) or ('Red IDC' in report and report['Red IDC'] == 'Present'):
         return  'IDC'
     elif 'TubularCancer' in report and report['TubularCancer'] == 1:
         return  'TubularCancer'
     elif 'CancerNOS' in report and report['CancerNOS'] == 1:
         return  'CancerNOS'
-    elif report['DCIS'] == 1:
+    elif ('DCIS' in report and report['DCIS'] == 1) or ('Red DCIS' in report and report['Red DCIS']=="Present"):
         return  'DCIS'
     elif 'CancerInvInsituNOS' in report and report['CancerInvInsituNOS'] == 1:
         return  'CancerInvInsituNOS'
@@ -271,13 +271,13 @@ def getMaxDXSingleReport(report):
         return  'Borderline'
     elif 'InsituNOS' in report and report['InsituNOS'] == 1:
         return  'InsituNOS'
-    elif 'LCIS' in report and report['LCIS'] == 1:
+    elif ('LCIS' in report and report['LCIS'] == 1) or ('Red LCIS' in report and report['Red LCIS'] == 'Present'):
         return  'LCIS'
-    elif 'ALH' in report and report['ALH'] == 1:
+    elif ('ALH' in report and report['ALH'] == 1) or ('Red ALH' in report and report['Red ALH'] == 'Present'):
         return  'ALH'
     elif 'LobularNeoplasia' in report and report['LobularNeoplasia'] == 1:
         return  'LobularNeoplasia'
-    elif 'ADH' in report and report['ADH'] == 1:
+    elif ('ADH' in report and report['ADH'] == 1) or ('Red ADH' in report and report['Red ADH'] == 'Present'):
         return  'ADH'
     elif 'Phylodes' in report and report['Phylodes'] == 1:
         return  'Phylodes'
@@ -476,16 +476,20 @@ def buildEpisodes(data, labelMaxDXBool, debug = False):
 
 def portToJSON(data, path, episodeMode = False):
     for report in data:
-        if not isinstance(report['Report_Date_TimePlusX'], str):
-            report['Report_Date_TimePlusX'] = report['Report_Date_TimePlusX'].isoformat()
+        try:
+            if not isinstance(report['Report_Date_TimePlusX'], str):
+                report['Report_Date_TimePlusX'] = report['Report_Date_TimePlusX'].isoformat()
 
-        if 'EndEpisode_Date_TimePlusX' in report:
-            if not isinstance(report['EndEpisode_Date_TimePlusX'], str):
-                report['EndEpisode_Date_TimePlusX'] = report['EndEpisode_Date_TimePlusX'].isoformat()
+            if 'EndEpisode_Date_TimePlusX' in report:
+                if not isinstance(report['EndEpisode_Date_TimePlusX'], str):
+                    report['EndEpisode_Date_TimePlusX'] = report['EndEpisode_Date_TimePlusX'].isoformat()
 
-        if not report['DOBPlusX'] == 0  and not( isinstance(report['DOBPlusX'], str)):
-            report['DOBPlusX'] = report['DOBPlusX'].isoformat()
-
+            if not report['DOBPlusX'] == 0  and not( isinstance(report['DOBPlusX'], str)):
+                report['DOBPlusX'] = report['DOBPlusX'].isoformat()
+        except Exception, e:
+            print 'wtf'
+            print report
+            raw_input()
 
         if MODE == "Breast":
             breastLabels = diagnoses
@@ -493,6 +497,10 @@ def portToJSON(data, path, episodeMode = False):
             breastLabels = hueLabels
     
         for diag in breastLabels:
+            if MODE == "TAGHIAN" and "Red "+ diag in diagnoses:
+                print "skip"
+                continue
+            assert not diag== "Red DCIS"
             sample = report[diag]
             if not (sample == 1 or sample == 0):
                 if "no_" in sample:
@@ -513,17 +521,24 @@ def portToJSON(data, path, episodeMode = False):
                 redLabels = labelsForEpisodes
             else:
                 redLabels = diagnoses
+            
             for label in redLabels:
+            
                 if report[label] in JSONLabelDict:
                     report[label] = JSONLabelDict[report[label]]
 
                 #Replace spaces in label name because otherwise website will breast
+                assert "Red DCIS" in JSONLabelNameDict
                 if label in JSONLabelNameDict:
                     temp = report[label]
                     del report[label]
+                    assert not label in report
                     report[ JSONLabelNameDict[label] ] = temp
 
-
+        mrn =  report["MRNPlusX"]
+        del report["MRNPlusX"]
+        report["FakeMRN"] = mrn
+        
     chunkLen = len(data)/10
     for i in range(10):    
         jsonData = json.dumps(data[i* chunkLen : (i+1)*chunkLen])
@@ -535,12 +550,12 @@ if __name__ == "__main__":
 
     verbose = False
 
-    train = True
+    train = False
     if train:
         binarizeFilesForClassification()
 
 
-    buildExportBool = False
+    buildExportBool = True
     if buildExportBool:
         print "Calling export"
         reportDB = binarizeFilesForClassification(False)
@@ -549,7 +564,7 @@ if __name__ == "__main__":
     else: 
         reportDB = p.load(open(outPath, 'rb'))
 
-    labelMaxDXBool = False
+    labelMaxDXBool = True
     if labelMaxDXBool:
         print "Calling labelMaxDXBool"
         getMaxDX(reportDB)
@@ -559,7 +574,7 @@ if __name__ == "__main__":
             print "Dumping report db after max dx labeling"
         p.dump( reportDB, open(outPath, 'wb'))
 
-    buildEpisodesBool = False
+    buildEpisodesBool = True
     if buildEpisodesBool:
         print "Calling build episode"
         reportDB, episodeDB = buildEpisodes(reportDB, labelMaxDXBool)
@@ -573,7 +588,7 @@ if __name__ == "__main__":
         reportDB = p.load( open(outPath, 'rb'))
         episodeDB = p.load( open(episodePath, 'rb'))
 
-    portToJSONBool = False
+    portToJSONBool = True
     if portToJSONBool:
         print "Dumping ReportDB"
         portToJSON(reportDB, JSONReportPath)

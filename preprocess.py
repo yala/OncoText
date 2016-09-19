@@ -97,9 +97,9 @@ if __name__ == "__main__":
     print "New Data has len", len(newData), "As compared to", len(allData)
     print "Num reports", reportCount, "over ", len(set([r['MRNPlusX'] for r in allData])), "aka", len(newData), "rows"
     print "rowcount should be", rowCount
+    key = "Report_Text"
     for inst in ["MGH", "NWH", "BWH"]:
         print inst
-        key = "Report_Text_Segmented"
         instReps = [r for r in newData if r['Institution']==inst]
         numReps = len(instReps)
         numPatients = len(set( [r['MRNPlusX'] for r in instReps ] ))
@@ -108,9 +108,9 @@ if __name__ == "__main__":
         print "avglen", avgLen, "range", range, "numreps", numReps
         print "num paitents", numPatients
     
-    print "Avglen overall", sum([len(r['Report_Text_Segmented'].split() ) for r in newData])/len(newData)
+    print "Avglen overall", sum([len(r[key].split() ) for r in newData])/len(newData)
     
-    print "overallRange", max([len(r['Report_Text_Segmented'].split() ) for r in newData]) - min([len(r['Report_Text_Segmented'].split() ) for r in newData])
+    print "overallRange", max([len(r[key].split() ) for r in newData]) - min([len(r[key].split() ) for r in newData])
     
         
     raw_input("Dump back to base db?")
