@@ -85,8 +85,9 @@ if __name__ == "__main__":
 
             testSets[mode] = [d['Report_Text_Segmented'] for f in filteredDB[-testSetSize:] ]
         else:
+            hkey = "Report_Text"
             print "aligning reports for ", mode, 'to test set for hughes dataset for row level scores'
-            train = [(preprocessReports([t[textKey]])[0], replaceSpaces(t[key])) for t in filteredDB if not \
+            train = [(preprocessReports([t[hkey]])[0], replaceSpaces(t[key])) for t in filteredDB if not \
             t['Report_Text_Segmented'] in hughesTest ]
             trainReports, trainLabels = [t[0] for t in train], [t[1] for t in train]
 
