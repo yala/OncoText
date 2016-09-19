@@ -33,7 +33,7 @@ def binarizeFilesForClassification(write = True):
         goldKey = 'TaghianGold'
 
     goldData = [d for d in allData if goldKey in d and not( d[goldKey] == 0)]
-
+   
     print "Num gold Data with DOBs", len([d for d in goldData if 'DOBPlusX' in d and not d['DOBPlusX'] == 0]), "/", len(goldData)
     remainData = [d for d in allData if not(goldKey in d) or d[goldKey] == 0]
 
@@ -60,7 +60,7 @@ def binarizeFilesForClassification(write = True):
 
         print "Parse Result Files"
         if MODE == "Breast":
-            classifierLabels = parseResultsFiles( "classification_results/Breast/class_results_all_")
+            classifierLabels = parseResultsFiles( "classification_results/Breast/class_results_")
         elif MODE == "TAGHIAN":
             classifierLabels = parseResultsFiles( "classification_results/Breast/red_class_results_all_")
 
@@ -549,7 +549,7 @@ if __name__ == "__main__":
     else: 
         reportDB = p.load(open(outPath, 'rb'))
 
-    labelMaxDXBool = False
+    labelMaxDXBool = True
     if labelMaxDXBool:
         print "Calling labelMaxDXBool"
         getMaxDX(reportDB)
@@ -573,7 +573,7 @@ if __name__ == "__main__":
         reportDB = p.load( open(outPath, 'rb'))
         episodeDB = p.load( open(episodePath, 'rb'))
 
-    portToJSONBool = True
+    portToJSONBool = False
     if portToJSONBool:
         print "Dumping ReportDB"
         portToJSON(reportDB, JSONReportPath)
