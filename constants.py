@@ -1,8 +1,8 @@
 import datetime
 import pickle as p
 
-MODE = "TAGHIAN"
-analyzeBoth = False
+MODE = "Breast"
+analyzeBoth = True
 if analyzeBoth:
   submode = "Analyze both"
 else:
@@ -37,6 +37,7 @@ if MODE == "Breast":
                  u'Red_ADH',\
                  u'LobularNeoplasia', u'FlatEpithelial',  
                  u'BluntAdenosis',  u'Red_ALH']
+                 
 
     #Contants for creating episodes
 
@@ -163,7 +164,9 @@ elif MODE == "TAGHIAN":
     'Type of sampled LN (choice=ALND (Axillary LN Dissection))': 'Axillary_LN_Dissection',
     'Type of sampled LN (choice=None)': 'No_Sampled_LN',
     'Type of sampled LN (choice=SLNB (Sentinel LN Biopsy))': 'Sentinel_LN_Biopsy',
-    'ITC ': 'ITC'
+    'ITC ': 'ITC',
+    'EIC': 'EIC',
+    'Are there positive LN?':'PositiveLN'
   }
   labelsForEpisodes = ['ITC ', 'ER', 'Her2 (Fish)', 'PR']
 
