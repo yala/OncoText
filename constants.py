@@ -1,7 +1,7 @@
 import datetime
 import pickle as p
 
-MODE = "Breast"
+MODE = "TAGHIAN"
 analyzeBoth = False
 if analyzeBoth:
   submode = "Analyze both"
@@ -52,7 +52,7 @@ elif MODE == "ALL_CANCER":
     print "MODE IS ALL CANCER"
 
 elif MODE == "TAGHIAN":
-  reportTextKey = "Report_Text"
+  reportTextKey = "Report_Text_Segmented"
 
   lauraDictToIndx = {'Biposy 1':0, 'Biopsy 2':1, 'Biopsy 3':2, 'Surgery 1':3, 'Surgery2':4, 'Surgery 3':5}
   maxedOutDictToIndx = {'Oncotype score':-1, 'Oncotype date':-1}  
