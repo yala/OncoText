@@ -181,9 +181,15 @@ def findMatchingReports(db, pathReps, save=False):
         if mrn in pathMrns:
             for rowIndx, r in enumerate(redcapReps):
                 redCapDates = [r[d] for d in dateFields]
+                sideDict = {'Left':0, "Right":1}
+                redSide = redcapReps[rowIndx]['Side']
+                if redSide in sideDict:
+                    redSide = sideDict[redSide]
+                else:
+                    continue
 
                 for pathRep in pathMrns[mrn]:
-                    if pathRep['Report_Date'] in redCapDates:
+                    if pathRep['Report_Date'] in redCapDates and pathRep['BreastSide'] == redSide:
                         pathRep['taghainColIndx'] = redCapDates.index(pathRep['Report_Date'])
                         pathRep['taghainRowIndx'] = rowIndx
                         countAligned += 1
@@ -515,7 +521,8 @@ if __name__ == "__main__":
         joinedDB = findMatchingReports(mrnDB, allPathReps, True)
     
     if buildDBsBool:
-        assert not findMatchingReportsBool ## Running findMatchingReports pullutes all path reps and sets off alarms
+        if findMatchingReportsBool:
+            allPathReps = p.load(open('../reportDB.p', 'rb'))
 
         if not findMatchingReportsBool:
             joinedDB =  p.load(open('redcapWithPathReps.p', 'rb'))

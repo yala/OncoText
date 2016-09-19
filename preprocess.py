@@ -34,29 +34,35 @@ def splitRep(txt):
 
 if __name__ == "__main__":
 
-    allData = p.load(open('rawBreastPathReport.p', 'rb'))
+    allData = p.load(open('rawBreastPathReport.bak.p', 'rb'))
+    print "Len all data, then num patients", len(allData), len(set([r['MRNPlusX'] for r in allData]))
     newData = []
 
     seen = 0
     seenStrg = 0
     maxStrg = -1
     maxSeen = -1
+
+    reportCount = 0
+    rowCount = 0
     
     for rep in allData:
         lowerCaseText = rep['Report_Text'].lower()
 
-        if not ("right" in lowerCaseText or "left" in lowerCaseText):
+        if not ("right" in lowerCaseText or "left" in lowerCaseText) or not 'breast' in lowerCaseText:
             if seenStrg < maxStrg:
                 seenStrg += 1
                 print rep['Report_Text']
                 raw_input()
-            continue        
+            continue
+        else:
+            reportCount +=1 
 
         if "right" in lowerCaseText and "left" in lowerCaseText:
-
+            rowCount += 2
             newTexts = splitRep(rep['Report_Text'])
 
-            if 'BreastSide' in rep:
+            if 'BreastSide' in rep and 'Correct' in rep and rep['Correct'] == 'Y':
 
                 relevantSideText = newTexts[rep['BreastSide']]
                 rep['Report_Text_Segmented'] = relevantSideText
@@ -78,6 +84,7 @@ if __name__ == "__main__":
                         raw_input()
 
         else:
+            rowCount += 1
             rep['Report_Text_Segmented'] = rep['Report_Text']
             newData.append(rep)
 
@@ -88,5 +95,7 @@ if __name__ == "__main__":
 
 
     print "New Data has len", len(newData), "As compared to", len(allData)
+    print "Num reports", reportCount, "over ", len(set([r['MRNPlusX'] for r in allData])), "aka", len(newData), "rows"
+    print "rowcount should be", rowCount
     raw_input("Dump back to base db?")
     p.dump(newData, open('rawBreastPathReport.p', 'wb'))

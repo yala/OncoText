@@ -1,7 +1,7 @@
 import datetime
 import pickle as p
 
-MODE = "TAGHIAN"
+MODE = "Breast"
 analyzeBoth = False
 if analyzeBoth:
   submode = "Analyze both"
@@ -30,7 +30,7 @@ if MODE == "Breast":
     diagnoses = [ u'BreastSide', u'DCIS', u'ILC', u'IDC', u'LCIS', \
                  u'ADH',\
                  u'LobularNeoplasia', u'FlatEpithelial', 
-                 u'BluntAdenosis',  u'ALH', 'cancer', 'atypia']#, 'ADH_DCIS', 'Phylodes']
+                 u'BluntAdenosis',  u'ALH']#, 'cancer', 'atypia']#, 'ADH_DCIS', 'Phylodes']
 
     if analyzeBoth:
       diagnoses = [ u'BreastSide', u'Red_DCIS', u'Red_ILC', u'Red_IDC', u'Red_LCIS', \
@@ -41,14 +41,12 @@ if MODE == "Breast":
     #Contants for creating episodes
 
     cols = diagnoses + metaData + ['Report_Text_Segmented', 'Report_Text', "Preprocessed_Report_Text"] 
-
     # Constants for genBoostexaFiles
     trainOutPath = "boostexer/breast/labled/pathology.data"
     testOutPath = "boostexer/breast/labled/pathology.test"
     devOutPath = "boostexer/breast/labled/pathology.dev"
 
     allDataStem = "boostexer/breast/unlabled/pathology_all"
-
 
 elif MODE == "ALL_CANCER":
     print "MODE IS ALL CANCER"
