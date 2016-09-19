@@ -30,7 +30,7 @@ if MODE == "Breast":
     diagnoses = [ u'BreastSide', u'DCIS', u'ILC', u'IDC', u'LCIS', \
                  u'ADH',\
                  u'LobularNeoplasia', u'FlatEpithelial', 
-                 u'BluntAdenosis',  u'ALH']#, 'cancer', 'atypia']#, 'ADH_DCIS', 'Phylodes']
+                 u'BluntAdenosis',  u'ALH', 'cancer', 'atypia']#, 'ADH_DCIS', 'Phylodes']
 
     if analyzeBoth:
       diagnoses = [ u'BreastSide', u'Red_DCIS', u'Red_ILC', u'Red_IDC', u'Red_LCIS', \
@@ -42,6 +42,7 @@ if MODE == "Breast":
     #Contants for creating episodes
 
     cols = diagnoses + metaData + ['Report_Text_Segmented', 'Report_Text', "Preprocessed_Report_Text"] 
+
     # Constants for genBoostexaFiles
     trainOutPath = "boostexer/breast/labled/pathology.data"
     testOutPath = "boostexer/breast/labled/pathology.test"
@@ -49,11 +50,12 @@ if MODE == "Breast":
 
     allDataStem = "boostexer/breast/unlabled/pathology_all"
 
+
 elif MODE == "ALL_CANCER":
     print "MODE IS ALL CANCER"
 
 elif MODE == "TAGHIAN":
-  reportTextKey = "Report_Text_Segmented"
+  reportTextKey = "Report_Text"
 
   lauraDictToIndx = {'Biposy 1':0, 'Biopsy 2':1, 'Biopsy 3':2, 'Surgery 1':3, 'Surgery2':4, 'Surgery 3':5}
   maxedOutDictToIndx = {'Oncotype score':-1, 'Oncotype date':-1}  
