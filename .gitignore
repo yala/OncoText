@@ -15,7 +15,9 @@ analysis/DisagreementDict.p
 boostexer/breast/unlabled/*.names
 boostexer/breast/unlabled/*.data
 boostexer/breast/unlabled/*.test
-
+*.p
+*.shyp
+*.swp
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
