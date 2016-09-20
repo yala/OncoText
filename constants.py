@@ -30,7 +30,7 @@ if MODE == "Breast":
     diagnoses = [ u'BreastSide', u'DCIS', u'ILC', u'IDC', u'LCIS', \
                  u'ADH',\
                  u'LobularNeoplasia', u'FlatEpithelial', 
-                 u'BluntAdenosis',  u'ALH', 'cancer', 'atypia']#, 'ADH_DCIS', 'Phylodes']
+                 u'BluntAdenosis',  u'ALH']#, 'cancer', 'atypia']#, 'ADH_DCIS', 'Phylodes']
 
     if analyzeBoth:
       diagnoses = [ u'BreastSide', u'Red_DCIS', u'Red_ILC', u'Red_IDC', u'Red_LCIS', \
