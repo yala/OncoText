@@ -170,9 +170,10 @@ def getLabelsAndReports(data, export = False):
                         diags.append("LEFT")
                 else:
                     if diag in sample and str(sample[diag]) == '1':
-                        diags.append(1)
+                        diags.append(diag)
                     else:
-                        diags.append(0)
+                        diags.append("no_"+diag)
+
             elif MODE == 'TAGHIAN':
                 if diag in sample and not sample[diag] == None:
                     diags.append(sample[diag])
@@ -538,7 +539,7 @@ def portToJSON(data, path, episodeMode = False):
         mrn =  report["MRNPlusX"]
         del report["MRNPlusX"]
         report["FakeMRN"] = mrn
-        
+
     chunkLen = len(data)/10
     for i in range(10):    
         jsonData = json.dumps(data[i* chunkLen : (i+1)*chunkLen])
@@ -550,12 +551,12 @@ if __name__ == "__main__":
 
     verbose = False
 
-    train = False
+    train = True
     if train:
         binarizeFilesForClassification()
 
 
-    buildExportBool = True
+    buildExportBool = False
     if buildExportBool:
         print "Calling export"
         reportDB = binarizeFilesForClassification(False)
@@ -564,7 +565,7 @@ if __name__ == "__main__":
     else: 
         reportDB = p.load(open(outPath, 'rb'))
 
-    labelMaxDXBool = True
+    labelMaxDXBool = False
     if labelMaxDXBool:
         print "Calling labelMaxDXBool"
         getMaxDX(reportDB)
@@ -574,7 +575,7 @@ if __name__ == "__main__":
             print "Dumping report db after max dx labeling"
         p.dump( reportDB, open(outPath, 'wb'))
 
-    buildEpisodesBool = True
+    buildEpisodesBool = False
     if buildEpisodesBool:
         print "Calling build episode"
         reportDB, episodeDB = buildEpisodes(reportDB, labelMaxDXBool)
@@ -588,7 +589,7 @@ if __name__ == "__main__":
         reportDB = p.load( open(outPath, 'rb'))
         episodeDB = p.load( open(episodePath, 'rb'))
 
-    portToJSONBool = True
+    portToJSONBool = False
     if portToJSONBool:
         print "Dumping ReportDB"
         portToJSON(reportDB, JSONReportPath)
