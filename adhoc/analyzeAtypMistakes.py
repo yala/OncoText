@@ -1,5 +1,6 @@
 import pickle as p
 import openpyxl as xl
+import re
 
 def parseXLS(inp, out):
     print "loading wb"
@@ -41,6 +42,15 @@ def parseXLS(inp, out):
     print "legend", legend
     p.dump(data, open(out, 'wb'))
     return data
+
+def clean(report):
+    reports = [report]
+    cleanReports = [ re.sub(r"\W", " ", d) for d in reports]
+    cleanReports = [ ' '.join(d.split('\n')) for d in cleanReports]
+    cleanReports = [ re.sub(r"(----)+", "", d) for d in cleanReports]
+    cleanReports = [ re.sub(r"(====)+", "", d) for d in cleanReports]
+
+    return cleanReports[0]
 
 export = p.load(open('atypiaExport.p'))
 molly = parseXLS('../externalDataSources/MasterAtypiaDev.xlsx', 'mollyCorrections.p')
@@ -90,4 +100,4 @@ print "AvgLen of mistake", avgLen
 
 with open("../boostexer/breast/debug/pathology_all_LobularNeoplasia.test", 'wb') as f:
     for rep in mistakeReps[15]:
-        f.write(rep['Preprocessed_Report_Text'] +" , 1 .\n")
+        f.write(clean(rep['Report_Text']) +" , LobularNeoplasia .\n")
