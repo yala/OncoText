@@ -177,11 +177,19 @@ elif MODE == "TAGHIAN":
     'Type of sampled LN (choice=SLNB (Sentinel LN Biopsy))': 'Sentinel_LN_Biopsy',
     'ITC ': 'ITC',
     'EIC': 'EIC',
-    'Are there positive LN?':'PositiveLN'
-  }
-  labelsForEpisodes = ['ITC ', 'ER', 'Her2 (Fish)', 'PR']
+    'Are there positive LN?':'PositiveLN',
+    'Red DCIS':   'DCIS',
+    'Red LCIS':  'LCIS',
+    'Red IDC':  'IDC',
+    'Red ILC':  'ILC',
+    'Red ALH':  'ALH',
+    'Red ADH':  'ADH',
+    'Red FlatEpithelial': 'FlatEpithelial',
+    'Red BluntAdenosis': 'BluntAdenosis',
+    'Red LobularNeoplasia': 'LobularNeoplasia'}
+  labelsForEpisodes = diagnoses
 
-  hueLabels = [ u'BreastSide', u'LobularNeoplasia', u'FlatEpithelial', u'BluntAdenosis']
+  hueLabels = []
 
       # Constants for genBoostexaFiles
   trainOutPath = "boostexer/breast/taghian/red.data"

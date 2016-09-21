@@ -188,9 +188,10 @@ if __name__ == "__main__":
 
     if MODE == "TAGHAIN":
         if submode == "Analyze both":
-            diagNames = hueLabels
+            diagNames = MixedAnotations
     if MODE == "Breast":
         diagNames = diagnoses
+
 
         numRowMistakes = 0
         numRows = len(gold[diagNames[0]][gold[diagNames[0]].keys()[0]] )
