@@ -67,21 +67,24 @@ elif MODE == "TAGHIAN":
   'Number of LN with < =0.02 cm', 'Method size', 'Radical Mastectomy']
   # TODO Remove ECE and debug why bad class name    Micro or Gross   Number of LN with < =0.02 cm Method size
 
-  diagnoses = [#'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 'Red ADH',
+  diagnoses = [
   u'Are there positive LN?', u'ITC ', u'PR',  
-  # u'Type of Surgery',  u'Type of biopsy',
   u'Her2 (Fish)', u'ER', 'ECE', 'LVI', 'BVI',
-  'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 'Red ADH', 'Oncotype score']
+  'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 
+  'Red ADH', 'Red BreastSide', 'Red FlatEpithelial','Red BluntAdenosis', 
+  'Red LoblularNeoplasia','cancer', 'atypia']
+
+  #'Oncotype score']
 
   # diagnoses = ['Oncotype score']
 
-  HueAnotationSource= ['DCIS', 'LCIS', 'IDC', 'ILC', 'ALH', 'ADH']
+  HueAnotationSource= ['DCIS', 'LCIS', 'IDC', 'ILC', 'ALH', 'ADH', 'BreastSide', 'FlatEpithelial', 'BluntAdenosis', 'LobularNeoplasia', 'cancer', 'atypia']
   diagSkip = ['ALH', 'ILC']
   BiopAnotationSource= [a + " Biop" for a in HueAnotationSource  if not a in diagSkip]
   SurgAnotationSource= [a + " Surg" for a in HueAnotationSource  if not a in diagSkip]
 
 
-  MixedAnotations= ['Red DCIS', 'Red LCIS', 'Red IDC', 'Red ILC', 'Red ALH', 'Red ADH']
+  MixedAnotations= "Red "+d for d in HueAnotationSource]
 
 
   redRawDBPath = 'reportDB+red+clean.p'
@@ -91,7 +94,9 @@ elif MODE == "TAGHIAN":
       'Simple Mastectomy':'Unchecked', 'Her2 (Fish)':'Unknown', 'ER': 'Unknown', 'Nipple sparing Mastectomy':'Unchecked',
       'Type of sampled LN (choice=ALND (Axillary LN Dissection))':'Unchecked', 'ECE':'No', 
       'LVI': 'Not_reported', 'BVI': 'Not_reported', 'TumorGrade': 'Not_assessed', 'Red DCIS':'Absent', 'Red LCIS':'Absent', 'Red IDC':'Absent', 'Red ILC':'Absent',
-      'Red ALH':'Absent', 'Red ADH':'Absent', 'Oncotype score':'Low_risk'}
+      'Red ALH':'Absent', 'Red ADH':'Absent', 'Red BreastSide':'RIGHT', 'Red FlatEpithelial':'Absent','Red BluntAdenosis':'Absent', 'Red LoblularNeoplasia': 'Absent',
+      'cancer':'Absent', 'atypia':'Absent'
+      'Oncotype score':'Low_risk'}
 
 
   extractions = [u'Max Tumor Size', 'Non Sentinel LN (# Malignant)', 'Sentinel LN (# Sampled)']
@@ -124,8 +129,12 @@ elif MODE == "TAGHIAN":
     'Red ILC': ['Present','Absent'], 
     'Red ALH': ['Present','Absent'], 
     'Red ADH': ['Present','Absent'],
-    'cancer': ['cancer','no_cancer'],
-    'atypia': ['atypia','no_atypia'],
+    'Red FlatEpithelial':['Present','Absent'],
+    'Red BluntAdenosis':['Present','Absent'],
+    'Red LobularNeoplasia':['Present','Absent'],
+    'cancer': ['Present','Absent'],
+    'atypia': ['Present','Absent'],
+    'BreastSide': ['RIGHT', 'LEFT'],
     'Oncotype score': ['Low_risk', 'Mid_risk', 'High_risk']
     }
 
