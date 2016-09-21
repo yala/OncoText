@@ -105,6 +105,9 @@ for r in redReps:
                 print d
                 misses.add(r[d])
 
+        if 'BreastSide' in r:
+            r['Red BreastSide'] == "RIGHT" if r['BreastSide'] in ['RIGHT',1, '1'] else 'LEFT'
+
 print "misses", misses
 print "Count gold", countGold
 print "countDif", countDif
