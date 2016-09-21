@@ -1,8 +1,8 @@
 import datetime
 import pickle as p
 
-MODE = "Breast"
-analyzeBoth = True
+MODE = "TAGHIAN"
+analyzeBoth = False
 if analyzeBoth:
   submode = "Analyze both"
 else:
@@ -72,19 +72,19 @@ elif MODE == "TAGHIAN":
   u'Her2 (Fish)', u'ER', 'ECE', 'LVI', 'BVI',
   'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 
   'Red ADH', 'Red BreastSide', 'Red FlatEpithelial','Red BluntAdenosis', 
-  'Red LoblularNeoplasia','cancer', 'atypia']
+  'Red LobularNeoplasia','cancer', 'atypia']
 
   #'Oncotype score']
 
   # diagnoses = ['Oncotype score']
 
-  HueAnotationSource= ['DCIS', 'LCIS', 'IDC', 'ILC', 'ALH', 'ADH', 'BreastSide', 'FlatEpithelial', 'BluntAdenosis', 'LobularNeoplasia', 'cancer', 'atypia']
+  HueAnotationSource= ['DCIS', 'LCIS', 'IDC', 'ILC', 'ALH', 'ADH', 'BreastSide', 'FlatEpithelial', 'BluntAdenosis', 'LobularNeoplasia']
   diagSkip = ['ALH', 'ILC']
   BiopAnotationSource= [a + " Biop" for a in HueAnotationSource  if not a in diagSkip]
   SurgAnotationSource= [a + " Surg" for a in HueAnotationSource  if not a in diagSkip]
 
 
-  MixedAnotations= "Red "+d for d in HueAnotationSource]
+  MixedAnotations= ["Red "+d for d in HueAnotationSource]
 
 
   redRawDBPath = 'reportDB+red+clean.p'
@@ -95,7 +95,7 @@ elif MODE == "TAGHIAN":
       'Type of sampled LN (choice=ALND (Axillary LN Dissection))':'Unchecked', 'ECE':'No', 
       'LVI': 'Not_reported', 'BVI': 'Not_reported', 'TumorGrade': 'Not_assessed', 'Red DCIS':'Absent', 'Red LCIS':'Absent', 'Red IDC':'Absent', 'Red ILC':'Absent',
       'Red ALH':'Absent', 'Red ADH':'Absent', 'Red BreastSide':'RIGHT', 'Red FlatEpithelial':'Absent','Red BluntAdenosis':'Absent', 'Red LoblularNeoplasia': 'Absent',
-      'cancer':'Absent', 'atypia':'Absent'
+      'cancer':'Absent', 'atypia':'Absent',
       'Oncotype score':'Low_risk'}
 
 
@@ -134,7 +134,7 @@ elif MODE == "TAGHIAN":
     'Red LobularNeoplasia':['Present','Absent'],
     'cancer': ['Present','Absent'],
     'atypia': ['Present','Absent'],
-    'BreastSide': ['RIGHT', 'LEFT'],
+    'Red BreastSide': ['RIGHT', 'LEFT'],
     'Oncotype score': ['Low_risk', 'Mid_risk', 'High_risk']
     }
 
