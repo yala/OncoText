@@ -17,7 +17,7 @@ for r in reps:
         if ('TaghianGold' in r and r['TaghianGold'] == 1):
             print "mmhmm"
             for c in cancers:
-                if c in r and r[c] == '1':
+                if c in r and r[c] == 'Present':
                     r['cancer'] = 'Present'
 
         if not 'cancer' in r:
@@ -26,7 +26,7 @@ for r in reps:
         if ('Correct' in r and r['Correct'] == 1) and ('TaghianGold' in r and r['TaghianGold'] == 1): 
             print "guchi"
             for a in atypias:
-                if a in r and r[a] == '1':
+                if a in r and r[a] == 'Present':
                     r['atypia'] = 'Present'
 
         if not 'atypia' in r:
