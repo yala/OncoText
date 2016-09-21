@@ -146,7 +146,7 @@ def preprocessReports(reports):
     cleanReports = [ ' '.join(d.split('\n')) for d in cleanReports]
     cleanReports = [ re.sub(r"(----)+", "", d) for d in cleanReports]
     cleanReports = [ re.sub(r"(====)+", "", d) for d in cleanReports]
-
+    cleanReports = [ d.lower() for d in cleanReports]
     return cleanReports
 
 # Function takes [ reports ] and returns a tuple or reports, labels
