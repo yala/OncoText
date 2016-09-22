@@ -154,6 +154,10 @@ elif MODE == "TAGHIAN":
     'Red ILC': ['Present','Absent'], 
     'Red ALH': ['Present','Absent'], 
     'Red ADH': ['Present','Absent'],
+    'Red FlatEpithelial':['Present','Absent'],
+    'Red BluntAdenosis':['Present','Absent'],
+    'Red LobularNeoplasia':['Present','Absent'],
+    'Red BreastSide': ['RIGHT', 'LEFT'],
     'cancer': ['cancer','no_cancer'],
     'atypia': ['atypia','no_atypia']
     }

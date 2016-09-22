@@ -186,15 +186,16 @@ if __name__ == "__main__":
     rowLevelDict = {}
     diagNames = []
 
-    if MODE == "TAGHAIN":
-        if submode == "Analyze both":
-            diagNames = MixedAnotations
+    if MODE == "TAGHIAN":
+        diagNames = MixedAnotations
     if MODE == "Breast":
         diagNames = diagnoses
 
 
     numRowMistakes = 0
-    numRows = len(gold[diagNames[0]][gold[diagNames[0]].keys()[0]] )
+    sampleDiag = diagNames[0]
+    sampleDiagKeys = gold[sampleDiag].keys()
+    numRows = len(gold[sampleDiag][sampleDiagKeys[0]])
     offenders = {}
     offenderRows = {}
     #This is my correcting hand annotations
