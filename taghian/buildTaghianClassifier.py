@@ -95,7 +95,7 @@ if __name__ == "__main__":
             #enforce same order as hugheTest
             test = []
             for hReport in hughesTest:
-                search = [ (preprocessReports([t[textKey]])[0], replaceSpaces(t[key]) )  for t \
+                search = [ (preprocessReports([t[hkey]])[0], replaceSpaces(t[key]) )  for t \
                 in filteredDB if t['Report_Text_Segmented'] == hReport ]
                 assert len(search) > 0
                 test.append( search[0] )
