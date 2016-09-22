@@ -102,6 +102,10 @@ if __name__ == "__main__":
 
             assert len(test) == 500
             testReports, testLabels = [t[0] for t in test], [t[1] for t in test]
+
+            if hkey == "Report_Text_Segmented":
+                for rep in testReports + trainReports:
+                    assert not ("right" in rep.lower() and "left" in rep.lower())
             print 'aligning done'
 
         print "Num train samples", len(trainLabels)
