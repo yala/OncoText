@@ -1,5 +1,5 @@
 #!/bin/bash
-pathTypes=( LobularNeoplasia)
+pathTypes=( LobularNeoplasia ADH ALH)
 stem="pathology_all_"
 outStem="../../../classification_results/Breast/class_results_"
 for name in "${pathTypes[@]}"; do

@@ -100,4 +100,14 @@ print "AvgLen of mistake", avgLen
 
 with open("../boostexer/breast/debug/pathology_all_LobularNeoplasia.test", 'wb') as f:
     for rep in mistakeReps[15]:
-        f.write(clean(rep['Report_Text']).lower() +" , LobularNeoplasia.\n")
+        f.write(clean(rep['Report_Text_Segmented']).lower() +" , Present.\n")
+
+with open("../boostexer/breast/debug/pathology_all_ADH.test", 'wb') as f:        
+    for rep in mistakeReps[3]:
+        f.write(clean(rep['Report_Text_Segmented']).lower() +" , Present.\n")    
+    for rep in mistakeReps[4]:
+        f.write(clean(rep['Report_Text_Segmented']).lower() +" , Absent.\n")    
+
+with open("../boostexer/breast/debug/pathology_all_ALH.test", 'wb') as f:        
+    for rep in mistakeReps[5]:
+            f.write(clean(rep['Report_Text_Segmented']).lower() +" , Present.\n")    
