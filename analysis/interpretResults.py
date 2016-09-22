@@ -199,7 +199,10 @@ if __name__ == "__main__":
     offenders = {}
     offenderRows = {}
     #This is my correcting hand annotations
-    corrections = [('Red_DCIS', 67), ('FlatEpithelial', 7), ('Red_ILC', 467), ('Red_ALH', 434)]
+    corrections = [('Red DCIS', 67), ('Red FlatEpithelial', 7), ('Red ILC', 467), ('Red ALH', 434),
+    ('Red ADH', 17), ('Red ADH', 46), ('Red ADH', 113), ('Red ADH', 141), ('Red ADH', 151),
+    ('Red ADH', 251), ('Red ADH', 326), ('Red ADH', 373), ('Red ADH', 381), ('Red ADH', 443), ('Red ADH', 495),
+    ('Red DCIS', 69), ('Red ALH', 286), ('Red ALH', 292), ('Red ADH', 164),   ]
 
     for i in range(numRows):
         incorrect = False
@@ -207,8 +210,6 @@ if __name__ == "__main__":
             for l in gold[d]:
                 if not l in analysisLabelDict[d]:
                     continue
-                if (d,i) in corrections:
-                    print "Noom"
                 if not guessed[d][l][i] == gold[d][l][i] and not incorrect and not (d,i) in corrections:
                     if not d in offenders:
                         offenders[d] = 0
