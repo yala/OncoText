@@ -8,6 +8,8 @@ if analyzeBoth:
 else:
   submode = "no"
 
+baseline = True
+
 #Shared constants for creating episodes
 dataPath = "rawBreastPathReport.p"
 outPath = "reportDB.p"
@@ -73,6 +75,12 @@ elif MODE == "TAGHIAN":
   'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 
   'Red ADH', 'Red BreastSide', 'Red FlatEpithelial','Red BluntAdenosis', 
   'Red LobularNeoplasia','cancer', 'atypia']
+
+  if baseline:
+    diagnoses = [
+    'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 
+    'Red ADH', 'Red BreastSide', 'Red FlatEpithelial','Red BluntAdenosis', 
+    'Red LobularNeoplasia']
 
   #'Oncotype score']
 
@@ -164,12 +172,6 @@ elif MODE == "TAGHIAN":
 
 
   JSONLabelDict = {
-    'Checked':1,
-    'Unchecked':0,
-    'Yes': 1,
-    'No':0,
-    'Positive':1,
-    'Negative': 0
   }
 
   JSONLabelNameDict = {
@@ -190,7 +192,8 @@ elif MODE == "TAGHIAN":
     'Red ADH':  'ADH',
     'Red FlatEpithelial': 'FlatEpithelial',
     'Red BluntAdenosis': 'BluntAdenosis',
-    'Red LobularNeoplasia': 'LobularNeoplasia'}
+    'Red LobularNeoplasia': 'LobularNeoplasia',
+    'Red BreastSide':'BreastSide'}
   labelsForEpisodes = diagnoses
 
   hueLabels = []
