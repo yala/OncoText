@@ -94,7 +94,7 @@ elif MODE == "TAGHIAN":
       'Simple Mastectomy':'Unchecked', 'Her2 (Fish)':'Unknown', 'ER': 'Unknown', 'Nipple sparing Mastectomy':'Unchecked',
       'Type of sampled LN (choice=ALND (Axillary LN Dissection))':'Unchecked', 'ECE':'No', 
       'LVI': 'Not_reported', 'BVI': 'Not_reported', 'TumorGrade': 'Not_assessed', 'Red DCIS':'Absent', 'Red LCIS':'Absent', 'Red IDC':'Absent', 'Red ILC':'Absent',
-      'Red ALH':'Absent', 'Red ADH':'Absent', 'Red BreastSide':'RIGHT', 'Red FlatEpithelial':'Absent','Red BluntAdenosis':'Absent', 'Red LoblularNeoplasia': 'Absent',
+      'Red ALH':'Absent', 'Red ADH':'Absent', 'Red BreastSide':'RIGHT', 'Red FlatEpithelial':'Absent','Red BluntAdenosis':'Absent', 'Red LobularNeoplasia': 'Absent',
       'cancer':'Absent', 'atypia':'Absent',
       'Oncotype score':'Low_risk'}
 
