@@ -9,27 +9,44 @@ labelDict = p.load(open('../redLabelDict.p', 'rb'))
 
 surgDiag = 'Type of Surgery'
 biopDiag = 'Type of biopsy'
+biopTypeDiag = 'BiopsyType'
 
 countGold = 0
 countDif = 0
+debug = False
 for r in redReps:
     if 'TaghianGold' in r and r['TaghianGold'] == 1:
         countGold += 1
+
         if surgDiag in r:
-            if r[surgDiag] == 'bilateral reduction mammoplasty':
-                r[surgDiag] = defaultLabelDict[surgDiag]
+            if debug:
+                print '----------------------'
+                print "SURGERY TYPE", r[surgDiag]
+                print "Report text:"
+                print r['Report_Text']
+                print r[surgDiag]
+                print "****************"
+                raw_input()
+            if r[surgDiag] in ['2nd_Re-Excision', '1st_Re-Excision', 'Excisional_biopsy_(Lumpectomy)']:
+                r[biopTypeDiag] = "Excision"
                 countDif += 1
-
-            r[biopDiag] = defaultLabelDict[biopDiag]
-            countDif += 1
-
         elif biopDiag in r:
-            if r[biopDiag] == 'Other':
-                r[biopDiag] = defaultLabelDict[biopDiag]
+            if debug:
+                print '----------------------'
+                print "BIOPSY TYPE", r[biopDiag]
+                print "Report text:"
+                print r['Report_Text']
+                print r[biopDiag]
+                print "****************"
+                raw_input()
+            if r[biopDiag] in ['Needle biopsy',  'Core biopsy',  'Incisional biopsy']:
+                r[biopTypeDiag] = "Incision"
                 countDif += 1
 
-            r[surgDiag] = defaultLabelDict[surgDiag]
+        if (surgDiag in r or biopDiag in r) and not biopTypeDiag in r:
+            r[biopTypeDiag] = "No_breast_biopsy"
             countDif += 1
+
 
         for d in ['ER', 'PR', 'Her2 (Fish)']:
             if d in r and not r[d] in labelDict[d]:
@@ -90,6 +107,9 @@ for r in redReps:
                 r[target] = 'Absent'
                 countDif += 1
 
+            if 'BreastSide' in r:
+                r['Red BreastSide'] = "RIGHT" if r['BreastSide'] in ['RIGHT',1, '1'] else 'LEFT'
+
         for d in BiopAnotationSource + SurgAnotationSource:
             if not ('TaghianGold' in r and r['TaghianGold'] == 1  and d in r):
                 continue
@@ -105,8 +125,6 @@ for r in redReps:
                 print d
                 misses.add(r[d])
 
-        if 'BreastSide' in r:
-            r['Red BreastSide'] = "RIGHT" if r['BreastSide'] in ['RIGHT',1, '1'] else 'LEFT'
 
 print "misses", misses
 print "Count gold", countGold

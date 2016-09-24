@@ -8,7 +8,7 @@ if analyzeBoth:
 else:
   submode = "no"
 
-baseline = True
+baseline = False
 
 #Shared constants for creating episodes
 dataPath = "rawBreastPathReport.p"
@@ -74,7 +74,9 @@ elif MODE == "TAGHIAN":
   u'Her2 (Fish)', u'ER', 'ECE', 'LVI', 'BVI',
   'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 
   'Red ADH', 'Red BreastSide', 'Red FlatEpithelial','Red BluntAdenosis', 
-  'Red LobularNeoplasia','cancer', 'atypia']
+  'Red LobularNeoplasia','cancer', 'atypia', 'BiopsyType']
+
+  diagnoses = ['BiopsyType']
 
   if baseline:
     diagnoses = [
@@ -98,7 +100,7 @@ elif MODE == "TAGHIAN":
   redRawDBPath = 'reportDB+red+clean.p'
 
   defaultLabelDict = { 'Are there positive LN?': 'No', 'Type of sampled LN (choice=None)':'Unchecked', 'ITC ':'No', 'PR':'Unknown',
-      'Type of sampled LN (choice=SLNB (Sentinel LN Biopsy))': 'Unchecked', 'Type of Surgery':'not_surgery', 'Type of biopsy':'No_breast_biopsy',
+      'Type of sampled LN (choice=SLNB (Sentinel LN Biopsy))': 'Unchecked', 'Type of Surgery':'not_surgery', 'BiopsyType':'No_breast_biopsy',
       'Simple Mastectomy':'Unchecked', 'Her2 (Fish)':'Unknown', 'ER': 'Unknown', 'Nipple sparing Mastectomy':'Unchecked',
       'Type of sampled LN (choice=ALND (Axillary LN Dissection))':'Unchecked', 'ECE':'No', 
       'LVI': 'Not_reported', 'BVI': 'Not_reported', 'TumorGrade': 'Not_assessed', 'Red DCIS':'Absent', 'Red LCIS':'Absent', 'Red IDC':'Absent', 'Red ILC':'Absent',
@@ -123,7 +125,7 @@ elif MODE == "TAGHIAN":
     'PR': ['Unknown', 'Negative', 'Positive'],
     'Simple Mastectomy': ['Checked', 'Unchecked'],
     'Type of Surgery': ['Mastectomy',  '2nd_Re-Excision', 'not_surgery', '1st_Re-Excision', 'Excisional_biopsy_(Lumpectomy)'],
-    'Type of biopsy': ['Incisional_biopsy',  'Fine_needle_aspiration_(FNA)', 'No_breast_biopsy', 'Core_biopsy', 'Needle_biopsy'],
+    'BiopsyType': ['Incision', 'Excision', 'No_breast_biopsy'],
     'Type of sampled LN (choice=ALND (Axillary LN Dissection))': ['Checked', 'Unchecked'],
     'Type of sampled LN (choice=None)': ['Checked', 'Unchecked'],
     'Type of sampled LN (choice=SLNB (Sentinel LN Biopsy))': ['Checked', 'Unchecked'],
@@ -147,7 +149,6 @@ elif MODE == "TAGHIAN":
     }
 
   analysisLabelDict = {'Are there positive LN?': ['Yes', 'No'],
-    'ECE': ['Yes', 'No'],
     'ER': ['Unknown', 'Negative', 'Positive'],
     'Her2 (Fish)': ['Unknown', 'Negative', 'Positive'],
     'ITC ': ['Yes', 'No'],
@@ -167,7 +168,9 @@ elif MODE == "TAGHIAN":
     'Red LobularNeoplasia':['Present','Absent'],
     'Red BreastSide': ['RIGHT', 'LEFT'],
     'cancer': ['cancer','no_cancer'],
-    'atypia': ['atypia','no_atypia']
+    'atypia': ['atypia','no_atypia'],
+    'BiopsyType': ['Incision', 'Excision', 'No_breast_biopsy']
+
     }
 
 
@@ -177,12 +180,12 @@ elif MODE == "TAGHIAN":
   JSONLabelNameDict = {
     'Her2 (Fish)': 'Her2',
     'Type of Surgery':'Type_of_Surgery',
-    'Type of biopsy': 'Type_of_Biopsy',
+    'BiopsyType': 'BiopsyType',
     'Type of sampled LN (choice=ALND (Axillary LN Dissection))': 'Axillary_LN_Dissection',
     'Type of sampled LN (choice=None)': 'No_Sampled_LN',
     'Type of sampled LN (choice=SLNB (Sentinel LN Biopsy))': 'Sentinel_LN_Biopsy',
     'ITC ': 'ITC',
-    'EIC': 'EIC',
+    'ECE': 'EIC',
     'Are there positive LN?':'PositiveLN',
     'Red DCIS':   'DCIS',
     'Red LCIS':  'LCIS',
