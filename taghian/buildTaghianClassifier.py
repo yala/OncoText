@@ -83,7 +83,7 @@ if __name__ == "__main__":
             testReports = [preprocessReports([t[textKey]])[0] for t in filteredDB[-testSetSize:]]
             testLabels  = [replaceSpaces(t[key]) for t in filteredDB[-testSetSize:]]
 
-            testSets[mode] = [d['Report_Text_Segmented'] for f in filteredDB[-testSetSize:] ]
+            testSets[mode] = zip(testReports, testLabels)
         else:
             print "mixed annotation"
             hkey = "Report_Text_Segmented"
@@ -108,6 +108,8 @@ if __name__ == "__main__":
                 for rep in testReports + trainReports:
                     assert not ("right" in rep.lower() and "left" in rep.lower())
             print 'aligning done'
+
+            testSets[mode] = zip(testReports, testLabels)
 
         print "Num train samples", len(trainLabels)
         print "-------- Train Label Dist,",key," ----------"

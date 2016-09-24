@@ -27,7 +27,7 @@ for r in redReps:
                 print r[surgDiag]
                 print "****************"
                 raw_input()
-            if r[surgDiag] in ['2nd_Re-Excision', '1st_Re-Excision', 'Excisional_biopsy_(Lumpectomy)']:
+            if r[surgDiag] in ['2nd Re-Excision', '1st Re-Excision', 'Excisional biopsy (Lumpectomy)']:
                 r[biopTypeDiag] = "Excision"
                 countDif += 1
         elif biopDiag in r:
