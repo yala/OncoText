@@ -76,8 +76,6 @@ elif MODE == "TAGHIAN":
   'Red ADH', 'Red BreastSide', 'Red FlatEpithelial','Red BluntAdenosis', 
   'Red LobularNeoplasia','cancer', 'atypia', 'BiopsyType']
 
-  diagnoses = ['BiopsyType']
-
   if baseline:
     diagnoses = [
     'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 
