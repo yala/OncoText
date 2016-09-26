@@ -10,12 +10,15 @@ from operator import itemgetter
 random.seed(0)
 
 def hasCancer(b):
-    cancers = [u'cancer', u'Red DCIS', u'Red ILC', u'Red IDC', u'Red LCIS']
+    cancers = [u'cancer']#, u'Red DCIS', u'Red ILC', u'Red IDC', u'Red LCIS']
     vals = [b[c] for c in cancers]
     return 'Present' in vals
 
 ## Return structue of {mrn :{epID:[reps]}}
 def getEps(data,mo=3):
+    countIncis = 0
+    countFilt = 0
+    countExis = 0
     pairs = []
     mrns = {}
     for i in range(len(data)):
@@ -36,6 +39,16 @@ def getEps(data,mo=3):
             
 
             incis= [b for b in breasts if b['BiopsyType']=='Incision' and not (hasCancer(b)) ]
+
+            if len([b for b in breasts if b['BiopsyType']=='Incision'])>0:
+                countIncis +=1
+
+            if len([b for b in breasts if b['BiopsyType']=='Excision'])>0:
+                countExis +=1
+
+            if len(incis)>0:
+                countFilt +=1
+
             for inc in incis:
                 incisDate = inc['Report_Date_TimePlusX']
                 def delta(b):
@@ -44,6 +57,10 @@ def getEps(data,mo=3):
                 exis = [b for b in breasts if b['BiopsyType']=='Excision' and delta(b)]
                 for e in exis:
                     pairs.append((inc, e))
+
+    print "count Incis", countIncis
+    print "count Excis", countExis
+    print "countFilt", countFilt
     return pairs
 
 
