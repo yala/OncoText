@@ -88,11 +88,6 @@ def binarizeFilesForClassification(write = True):
 
         for key in exportableData:
             r = exportableData[key]
-        
-            if r['BreastSide'] == 'RIGHT':
-                r['BreastSide'] = 1
-            if r['BreastSide'] == 'LEFT':
-                r['BreastSide'] = 0
 
         return exportableData
 
@@ -163,8 +158,8 @@ def getLabelsAndReports(data, export = False):
 
         for diag in diagnoses:
             if MODE == "Breast":
-                if diag == u'BreastSide':
-                    if u'BreastSide' in sample:
+                if diag == u'Red BreastSide':
+                    if u'Red BreastSide' in sample:
                         diags.append(sample[diag])
                     else:
                         diags.append("LEFT")
@@ -323,10 +318,10 @@ def buildEpisodes(data, labelMaxDXBool, debug = False):
         if not data[i]['MRNPlusX'] in mrns:
             mrns[data[i]['MRNPlusX']] = {}
 
-        if not data[i]['BreastSide'] in mrns[data[i]['MRNPlusX']]:
-            mrns[data[i]['MRNPlusX']][data[i]['BreastSide']] = [data[i]]
+        if not data[i]['Red BreastSide'] in mrns[data[i]['MRNPlusX']]:
+            mrns[data[i]['MRNPlusX']][data[i]['Red BreastSide']] = [data[i]]
         else:
-            mrns[data[i]['MRNPlusX']][data[i]['BreastSide']].append(data[i])
+            mrns[data[i]['MRNPlusX']][data[i]['Red BreastSide']].append(data[i])
 
     #Structure : List of Reports with Episode IDs
     reportsDB = []
@@ -495,6 +490,7 @@ def portToJSON(data, path, episodeMode = False):
         if MODE == "Breast":
             breastLabels = diagnoses
         if MODE == "TAGHIAN":
+            assert "ECE" in diagnoses
             breastLabels = hueLabels
     
         for diag in breastLabels:
@@ -507,11 +503,11 @@ def portToJSON(data, path, episodeMode = False):
                 if "no_" in sample:
                     report[diag] = 0
                 else:
-                    if diag == "BreastSide":
+                    if diag == "Red BreastSide":
                         if sample == "RIGHT":
-                            report[diag] = 1 
+                            report[diag] = 'RIGHT' 
                         else:
-                            report[diag] = 0
+                            report[diag] = 'LEFT'
                     elif not sample == diag:
                         print sample, diag
                         raw_input()
@@ -522,8 +518,10 @@ def portToJSON(data, path, episodeMode = False):
                 redLabels = labelsForEpisodes
             else:
                 redLabels = diagnoses
-            
+
+            assert "ECE" in redLabels
             for label in redLabels:
+
             
                 if report[label] in JSONLabelDict:
                     report[label] = JSONLabelDict[report[label]]
@@ -539,6 +537,7 @@ def portToJSON(data, path, episodeMode = False):
         mrn =  report["MRNPlusX"]
         del report["MRNPlusX"]
         report["FakeMRN"] = mrn
+        assert "EIC" in report
 
     chunkLen = len(data)/10
     for i in range(10):    
@@ -589,7 +588,7 @@ if __name__ == "__main__":
         reportDB = p.load( open(outPath, 'rb'))
         episodeDB = p.load( open(episodePath, 'rb'))
 
-    portToJSONBool = False
+    portToJSONBool = True
     if portToJSONBool:
         print "Dumping ReportDB"
         portToJSON(reportDB, JSONReportPath)
