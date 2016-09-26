@@ -12,10 +12,10 @@ random.seed(0)
 def hasCancer(b):
     cancers = [u'cancer', u'Red DCIS', u'Red ILC', u'Red IDC', u'Red LCIS']
     vals = [b[c] for c in cancers]
-    return 'Present' in vals
+    return 'Present' in vals 
 
 ## Return structue of {mrn :{epID:[reps]}}
-def getEps(data,mo=3):
+def getEps(data,mo=6):
     pairs = []
     mrns = {}
     for i in range(len(data)):
@@ -35,7 +35,7 @@ def getEps(data,mo=3):
             breasts = patient[side]
             
 
-            incis= [b for b in breasts if b['BiopsyType']=='Incision' and not (hasCancer(b)) ]
+            incis= [b for b in breasts if b['BiopsyType']=='Incision' and not (hasCancer(b) or 'carci' in b['Report_Text_Segmented'].lower()) ]
             for inc in incis:
                 incisDate = inc['Report_Date_TimePlusX']
                 def delta(b):
