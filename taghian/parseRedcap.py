@@ -323,6 +323,7 @@ def parseOncoScore(score):
         return 'High risk'
     else: 
         return 'High risk'
+
 ## Suport building dbs from path reps (aligned by taghian index in the path rep) for er/pr/her2
 ## This is because I have col to index dictionaries to figure out which date led to that result
 ## Input DB is joinedDB
@@ -424,7 +425,8 @@ def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen 
             onc = onc[extKey]
 
             for rep in reversed(relevantReps):
-                if oncDate == None or rep['Report_Date_TimePlusX'] > oncDate:# or not rep['BiopsyType']=='Excision':
+                if oncDate == None or rep['Report_Date_TimePlusX'] > oncDate \
+                or (oncDate - rep['Report_Date_TimePlusX']).days > 35:# or not rep['BiopsyType']=='Excision':
                     continue
 
                 #Skip if annotated by taghain
@@ -450,8 +452,14 @@ def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen 
                      print '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
                      print "Extraction type", extraction
                      print rep[reportTextKey]
-                     print rep[extraction]
+                     print rep[extraction], rep['MRNPlusX'], oncDate
+                     print rep['Report_Date_TimePlusX']
+                     print [r['Report_Date_TimePlusX'] for r in relevantReps]
                      raw_input()
+                if normalizeMRN(mrnOnc) == "05413985":
+                    print "rep chosen", rep['Report_Text']
+                    print onc
+                    raw_input()
                 break
     print "num oncoscores", len(outDB[extraction])
     raw_input()
