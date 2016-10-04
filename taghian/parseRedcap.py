@@ -318,7 +318,7 @@ def parseOncoScore(score):
     if score < 18:
         return 'Low risk'
     elif score <= 30:
-        return 'Mid risk'
+        return 'High risk'
     else: 
         return 'High risk'
 ## Suport building dbs from path reps (aligned by taghian index in the path rep) for er/pr/her2
