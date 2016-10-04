@@ -402,45 +402,45 @@ def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen 
 
     #process ext
     extraction = 'Oncotype score'
-    for rep in allPathReps:
-        if rep['ReportID'] in outDBRepIds and  extraction  in outDBRepIds[rep['ReportID']]:
-            continue
+    for mrn_0 in mrnToOnc:
 
-        mrn = normalizeMRN(rep['MRNPlusX'])
+        mrnOnc = normalizeMRN(mrn_0)
+        oncs = mrnToOnc[oncs]
 
-        if not mrn in mrnToOnc:
-            continue    
-    
-        if 'Oncotype score' in rep:
-            continue
+        relevantReps = [r for r in allPathReps if normalizeMRN(rep['MRNPlusX']) == mrnOnc]
+        relevantReps = sorted( patient[side], key=itemgetter('Report_Date_TimePlusX') )
 
-        for onc in mrnToOnc[mrn]:
+        for onc in oncs:
             oncDate = onc['SpecimenReceivedPlusX']
             onc = onc[extKey]
 
-            if oncDate == None or rep['Report_Date_TimePlusX'] > oncDate or (oncDate - rep['Report_Date_TimePlusX']).days > 30 :
-                continue
+            for rep in reversed(relevantReps):
+                if oncDate == None or rep['Report_Date_TimePlusX'] > oncDate or not rep['BiopsyType']=='Excision':
+                    continue
 
-            rep[extraction] = parseOncoScore(onc)
+                #Skip if annotated by taghain
+                if rep['ReportID'] in outDBRepIds and extraction in [rep['ReportID']]:
+                    continue
 
+                ## Now at most recent excision that has no taghian annotation
+                assert not 'Oncotype score' in rep:
 
+                rep[extraction] = parseOncoScore(onc)
+                
+                outDB[extraction].append(rep)
+                if not rep['ReportID'] in outDBRepIds:
+                    outDBRepIds[rep['ReportID']] = {} 
 
-            ##For oncoscore, assert that report is a lumpectomy
-            
-            outDB[extraction].append(rep)
-            if not rep['ReportID'] in outDBRepIds:
-                outDBRepIds[rep['ReportID']] = {} 
+                assert not extraction  in outDBRepIds[rep['ReportID']]  
+                outDBRepIds[rep['ReportID']][extraction] = rep[extraction]
 
-            # assert not extraction  in outDBRepIds[rep['ReportID']]  
-            outDBRepIds[rep['ReportID']][extraction] = rep[extraction]
-
-            if extraction in toSee and seen[extraction] < 0:
-                 seen[extraction] += 1
-                 print '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
-                 print "Extraction type", extraction
-                 print rep[reportTextKey]
-                 print rep[extraction]
-                 raw_input()
+                if extraction in toSee and seen[extraction] < 10:
+                     seen[extraction] += 1
+                     print '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
+                     print "Extraction type", extraction
+                     print rep[reportTextKey]
+                     print rep[extraction]
+                     raw_input()
     print "num oncoscores", len(outDB[extraction])
     raw_input()
     return False
