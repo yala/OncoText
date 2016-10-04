@@ -5,6 +5,8 @@ sys.path.append("..")
 from constants import *
 import datetime
 from createEpisodes import validateRepsDB
+from operator import itemgetter
+
 
 dateFields = ['Date of 1st biopsy', 'Date of 2nd biopsy',  'Date of 3rd biopsy', 'Date of 1 st surgery','Date of 2nd surgery', 'Date of 3rd surgery' ]
 dateFieldsToIndx = {'Date of 1st biopsy':0, 'Date of 2nd biopsy':1,  'Date of 3rd biopsy':2, 'Date of 1 st surgery':3,'Date of 2nd surgery':4, 'Date of 3rd surgery':5}
@@ -339,16 +341,22 @@ def processGradeData(grades, allPathReps, outDB, outDBRepIds):
     return False
 
 def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen ):
+    allPathReps = p.load(open('../reportDB.p','rb'))
     ## Process external oncoscores
-    externalPath =  '../externalDataSources/oncoscore.xlsx'
-    extOncos =  parseXLS(externalPath, "oncoscore.p")
+    loadBool = False
     extKey = 'Dx Score'
-    mrnToOnc = {}
-    for row in extOncos:
-        mrn = normalizeMRN(row['MRNPlusX'])
-        if not mrn in mrnToOnc:
-            mrnToOnc[mrn] = []    
-        mrnToOnc[mrn].append(row)
+    if loadBool:
+        externalPath =  '../externalDataSources/oncoscore.xlsx'
+        extOncos =  parseXLS(externalPath, "oncoscoreList.p")   
+        mrnToOnc = {}
+        for row in extOncos:
+            mrn = normalizeMRN(row['MRNPlusX'])
+            if not mrn in mrnToOnc:
+                mrnToOnc[mrn] = []    
+            mrnToOnc[mrn].append(row)
+        p.dump(mrnToOnc, open('oncoscoreDb.p','wb'))
+    else:
+        mrnToOnc = p.load(open('oncoscoreDb.p','rb'))
     print "len mrnToOnc", len(mrnToOnc), type(mrnToOnc.keys()[0])
 
     #process redcap
@@ -402,13 +410,14 @@ def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen 
 
     #process ext
     extraction = 'Oncotype score'
-    for mrn_0 in mrnToOnc:
+    for mrnOnc in mrnToOnc:
+        oncs = mrnToOnc[mrnOnc]
 
-        mrnOnc = normalizeMRN(mrn_0)
-        oncs = mrnToOnc[oncs]
+        relevantReps = [r for r in allPathReps if normalizeMRN(r['MRNPlusX']) == normalizeMRN(mrnOnc)]
+        if not len(relevantReps)>0:
+            continue
 
-        relevantReps = [r for r in allPathReps if normalizeMRN(rep['MRNPlusX']) == mrnOnc]
-        relevantReps = sorted( patient[side], key=itemgetter('Report_Date_TimePlusX') )
+        relevantReps = sorted(relevantReps, key=itemgetter('Report_Date_TimePlusX') )
 
         for onc in oncs:
             oncDate = onc['SpecimenReceivedPlusX']
@@ -423,7 +432,7 @@ def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen 
                     continue
 
                 ## Now at most recent excision that has no taghian annotation
-                assert not 'Oncotype score' in rep:
+                assert not 'Oncotype score' in rep
 
                 rep[extraction] = parseOncoScore(onc)
                 
