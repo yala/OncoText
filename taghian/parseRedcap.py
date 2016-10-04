@@ -432,7 +432,8 @@ def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen 
                     continue
 
                 ## Now at most recent excision that has no taghian annotation
-                assert not 'Oncotype score' in rep
+                if 'Oncotype score' in rep:
+                    continue
 
                 rep[extraction] = parseOncoScore(onc)
                 
@@ -440,7 +441,8 @@ def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen 
                 if not rep['ReportID'] in outDBRepIds:
                     outDBRepIds[rep['ReportID']] = {} 
 
-                assert not extraction  in outDBRepIds[rep['ReportID']]  
+                if extraction  in outDBRepIds[rep['ReportID']]:
+                    continue
                 outDBRepIds[rep['ReportID']][extraction] = rep[extraction]
 
                 if extraction in toSee and seen[extraction] < 10:
