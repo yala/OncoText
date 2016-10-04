@@ -339,6 +339,19 @@ def processGradeData(grades, allPathReps, outDB, outDBRepIds):
     return False
 
 def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen ):
+    ## Process external oncoscores
+    externalPath =  '../externalDataSources/oncoscore.xlsx'
+    extOncos =  parseXLS(externalPath, "oncoscore.p")
+    extKey = 'Dx Score'
+    mrnToOnc = {}
+    for row in extOncos:
+        mrn = normalizeMRN(row['MRNPlusX'])
+        if not mrn in mrnToOnc:
+            mrnToOnc[mrn] = []    
+        mrnToOnc[mrn].append(row)
+    print "len mrnToOnc", len(mrnToOnc), type(mrnToOnc.keys()[0])
+
+    #process redcap
     for mrn in db:
 
         pathReps =  db[mrn]['hughes']
@@ -379,7 +392,7 @@ def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen 
                 assert not extraction  in outDBRepIds[rep['ReportID']]  
                 outDBRepIds[rep['ReportID']][extraction] = rep[extraction]
 
-                if extraction in toSee and seen[extraction] < 10:
+                if extraction in toSee and seen[extraction] < 0:
                      seen[extraction] += 1
                      print '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
                      print "Extraction type", extraction
@@ -387,6 +400,49 @@ def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen 
                      print rep[extraction]
                      raw_input()
 
+    #process ext
+    extraction = 'Oncotype score'
+    for rep in allPathReps:
+        if rep['ReportID'] in outDBRepIds and  extraction  in outDBRepIds[rep['ReportID']]:
+            continue
+
+        mrn = normalizeMRN(rep['MRNPlusX'])
+
+        if not mrn in mrnToOnc:
+            continue    
+    
+        if 'Oncotype score' in rep:
+            continue
+
+        for onc in mrnToOnc[mrn]:
+            oncDate = onc['SpecimenReceivedPlusX']
+            onc = onc[extKey]
+
+            if oncDate == None or rep['Report_Date_TimePlusX'] > oncDate or (oncDate - rep['Report_Date_TimePlusX']).days > 90 :
+                continue
+
+            rep[extraction] = parseOncoScore(onc)
+
+
+
+            ##For oncoscore, assert that report is a lumpectomy
+            
+            outDB[extraction].append(rep)
+            if not rep['ReportID'] in outDBRepIds:
+                outDBRepIds[rep['ReportID']] = {} 
+
+            # assert not extraction  in outDBRepIds[rep['ReportID']]  
+            outDBRepIds[rep['ReportID']][extraction] = rep[extraction]
+
+            if extraction in toSee and seen[extraction] < 0:
+                 seen[extraction] += 1
+                 print '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
+                 print "Extraction type", extraction
+                 print rep[reportTextKey]
+                 print rep[extraction]
+                 raw_input()
+    print "num oncoscores", len(outDB[extraction])
+    raw_input()
     return False
 
 def buildDB(db, grades, redmap, allPathReps, debug = False):
@@ -491,8 +547,8 @@ exportToRepsDBBool= True
 
 if __name__ == "__main__":
     allPathReps = p.load(open('../reportDB.p', 'rb'))
-    print "Validate all path", '../reportDB.p'
-    validateRepsDB(allPathReps, True)
+    # print "Validate all path", '../reportDB.p'
+    # validateRepsDB(allPathReps, True)
 
 
     if parseXLSBool:
