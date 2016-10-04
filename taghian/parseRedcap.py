@@ -343,7 +343,7 @@ def processGradeData(grades, allPathReps, outDB, outDBRepIds):
 def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen ):
     allPathReps = p.load(open('../reportDB.p','rb'))
     ## Process external oncoscores
-    loadBool = False
+    loadBool = True
     extKey = 'Dx Score'
     if loadBool:
         externalPath =  '../externalDataSources/oncoscore.xlsx'
@@ -424,7 +424,7 @@ def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen 
             onc = onc[extKey]
 
             for rep in reversed(relevantReps):
-                if oncDate == None or rep['Report_Date_TimePlusX'] > oncDate or not rep['BiopsyType']=='Excision':
+                if oncDate == None or rep['Report_Date_TimePlusX'] > oncDate:# or not rep['BiopsyType']=='Excision':
                     continue
 
                 #Skip if annotated by taghain
@@ -450,6 +450,7 @@ def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen 
                      print rep[reportTextKey]
                      print rep[extraction]
                      raw_input()
+                break
     print "num oncoscores", len(outDB[extraction])
     raw_input()
     return False
