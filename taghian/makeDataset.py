@@ -23,7 +23,7 @@ for r in reps:
         if not 'cancer' in r:
             r['cancer'] = 'Absent'
 
-        if ('Correct' in r and r['Correct'] == 1) and ('TaghianGold' in r and r['TaghianGold'] == 1): 
+        if ('Correct' in r and r['Correct'] == 1) or ('TaghianGold' in r and r['TaghianGold'] == 1): 
             print "guchi"
             for a in atypias:
                 if a in r and r[a] == 'Present':

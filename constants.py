@@ -74,7 +74,7 @@ elif MODE == "TAGHIAN":
   u'Her2 (Fish)', u'ER', 'ECE', 'LVI', 'BVI',
   'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 
   'Red ADH', 'Red BreastSide', 'Red FlatEpithelial','Red BluntAdenosis', 
-  'Red LobularNeoplasia','cancer', 'atypia', 'BiopsyType']
+  'Red LobularNeoplasia', 'cancer', 'atypia']#, 'BiopsyType']
 
   if baseline:
     diagnoses = [
