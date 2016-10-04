@@ -321,9 +321,10 @@ def parseOncoScore(score):
         return 'Low risk'
     elif score <= 30:
         return 'High risk'
-    else: 
+    elif score > 30: 
         return 'High risk'
-
+    else:
+        return 'None'
 ## Suport building dbs from path reps (aligned by taghian index in the path rep) for er/pr/her2
 ## This is because I have col to index dictionaries to figure out which date led to that result
 ## Input DB is joinedDB
@@ -388,8 +389,11 @@ def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen 
 
                 if redcap[redcapIndx]['Oncotype date'] == None or rep['Report_Date_TimePlusX'] > redcap[redcapIndx]['Oncotype date']:
                     continue
-
-                rep[extraction] = parseOncoScore(redcap[redcapIndx][colField])
+                
+                score = parseOncoScore(redcap[redcapIndx][colField])
+                if score == "None":
+                    continue
+                rep[extraction] = score
 
 
                 ##For oncoscore, assert that report is a lumpectomy
