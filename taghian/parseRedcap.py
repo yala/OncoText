@@ -418,7 +418,7 @@ def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen 
             oncDate = onc['SpecimenReceivedPlusX']
             onc = onc[extKey]
 
-            if oncDate == None or rep['Report_Date_TimePlusX'] > oncDate or (oncDate - rep['Report_Date_TimePlusX']).days > 90 :
+            if oncDate == None or rep['Report_Date_TimePlusX'] > oncDate or (oncDate - rep['Report_Date_TimePlusX']).days > 30 :
                 continue
 
             rep[extraction] = parseOncoScore(onc)
