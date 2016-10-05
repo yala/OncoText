@@ -430,7 +430,8 @@ def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen 
 
             for rep in reversed(relevantReps):
                 if oncDate == None or rep['Report_Date_TimePlusX'] > oncDate \
-                or (oncDate - rep['Report_Date_TimePlusX']).days > 35:# or not rep['BiopsyType']=='Excision':
+                or (oncDate - rep['Report_Date_TimePlusX']).days > 35\
+                or ("right" in rep['Report_Text'].lower() and "left" in rep['Report_Text'].lower() ):
                     continue
 
                 #Skip if annotated by taghain
