@@ -9,7 +9,7 @@ reps = p.load(open('../reportDB+red+clean.p', 'rb'))
 golds = [r for r in reps if 'Correct' in r and r['Correct'] == 'Y']
 print len(golds)
 
-cancers = [ u'Red DCIS', u'Red ILC', u'Red IDC', u'Red LCIS']
+cancers = [ u'Red DCIS', u'Red ILC', u'Red IDC', u'Red LCIS', 'Red CancerNOS', 'Red InsituNOS', 'Red CancerInvInsituNOS'  ]
 atypias = [u'Red ADH',u'Red LobularNeoplasia', u'Red FlatEpithelial',  u'Red ALH']
 
 for r in reps:

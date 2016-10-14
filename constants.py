@@ -69,12 +69,13 @@ elif MODE == "TAGHIAN":
   'Number of LN with < =0.02 cm', 'Method size', 'Radical Mastectomy']
   # TODO Remove ECE and debug why bad class name    Micro or Gross   Number of LN with < =0.02 cm Method size
 
-  diagnoses = [
+  diagnoses = [ 'Oncotype score',
   u'Are there positive LN?', u'ITC ', u'PR',  
   u'Her2 (Fish)', u'ER', 'ECE', 'LVI', 'BVI',
   'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 
   'Red ADH', 'Red BreastSide', 'Red FlatEpithelial','Red BluntAdenosis', 
-  'Red LobularNeoplasia', 'cancer', 'atypia']#, 'BiopsyType']
+  'Red LobularNeoplasia', 'cancer', 'atypia', 'BiopsyType', 
+  'Red ADH_DCIS', 'Red Phylodes', 'Red CancerNOS', 'Red InvasiveSuspicious', 'Red InsituNOS', 'Red CancerInvInsituNOS']
 
   if baseline:
     diagnoses = [
@@ -84,9 +85,10 @@ elif MODE == "TAGHIAN":
 
   #'Oncotype score']
 
-  # diagnoses = ['Oncotype score']
+  diagnoses = ['Oncotype score']
 
-  HueAnotationSource= ['DCIS', 'LCIS', 'IDC', 'ILC', 'ALH', 'ADH', 'BreastSide', 'FlatEpithelial', 'BluntAdenosis', 'LobularNeoplasia']
+  HueAnotationSource= ['DCIS', 'LCIS', 'IDC', 'ILC', 'ALH', 'ADH', 'BreastSide', 'FlatEpithelial', 'BluntAdenosis', 'LobularNeoplasia',
+  'ADH_DCIS', 'Phylodes', 'CancerNOS', 'InvasiveSuspicious', 'InsituNOS', 'CancerInvInsituNOS']
   diagSkip = ['ALH', 'ILC']
   BiopAnotationSource= [a + " Biop" for a in HueAnotationSource  if not a in diagSkip]
   SurgAnotationSource= [a + " Surg" for a in HueAnotationSource  if not a in diagSkip]
@@ -104,7 +106,8 @@ elif MODE == "TAGHIAN":
       'LVI': 'Not_reported', 'BVI': 'Not_reported', 'TumorGrade': 'Not_assessed', 'Red DCIS':'Absent', 'Red LCIS':'Absent', 'Red IDC':'Absent', 'Red ILC':'Absent',
       'Red ALH':'Absent', 'Red ADH':'Absent', 'Red BreastSide':'RIGHT', 'Red FlatEpithelial':'Absent','Red BluntAdenosis':'Absent', 'Red LobularNeoplasia': 'Absent',
       'cancer':'Absent', 'atypia':'Absent',
-      'Oncotype score':'Low_risk'}
+      'Oncotype score':'Low_risk',
+      'Red ADH_DCIS':'Absent', 'Red Phylodes':'Absent', 'Red CancerNOS':'Absent', 'Red InvasiveSuspicious':'Absent', 'Red InsituNOS':'Absent', 'Red CancerInvInsituNOS':'Absent'}
 
 
   extractions = [u'Max Tumor Size', 'Non Sentinel LN (# Malignant)', 'Sentinel LN (# Sampled)']
@@ -119,14 +122,11 @@ elif MODE == "TAGHIAN":
     'ER': ['Unknown', 'Negative', 'Positive'],
     'Her2 (Fish)': ['Unknown', 'Negative', 'Positive'],
     'ITC ': ['Yes', 'No'],
-    'Nipple sparing Mastectomy': ['Checked', 'Unchecked'],
+    # 'Nipple sparing Mastectomy': ['Checked', 'Unchecked'],
     'PR': ['Unknown', 'Negative', 'Positive'],
-    'Simple Mastectomy': ['Checked', 'Unchecked'],
-    'Type of Surgery': ['Mastectomy',  '2nd_Re-Excision', 'not_surgery', '1st_Re-Excision', 'Excisional_biopsy_(Lumpectomy)'],
+    # 'Simple Mastectomy': ['Checked', 'Unchecked'],
+    # 'Type of Surgery': ['Mastectomy',  '2nd_Re-Excision', 'not_surgery', '1st_Re-Excision', 'Excisional_biopsy_(Lumpectomy)'],
     'BiopsyType': ['Incision', 'Excision', 'No_breast_biopsy'],
-    'Type of sampled LN (choice=ALND (Axillary LN Dissection))': ['Checked', 'Unchecked'],
-    'Type of sampled LN (choice=None)': ['Checked', 'Unchecked'],
-    'Type of sampled LN (choice=SLNB (Sentinel LN Biopsy))': ['Checked', 'Unchecked'],
     'ECE': ['Yes', 'No'],
     'LVI': ['Yes', 'No', 'Not_reported'],
     'BVI': ['Yes', 'No', 'Not_reported'],
@@ -143,8 +143,15 @@ elif MODE == "TAGHIAN":
     'cancer': ['Present','Absent'],
     'atypia': ['Present','Absent'],
     'Red BreastSide': ['RIGHT', 'LEFT'],
-    'Oncotype score': ['Low_risk', 'Mid_risk', 'High_risk']
-    }
+    'Oncotype score': ['Low_risk', 'High_risk'],
+    'Red ADH_DCIS': ['Present','Absent'],
+    'Red Phylodes': ['Present','Absent'],
+    'Red CancerNOS': ['Present','Absent'],
+    'Red InvasiveSuspicious': ['Present','Absent'],
+    'Red InsituNOS': ['Present','Absent'],
+    'Red CancerInvInsituNOS': ['Present','Absent']
+
+  }
 
   analysisLabelDict = {'Are there positive LN?': ['Yes', 'No'],
     'ER': ['Unknown', 'Negative', 'Positive'],
@@ -167,8 +174,14 @@ elif MODE == "TAGHIAN":
     'Red BreastSide': ['RIGHT', 'LEFT'],
     'cancer': ['cancer','no_cancer'],
     'atypia': ['atypia','no_atypia'],
-    'BiopsyType': ['Incision', 'Excision', 'No_breast_biopsy']
-
+    'BiopsyType': ['Incision', 'Excision', 'No_breast_biopsy'],
+    'Oncotype score': ['Low_risk', 'High_risk'],
+    'Red ADH_DCIS': ['Present','Absent'],
+    'Red Phylodes': ['Present','Absent'],
+    'Red CancerNOS': ['Present','Absent'],
+    'Red InvasiveSuspicious': ['Present','Absent'],
+    'Red InsituNOS': ['Present','Absent'],
+    'Red CancerInvInsituNOS': ['Present','Absent']
     }
 
 
@@ -194,7 +207,14 @@ elif MODE == "TAGHIAN":
     'Red FlatEpithelial': 'FlatEpithelial',
     'Red BluntAdenosis': 'BluntAdenosis',
     'Red LobularNeoplasia': 'LobularNeoplasia',
-    'Red BreastSide':'BreastSide'}
+    'Red BreastSide':'BreastSide',
+    'Red ADH_DCIS': 'AdhDcis',
+    'Red Phylodes': 'Phyllodes',
+    'Red CancerNOS': 'CancerNOS',
+    'Red InvasiveSuspicious': 'InvasiveSuspicious',
+    'Red InsituNOS': 'InsituNOS',
+    'Red CancerInvInsituNOS': 'CancerInvInsituNOS'
+    }
   labelsForEpisodes = diagnoses
 
   hueLabels = []
