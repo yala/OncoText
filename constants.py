@@ -69,13 +69,13 @@ elif MODE == "TAGHIAN":
   'Number of LN with < =0.02 cm', 'Method size', 'Radical Mastectomy']
   # TODO Remove ECE and debug why bad class name    Micro or Gross   Number of LN with < =0.02 cm Method size
 
-  diagnoses = [ 'Oncotype score',
+  diagnoses = [
   u'Are there positive LN?', u'ITC ', u'PR',  
   u'Her2 (Fish)', u'ER', 'ECE', 'LVI', 'BVI',
   'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 
   'Red ADH', 'Red BreastSide', 'Red FlatEpithelial','Red BluntAdenosis', 
   'Red LobularNeoplasia', 'cancer', 'atypia', 'BiopsyType', 
-  'Red ADH_DCIS', 'Red Phylodes', 'Red CancerNOS', 'Red InvasiveSuspicious', 'Red InsituNOS', 'Red CancerInvInsituNOS']
+  'Red ADH_DCIS', 'Red Phylodes', 'Red CancerNOS', 'Red InvasiveSuspicious', 'Red InsituNOS', 'Red CancerInvInsituNOS', "Oncotype score"]
 
   if baseline:
     diagnoses = [
@@ -85,7 +85,7 @@ elif MODE == "TAGHIAN":
 
   #'Oncotype score']
 
-  diagnoses = ['Oncotype score']
+  #diagnoses = ['Oncotype score']
 
   HueAnotationSource= ['DCIS', 'LCIS', 'IDC', 'ILC', 'ALH', 'ADH', 'BreastSide', 'FlatEpithelial', 'BluntAdenosis', 'LobularNeoplasia',
   'ADH_DCIS', 'Phylodes', 'CancerNOS', 'InvasiveSuspicious', 'InsituNOS', 'CancerInvInsituNOS']
