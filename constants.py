@@ -127,7 +127,6 @@ elif MODE == "TAGHIAN":
     # 'Simple Mastectomy': ['Checked', 'Unchecked'],
     # 'Type of Surgery': ['Mastectomy',  '2nd_Re-Excision', 'not_surgery', '1st_Re-Excision', 'Excisional_biopsy_(Lumpectomy)'],
     'BiopsyType': ['Incision', 'Excision', 'No_breast_biopsy'],
-    'ECE': ['Yes', 'No'],
     'LVI': ['Yes', 'No', 'Not_reported'],
     'BVI': ['Yes', 'No', 'Not_reported'],
     'TumorGrade': ['Well_differentiated_(grade_I)', 'Moderate_(grade_II)', 'Poor_(grade_III)_Undifferentiated', 'Not_assessed'],
