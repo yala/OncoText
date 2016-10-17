@@ -26,35 +26,7 @@ metaData = ['Report_Date_TimePlusX', 'MRNPlusX', 'Correct', 'Institution', 'DOBP
 SIX_MONTHS = datetime.timedelta(365/2)
 
 hueLabels = []
-if MODE == "Breast":
-    reportTextKey = "Report_Text_Segmented"
-    #Outcomes constants
-    diagnoses = [ u'BreastSide', u'DCIS', u'ILC', u'IDC', u'LCIS', \
-                 u'ADH',\
-                 u'LobularNeoplasia', u'FlatEpithelial', 
-                 u'BluntAdenosis',  u'ALH',
-                 'ADH_DCIS', 'Phylodes', 'CancerNOS', 'InvasiveSuspicious', 'InsituNOS', 'CancerInvInsituNOS']#, 'cancer', 'atypia']#, 'ADH_DCIS', 'Phylodes']
-
-    if analyzeBoth:
-      diagnoses = [ u'BreastSide', u'Red_DCIS', u'Red_ILC', u'Red_IDC', u'Red_LCIS', \
-                 u'Red_ADH',\
-                 u'LobularNeoplasia', u'FlatEpithelial',  
-                 u'BluntAdenosis',  u'Red_ALH']
-                 
-
-    #Contants for creating episodes
-
-    cols = diagnoses + metaData + ['Report_Text_Segmented', 'Report_Text', "Preprocessed_Report_Text"] 
-
-    # Constants for genBoostexaFiles
-    trainOutPath = "boostexer/breast/labled/pathology.data"
-    testOutPath = "boostexer/breast/labled/pathology.test"
-    devOutPath = "boostexer/breast/labled/pathology.dev"
-
-    allDataStem = "boostexer/breast/unlabled/pathology_all"
-
-
-elif MODE == "TAGHIAN":
+if MODE == "TAGHIAN":
   reportTextKey = "Report_Text_Segmented"
 
   lauraDictToIndx = {'Biposy 1':0, 'Biopsy 2':1, 'Biopsy 3':2, 'Surgery 1':3, 'Surgery2':4, 'Surgery 3':5}
@@ -67,13 +39,14 @@ elif MODE == "TAGHIAN":
   'Number of LN with < =0.02 cm', 'Method size', 'Radical Mastectomy']
   # TODO Remove ECE and debug why bad class name    Micro or Gross   Number of LN with < =0.02 cm Method size
 
-  diagnoses = [ "Red ADH_DCIS", 'Oncotype score', 'TumorGrade',
+  diagnoses = [
   u'Are there positive LN?', u'ITC ', u'PR',  
   u'Her2 (Fish)', u'ER', 'ECE', 'LVI', 'BVI',
   'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 
   'Red ADH', 'Red BreastSide', 'Red FlatEpithelial','Red BluntAdenosis', 
   'Red LobularNeoplasia', 'cancer', 'atypia', 'BiopsyType', 
-  'Red ADH_DCIS', 'Red Phylodes', 'Red CancerNOS', 'Red InvasiveSuspicious', 'Red InsituNOS', 'Red CancerInvInsituNOS', "Oncotype score"]
+  'Red ADH_DCIS', 'Red Phylodes', 'Red CancerNOS', 'Red InvasiveSuspicious', 'Red InsituNOS', 'Red CancerInvInsituNOS', "Oncotype score",
+  'TumorGrade']
 
   if baseline:
     diagnoses = [
@@ -215,7 +188,6 @@ elif MODE == "TAGHIAN":
     }
   labelsForEpisodes = diagnoses
 
-  hueLabels = []
 
       # Constants for genBoostexaFiles
   trainOutPath = "boostexer/breast/taghian/red.data"
@@ -225,18 +197,7 @@ elif MODE == "TAGHIAN":
 
   allDataStem = "boostexer/breast/unlabled/red_all"
 
-  if submode == "Analyze both":
-
-    redLabels = diagnoses    
-
-    for label in hueLabels:
-      if not label in constantValidLabelDict:
-        constantValidLabelDict[label] = [1, 0]
-
-    diagnoses = redLabels + hueLabels + ['cancer', 'atypia']
-    print "len(diag), diag", len(diagnoses), diagnoses
-
-  metaData = hueLabels + metaData
+  metaData = metaData
 
   cols = diagnoses + metaData + ['Report_Text_Segmented', 'Report_Text', "Preprocessed_Report_Text"]
 

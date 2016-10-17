@@ -17,36 +17,30 @@ if MODE == "TAGHIAN":
 # Set write to true to generate train and test files for classification. 
 # Set write to false to collace files for export
 def binarizeFilesForClassification(write = True):
-    allDataPath = redRawDBPath if MODE == "TAGHIAN" else dataPath
+    allDataPath = redRawDBPath
     allData = p.load(open(allDataPath, 'rb'))
 
     #valid input db isn't corrupted
-    print "Validate source allData array from", allDataPath
-    validateRepsDB(allData, flex= True)
 
-    if MODE == "Breast":
-        goldKey = 'Correct' 
-        ## This datapath contains rule based generated anotations for diagnoses
-        allData = p.load(open(dataPath, 'rb'))
-    elif MODE == 'TAGHIAN':
-        ## This datapath contains ML generated anotations for diagnoses
-        goldKey = 'TaghianGold'
-
-    goldData = [d for d in allData if goldKey in d and not( d[goldKey] == 0)]
-   
-    print "Num gold Data with DOBs", len([d for d in goldData if 'DOBPlusX' in d and not d['DOBPlusX'] == 0]), "/", len(goldData)
-    remainData = [d for d in allData if not(goldKey in d) or d[goldKey] == 0]
+    def isGold(r):
+        isTaghian = 'TaghianGold' in r and r['TaghianGold'] == 1
+        isHughes = 'Correct' in r and r['Correct'] == 'Y'
+        return isTaghian or isHughes
+    
+    trainData = [d for d in allData if isGold(d)]
+        
 
     # For taghian, because TaghianGold has a different number of things annotated per diagnosis in gold
     # Using gold labels by themselves would be a pain, so we will re-annotate the whole thing.
     # Since the training error is ~0, this wont hurt us.
-    if MODE == "TAGHIAN":
-        remainData = allData
+    
+    remainData = allData
     print "Num remainData with DOBs", len([d for d in remainData if 'DOBPlusX' in d and not d['DOBPlusX'] == 0]), "/", len(remainData)
     
     export = not write
+    ## gen train data
 
-    trainReports, trainLabels = getLabelsAndReports(goldData, export)
+    trainReports, trainLabels = getLabelsAndReports(trainData, export)
     restReports,  restLabels =  getLabelsAndReports(remainData, export)
     assert len(restReports) == len(remainData)
 
@@ -59,32 +53,22 @@ def binarizeFilesForClassification(write = True):
         exportableData = {}
 
         print "Parse Result Files"
-        if MODE == "Breast":
-            classifierLabels = parseResultsFiles( "classification_results/Breast/class_results_")
-        elif MODE == "TAGHIAN":
-            classifierLabels = parseResultsFiles( "classification_results/Breast/red_class_results_all_")
+        
+        classifierLabels = parseResultsFiles( "classification_results/Breast/red_class_results_all_")
 
         print "Retag Labels"
         restLabels = retagLabels(restLabels, classifierLabels)
         
         print "Exporting"
-        if MODE == "Breast":
-            buildExport(exportableData, trainLabels, 0)
-            print "num DOBs retag train" , len([d for d in exportableData if 'DOBPlusX' in exportableData[d]])
-            assert len(exportableData) == len(trainLabels)
-
-        if MODE == "TAGHIAN":
-            assert len(exportableData) == 0
+        
+        assert len(exportableData) == 0
 
         buildExport(exportableData, restLabels, len(exportableData))
         print "num DOBs retag rst" , len([d for d in exportableData if 'DOBPlusX' in exportableData[d]])
 
         validateRepsDB([exportableData[k] for k in exportableData], flex=True)
 
-        if MODE == "Breast":
-            assert len(exportableData) == len(trainLabels) + len(restLabels)
-        else:
-            assert len(exportableData) == len(restLabels)
+        assert len(exportableData) == len(restLabels)
 
         for key in exportableData:
             r = exportableData[key]
@@ -156,26 +140,14 @@ def getLabelsAndReports(data, export = False):
         diags = []
         sample = data[i]
 
-        for diag in diagnoses:
-            if MODE == "Breast":
-                if diag == u'Red BreastSide':
-                    if u'Red BreastSide' in sample:
-                        diags.append(sample[diag])
-                    else:
-                        diags.append("LEFT")
-                else:
-                    if diag in sample and str(sample[diag]) == '1':
-                        diags.append(diag)
-                    else:
-                        diags.append("no_"+diag)
+        for diag in diagnoses:    
+            if diag in sample and not sample[diag] == None and sample[diag] in labelDict[diag]:
+                diags.append(sample[diag])
 
-            elif MODE == 'TAGHIAN':
-                if diag in sample and not sample[diag] == None:
-                    diags.append(sample[diag])
+                assert replaceSpaces(sample[diag]) in labelDict[diag]
 
-                    assert replaceSpaces(sample[diag]) in labelDict[diag]
-                else:
-                    diags.append('PLACEHOLDER')
+            else:
+                diags.append('PLACEHOLDER')
 
         if export:
             for meta in metaData:
@@ -549,13 +521,15 @@ def portToJSON(data, path, episodeMode = False):
 if __name__ == "__main__":
 
     verbose = False
+    trainBool = True
+    exportBool = False
 
-    train = False
+    train = trainBool
     if train:
         binarizeFilesForClassification()
 
 
-    buildExportBool = True
+    buildExportBool = exportBool
     if buildExportBool:
         print "Calling export"
         reportDB = binarizeFilesForClassification(False)
@@ -564,7 +538,7 @@ if __name__ == "__main__":
     else: 
         reportDB = p.load(open(outPath, 'rb'))
 
-    labelMaxDXBool = True
+    labelMaxDXBool = exportBool
     if labelMaxDXBool:
         print "Calling labelMaxDXBool"
         getMaxDX(reportDB)
@@ -574,7 +548,7 @@ if __name__ == "__main__":
             print "Dumping report db after max dx labeling"
         p.dump( reportDB, open(outPath, 'wb'))
 
-    buildEpisodesBool = True
+    buildEpisodesBool = exportBool
     if buildEpisodesBool:
         print "Calling build episode"
         reportDB, episodeDB = buildEpisodes(reportDB, labelMaxDXBool)
@@ -588,7 +562,7 @@ if __name__ == "__main__":
         reportDB = p.load( open(outPath, 'rb'))
         episodeDB = p.load( open(episodePath, 'rb'))
 
-    portToJSONBool = True
+    portToJSONBool = exportBool
     if portToJSONBool:
         print "Dumping ReportDB"
         portToJSON(reportDB, JSONReportPath)
