@@ -164,7 +164,12 @@ def findMatchingReports(db, pathReps, save=False):
 
     for r in pathReps:
         pathMRN = normalizeMRN(r['MRNPlusX'])
-        r['Report_Date'] = r['Report_Date_TimePlusX'] + datetime.timedelta(-13)
+        try:
+            r['Report_Date'] = r['Report_Date_TimePlusX'] + datetime.timedelta(-13)
+        except Exception, e:
+            print e
+            print r['Report_Date_TimePlusX']
+            raw_input()
 
         if pathMRN in pathMrns:
             pathMrns[pathMRN].append( r )
@@ -183,7 +188,7 @@ def findMatchingReports(db, pathReps, save=False):
         if mrn in pathMrns:
             for rowIndx, r in enumerate(redcapReps):
                 redCapDates = [r[d] for d in dateFields]
-                sideDict = {'Left':0, "Right":1}
+                sideDict = {'Left':'LEFT', "Right":'RIGHT'}
                 redSide = redcapReps[rowIndx]['Side']
                 if redSide in sideDict:
                     redSide = sideDict[redSide]
@@ -343,7 +348,7 @@ def processGradeData(grades, allPathReps, outDB, outDBRepIds):
     return False
 
 def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen ):
-    allPathReps = p.load(open('../reportDB.p','rb'))
+    allPathReps = p.load(open(rawDBPath,'rb'))
     ## Process external oncoscores
     loadBool = True
     extKey = 'Dx Score'
@@ -429,10 +434,15 @@ def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen 
             onc = onc[extKey]
 
             for rep in reversed(relevantReps):
-                if oncDate == None or rep['Report_Date_TimePlusX'] > oncDate \
-                or (oncDate - rep['Report_Date_TimePlusX']).days > 35\
-                or ("right" in rep['Report_Text'].lower() and "left" in rep['Report_Text'].lower() ):
-                    continue
+                try:
+                    if oncDate == None or rep['Report_Date_TimePlusX'] > oncDate \
+                    or (oncDate - rep['Report_Date_TimePlusX']).days > 35\
+                    or ("right" in rep['Report_Text'].lower() and "left" in rep['Report_Text'].lower() ):
+                        continue
+                except Exception, e:
+                    print oncDate
+                    print e
+                    raw_input()
 
                 #Skip if annotated by taghain
                 if rep['ReportID'] in outDBRepIds and extraction in [rep['ReportID']]:
@@ -452,7 +462,7 @@ def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen 
                     continue
                 outDBRepIds[rep['ReportID']][extraction] = rep[extraction]
 
-                if extraction in toSee and seen[extraction] < 10:
+                if extraction in toSee and seen[extraction] < 0:
                      seen[extraction] += 1
                      print '&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&'
                      print "Extraction type", extraction
@@ -467,7 +477,6 @@ def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen 
                     raw_input()
                 break
     print "num oncoscores", len(outDB[extraction])
-    raw_input()
     return False
 
 def buildDB(db, grades, redmap, allPathReps, debug = False):
@@ -497,10 +506,6 @@ def buildDB(db, grades, redmap, allPathReps, debug = False):
                 
     for report in allPathReps:
         if report['ReportID'] in outDBRepIds:
-            validateRepsDB( [report], True )
-            if report['DCIS'] == 'Checked':
-                assert False
-
             report['TaghianGold'] = 1
             for extraction in outDBRepIds[report['ReportID']]:
                 assert MODE == "TAGHIAN" and (extraction in types or extraction in externalList)
@@ -516,7 +521,6 @@ def buildDB(db, grades, redmap, allPathReps, debug = False):
 
             assert 'TaghianGold' in report and report['TaghianGold'] == 1
             assert len( [t for t in list(types)+externalList if t in report ] ) > 0
-            validateRepsDB( [report], True, True )
             outDBReps.append( report )
                 
 
@@ -569,10 +573,12 @@ preprocessDBBool = False
 findMatchingReportsBool = False
 buildDBsBool = True
 exportToRepsDBBool= True
+rawDBPath = '../rawBreastPathReport.p'
 
 if __name__ == "__main__":
-    allPathReps = p.load(open('../reportDB.p', 'rb'))
-    # print "Validate all path", '../reportDB.p'
+
+    allPathReps = p.load(open(rawDBPath, 'rb'))
+    # print "Validate all path", rawDBPath
     # validateRepsDB(allPathReps, True)
 
 
@@ -603,7 +609,7 @@ if __name__ == "__main__":
     
     if buildDBsBool:
         if findMatchingReportsBool:
-            allPathReps = p.load(open('../reportDB.p', 'rb'))
+            allPathReps = p.load(open(rawDBPath, 'rb'))
 
         if not findMatchingReportsBool:
             joinedDB =  p.load(open('redcapWithPathReps.p', 'rb'))
@@ -617,7 +623,7 @@ if __name__ == "__main__":
         if not buildDBsBool:
             redReps =     p.load(open('allExtractionReps.p', 'rb'))
         print "Validate red path reps", 'allExtractionReps.p'
-        validateRepsDB(redReps, True, True)
+        # validateRepsDB(redReps, True, True)
         exportRepDB(redReps, allPathReps)
 
 

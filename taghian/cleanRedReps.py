@@ -100,10 +100,10 @@ for r in redReps:
                     print "Skiping because already writen"
                     assert (r[d] == '1' and r[target] == "Present") or (r[d] == '0' and r[target] == "Absent")
                     continue
-            if r[d] == 1:
+            if str(r[d]) == 1:
                 r[target] = 'Present'
                 countDif += 1
-            if r[d] == 0:
+            if str(r[d]) == 0:
                 r[target] = 'Absent'
                 countDif += 1
 

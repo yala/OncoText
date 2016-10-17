@@ -1,6 +1,7 @@
 import pickle as p
 from constants import *
 import copy
+import re
 
 def splitRep(txt):
     leftTxt = ""
@@ -32,6 +33,24 @@ def splitRep(txt):
 
     return {"LEFT":leftTxt, "RIGHT": rightTxt}
 
+def unicodeToDatetime(db):
+    def utcToDate(date):
+        yyyymmdd = date.split('T')[0]
+        try:
+            date = datetime.datetime.strptime(yyyymmdd, '%Y-%m-%d')
+            return date
+        except Exception, e:
+            print yyyymmdd
+            record[col] = yyyymmdd
+            raw_input()
+            return 0
+
+    newDb = db
+    for b in newDb:
+        b['Report_Date_TimePlusX'] = utcToDate(b['Report_Date_TimePlusX'])
+
+    return newDb
+
 if __name__ == "__main__":
 
     allData = p.load(open('rawBreastPathReport.bak.p', 'rb'))
@@ -45,6 +64,7 @@ if __name__ == "__main__":
 
     reportCount = 0
     rowCount = 0
+    repId = 0
     
     for rep in allData:
         lowerCaseText = rep['Report_Text'].lower()
@@ -58,22 +78,29 @@ if __name__ == "__main__":
         else:
             reportCount +=1 
 
+        ## Handle Bilaterals
         if "right" in lowerCaseText and "left" in lowerCaseText:
             rowCount += 2
             newTexts = splitRep(rep['Report_Text'])
 
+            ## Do not make 2 reps for golds for simplicty
             if 'BreastSide' in rep and 'Correct' in rep and rep['Correct'] == 'Y':
 
                 relevantSideText = newTexts[rep['BreastSide']]
                 rep['Report_Text_Segmented'] = relevantSideText
+                rep['ReportID'] = repId
+                repId +=1
+                newData.append(rep) 
 
-                newData.append(rep)
 
+            ## Make 2 reps for rest of bilats
             else:
                 for side in ["RIGHT", "LEFT"]:
                     newRep = copy.deepcopy(rep)
                     newRep['Report_Text_Segmented'] =  newTexts[side]
-
+                    newRep['BreastSide'] = side
+                    newRep['ReportID'] = repId
+                    repId +=1
                     newData.append(copy.deepcopy(newRep))
 
                     if seen < maxSeen:
@@ -83,17 +110,29 @@ if __name__ == "__main__":
                         print "side", side
                         raw_input()
 
-        else:
+        else: ## unilat case,
             rowCount += 1
             rep['Report_Text_Segmented'] = rep['Report_Text']
+            rep['ReportID'] = repId
+            if not 'BreastSide' in rep:
+                if 'left' in rep['Report_Text'].lower():
+                    rep['BreastSide'] = 'LEFT'
+                else: ##okay for this to be noisy because we'll reannotate this anyways
+                    rep['BreastSide'] = 'RIGHT'
+
+            repId +=1
             newData.append(rep)
 
 
     
+    ## Validate segmenting work
     for rep in newData:
         assert not( "right" in rep['Report_Text_Segmented'].lower() and "left" in rep['Report_Text_Segmented'].lower())
 
+    # Clean dates to python datetime
+    newData = unicodeToDatetime(newData)
 
+    ## Print out data dist 
     print "New Data has len", len(newData), "As compared to", len(allData)
     print "Num reports", reportCount, "over ", len(set([r['MRNPlusX'] for r in allData])), "aka", len(newData), "rows"
     print "rowcount should be", rowCount
@@ -113,5 +152,4 @@ if __name__ == "__main__":
     print "overallRange", max([len(r[key].split() ) for r in newData]) - min([len(r[key].split() ) for r in newData])
     
         
-    raw_input("Dump back to base db?")
     p.dump(newData, open('rawBreastPathReport.p', 'wb'))
