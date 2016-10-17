@@ -73,7 +73,7 @@ elif MODE == "TAGHIAN":
   'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 
   'Red ADH', 'Red BreastSide', 'Red FlatEpithelial','Red BluntAdenosis', 
   'Red LobularNeoplasia', 'cancer', 'atypia', 'BiopsyType', 
-  'Red ADH_DCIS', 'Red Phylodes', 'Red CancerNOS', 'Red InvasiveSuspicious', 'Red InsituNOS', 'Red CancerInvInsituNOS']
+  'Red ADH_DCIS', 'Red Phylodes', 'Red CancerNOS', 'Red InvasiveSuspicious', 'Red InsituNOS', 'Red CancerInvInsituNOS', "Oncotype score"]
 
   if baseline:
     diagnoses = [
@@ -83,7 +83,7 @@ elif MODE == "TAGHIAN":
 
   #'Oncotype score']
 
-  # diagnoses = ['Oncotype score']
+  #diagnoses = ['Oncotype score']
 
   HueAnotationSource= ['DCIS', 'LCIS', 'IDC', 'ILC', 'ALH', 'ADH', 'BreastSide', 'FlatEpithelial', 'BluntAdenosis', 'LobularNeoplasia',
   'ADH_DCIS', 'Phylodes', 'CancerNOS', 'InvasiveSuspicious', 'InsituNOS', 'CancerInvInsituNOS']
