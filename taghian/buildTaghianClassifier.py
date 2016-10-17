@@ -50,28 +50,15 @@ if __name__ == "__main__":
 
         print "Size of db", len(db)
         testSetSize = min(int(len(db) * .15 ), 500)
-        
-        if buildLabelDictsBool:
-            validLabelsUnfiltered = set([replaceSpaces(r[key]) for r in db if not r[key] == None])
-            allLabelDict[mode] = validLabelsUnfiltered
-            print "Length of valid labels unfilitered", len(validLabelsUnfiltered)
-            print "validLabelsUnfiltered", validLabelsUnfiltered
-            labelDist = {}
-            for label in validLabelsUnfiltered:
-                labelDist[label] = len([r for r in db if replaceSpaces(r[key]) == label])
-            print "Distribution", labelDist
-            validLabels = set([label for label in labelDist if labelDist[label] > 4 ])
-            validLabelDict[mode] = validLabels
-            print "Valid Labels", validLabels        
-        else:
-            validLabels = validLabelDict[mode]
+            
+        validLabels = validLabelDict[mode]
     
         filteredDB = [d for d in db if replaceSpaces(d[key]) in validLabels]
 
         print "Len filiteredDB", len(filteredDB)
 
-        balanced = False
-        if not mode in MixedAnotations:
+        alignTest = False
+        if not mode in MixedAnotations or not alignTest:
 
             # Reshuffle DB until there is some amount of each label on each side
             print "shuffle"
