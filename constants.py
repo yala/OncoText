@@ -32,7 +32,8 @@ if MODE == "Breast":
     diagnoses = [ u'BreastSide', u'DCIS', u'ILC', u'IDC', u'LCIS', \
                  u'ADH',\
                  u'LobularNeoplasia', u'FlatEpithelial', 
-                 u'BluntAdenosis',  u'ALH']#, 'cancer', 'atypia']#, 'ADH_DCIS', 'Phylodes']
+                 u'BluntAdenosis',  u'ALH',
+                 'ADH_DCIS', 'Phylodes', 'CancerNOS', 'InvasiveSuspicious', 'InsituNOS', 'CancerInvInsituNOS']#, 'cancer', 'atypia']#, 'ADH_DCIS', 'Phylodes']
 
     if analyzeBoth:
       diagnoses = [ u'BreastSide', u'Red_DCIS', u'Red_ILC', u'Red_IDC', u'Red_LCIS', \
@@ -53,9 +54,6 @@ if MODE == "Breast":
     allDataStem = "boostexer/breast/unlabled/pathology_all"
 
 
-elif MODE == "ALL_CANCER":
-    print "MODE IS ALL CANCER"
-
 elif MODE == "TAGHIAN":
   reportTextKey = "Report_Text_Segmented"
 
@@ -69,7 +67,7 @@ elif MODE == "TAGHIAN":
   'Number of LN with < =0.02 cm', 'Method size', 'Radical Mastectomy']
   # TODO Remove ECE and debug why bad class name    Micro or Gross   Number of LN with < =0.02 cm Method size
 
-  diagnoses = [ 'Oncotype score',
+  diagnoses = [ "Red ADH_DCIS", 'Oncotype score', 'TumorGrade',
   u'Are there positive LN?', u'ITC ', u'PR',  
   u'Her2 (Fish)', u'ER', 'ECE', 'LVI', 'BVI',
   'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 
@@ -85,7 +83,7 @@ elif MODE == "TAGHIAN":
 
   #'Oncotype score']
 
-  diagnoses = ['Oncotype score']
+  # diagnoses = ['Oncotype score']
 
   HueAnotationSource= ['DCIS', 'LCIS', 'IDC', 'ILC', 'ALH', 'ADH', 'BreastSide', 'FlatEpithelial', 'BluntAdenosis', 'LobularNeoplasia',
   'ADH_DCIS', 'Phylodes', 'CancerNOS', 'InvasiveSuspicious', 'InsituNOS', 'CancerInvInsituNOS']
