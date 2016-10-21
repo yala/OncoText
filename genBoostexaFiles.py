@@ -245,8 +245,8 @@ if __name__ == "__main__":
         testLabels = [labels[d] for d in idx[-500:]]
 
     print "dumping ",reportTextKey, "list for test set."
-    p.dump([reports[i] for i in idx[-500:]], open('genBoostexaTestReportDump.p', 'wb'))
-    p.dump([goldData[i]['Report_Text'] for i in idx[-500:]], open('genBoostexaFullTestReportDump.p', 'wb'))
+    p.dump([reports[i] for i in idx[-500:]], open('analysis/genBoostexaTestReportDump.p', 'wb'))
+    p.dump([goldData[i]['Report_Text'] for i in idx[-500:]], open('analysis/genBoostexaFullTestReportDump.p', 'wb'))
 
 
     learningCurve = False

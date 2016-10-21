@@ -285,6 +285,7 @@ def buildEpisodes(data, labelMaxDXBool, debug = False):
 
     mrns = {}
     for i in range(len(data)):
+        assert i == data[i]['ReportID']
         data[i]['ReportID'] = i
 
         if not data[i]['MRNPlusX'] in mrns:
@@ -521,8 +522,8 @@ def portToJSON(data, path, episodeMode = False):
 if __name__ == "__main__":
 
     verbose = False
-    trainBool = True
-    exportBool = False
+    trainBool = False
+    exportBool = not trainBool
 
     train = trainBool
     if train:

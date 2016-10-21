@@ -21,7 +21,7 @@ JSONEpisodePath = "episodeDB.json"
 def replaceSpaces(label):
     return '_'.join(str(label).split())
 
-metaData = ['Report_Date_TimePlusX', 'MRNPlusX', 'Correct', 'Institution', 'DOBPlusX']
+metaData = ['Report_Date_TimePlusX', 'MRNPlusX', 'ReportID', 'Correct', 'Institution', 'DOBPlusX']
 
 SIX_MONTHS = datetime.timedelta(365/2)
 
@@ -32,21 +32,21 @@ if MODE == "TAGHIAN":
   lauraDictToIndx = {'Biposy 1':0, 'Biopsy 2':1, 'Biopsy 3':2, 'Surgery 1':3, 'Surgery2':4, 'Surgery 3':5}
   maxedOutDictToIndx = {'Oncotype score':-1, 'Oncotype date':-1}  
   maxedOutList = ['Oncotype score', 'Oncotype date']
-  externalList = ['TumorGrade']  
+  externalList = ['TumorGrade', 'Red SuspiciousForPhyllodes']  
 
   filtOutList = ['DCIS', 'LCIS', 'ILC', 'Mixed Inv Duct and Lob canc', 'IDC', 'ALH', 'hospital', 'Her2 (Fish)-val', \
   'IDC with lobular features', 'date', 'ADH', 'Her2 (immunochem)', 'Her2 (Fish)- val', 'ALND (#sampled)', 'Number of LN with > 0.2 cm', 'Micro or Gross',
   'Number of LN with < =0.02 cm', 'Method size', 'Radical Mastectomy']
   # TODO Remove ECE and debug why bad class name    Micro or Gross   Number of LN with < =0.02 cm Method size
 
-  diagnoses = [
-  u'Are there positive LN?', u'ITC ', u'PR',  
-  u'Her2 (Fish)', u'ER', 'ECE', 'LVI', 'BVI',
-  'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 
-  'Red ADH', 'Red BreastSide', 'Red FlatEpithelial','Red BluntAdenosis', 
-  'Red LobularNeoplasia', 'cancer', 'atypia', 'BiopsyType', 
-  'Red ADH_DCIS', 'Red Phylodes', 'Red CancerNOS', 'Red InvasiveSuspicious', 'Red InsituNOS', 'Red CancerInvInsituNOS', "Oncotype score",
-  'TumorGrade']
+  diagnoses = [ 'Red SuspiciousForPhyllodes' ]
+  # u'Are there positive LN?', u'ITC ', u'PR',  
+  # u'Her2 (Fish)', u'ER', 'ECE', 'LVI', 'BVI',
+  # 'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 
+  # 'Red ADH', 'Red BreastSide', 'Red FlatEpithelial','Red BluntAdenosis', 
+  # 'Red LobularNeoplasia', 'cancer', 'atypia', 'BiopsyType', 
+  # 'Red ADH_DCIS', 'Red Phylodes', 'Red CancerNOS', 'Red InvasiveSuspicious', 
+  # 'Red InsituNOS', 'Red CancerInvInsituNOS', 'Red SuspiciousForPhyllodes']#, "Oncotype score", 'TumorGrade']
 
   if baseline:
     diagnoses = [
@@ -54,9 +54,7 @@ if MODE == "TAGHIAN":
     'Red ADH', 'Red BreastSide', 'Red FlatEpithelial','Red BluntAdenosis', 
     'Red LobularNeoplasia']
 
-  #'Oncotype score']
-
-  #diagnoses = ['Oncotype score']
+  
 
   HueAnotationSource= ['DCIS', 'LCIS', 'IDC', 'ILC', 'ALH', 'ADH', 'BreastSide', 'FlatEpithelial', 'BluntAdenosis', 'LobularNeoplasia',
   'ADH_DCIS', 'Phylodes', 'CancerNOS', 'InvasiveSuspicious', 'InsituNOS', 'CancerInvInsituNOS']
@@ -78,7 +76,8 @@ if MODE == "TAGHIAN":
       'Red ALH':'Absent', 'Red ADH':'Absent', 'Red BreastSide':'RIGHT', 'Red FlatEpithelial':'Absent','Red BluntAdenosis':'Absent', 'Red LobularNeoplasia': 'Absent',
       'cancer':'Absent', 'atypia':'Absent',
       'Oncotype score':'Low_risk',
-      'Red ADH_DCIS':'Absent', 'Red Phylodes':'Absent', 'Red CancerNOS':'Absent', 'Red InvasiveSuspicious':'Absent', 'Red InsituNOS':'Absent', 'Red CancerInvInsituNOS':'Absent'}
+      'Red ADH_DCIS':'Absent', 'Red Phylodes':'Absent', 'Red CancerNOS':'Absent', 'Red InvasiveSuspicious':'Absent', 'Red InsituNOS':'Absent', 'Red CancerInvInsituNOS':'Absent',
+      'Red SuspiciousForPhyllodes':'Absent'}
 
 
   extractions = [u'Max Tumor Size', 'Non Sentinel LN (# Malignant)', 'Sentinel LN (# Sampled)']
@@ -120,8 +119,8 @@ if MODE == "TAGHIAN":
     'Red CancerNOS': ['Present','Absent'],
     'Red InvasiveSuspicious': ['Present','Absent'],
     'Red InsituNOS': ['Present','Absent'],
-    'Red CancerInvInsituNOS': ['Present','Absent']
-
+    'Red CancerInvInsituNOS': ['Present','Absent'],
+    'Red SuspiciousForPhyllodes': ['Present','Absent']
   }
 
   analysisLabelDict = {'Are there positive LN?': ['Yes', 'No'],
@@ -152,7 +151,8 @@ if MODE == "TAGHIAN":
     'Red CancerNOS': ['Present','Absent'],
     'Red InvasiveSuspicious': ['Present','Absent'],
     'Red InsituNOS': ['Present','Absent'],
-    'Red CancerInvInsituNOS': ['Present','Absent']
+    'Red CancerInvInsituNOS': ['Present','Absent'],
+    'Red SuspiciousForPhyllodes': ['Present', 'Absent']
     }
 
 
@@ -184,7 +184,8 @@ if MODE == "TAGHIAN":
     'Red CancerNOS': 'CancerNOS',
     'Red InvasiveSuspicious': 'InvasiveSuspicious',
     'Red InsituNOS': 'InsituNOS',
-    'Red CancerInvInsituNOS': 'CancerInvInsituNOS'
+    'Red CancerInvInsituNOS': 'CancerInvInsituNOS',
+    'Red SuspiciousForPhyllodes': 'SuspiciousForPhyllodes'
     }
   labelsForEpisodes = diagnoses
 
@@ -197,7 +198,6 @@ if MODE == "TAGHIAN":
 
   allDataStem = "boostexer/breast/unlabled/red_all"
 
-  metaData = metaData
 
   cols = diagnoses + metaData + ['Report_Text_Segmented', 'Report_Text', "Preprocessed_Report_Text"]
 
