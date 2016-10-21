@@ -39,14 +39,15 @@ if MODE == "TAGHIAN":
   'Number of LN with < =0.02 cm', 'Method size', 'Radical Mastectomy']
   # TODO Remove ECE and debug why bad class name    Micro or Gross   Number of LN with < =0.02 cm Method size
 
-  diagnoses = [ 'Red SuspiciousForPhyllodes', 'Oncotype score', 'TumorGrade']
-  # u'Are there positive LN?', u'ITC ', u'PR',  
-  # u'Her2 (Fish)', u'ER', 'ECE', 'LVI', 'BVI',
-  # 'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 
-  # 'Red ADH', 'Red BreastSide', 'Red FlatEpithelial','Red BluntAdenosis', 
-  # 'Red LobularNeoplasia', 'cancer', 'atypia', 'BiopsyType', 
-  # 'Red ADH_DCIS', 'Red Phylodes', 'Red CancerNOS', 'Red InvasiveSuspicious', 
-  # 'Red InsituNOS', 'Red CancerInvInsituNOS', 'Red SuspiciousForPhyllodes', 'Oncotype score', 'TumorGrade']
+  diagnoses = [
+  'Are there positive LN?', u'ITC ', u'PR',  
+  u'Her2 (Fish)', u'ER', 'ECE', 'LVI', 'BVI',
+  'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 
+  'Red ADH', 'Red BreastSide', 'Red FlatEpithelial','Red BluntAdenosis', 
+  'Red LobularNeoplasia', 'cancer', 'atypia', 'BiopsyType', 
+  'Red ADH_DCIS', 'Red Phylodes', 'Red CancerNOS', 'Red InvasiveSuspicious', 
+  'Red InsituNOS', 'Red CancerInvInsituNOS', 'Red SuspiciousForPhyllodes', 'Oncotype score', 'TumorGrade',
+  'Red CancerSuspicious', 'Red TubularCancer']
 
   if baseline:
     diagnoses = [
@@ -57,7 +58,8 @@ if MODE == "TAGHIAN":
   
 
   HueAnotationSource= ['DCIS', 'LCIS', 'IDC', 'ILC', 'ALH', 'ADH', 'BreastSide', 'FlatEpithelial', 'BluntAdenosis', 'LobularNeoplasia',
-  'ADH_DCIS', 'Phylodes', 'CancerNOS', 'InvasiveSuspicious', 'InsituNOS', 'CancerInvInsituNOS']
+  'ADH_DCIS', 'Phylodes', 'CancerNOS', 'InvasiveSuspicious', 'InsituNOS', 'CancerInvInsituNOS','CancerSuspicious',
+  'TubularCancer' ]
   diagSkip = ['ALH', 'ILC']
   BiopAnotationSource= [a + " Biop" for a in HueAnotationSource  if not a in diagSkip]
   SurgAnotationSource= [a + " Surg" for a in HueAnotationSource  if not a in diagSkip]
@@ -77,7 +79,7 @@ if MODE == "TAGHIAN":
       'cancer':'Absent', 'atypia':'Absent',
       'Oncotype score':'Low_risk',
       'Red ADH_DCIS':'Absent', 'Red Phylodes':'Absent', 'Red CancerNOS':'Absent', 'Red InvasiveSuspicious':'Absent', 'Red InsituNOS':'Absent', 'Red CancerInvInsituNOS':'Absent',
-      'Red SuspiciousForPhyllodes':'Absent'}
+      'Red SuspiciousForPhyllodes':'Absent', 'Red CancerSuspicious':'Absent', 'Red TubularCancer':'Absent'}
 
 
   extractions = [u'Max Tumor Size', 'Non Sentinel LN (# Malignant)', 'Sentinel LN (# Sampled)']
@@ -120,7 +122,9 @@ if MODE == "TAGHIAN":
     'Red InvasiveSuspicious': ['Present','Absent'],
     'Red InsituNOS': ['Present','Absent'],
     'Red CancerInvInsituNOS': ['Present','Absent'],
-    'Red SuspiciousForPhyllodes': ['Present','Absent']
+    'Red SuspiciousForPhyllodes': ['Present','Absent'],
+    'Red CancerSuspicious':['Present','Absent'], 
+    'Red TubularCancer':['Present','Absent']
   }
 
   analysisLabelDict = {'Are there positive LN?': ['Yes', 'No'],
@@ -152,7 +156,9 @@ if MODE == "TAGHIAN":
     'Red InvasiveSuspicious': ['Present','Absent'],
     'Red InsituNOS': ['Present','Absent'],
     'Red CancerInvInsituNOS': ['Present','Absent'],
-    'Red SuspiciousForPhyllodes': ['Present', 'Absent']
+    'Red SuspiciousForPhyllodes': ['Present', 'Absent'],
+    'Red CancerSuspicious':['Present','Absent'], 
+    'Red TubularCancer':['Present','Absent']
     }
 
 
@@ -187,7 +193,9 @@ if MODE == "TAGHIAN":
     'Red CancerInvInsituNOS': 'CancerInvInsituNOS',
     'Red SuspiciousForPhyllodes': 'SuspiciousForPhyllodes',
     'Oncotype score': 'EstimatedOncotypeScore',
-    'TumorGrade': 'TumorGrade'
+    'TumorGrade': 'TumorGrade',
+    'Red CancerSuspicious': 'CancerSuspicious', 
+    'Red TubularCancer': 'TubularCancer'
     }
   labelsForEpisodes = diagnoses
 
