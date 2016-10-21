@@ -9,11 +9,13 @@ reps = p.load(open('../reportDB+red+clean.p', 'rb'))
 golds = [r for r in reps if 'Correct' in r and r['Correct'] == 'Y']
 print len(golds)
 
-cancers = [ u'Red DCIS', u'Red ILC', u'Red IDC', u'Red LCIS', 'Red CancerNOS', 'Red InsituNOS', 'Red CancerInvInsituNOS'  ]
+cancers = [ u'Red DCIS', u'Red ILC', u'Red IDC', u'Red LCIS', 'Red CancerNOS', 'Red InsituNOS', 'Red CancerInvInsituNOS',
+  'Red CancerSuspicious', 'Red TubularCancer', 'Red InvasiveSuspicious']
+  
 atypias = [u'Red ADH',u'Red LobularNeoplasia', u'Red FlatEpithelial',  u'Red ALH']
 
 for r in reps:
-    if ('Correct' in r and r['Correct'] == 1) or ('TaghianGold' in r and r['TaghianGold'] == 1): 
+    if ('Correct' in r and r['Correct'] == 'Y') or ('TaghianGold' in r and r['TaghianGold'] == 1): 
         if ('TaghianGold' in r and r['TaghianGold'] == 1):
             print "mmhmm"
             for c in cancers:
@@ -23,7 +25,7 @@ for r in reps:
         if not 'cancer' in r:
             r['cancer'] = 'Absent'
 
-        if ('Correct' in r and r['Correct'] == 1) or ('TaghianGold' in r and r['TaghianGold'] == 1): 
+        if ('Correct' in r and r['Correct'] == 'Y') or ('TaghianGold' in r and r['TaghianGold'] == 1): 
             print "guchi"
             for a in atypias:
                 if a in r and r[a] == 'Present':
