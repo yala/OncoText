@@ -46,25 +46,53 @@ diagToValue = {'Are there positive LN?': ['Yes', 'No'],
 ## Parse the dict for daignoses, and add annotations if found
 ## Example:
 ## [ {Report_Text: }]
+## @return: 0
 def addTraining(trainDB):
+    ## Can assume reports all ready preprocessed into left/right
+    ## Some annotations per report
+    ## gen boostexer files, and continue training. add to existing files
     return 0
 
-## Generates test files for given testDB, and kick off model
-def evaluate(testDB):
+## Generates test files for given testDB, and kick off model. Note, this is async.
+## Return 0
+def evaluate(testDB=None, name='default'):
+    ## if testDB specified (#global), then make that test/set
+    ## Hit's bash script to run and eval on that testset
     return 0
 
-##
-def interpretResults():
+
+## Takes all unlabled data and produces relevant files, and kick off classification. 
+## Note, this is async.
+## Return 0
+def predict(testDB=None, name='default'):
+    ## if testDB specified (#global), then make that test/set
+    ## Hit's bash script to run and eval on that testset
     return 0
 
-## 
-def getPredictions():
+## Assume evaluate has been run. Interpret results from last eval
+def interpretResults(name='default'):
+    ##
+    return 0
+
+## Asume predict has been run, this consolidates the predict raw files into a DB 
+## returns reportDb, episodeDB
+## reportDb -> reportlevel details (keep repID const) for all extractions on all unlabeled
+## episodeDb -> reportDb consolidated into windows of diff reports on same month in 6 month
+## consecutive period
+def getPredictions(db, name='default'):
+    reportDb, episodeDb = []
     return 0
 
 ## Kicks off job to retrain model
+## Return 0
 def retrain()
     return 0
 
+
+
+## Notes:
+# Handling namespaces. Want to support diff people having diff unlabled data to view
+# One cannical train source
 
 def populateDefault():
 
