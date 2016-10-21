@@ -5,7 +5,7 @@ from constants import *
 
 
 redReps = p.load(open('../reportDB+red.p', 'rb'))
-labelDict = p.load(open('../redLabelDict.p', 'rb'))
+labelDict = constantValidLabelDict
 
 surgDiag = 'Type of Surgery'
 biopDiag = 'Type of biopsy'
@@ -63,8 +63,26 @@ for r in redReps:
 
 
         if 'TumorGrade' in r:
-            if r['TumorGrade'] == 'Undifferentiated':
-                r['TumorGrade'] = 'Poor (grade III)'
+            if "grade III" in r['TumorGrade']:
+                r['TumorGrade'] = 'Poor_(grade_III)_Undifferentiated'
+                countDif += 1
+            
+            elif  "grade II" in r['TumorGrade']:
+                r['TumorGrade'] = 'Moderate_(grade_II)'
+                countDif += 1                
+            elif  "grade I" in r['TumorGrade']:
+                r['TumorGrade'] = 'Well_differentiated_(grade_I)'
+                countDif += 1
+            elif r['TumorGrade'] == 'Not assessed':
+                r['TumorGrade'] = 'Not_assessed'
+                countDif += 1
+
+        if 'Oncotype score' in r:
+            if r['Oncotype score'] == 'Low risk':
+                r['Oncotype score'] = 'Low_risk'
+                countDif +=1
+            if r['Oncotype score'] == 'High risk':
+                r['Oncotype score'] = 'High_risk'
                 countDif += 1
 
         if 'LVI' in r:
@@ -88,10 +106,10 @@ for r in redReps:
                 countDif += 1
 misses = set({})
 for r in redReps:
-    if ('TaghianGold' in r and r['TaghianGold'] == 1 )or ('Correct' in r and r['Correct'] == 1):
+    if ('TaghianGold' in r and r['TaghianGold'] == 1 )or ('Correct' in r and r['Correct'] == 'Y'):
         for d in HueAnotationSource:
 
-            if not ('Correct' in r and r['Correct'] == 1 and d in r):
+            if not ('Correct' in r and r['Correct'] == 'Y' and d in r):
                 continue
             target = "Red "+d
 
@@ -100,10 +118,10 @@ for r in redReps:
                     print "Skiping because already writen"
                     assert (r[d] == '1' and r[target] == "Present") or (r[d] == '0' and r[target] == "Absent")
                     continue
-            if str(r[d]) == 1:
+            if str(r[d]) == '1':
                 r[target] = 'Present'
                 countDif += 1
-            if str(r[d]) == 0:
+            if str(r[d]) == '0':
                 r[target] = 'Absent'
                 countDif += 1
 
