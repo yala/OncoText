@@ -347,6 +347,59 @@ def processGradeData(grades, allPathReps, outDB, outDBRepIds):
             outDBRepIds[rep['ReportID']]['TumorGrade'] = rep['TumorGrade']
     return False
 
+def processSusPhyllodes(allPathReps, outDB, outDBRepIds):
+    phylodesDb = parseXLS('../externalDataSources/susPhyllodes.xlsx', 'susPhyllodes.p')
+    ## build Mrn -> sus for phyllodes 
+    mrnSus = {}
+    mrnKey = 'MRNPlusX'
+    susKey = 'HxOfOrSuspiciousForPhyllodes'
+    for row in phylodesDb:
+        mrn = str(row[mrnKey])
+        if not susKey in row or row[susKey] == None:
+            continue
+        sus = row[susKey]
+        if mrn in mrnSus:
+            mrnSus[mrn] = 'SKIP'
+        else:
+            mrnSus[mrn] = sus
+
+    print "num mrnSus", len([m for m in mrnSus if not mrnSus[m] == "SKIP"])
+
+    ## build mrn: to num articles, if 1 then sus phyllodes
+    repCounts = {}
+    for rep in allPathReps:
+        mrn = rep['MRNPlusX']
+        if not mrn in repCounts:
+            repCounts[mrn] = 0
+        repCounts[mrn] += 1
+
+    print "num eligble reps", (len([k for k in repCounts if repCounts[k]== 1 and k in mrnSus]))
+
+    susKey = 'Red SuspiciousForPhyllodes'
+    if not susKey in outDB:
+        outDB['Red SuspiciousForPhyllodes'] = []    
+    ## do allignmnet on the ones
+    for rep in allPathReps:
+        mrn = rep['MRNPlusX']
+        criteria = (mrn in mrnSus and repCounts[mrn] == 1 and not mrnSus[mrn]=='SKIP')
+        if not criteria:
+            continue
+
+        sus = 'Present' if str(mrnSus[mrn]) == '1' else 'Absent'
+        rep['Red SuspiciousForPhyllodes'] = sus
+        outDB['Red SuspiciousForPhyllodes'].append(rep)
+        if not rep['ReportID'] in outDBRepIds:
+            outDBRepIds[rep['ReportID']] = {}
+        outDBRepIds[rep['ReportID']]['Red SuspiciousForPhyllodes'] = sus
+
+
+    ## print stats
+    print "sus phyllodes has", len(outDB['Red SuspiciousForPhyllodes'])
+    vals = [r['Red SuspiciousForPhyllodes'] for r in outDB['Red SuspiciousForPhyllodes'] ]
+    print len([v for v in vals if v == 'Present']), "present, ", len([v for v in vals if v == 'Absent']), "absent"
+
+    return False
+
 def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen ):
     allPathReps = p.load(open(rawDBPath,'rb'))
     ## Process external oncoscores
@@ -494,12 +547,11 @@ def buildDB(db, grades, redmap, allPathReps, debug = False):
 
     #Investigative Counts
     yetToPrintBool = True
-
-
+    
     processRedcapData(db, colSeqs, types, outDB, outDBRepIds, toSee, seen)
     processGradeData(grades, allPathReps, outDB, outDBRepIds)
     processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen )
-
+    processSusPhyllodes(allPathReps, outDB, outDBRepIds)
     ## Now we print label distrubtions for generating maps and in constants
     printLabelDist(outDB)
     assert len(outDBReps) == 0
