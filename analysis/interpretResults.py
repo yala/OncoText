@@ -85,7 +85,7 @@ if __name__ == "__main__":
     for diag in diagnoses:
         if MODE == "TAGHIAN":
             labels = diagLabelDict[diag]
-        for label in labels +['overall'] if True else ['overall']:
+        for label in labels if True else ['overall']:
             if len(labels) == 2 and label == labels[-1] and False: 
                 continue
             if submode == "Analyze both" and diag in hueLabels and label == 0 and False:
@@ -202,7 +202,9 @@ if __name__ == "__main__":
     corrections = [('Red DCIS', 67), ('Red FlatEpithelial', 7), ('Red ILC', 467), ('Red ALH', 434),
     ('Red ADH', 17), ('Red ADH', 46), ('Red ADH', 113), ('Red ADH', 141), ('Red ADH', 151),
     ('Red ADH', 251), ('Red ADH', 326), ('Red ADH', 373), ('Red ADH', 381), ('Red ADH', 443), ('Red ADH', 495),
-    ('Red DCIS', 69), ('Red ALH', 286), ('Red ALH', 292), ('Red ADH', 164),   ]
+    ('Red DCIS', 69), ('Red ALH', 286), ('Red ALH', 292), ('Red ADH', 164), ('Red LobularNeoplasia',494),
+    ('Red LCIS', 348), ('Red IDC', 135), ('Red FlatEpithelial', 354), ('Red ALH', 154), ('Red ALH', 167),
+    ('Red LCIS', 18), ('Red ILC', 379), ('Red ILC', 171),('Red ALH', 12)  ]
 
     for i in range(numRows):
         incorrect = False
