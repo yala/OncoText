@@ -460,32 +460,6 @@ def portToJSON(data, path, episodeMode = False):
             print report
             raw_input()
 
-        if MODE == "Breast":
-            breastLabels = diagnoses
-        if MODE == "TAGHIAN":
-            assert "ECE" in diagnoses
-            breastLabels = hueLabels
-    
-        for diag in breastLabels:
-            if MODE == "TAGHIAN" and "Red "+ diag in diagnoses:
-                print "skip"
-                continue
-            assert not diag== "Red DCIS"
-            sample = report[diag]
-            if not (sample == 1 or sample == 0):
-                if "no_" in sample:
-                    report[diag] = 0
-                else:
-                    if diag == "Red BreastSide":
-                        if sample == "RIGHT":
-                            report[diag] = 'RIGHT' 
-                        else:
-                            report[diag] = 'LEFT'
-                    elif not sample == diag:
-                        print sample, diag
-                        raw_input()
-                    report[diag] = 1
-
         if MODE == "TAGHIAN":
             if episodeMode:
                 redLabels = labelsForEpisodes
