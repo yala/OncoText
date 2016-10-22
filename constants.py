@@ -49,6 +49,15 @@ if MODE == "TAGHIAN":
   'Red InsituNOS', 'Red CancerInvInsituNOS', 'Red SuspiciousForPhyllodes', 'Oncotype score', 'TumorGrade',
   'Red CancerSuspicious', 'Red TubularCancer']
 
+  const_cancers = [
+  'Red ILC','Red DCIS', 'Red IDC', 
+  'cancer', 'Red CancerNOS', 'Red InvasiveSuspicious', 'Red InsituNOS', 'Red CancerInvInsituNOS', 
+  'Red CancerSuspicious', 'Red TubularCancer']
+
+  const_atypias = [
+  'Red ALH','Red ADH', 'Red FlatEpithelial','Red LobularNeoplasia','Red ADH_DCIS'
+  ]
+  
   if baseline:
     diagnoses = [
     'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 
