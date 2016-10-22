@@ -10,6 +10,16 @@ random.seed(1)
 ruleBasedData = p.load(open('../'+dataPath, 'rb'))
 mlData = p.load(open('../'+outPath, 'rb'))
 
+targets = [
+  'ADH_DCIS', 'Phylodes', 'CancerNOS', 'InvasiveSuspicious', 
+  'InsituNOS', 'CancerInvInsituNOS',
+  'CancerSuspicious', 'TubularCancer', 'ILC', 'IDC', 'FlatEpithelial', 'BluntAdenosis' ]
+
+
+targets = [
+   'CancerNOS', 
+  'InsituNOS', 'CancerInvInsituNOS' ]
+
 
 def buildDict(data, debug = False):
     resultDict = {}
@@ -36,15 +46,12 @@ print "Num labled ML samples",len(mlDict)
 
 disagreement = {}
 disaArticles = set([])
-ignoreList = ['Medullary', 'ClingingCarcinoma', 'CancerNOS', 'Borderline', 'InvasiveSuspicious', 'CancerInvInsituNOS', 'InsituNOS' ]
 
 
 numDisagreement = 0
 countsDetecs = {}
-for diag in hueLabels + HueAnotationSource:
+for diag in targets:
 
-    if diag in ignoreList:
-        continue
 
     disagreement[diag] = []
     countsDetecs[diag] = 0
@@ -74,7 +81,7 @@ for diag in hueLabels + HueAnotationSource:
                 print text
                 raw_input()
                 numPrinted +=1
-            disagreement[diag].append({'text':text, 'ruleLabel':ruleLabel,\
+            disagreement[diag].append({ 'ReportID':ruleBasedDict[text]['ReportID'], 'text':text, 'ruleLabel':ruleLabel,\
              'mlLable':mlLabel})
             if str(ruleLabel) == '1':
                 countsDetecs[diag]+= 1
@@ -100,7 +107,7 @@ for diag in disagreement:
         continue
     exportAll = disagreement[diag]
     random.shuffle(exportAll)
-    export = exportAll[:15]
+    export = exportAll[:60]
     path = "disagreementsForMolly/disagreement_on_"+diag+".csv"
     keys = export[0].keys()
     with open(path, "wb") as outCSV:

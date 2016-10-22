@@ -1,620 +1,51 @@
-text,ruleLabel,mlLable
+text,ReportID,mlLable,ruleLabel
 "Accession Number:  REMOVED_ACCESSION_ID  Report Status: Final 
 Type: Surgical Pathology 
-Specimen Type: Consult material 
-Procedure Date: 
-Ordering Provider: ROGER L CHRISTIAN M.D. 
-CASE: BS-07- REMOVED_ACCESSION_ID  
- REMOVED_PATIENT_NAME  
-Resident: Eric C Huang, M.D., Ph.D. 
-Pathologist: Susan Lester, M.D., Ph.D. 
-PATHOLOGIC DIAGNOSIS: 
-CONSULT SLIDES FROM WINCHESTER HOSPITAL, WINCHESTER, MA: 
-LEFT BREAST, CORE NEEDLE BIOPSIES ( REMOVED_ACCESSION_ID ; 10/15/ REMOVED_CASE_ID ): 
-1:30: 
-INVASIVE CARCINOMA WITH DUCTAL AND LOBULAR FEATURES, moderately differentiated 
-(modified Bloom-Richardson grade II/III), measuring at least 0.6cm  Numerous 
-signet ring cells are present. 
-No lymphovascular invasion is identified in this limited specimen. 
-CARCINOMA IN SITU WITH DUCTAL AND LOBULAR FEATURES, solid type (intermediate 
-nuclear grade), not associated with calcifications or necrosis, is present. 
-Special studies were performed at an outside institution with the following 
-results (reviewed): 
-ESTROGEN RECEPTOR POSITIVE 
-PROGESTERONE RECEPTOR POSITIVE - LOW 
- REMOVED_ACCESSION_ID /NEU NEGATIVE (1+) 
-1:00: 
-Fragments of a fibroadenoma. 
-CLINICAL DATA: 
-History: Invasive carcinoma. 
-Clinical Diagnosis: IDLC 
-TISSUE SUBMITTED: 
-Consult slides. 
-GROSS DESCRIPTION: 
-Received from Winchester Hospital, Pathology Department, 41 Highland Avenue, 
-Winchester, MA  REMOVED_CASE_ID , are seventeen (17) glass slides. 
-The slides are labeled "" REMOVED_ACCESSION_ID "" and sublabeled ""A  REMOVED_ACCESSION_ID "" through ""A 
- REMOVED_ACCESSION_ID "", ""A ER"", ""A PR"", ""A  REMOVED_ACCESSION_ID "", ""A  REMOVED_ACCESSION_ID "", ""A  REMOVED_ACCESSION_ID "", ""A Ki-67"", ""A CEA"", ""A 
- REMOVED_ACCESSION_ID "", ""A MUCIN"", ""A NEG"", ""A NEG CTRL"" and ""B  REMOVED_ACCESSION_ID "" through ""B  REMOVED_ACCESSION_ID "", 
-corresponding to a left breast core needle biopsies A) 1:30, 5-6cm (0.2 x REMOVED_DATE 
-cm) B) 1 o'clock, 2-3cm (0.6 x 1.1cm ) performed on REMOVED_DATE  according to the 
-accompanying pathology report bearing the patient's name. 
-By his/her signature below, the senior physician certifies that he/she 
-personally conducted a microscopic examination (""gross only"" exam if so stated) 
-of the described specimen(s) and rendered or confirmed the diagnosis(es) 
-related thereto. 
-Final Diagnosis by Susan Lester M.D., Ph.D., Electronically signed on 
-10/29/ REMOVED_CASE_ID  
-[report_end] ",1,0
-"Accession Number:  REMOVED_ACCESSION_ID  Report Status: Amend/Addenda 
-Type: Surgical Pathology 
-Specimen Type: Consult material 
-Procedure Date: 
-Ordering Provider: CHERYL C MOORE M.D. 
-CASE: BS-08- REMOVED_ACCESSION_ID  
- REMOVED_PATIENT_NAME  
-********** Addended Report *********** 
-Resident: Mariana A. Stoleru, M.D. 
-Pathologist: Deborah A Dillon, M.D. 
-PATHOLOGIC DIAGNOSIS: 
-CONSULT SLIDES FROM WENTWORTH-DOUGLASS HOSPITAL, DOVER, NH: 
-LEFT BREAST, 2:00, CORE NEEDLE BIOPSIES FOR A REMOVED_DATE CM MASS ( REMOVED_ACCESSION_ID ; 7/02/08): 
-INVASIVE CARCINOMA with ductal and lobular features, well differentiated 
-(modified Bloom-Richardson grade I/III), measuring at least 0.8cm in this 
-limited specimen. 
-No lymphovascular invasion is seen in this limited specimen. 
-DUCTAL CARCINOMA IN SITU, solid and cribriform types (low nuclear grade), with 
-associated calcifications, is present. 
-CLINICAL DATA: 
-History: Abnormal mammogram 
-Clinical Diagnosis: IDC 
-TISSUE SUBMITTED: 
-Consult slides. 
-GROSS DESCRIPTION: 
-Received from Wentworth-Douglass Hospital, Pathology Department, 789 Central 
-Avenue, Dover, NH  REMOVED_CASE_ID , are seven (7) glass slides. 
-The slides are labeled "" REMOVED_ACCESSION_ID "" and sublabeled "" REMOVED_ACCESSION_ID "", "" REMOVED_ACCESSION_ID   REMOVED_ACCESSION_ID "", "" REMOVED_ACCESSION_ID   REMOVED_ACCESSION_ID "", 
-"" REMOVED_ACCESSION_ID  ER"", "" REMOVED_ACCESSION_ID  PR"", "" REMOVED_ACCESSION_ID   REMOVED_ACCESSION_ID "" and "" REMOVED_ACCESSION_ID  NEGATIVE"", corresponding to a left breast, 
-2 o'clock, core biopsy (1.2 x REMOVED_DATE x 0.2cm ) performed on REMOVED_DATE  according to 
-the accompanying pathology report bearing the patient's name. 
-Subsequently received on REMOVED_DATE is one (1) block labeled "" REMOVED_ACCESSION_ID "" and 
-sublabeled  REMOVED_ACCESSION_ID . 
-By his/her signature below, the senior physician certifies that he/she 
-personally conducted a microscopic examination (""gross only"" exam if so stated) 
-of the described specimen(s) and rendered or confirmed the diagnosis(es) 
-related thereto. 
-Final Diagnosis by Deborah A Dillon M.D., Electronically signed on REMOVED_DATE 
-SURGICAL ADDENDUM (7/24/08): 
-Immunoperoxidase studies were performed on formalin fixed tissue with the 
-following results for invasive carcinoma (block  REMOVED_ACCESSION_ID ): 
-Estrogen receptor POSITIVE 
-Progesterone receptor NEGATIVE 
- REMOVED_ACCESSION_ID /neu (c-erb- REMOVED_ACCESSION_ID ) NEGATIVE (0) 
-Hormone receptor analysis: The percent of immunoreactive nuclei in the 
-invasive carcinoma is assessed visually and reported as follows: 
-positive >10% of nuclei immunoreactive 
-positive - low > 0% - < 10% of nuclei immunoreactive 
-negative 0% of nuclei immunoreactive 
-The lower threshold for clinically significant immunoreactivity has not yet 
-been determined. 
- REMOVED_ACCESSION_ID /neu analysis: 
-Negative (0): No immunoreactivity or immunoreactivity in <10% of tumor cells. 
-Negative (1+): Faint weak immunoreactivity in >10% of tumor cells but only a 
-portion of the membrane is positive. 
-Positive (2+):Weak to moderate complete membrane immunoreactivity in >10% of 
-tumor cells. 
-Positive (3+):Moderate to strong complete membrane immunoreactivity in >30% of 
-tumor cells. 
-Cytoplasmic immunoreactivity alone is scored as a negative result. 
-External controls are evaluated and show appropriate Immunoreactivity. 
-Some of the reagents used in these assays may be approved for investigational 
-use only. 
-Addendum #1 by Deborah A Dillon M.D., Electronically signed on REMOVED_DATE 
-[report_end] ",1,0
-"Accession Number:  REMOVED_ACCESSION_ID  Report Status: Amend/Addenda 
-Type: Surgical Pathology 
-Specimen Type: Breast, excisional tissue 
-Procedure Date: REMOVED_DATE 
-Ordering Provider: DIANE C LOCKHART M.D. 
-CASE: BS-09- REMOVED_ACCESSION_ID  
- REMOVED_PATIENT_NAME  
-********** Addended Report *********** 
-Resident: Dick Guang-Iong Hwang, M.D., Ph.D. 
-Pathologist: Jane E. Brock, M.B., B.S., Ph.D. 
-PATHOLOGIC DIAGNOSIS: 
-LEFT BREAST WIRE LOCALIZED EXCISION FOR A REMOVED_DATE CM ENHANCING AREA SEEN ON MRI 
-IMAGING (PART A): 
-ATYPICAL LOBULAR HYPERPLASIA, focal. 
-Nodule of apocrine cysts, columnar cell change and papillary hyperplasia (0.4 
-cm focus,  REMOVED_ACCESSION_ID ,  REMOVED_ACCESSION_ID , see Note). 
-Extensive benign cysts and calcifications in normal epithelium. 
-The margins were inked and evaluated for the final diagnosis. 
-NOTE: The benign 0.4cm nodule seen abutting the superior margin in slides  REMOVED_ACCESSION_ID  
-and  REMOVED_ACCESSION_ID  likely represents the lesion of interest on MRI screening. 
-LEFT BREAST WIRE LOCALIZED EXCISION FOR A CLIP AND A MASS, LEFT SENTINEL LYMPH 
-NODE BIOPSIES #1, #2, #3 (PARTS B,C,F,G, INCLUDING FSA, FSB, FSC): 
-INVASIVE CARCINOMA with ductal and lobular features 
-DUCTAL CARCINOMA IN SITU 
-LOBULAR CARCINOMA IN SITU 
-INVASIVE CARCINOMA with ductal and lobular features, moderately differentiated 
-(modified Bloom-Richardson grade II/III), 1.9cm  
-Tumor scores 3 for tubule formation, 2 for nuclear pleomorphism and 1 for 
-mitoses (total score 6). 
-No lymphovascular invasion is present. 
-DUCTAL CARCINOMA IN SITU, solid type (intermediate nuclear grade) with necrosis 
-and calcifications is present in at least 6 of 19 blocks, associated with the 
-invasive carcinoma (EIC negative). 
-LOBULAR CARCINOMA IN SITU is present. 
-Invasive carcinoma is present at the anterior margin ( REMOVED_ACCESSION_ID ) and lateral margin 
-( REMOVED_ACCESSION_ID ), < 0.1cm from the inferior margin ( REMOVED_ACCESSION_ID ). Posterior, superior, and medial 
-margins are negative for invasive carcinoma (> 0.3cm ). 
-DCIS is present 0.1cm from the anterior margin ( REMOVED_ACCESSION_ID ), 0.2cm from the lateral 
-margin ( REMOVED_ACCESSION_ID ). Medial, superior, inferior, and posterior margins are negative 
-for DCIS (> 0.3cm ). 
-Five lymph nodes including three (3) sentinel lymph nodes and two (2) 
-intra-parenchymal lymph nodes (0.9cm and 0.6cm ) are negative for carcinoma 
-(at least 3 H&E levels examined for sentinel lymph nodes). 
-Immunoperoxidase studies were performed on formalin fixed tissue with the 
-following results for invasive carcinoma (block  REMOVED_ACCESSION_ID ,  REMOVED_ACCESSION_ID ,  REMOVED_ACCESSION_ID ; see NOTE): 
-Estrogen receptor POSITIVE 
-Progesterone receptor POSITIVE 
- REMOVED_ACCESSION_ID /neu (c-erb- REMOVED_ACCESSION_ID ) Heterogeneous (predominantly 0 - focally 2+) see 
-Note 
-E-CADHERIN Positive in ductal component and negative in lobular 
-component 
-NOTE: Multiple slides are stained for hormone receptors. The lobular component 
-of the tumor which is E-cadherin negative, shows absent membranous staining for 
- REMOVED_ACCESSION_ID /neu and the ductal component which is E-cadherin shows 1+ to focally 2+ 
-staining for  REMOVED_ACCESSION_ID /neu but represents less than 10% of the total tumor volume 
-using Dako antibody clone ( REMOVED_ACCESSION_ID ). The tumor is uniformly negative for  REMOVED_ACCESSION_ID /neu 
-using the  REMOVED_ACCESSION_ID   REMOVED_ACCESSION_ID  clone including the ductal component ( REMOVED_ACCESSION_ID ,  REMOVED_ACCESSION_ID ,  REMOVED_ACCESSION_ID ). The 
-DCIS which is E-cadherin positive, shows 2+ expression of  REMOVED_ACCESSION_ID /neu and the LCIS 
-which is E-cadherin negative is also  REMOVED_ACCESSION_ID /neu negative. The prior core biopsy 
-showed 2+ staining for  REMOVED_ACCESSION_ID /neu in the invasive component and FISH studies are 
-pending on the core biopsy material. 
-The left breast carcinoma could be classified as AJCC Classification (6th 
-edition):  REMOVED_ACCESSION_ID c  REMOVED_ACCESSION_ID (sn) 
-RIGHT BREAST WIRE LOCALIZED EXCISION FOR A CLIP AND A MASS AND RIGHT SENTINEL 
-LYMPH NODES #1 AND #2 (PARTS D, E, H AND FSD, FSE): 
-INVASIVE DUCTAL CARCINOMA 
-DUCTAL CARCINOMA IN SITU 
-INVASIVE DUCTAL CARCINOMA, well differentiated (modified Bloom-Richardson grade 
-I/III), 1.1cm in greatest dimension. 
-Tumor scores 1 for tubule formation, 2 for nuclear pleomorphism and 1 for 
-mitoses (total score 4). Tumor is associated with biopsy site changes. 
-Immunohistochemical profile has been performed previously (ER positive, PR 
-positive-low,  REMOVED_ACCESSION_ID /neu not amplified by FISH, see  REMOVED_ACCESSION_ID ). 
-No lymphovascular invasion is present. 
-DUCTAL CARCINOMA IN SITU, cribriform type (low nuclear grade) without necrosis 
-or calcifications is present associated with the invasive carcinoma (6 of 28 
-blocks; EIC negative). 
-Other findings: 
-Atypical lobular hyperplasia. 
-Fibroadenoma (0.5cm   REMOVED_ACCESSION_ID ). 
-Invasive carcinoma is present at the lateral margin ( REMOVED_ACCESSION_ID ,  REMOVED_ACCESSION_ID ). Medial, 
-superior, inferior, anterior and posterior margins are negative for invasive 
-carcinoma (> 0.3cm ). 
-DCIS is 0.2cm from the lateral margin ( REMOVED_ACCESSION_ID ). Medial, superior, inferior, 
-anterior and posterior margins are negative for DCIS (> 0.3cm ). 
-Two (2) sentinel lymph nodes negative for carcinoma (3 H&E levels examined). 
-Immunohistochemical studies for ER, PR and  REMOVED_ACCESSION_ID /neu have been performed 
-previously on core biopsy material (ER positive, PR positive-low,  REMOVED_ACCESSION_ID /neu not 
-amplified by FISH, performed at HVMA). 
-The right breast carcinoma could be classified as AJCC Classification (6th 
-edition):  REMOVED_ACCESSION_ID c  REMOVED_ACCESSION_ID (sn) 
-CLINICAL DATA: 
-History: 60 yo woman found to have architectural distortion on screening mammo 
-R had U/S core positive inv ductal Ca. Preop MRI showed. Suspicious L lesion, 
-s/p U/S core positive invasive lobular CA. Second lesion on left noted which 
-needs tissue dx; pt preferred simultaneous case. 
-Operation: R wire loc, partial mastectomy + SLNBX, L breast BX; L wire loc 
-partial mastectomy + SLN bx. 
-Operative Findings: Not provided. 
-Clinical Diagnosis: Bilateral breast cancer. 
-TISSUE SUBMITTED: 
-A/1. L breast bx - short stitch superior FS 
-B/2. L SLN 
-C/3. L partial mastectomy 
-D/4. R SLN FS 
-E/5. R partial mastectomy 
-F/6. L SLN #2 FS 
-G/7. L SLN #3 FS 
-H/8. R SLN #2 FS 
-RADIOLOGY: 
-#1. Intact wire and breast tissue are within the specimen. Please submit 
-entire specimen for path. Evaluation; MRI-guided wire localization. Dr. Gambos 
-#3. Specimen contains intact hookwire, calcifications, biopsy clip + density. 
-Discussed with Dr. Lockhart by Ainsly Maclean MD. 
-#5. Specimen contains biopsy clip + mass like density, hookwire intact. 
-Discussed with Dr. Lockhart @ 6:25 pm by Ainsly Maclean 
-O.R. CONSULTATION: 
-SPECIMEN LABELED ""#2. LT SENTINEL NODE #1"" (FSA): 
-One (1) lymph node negative for tumor. 
-SPECIMEN LABELED ""#6. LEFT SENTINEL LYMPH NODE #2"" (FSB): 
-One (1) lymph node negative for tumor. 
-SPECIMEN LABELED ""#7. L SLN #3"" (FSC): 
-One (1) lymph node negative for tumor. 
-SPECIMEN LABELED ""#4. RIGHT SENTINEL LYMPH NODE"" (FSD): 
-One (1) lymph node, negative for tumor. 
-SPECIMEN LABELED ""#5. RIGHT SENTINEL LYMPH NODE #2"" (FSE): 
-One (1) lymph node, negative for tumor. 
-OR Consultation by: Jeffrey Fred Krane, M.D., Ph.D., David Dorfman, M.D. 
-Resident: Leona A. Doyle, M.D., Christian J. Davidson, M.D. 
-The senior physician certifies that he/she personally conducted a gross and/or 
-microscopic examination of the described specimen(s) and rendered or confirmed 
-the rapid diagnos(es) related thereto. 
-GROSS DESCRIPTION: 
-The specimen is received fresh, in eight parts, each  labeled REMOVE_PATIENT_NAME  patient's 
-name, and unit number. 
-Part A, labeled ""#1. L breast Bx mammo, short stitch superior, long stitch 
-lateral"", consists of an irregular portion of yellow lobulated fibrofatty 
-tissue (3.6 x REMOVED_DATE x 1.0cm ), with a long suture designating lateral, and a 
-short suture designating superior. An accompanying specimen radiograph 
-demonstrates a wire in the specimen. The specimen is received previously inked 
-per pathology protocol as anterior blue, posterior black, superior red, 
-inferior green, medial orange, and lateral yellow. As displayed in the 
-accompanying radiograph, there is an inserted needle localization wire, which 
-enters along the lateral-inferior margin, and exits at the superior margin. 
-The specimen is serially sectioned to reveal 90% yellow lobulated adipose 
-tissue, and 10% white fibrous tissue, with no discrete masses or lesions 
-identified. The specimen is sequentially submitted in its entirety. 
-Micro  REMOVED_ACCESSION_ID : Medial margin, radially, 3 frags, ESS. 
-Micro  REMOVED_ACCESSION_ID : Sequential cross sections from medial to lateral, 1 frag each, 
-ESS. 
-Micro  REMOVED_ACCESSION_ID : Lateral margin, radially, 4 frags, ESS. 
-Part B, labeled ""#2. Lt sentinel node #1 FS"", consists of a tan-yellow 
-irregular soft tissue (2.2 x REMOVED_DATE x 0.9cm ), with attached yellow adipose 
-tissue. The specimen is trisected, and submitted in its entirety for frozen 
-section as  REMOVED_ACCESSION_ID , and  REMOVED_ACCESSION_ID . The remainder of the adipose tissue is submitted 
-for permanent. 
-Micro  REMOVED_ACCESSION_ID :  REMOVED_ACCESSION_ID  remnant, 1 frag, ESS. 
-Micro  REMOVED_ACCESSION_ID :  REMOVED_ACCESSION_ID  remnant, 2 frags, ESS. 
-Micro  REMOVED_ACCESSION_ID : Remainder of adipose tissue, 1 frag, ESS. 
-Part C, labeled ""#3. Lt partial mastectomy short superior long lateral"", 
-consists of an irregular fragment of yellow lobulated fibrofatty tissue (5.0 x 
-5.0 x 2.3cm ), with a long suture designating lateral, and a short suture 
-designating superior. The specimen is received with a radiograph which 
-demonstrates a clip, wire and 3 densities in the specimen. The specimen is 
-inked (in the frozen room) per pathology protocol as the anterior blue, 
-posterior black, superior red, inferior green, lateral yellow and medial 
-orange. The specimen is serially sectioned to reveal a white-pink irregular 
-ill-defined mass (1.9 x REMOVED_DATE x 0.9cm ) located 0.2cm from the lateral margin, 
-0.3cm from the anterior, inferior and medial margins, 1.5cm from the superior 
-margin, and 2.0cm from the posterior margin. A portion of the mass is 
-submitted to tissue bank including that containing the clip. In addition to 
-the mass there are also two white well-delineated nodules. One of the nodules 
-(0.9cm in greatest diameter) is 0.2cm from the previously described mass, and 
-is 0.4cm from the lateral margin, 1.4cm from the medial margin, 1.6cm from 
-the superior margin, 1.0cm from the inferior margin, 1.2cm from the anterior 
-margin and 2.2cm from the posterior margin. The second well-delineated nodule 
-(0.6cm in greatest diameter) is 2.0cm posterior to the first described 
-nodule, and a 0.2cm from the posterior margins, 3.3cm from the anterior 
-margins, 1.3cm from the superior margins, 1.3cm from the medial margins, REMOVED_DATE 
-cm from the lateral margins, and 1.3cm from the inferior margins. The 
-remaining cut surface displays 95% yellow lobulated adipose tissue, and 5% 
-white fibrous tissue, with no additional discrete masses or lesions identified. 
-The specimen is sequentially submitted in its entirety. 
-Micro  REMOVED_ACCESSION_ID : Posterior margin, to include the second described well-delineated 
-nodule in  REMOVED_ACCESSION_ID , multi frags, ESS. 
-Micro  REMOVED_ACCESSION_ID : Sequential cross sections, trisected,  REMOVED_ACCESSION_ID  1 frag,  REMOVED_ACCESSION_ID  2 frags, ESS. 
-Micro  REMOVED_ACCESSION_ID : Sequential cross sections, serially sectioned, with the first 
-described well-delineated nodule in  REMOVED_ACCESSION_ID , 1 frag each, ESS. 
-Micro  REMOVED_ACCESSION_ID : Sequential cross sections, serially sectioned, cavities in 
- REMOVED_ACCESSION_ID ,  REMOVED_ACCESSION_ID  1 frag each,  REMOVED_ACCESSION_ID  2 frags, ESS. 
-Micro  REMOVED_ACCESSION_ID : Sequential cross sections, trisected, to contain main mass, 1 
-frag each, ESS. 
-Micro  REMOVED_ACCESSION_ID : Sequential cross sections, bisected, 2 frags, ESS. 
-Micro  REMOVED_ACCESSION_ID : Anterior margin, radially, 3 frags each, ESS. 
-Part D, labeled ""#4. Right sentinel lymph node FS"", consists of a tan-yellow 
-soft tissue, consistent with a lymph node (1.6 x REMOVED_DATE x 0.5cm ), which is 
-bisected and submitted for frozen section as FSD. Remainder of the adipose 
-tissue is submitted for permanent. 
-Micro  REMOVED_ACCESSION_ID : FSD remnant, 1 frag, ESS. 
-Micro  REMOVED_ACCESSION_ID : Remainder of adipose tissue, 1 frag, ESS. 
-Part E, labeled ""#5. Right partial mastectomy short stitch superior long stitch 
-lateral"", consists of an irregular fragment of yellow lobulated fibrofatty 
-tissue (6.0 x REMOVED_DATE x 3.0cm ), with a long suture designating lateral, and a 
-short suture designating superior. The specimen is received with a radiograph 
-which demonstrates a wire, a clip and a density in the specimen. The specimen 
-displays an inserted needle localization wire, which enters along the lateral 
-margin, and does not exit the specimen. The specimen is inked in the frozen 
-section room per pathology protocol, as anterior blue, posterior black, 
-superior red, inferior green, lateral yellow and medial orange. The specimen 
-is serially sectioned to reveal an ill-defined irregular white-pink mass (1.1 x 
-1.0 x 1.0cm ). The mass is 0.1cm from the anterior margin, 0.5cm from the 
-posterior margin, 0.3cm from the superior margin, 1.2cm from the inferior 
-margin, 1.8cm from the medial margin and 2.0cm from the lateral margin. A 
-surgical clip is identified within the specimen, as displayed in the 
-accompanying radiograph. The remaining cut surface displays 80% yellow 
-lobulated adipose tissue, and 20% white fibrous tissue, with no additional 
-discrete masses or lesions identified. The specimen is sequentially submitted 
-in its entirety. 
-Micro  REMOVED_ACCESSION_ID : Lateral margin, radially, 2 frags each, ESS. 
-Micro  REMOVED_ACCESSION_ID : Sequential cross sections, bisected, 1 frag each, ESS. 
-Micro  REMOVED_ACCESSION_ID : Sequential cross sections, bisected, 1 frag each, ESS. 
-Micro  REMOVED_ACCESSION_ID : Sequential cross sections, bisected, 1 frag each, ESS. 
-Micro  REMOVED_ACCESSION_ID : Sequential cross sections, bisected, 1 frag each, ESS. 
-Micro  REMOVED_ACCESSION_ID : Sequential cross sections, serially sectioned, to include the 
-mass in  REMOVED_ACCESSION_ID , and the surgical clip identified in  REMOVED_ACCESSION_ID , 1 frag each, ESS. 
-Micro  REMOVED_ACCESSION_ID : Sequential cross sections, bisected, with the mass in  REMOVED_ACCESSION_ID , 1 
-frag each, ESS. 
-Micro  REMOVED_ACCESSION_ID : Sequential cross sections, trisected, 1 frag each, ESS. 
-Micro  REMOVED_ACCESSION_ID : Sequential cross sections, trisected, 1 frag each, ESS. 
-Micro  REMOVED_ACCESSION_ID : Sequential cross sections, bisected, 1 frag each, ESS. 
-Micro  REMOVED_ACCESSION_ID : Sequential cross sections, bisected, 1 frag each, ESS. 
-Micro  REMOVED_ACCESSION_ID : Medial margin, radially,  REMOVED_ACCESSION_ID  3 frags,  REMOVED_ACCESSION_ID  4 frags, ESS. 
-Part F, labeled ""#6. Lt sentinel LN #2 FS"", consists of a tan-yellow irregular 
-soft tissue (0.9 x REMOVED_DATE x 0.4cm ), consistent with a lymph node, which is 
-submitted in toto for frozen section as FSB. 
-Micro  REMOVED_ACCESSION_ID : FSB remnant, 1 frag, ESS. 
-Part G, labeled ""#7. LS LN #3 FS"", consists of a tan-yellow irregular soft 
-tissue, with attached yellow adipose tissue (1.4 x REMOVED_DATE x 0.3cm ). The adipose 
-tissue is removed, and the specimen is bisected and submitted in toto for 
-frozen section as FSC. The remaining adipose tissue is submitted for 
-permanent. 
-Micro  REMOVED_ACCESSION_ID : FSC remnant, 2 frags, ESS. 
-Micro  REMOVED_ACCESSION_ID : Remainder of adipose tissue, multi frags, ESS. 
-Part H, labeled ""#8. Right sentinel lymph node #2 FS"", consists of a tan-pink 
-to yellow irregular soft tissue, consistent with a lymph node (1.1 x REMOVED_DATE x REMOVED_DATE 
-cm), which is bisected and submitted in toto for frozen section as FSE. 
-Micro  REMOVED_ACCESSION_ID : FSE remnant, 2 frags, ESS. 
-CASE NUMBER:  REMOVED_CASE_ID . 
-By his/her signature below, the senior physician certifies that he/she 
-personally conducted a microscopic examination (""gross only"" exam if so stated) 
-of the described specimen(s) and rendered or confirmed the diagnosis(es) 
-related thereto. 
-Final Diagnosis by Jane E. Brock M.B., B.S., Ph.D., Electronically signed on 
-Friday May 15,  REMOVED_CASE_ID  at 02:25:56PM 
-SURGICAL ADDENDUM: (6/17/09) 
-A paraffin block of invasive carcinoma was sent for the genomic health oncotype 
-DX Breast Cancer Assay with the following results for the left breast carcinoma 
-(block  REMOVED_ACCESSION_ID ): 
-Recurrence Score = 21 
-Patients with a Recurrence Score of 21 in the clinical validation study had an 
-Average Rate of Recurrence at 10 years of 13% (95% CI: 10% - 16%). 
-QUANTITATIVE SINGLE GENE REPORT: 
-ER Score = REMOVED_DATE Positive 
-PR Score = REMOVED_DATE Positive 
- REMOVED_ACCESSION_ID  Score = REMOVED_DATE Negative 
-Addendum #1 by Jane E. Brock M.B., B.S., Ph.D., Electronically signed on 
-Wednesday REMOVED_MONTH 17,  REMOVED_CASE_ID  at 02:43:53PM 
-SURGICAL ADDENDUM: 
-A paraffin block of invasive carcinoma was sent for the genomic health oncotype 
-DX Breast Cancer Assay with the following results for the right invasive 
-carcinoma (block  REMOVED_ACCESSION_ID ): 
-Recurrence Score = 19 
-Patients with a Recurrence Score of 19 in the clinical validation study had an 
-Average Rate of Recurrence at 10 years of 12% (95% CI: 9% - 15%). 
-QUANTITATIVE SINGLE GENE REPORT: 
-ER Score = REMOVED_DATE Positive 
-PR Score = REMOVED_DATE Positive 
- REMOVED_ACCESSION_ID  Score = REMOVED_DATE Negative 
-Addendum #2 by Susan Lester M.D., Ph.D., Electronically signed on Tuesday 
-REMOVED_MONTH 07,  REMOVED_CASE_ID  at 04:53:44PM 
-[report_end] ",1,0
-"Accession Number:  REMOVED_ACCESSION_ID  Report Status: Final 
-Type: Surgical Pathology 
-Pathology Report  REMOVED_ACCESSION_ID  SKIN CYST, TAG OR DEBRIDEMENT 
+Pathology Report  REMOVED_ACCESSION_ID  BREAST - EXCISIONAL TISSUE W/MARGINS 
 Accessioned On: REMOVED_DATE 
-LESTER, SUSAN, M.D.~PH.D. 
-DIAGNOSIS: by LESTER,SUSAN,M.D.,PH.D. 
-LEFT AXILLARY SKIN, EXCISION: 
-Skin with cicatrix. 
-Note: No tumor is seen. 
-LEFT AXILLARY LYMPH NODE DISSECTION, LEVELS I AND II: 
-Thirteen (13) lymph nodes with no tumor seen. 
-LEFT BREAST, RE-EXCISION: 
-INVASIVE LOBULAR CARCINOMA, well differentiated (modified Bloom-Richardson 
-grade I/III), is present as two foci (each 0.2cm in size; blocks 25 and 
-26). The invasive carcinoma is not present adjacent to the prior biopsy 
-site. 
-No lymphovascular invasion is seen. 
-The invasive carcinomas are not present at the margin. The closest margin 
-is medial (0.1cm from invasive carcinoma). 
-EXTENSIVE CARCINOMA IN SITU, solid type (low to intermediate nuclear 
-grade) is present in 10 of 19 blocks (blocks REMOVED_DATE  22, 23, and REMOVED_DATE  see 
-note). No necrosis or calcifications are present. 
-CARCINOMA IN SITU is < 0.1cm from the inferior margin (four blocks), 
-anterior margin (two blocks), and medial margin (two blocks). Carcinoma 
-in situ is not seen near the superior, lateral, or posterior margins. 
-Carcinoma in situ is present adjacent to the prior biopsy site and away 
-from the prior biopsy site. 
-Note: The carcinoma in situ is identical to that seen in the prior 
-re-excision ( REMOVED_ACCESSION_ID ). The architectural pattern favors lobular 
-carcinoma in situ (with involvement of lobules and pagetoid spread), but 
-the degree of nuclear pleomorphism and the presence of a solid cohesive 
-growth pattern favors ductal carcinoma in situ. 
-The invasive carcinomas appear to be separate primary tumors associated 
-with the carcinoma in situ. 
-CLINICAL DATA: 
-History: 43 year old female with abnormal mammo REMOVED_DATE  needle localization 
-biopsy showed invasive lobular carcinoma (9mm ) with positive lateral and 
-inferior margins. No LVI. ER+, PR+, and Her2/neu-. REMOVED_DATE left breast 
-re-excision showed invasive lobular carcinoma and left sentinel node 
-showed metastatic cancer in 1 node. 
-Operation: Left breast re-excision level I and II axillary node 
-dissection. 
-TISSUE SUBMITTED: #1. Axillary scar. 
-#2. Left axillary contents. 
-#3. Left breast biopsy short stitch superior, long stitch 
-lateral whip stitch on chest margin. 
-GROSS DESCRIPTION: by OAKES,SCOTT A.,M.D. 
-The specimen is received fresh, in three parts, each  labeled REMOVE_PATIENT_NAME  patient's 
-name and unit number. 
-Part one, sublabeled ""#1. axillary scar"", consists of a single skin ellipse 
-that measures 3cm x REMOVED_DATE x 0.4cm that contains a 2.9cm healing surgical scar. 
-MICRO #1: 4 frags, ESS. 
-Part two, sublabeled ""#2. left axillary contents"", consists of a single 
-fragment of pink/yellow fibroadipose tissue that measures 4cm x 3.5cm x 
-2.5cm  Eleven potential lymph nodes are grossly identified in the specimen, 
-the largest measuring 2.8cm in greatest dimension. 
-MICRO #2: 3 lymph nodes, 3 frags, ESS. 
-MICRO #3: 1 lymph nodes, 2 frags, ESS. 
-MICRO #4: 2 lymph nodes, 2 frags, ESS. 
-MICRO #5-7: 1 lymph node, mult frags, ESS. 
-MICRO #8: 4 lymph nodes, 2 frags, ESS. 
-Part three, sublabeled ""#3. left breast biopsy"", consists of a single fragment 
-of pink/yellow fibroadipose tissue that has been previously inked. The specimen 
-is inked by the surgeon per pathology protocol for the evaluation of margins: 
-posterior = black; anterior = blue; superior = red; inferior = green; lateral 
-= yellow; medial = orange, that measures 10cm x REMOVED_DATE x 3.5cm  The specimen 
-includes a very small skin ellipse measuring 3.5cm x 0.8cm x 0.4cm  The 
-center of the specimen contains a large cystic biopsy cavity that measures 9cm 
-x 5cm x 3cm  On sectioning there are no areas grossly suspicious for 
-invasive carcinoma. The biopsy site and all margins are extensively sampled 
-for histologic examination. 
-MICRO #9: Skin ellipse, 2 frags, RSS. 
-MICRO #10-12: Deep margin, 1 frag each, RSS. 
-MICRO #13-15: Lateral margin, 1 frag, ESS. 
-MICRO #16-18: Inferior margin, 1 frag each, RSS. 
-MICRO #19-21: Superior margin, 1 frag each, RSS. 
-MICRO #22-24: Superficial margin, 1 frag each, RSS. 
-MICRO #25-27: Medial resection margin, 1 frag each, RSS. 
-Reports to: RHEI, ESTHER M.D. 
-SPECIMEN TYPE: SKIN CYST, TAG OR DEBRIDEMENT 
-ADDITIONAL SPECIMEN TYPE: LYMPH NODES REGIONAL RESECTION 
-ADDITIONAL SPECIMEN TYPE: BREAST - EXCISIONAL TISSUE W/MARGINS 
-[report_end] ",0,1
-"Accession Number:  REMOVED_ACCESSION_ID  Report Status: Amend/Addenda 
-Type: Surgical Pathology 
-Specimen Type: Breast core needle biopsy 
-Procedure Date: REMOVED_DATE 
-Ordering Provider: DIANNE GEORGIAN-SMITH M.D. 
-CASE: BS-09- REMOVED_ACCESSION_ID  
- REMOVED_PATIENT_NAME  
-********** Addended Report *********** 
-Resident: Qinghong Yang, M.D., Ph.D. 
-Pathologist: Susan Lester, M.D., Ph.D. 
-PATHOLOGIC DIAGNOSIS: 
-LEFT BREAST, UPPER INNER, 14 G ULTRASOUND GUIDED CORE NEEDLE BIOPSIES FOR A 
-2 CM IRREGULAR MASS: 
-INVASIVE CARCINOMA with ductal and lobular features, poorly 
-differentiated (modified Bloom-Richardson grade III/III), measuring at 
-least 1.6cm in size. 
-No lymphovascular invasion is seen in this limited specimen. 
-No in situ carcinoma is seen in this limited specimen. 
-NOTE: Immunohistochemical analysis for estrogen receptor, 
-progesterone receptor, and  REMOVED_ACCESSION_ID /neu will be performed and reported in an 
-addendum. 
-CLINICAL DATA: 
-HISTORY: 64 year old with left breast mass. Diff Dx: Highly suspicious for 
-carcinoma. Time in formalin - 2:15 pm. 
-BREAST IMAGING FINDING: 
-1. Left: 2cm irregular mass. 
-LOCATION: 
-1. Left: upper/inner. 
-TYPE OF CORE NEEDLE BIOPSY: 
-1. 14 G Ultrasound. 
-TISSUE SUBMITTED: 
-A/1) Left breast core biopsy in one orange cassette. 
-GROSS DESCRIPTION: 
-The specimen is received in formalin,  labeled REMOVE_PATIENT_NAME  patient's name, unit 
-number, and ""left breast"", and consists of multiple white/yellow fibrofatty 
-tissues (aggregating REMOVED_DATE x REMOVED_DATE x 0.2cm ), which are received in an orange 
-cassette. The specimens are submitted in toto. 
-Micro  REMOVED_ACCESSION_ID : Multi frags, ESS. 
-cp/lp 
-CASE NUMBER:  REMOVED_CASE_ID  
-By his/her signature below, the senior physician certifies that he/she 
-personally conducted a microscopic examination (""gross only"" exam if so stated) 
-of the described specimen(s) and rendered or confirmed the diagnosis(es) 
-related thereto. 
-Final Diagnosis by Susan Lester M.D., Ph.D., Electronically signed on Monday 
-REMOVED_MONTH 13,  REMOVED_CASE_ID  at 03:45:49PM 
-SURGICAL ADDENDUM: 
+HORNICK, JASON, L., M.D.~PH.D. 
+DIAGNOSIS: by HORNICK,JASON L.,M.D.,PH.D. 
+LEFT BREAST, EXCISION FOR A MASS: 
+INVASIVE CARCINOMA WITH MIXED FEATURES AND 
+DUCTAL CARCINOMA IN SITU 
+SYNOPSIS: 
+INVASIVE CARCINOMA 
+Size - 4.3cm 
+Multifocal - no 
+Histologic Type - mixed ductal and lobular 
+Histologic Grade (SBR) - II (moderate) 
+Nuclear Grade - intermediate 
+EIC - positive 
+Lymphovascular invasion - absent 
+Dermal lymphatic invasion - N/A 
+Skin invasion - N/A 
+Skeletal muscle invasion - N/A 
+Final Margins (invasive) - 
+Positive (ink on carcinoma) - all margins 
+DUCTAL CARCINOMA IN SITU 
+Types - solid and cribriform 
+Nuclear grade - intermediate 
+Calcifications in DCIS - absent 
+Central necrosis in DCIS - present 
+Extent of DCIS 
+Number of blocks:total - 6:7 blocks 
+Final Margins (DCIS) 
+Negative (>0.3cm ) - medial, posterior, superior 
+Very close (<0.1cm ) - lateral, anterior, inferior 
+LOBULAR CARCINOMA IN SITU - absent 
+AJCC CLASSIFICATION (6th edition) -  REMOVED_ACCESSION_ID  pNX MX 
+SPECIAL STUDIES (ER/PR/HER-2) - pending 
+NOTE: This case was reviewed by Dr. J. Connolly (Breast Pathology Service), who 
+concurs. 
+SURGICAL ADDENDUM: by LESTER,SUSAN,M.D.,PH.D. 
 Immunoperoxidase studies were performed on formalin fixed tissue with the 
-following results for invasive carcinoma (block  REMOVED_ACCESSION_ID ): 
+following results for invasive carcinoma (block 3): 
 Estrogen receptor POSITIVE 
 Progesterone receptor POSITIVE 
- REMOVED_ACCESSION_ID /neu (c-erb- REMOVED_ACCESSION_ID ) HETEROGENEOUS (see note) 
-Note: The carcinoma shows very heterogeneous positivity for  REMOVED_ACCESSION_ID /neu. The 
-majority of the carcinoma is negative, but focal areas show moderate complete 
-membrane immunoreactivity. Repeat studies on the excisional specimen would be 
-of value. 
-Immunohistochemical studies for estrogen receptor, progesterone receptor, and 
- REMOVED_ACCESSION_ID /neu were evaluated by manual morphometric analysis using the following 
-criteria: 
-Hormone receptor analysis: The percent of immunoreactive nuclei in the 
-carcinoma is reported as follows: 
-positive >10% of nuclei immunoreactive 
-positive - low > 0% - < 10% of nuclei immunoreactive 
-negative 0% of nuclei immunoreactive 
-The lower threshold for clinically significant immunoreactivity has not yet 
-been determined. 
- REMOVED_ACCESSION_ID /neu analysis: 
-Negative (0): No immunoreactivity or immunoreactivity in <10% of tumor 
-cells. 
-Negative (1+): Faint weak immunoreactivity in >10% of tumor cells but 
-only a portion of the membrane is positive. 
-Equivocal (2+):Weak to moderate complete membrane immunoreactivity in 
->10% of tumor cells or moderate to strong complete membrane 
-immunoreactivity in < 30% of tumor cells. 
-Positive (3+):Moderate to strong complete membrane immunoreactivity in 
->30% of tumor cells. 
-Cytoplasmic immunoreactivity alone is scored as a negative result. 
-External controls are evaluated and show appropriate immunoreactivity. 
-The immunoperoxidase, immunofluorescence and in-situ hybridization tests 
-performed at Brigham and Women's Hospital were developed and their performance 
-characteristics determined by the Immunohistochemistry Laboratories in the 
-Department of Pathology at BWH. They have not been cleared or approved by the 
-U.S. Food and Drug Administration (FDA). The FDA has determined that such 
-clearance or approval is not necessary. 
-Addendum #1 by Susan Lester M.D., Ph.D., Electronically signed on Wednesday 
-REMOVED_MONTH 15,  REMOVED_CASE_ID  at 05:37:12PM 
-[report_end] ",1,0
-"Accession Number:  REMOVED_ACCESSION_ID  Report Status: FinalType: Surgical Pathology Pathology Report:  REMOVED_ACCESSION_ID  OPERATION DATE: 22 REMOVED_MONTH 04 ACCESSIONED ON: 22 REMOVED_MONTH 04 at 15:00 CLINICAL DATA: 54 year old female with left breast cancer. =============================================================================== *** FINAL DIAGNOSIS *** LYMPH NODE (LEFT AXILLA, SENTINEL), EXCISION: THERE IS NO EVIDENCE OF MALIGNANCY IN 1 LYMPH NODE. NOTE: Keratin-positive tumor cells are not identified on three  REMOVED_ACCESSION_ID .3/Cam5.2 immunostained levels. The frozen section diagnosis is confirmed. BREAST (LEFT), EXCISIONAL BIOPSY: INVASIVE AND IN-SITU APOCRINE CARCINOMA. SEE TABLE #1. LOBULAR NEOPLASIA (ATYPICAL LOBULAR HYPERPLASIA). HEALING BIOPSY SITE. TABLE OF PATHOLOGICAL FINDINGS #1 INVASIVE CARCINOMA Tumor size: REMOVED_DATE x REMOVED_DATE x 0.5cm  Grade: 2 Lymphatic vessel invasion: Present Blood vessel invasion: Not identified. Margin of invasive carcinoma: Invasive carcinoma extends to less than 0.2cm from the anterior and posterior margins of the specimen. Location of ductal carcinoma in-situ: Within the region of the mass. Grade of ductal carcinoma in-situ: 1 Margin of ductal carcinoma in-situ: The distances to all margins measure 0.2cm or greater. Stains for receptors: Requested on block D. BREAST (LEFT, FINAL SUPERIOR MARGIN), EXCISION: THERE IS NO EVIDENCE OF MALIGNANCY. BREAST (LEFT, FINAL INFERIOR MARGIN), EXCISION: THERE IS NO EVIDENCE OF MALIGNANCY. MULTIPLE LEVELS EXAMINED. BREAST (LEFT, ADDITIONAL MEDIAL), EXCISION: LOBULAR NEOPLASIA (ATYPICAL LOBULAR HYPERPLASIA). MYXOID FIBROADENOMA. BREAST (LEFT, FINAL MEDIAL), EXCISIONAL: LOBULAR NEOPLASIA (ATYPICAL LOBULAR HYPERPLASIA). BREAST (LEFT, FINAL ANTERIOR MARGIN), EXCISION: THERE IS NO EVIDENCE OF MALIGNANCY. BREAST (LEFT, FINAL LATERAL MARGIN), EXCISION: THERE IS NO EVIDENCE OF MALIGNANCY. BREAST (LEFT, FINAL DEEP MARGIN), EXCISION: THERE IS NO EVIDENCE OF MALIGNANCY. Diagnosis by: MELINDA J. LERWILL, M.D. Signed On: 26 REMOVED_MONTH 04 at 14:33 =============================================================================== *** IMMUNOHISTOCHEMISTRY Addendum *** RESULTS OF IMMUNOHISTOCHEMICAL STAINING FOR RECEPTOR PROTEINS Breast (Left, block D): The tumor cells do not stain for estrogen receptor protein. The tumor cells do not stain for progesterone receptor protein. The tumor cells do not show overexpression of HER-2/c-erbB-2. See note. Note: These tests were developed and their performance characteristics determined by the Pathology Department at the Massachusetts General Hospital. They have not been cleared or approved by the U.S. Food and Drug Administration (FDA). The FDA has determined that such clearance or approval is not necessary; this laboratory has established and verified the test's accuracy and precision. Added by: Atul Kumar Bhan, M.D. Signed On: 26 REMOVED_MONTH 04 at 15:47 GROSS DESCRIPTION: Received fresh in the Frozen Section Lab,  labeled REMOVE_PATIENT_NAME  patient's name and unit number, and ""left axillary sentinel node"" are two tan-yellow fragments of fibroadipose tissue measuring REMOVED_DATE x REMOVED_DATE x 0.3cm in aggregate which are entirely frozen as Fx#1, now resubmitted in cassette A. Received fresh,  labeled REMOVE_PATIENT_NAME  patient's name and unit number, and ""left breast lumpectomy"" is a REMOVED_DATE x REMOVED_DATE x 0.7cm oriented fragment of tan-yellow breast. The specimen is inked as follows: anterior-blue, posterior-black, medial-green, and lateral-yellow. The specimen is serially sectioned to reveal a REMOVED_DATE x REMOVED_DATE x 0.5cm ill-defined, tan and focally hemorrhagic nodule. The specimen is entirely submitted from superior to inferior into cassettes B-F. Received fresh,  labeled REMOVE_PATIENT_NAME  patient's name and unit number, and ""left breast lumpectomy additional tissue superior margin"" is a REMOVED_DATE x REMOVED_DATE x 0.3cm fragment of tan-white and focally yellow fibroadipose tissue which is serially sectioned and entirely submitted into cassette G. Received fresh,  labeled REMOVE_PATIENT_NAME  patient's name and unit number, and ""left breast lumpectomy inferior margin"" is an unoriented REMOVED_DATE x REMOVED_DATE x 0.3cm fragment of yellow fibrofatty tissue which is serially sectioned and entirely submitted into cassette H. Received fresh,  labeled REMOVE_PATIENT_NAME  patient's name and unit number, and ""left breast lumpectomy, additional tissue medial"" is a REMOVED_DATE x REMOVED_DATE x 0.3cm fragment of tan-pink fibrofatty tissue containing a REMOVED_DATE x REMOVED_DATE x 0.2cm firm tan-pink nodule. The nodule is bisected and entirely submitted into cassette I and the remaining fibrofatty tissue is entirely submitted into cassette J. Received fresh,  labeled REMOVE_PATIENT_NAME  patient's name and unit number, and ""left breast lumpectomy final, medial margin"" is a REMOVED_DATE x REMOVED_DATE x 0.3cm fragment of tan-pink and focally yellow fibrofatty tissue which is serially sectioned and entirely submitted into cassette K. Received fresh,  labeled REMOVE_PATIENT_NAME  patient's name and unit number, and ""left breast lumpectomy anterior margin"" is a REMOVED_DATE x REMOVED_DATE x 0.3cm fragment of tan-pink fibroadipose tissue which is serially sectioned and entirely submitted into cassette L. Received fresh,  labeled REMOVE_PATIENT_NAME  patient's name and unit number, and ""left breast lumpectomy, lateral margin"" is a REMOVED_DATE x REMOVED_DATE x 0.4cm of tan-white and focally yellow fibroadipose tissue which is serially sectioned and entirely submitted into cassette M. Received fresh,  labeled REMOVE_PATIENT_NAME  patient's name and unit number, and ""left breast lumpectomy, deep margin"" is a REMOVED_DATE x REMOVED_DATE x 0.3cm fragment of tan-pink and focally yellow fibroadipose tissue which is serially sectioned and entirely submitted into cassette N. Resident: PAUL MICHAELS, MD *** INTRA-OPERATIVE DIAGNOSIS *** FROZEN SECTION DIAGNOSIS #1: LYMPH NODE (LEFT AXILLARY SENTINEL): THERE IS NO EVIDENCE OF MALIGNANCY. O.R. Resident: MASSIMO D'APUZZO, MD,PhD O.R. Diagnosis by: Judith Ann Ferry, M.D. =============================================================================== SOURCE CARE UNIT: SAME DAY SURGICAL UNIT -  REMOVED_ACCESSION_ID  REPORTS TO: Michele Annette Gadd, M.D. PART A: LYMPH NODE (LEFT AXILLARY SENTINEL), EXCISION PART B: BREAST(LEFT),EXCISIONAL BIOPSY PART C: BREAST(LEFT,FINAL SUPERIOR MARGIN),EXCISION PART D: BREAST(LEFT,FINAL INFERIOR MARGIN),EXCISION PART E: BREAST(LEFT,ADDITIONAL MEDIAL),EXCISION PART F: BREAST(LEFT,FINAL MEDIAL),EXCISION PART G: BREAST(LEFT,FINAL ANTERIOR MARGIN),EXCISION PART H: BREAST(LEFT,FINAL LATERAL MARGIN),EXCISION PART I: BREAST(LEFT,FINAL DEEP MARGIN),EXCISION ",0,1
-"Accession Number:  REMOVED_ACCESSION_ID  Report Status: Amend/Addenda 
-Type: Surgical Pathology 
-Specimen Type: Breast core needle biopsy 
-Procedure Date: REMOVED_DATE 
-Ordering Provider: ROXANNE LORANS M.D. 
-CASE: BS-06- REMOVED_ACCESSION_ID  
- REMOVED_PATIENT_NAME  
-********** Addended Report *********** 
-Resident: Jian Shen, M.D., Ph.D. 
-Pathologist: Andrea L Richardson, M.D., Ph.D. 
-PATHOLOGIC DIAGNOSIS: 
-RIGHT BREAST, 14 G ULTRASOUND GUIDED CORE NEEDLE BIOPSIES FOR AN IRREGULAR REMOVED_DATE 
-CM MASS: 
-INVASIVE CARCINOMA with ductal and lobular features, well differentiated 
-(modified Bloom-Richardson grade I/III), measuring at least 0.5cm in size in 
-this limited specimen. 
-No lymphovascular invasion is seen in this limited specimen. 
-No in situ carcinoma is present in this limited specimen. 
-NOTE: Immunohistochemical analysis for estrogen receptor, progesterone 
-receptor, and  REMOVED_ACCESSION_ID /neu will be performed and reported in an addendum. 
-CLINICAL DATA: 
-History: Right breast 5-mm mass. 
-Breast Imaging Findings: ill-defined, irregular/spiculated. 
-Operation: 14 G Ultrasound. 
-Operative Findings: 5-mm ill-defined mass. 
-Clinical Diagnosis: R/O CA. 
-TISSUE SUBMITTED: 
-A/1) Right breast tissue. 
-GROSS DESCRIPTION: 
-Received in formalin,  labeled REMOVE_PATIENT_NAME  patient's name, unit number, and ""Right 
-breast"" consists of a white cassette, which contains a few delicate, 
-yellow/white fibrofatty soft tissue cores (1.0 X REMOVED_DATE X 0.2cm in aggregate), 
-entirely submitted. 
-Micro  REMOVED_ACCESSION_ID : Few frags, ESS. 
-WP/mmm 
-By his/her signature below, the senior physician certifies that he/she 
-personally conducted a microscopic examination (""gross only"" exam if so stated) 
-of the described specimen(s) and rendered or confirmed the diagnosis(es) 
-related thereto. 
-Final Diagnosis by Andrea L Richardson M.D., Ph.D., Electronically signed on 
-5/31/ REMOVED_CASE_ID  
-Surgical Addendum: (6/2/06) 
-Immunoperoxidase studies were performed on formalin fixed tissue with the 
-following results for invasive carcinoma (block  REMOVED_ACCESSION_ID ): 
-Estrogen receptor POSITIVE 
-Progesterone receptor NEGATIVE 
- REMOVED_ACCESSION_ID /neu (c-erb- REMOVED_ACCESSION_ID ) NEGATIVE (1+) 
-Note: Normal epithelial cells are appropriately immunoreactive for 
-progesterone receptor. 
+ REMOVED_ACCESSION_ID /neu (c-erb- REMOVED_ACCESSION_ID ) NEGATIVE (0) 
 Interpretation: 
 Hormone receptor analysis: The percent of immunoreactive nuclei in the 
-carcinoma is assessed visually and reported as follows: 
+invasive carcinoma is assessed visually and reported as follows: 
 positive >10% of nuclei immunoreactive 
 positive - low >0% to <10% of nuclei immunoreactive 
 negative 0% nuclei immunoreactive 
@@ -623,248 +54,1091 @@ been determined.
  REMOVED_ACCESSION_ID /neu analysis: 
 Negative (0): No immunoreactivity or immunoreactivity in <10% of tumor 
 cells. 
-Negative (1+): Faint weak immunoreactivity in >10% of tumor cells but only 
-a portion of the membrane is positive. 
-Positive (2+): Weak to moderate complete membrane immunoreactivity in >10% 
-of tumor cells. 
-Positive (3+): Moderate to strong complete membrane immunoreactivity in 
->10% of tumor cells. 
+Negative (1+): Faint weak immunoreactivity in >10% of tumor cells but 
+only a portion of the membrane is positive. 
+Positive (2+): Weak to moderate complete membrane 
+immunoreactivity in >10% of tumor cells. 
+Positive (3+): Moderate to strong complete membrane immunoreactivity 
+in >10% of tumor cells. 
 Cytoplasmic immunoreactivity alone is scored as a negative result. 
 Some of the reagents used in these assays may be approved for investigational 
 use only. 
-Addendum #1 by Andrea L Richardson M.D., Ph.D., Electronically signed on 
-6/2/ REMOVED_CASE_ID  
-[report_end] ",1,0
-" REMOVED_CASE_ID  FRANKLIN,KATHLEEN E 64/F <REG REF 10/22> ( REMOVED_CASE_ID ) WIC PANISZYN,LUCY M.D.--------------------------------------------------------------------------------------------Specimen:  REMOVED_ACCESSION_ID : REMOVED_CASE_ID  SOUT Received: 10/22/07- REMOVED_CASE_ID  Spec Type: - Clinical diagnosis & history: Patch of fibrous tissue with distortion and calcifications in lateral right breast; radial scar vs ductal carcinoma in situ Edited by: REMOVED_DATE -  REMOVED_CASE_ID  PAT.MURJ Gross description: The specimen is received in formalin in one container, labeled ""vacuum assisted breast biopsies, right breast calcifications"" and consists of two orange cassettes. The first orange cassette contains two soft, yellowish-pink, glistening needle biopsies measuring 0.4cm  in length x 0.3cm  in diameter and 1.4cm  in length x 0.3cm  in diameter. These specimens are marked with green ink and resubmitted in cassette 1. 2X all. The second orange cassette contains a 1.4cm  long, 0.3cm  in diameter soft, yellowish-pink, glistening needle biopsy. The specimen is marked with green ink and submitted in cassette 2. 1X all. Also present, free-floating within the container, is a REMOVED_DATE x REMOVED_DATE x 0.3cm  aggregate of soft, yellow needle biopsies, each measuring 0.3cm  in diameter. The specimens are marked with green ink and submitted in cassette REMOVED_DATE agg. all. Dictated by: LV Edited by: REMOVED_DATE -  REMOVED_CASE_ID  PAT.MURJ DIAGNOSIS: Right breast, lateral, needle biopsy: Moderately differentiated infiltrating lobular carcinoma. Ductal carcinoma in situ, grade REMOVED_DATE  cribriform and solid type with focal necrosis and microcalcifications. Edited by: REMOVED_DATE -  REMOVED_CASE_ID  PAT.MURJ DESCRIPTIVE COMMENT: NOTE: The invasive tumor measures at least 0.3cm  No lymphatic/vascular invasion is seen. Immunohistochemical stains for estrogen and progesterone receptors will be performed and the results will be reported in an addendum to follow. Final Diagnosis by: Michael J. Ross, M.D. Edited by: REMOVED_DATE -  REMOVED_CASE_ID  PAT.MURJ ADDENDUM REPORTAddendum #1 Entered: 10/25/07- REMOVED_CASE_ID  *** ADDITIONAL DIAGNOSTIC INFORMATION *** This report contains an addendum to the original for the purpose of providing additional diagnostic information. The invasive tumor cells are positive for E-cadherin and negative for high molecular weight cytokeratin (34 beta  REMOVED_ACCESSION_ID ) supporting infiltrating duct carcinoma rather than infiltrating lobular carcinoma. Immunohistochemical staining on the formalin-fixed, paraffin-embedded block 2 reveals these results for the infiltrating carcinoma: Estrogen receptor: POSITIVE (>10% of nuclei stained Progesterone receptor: NEGATIVE (0% of nuclei stained) Estrogen receptor ( REMOVED_ACCESSION_ID , indirect biotin-free detection) and/or progesterone receptor (PgR 1 REMOVED_ACCESSION_ID , indirect biotin-free detection) is assessed visually by quantitation of the percent of tumor cells staining.Addendum Final: ROSS,MICHAEL J. M.D. * REMOVED_DATE <10/25/07- REMOVED_CASE_ID > by MD.ROSMJ Edited by: REMOVED_DATE -  REMOVED_CASE_ID  PAT.DORD REMOVED_DATE -  REMOVED_CASE_ID  MD.ROSMJCODES:  REMOVED_ACCESSION_ID  - Right breast, N-Moderately diff BREANBX - -BREANBX BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-Positive BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-Invasive BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-Obstruction, NO BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-Focal necrosis BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-Tumor cells, un BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-Carcinoma, NOS BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-Intraductal car BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-Infiltrating du BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-Lobular carcino BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-NCA BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-For BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-With grade BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-Progesterone BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-Beta, NOS BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-Solid substance BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-Estrogen, NOS Edited by: REMOVED_DATE -  REMOVED_CASE_ID  PAT.MURJ REMOVED_DATE -  REMOVED_CASE_ID  PAT.MURJ REMOVED_DATE -  REMOVED_CASE_ID  PAT.MURJ REMOVED_DATE -  REMOVED_CASE_ID  PAT.DORD REMOVED_DATE -  REMOVED_CASE_ID  PAT.DORD REMOVED_DATE -  REMOVED_CASE_ID  MD.ROSMJ REMOVED_DATE -  REMOVED_CASE_ID  MD.ROSMJCOPIES TO: BLOCK,CAROLINE M.D. NEHOA - VERNON CANCER CENTER NEWTON, MA  REMOVED_CASE_ID  (617)658- REMOVED_CASE_ID  PANISZYN,LUCY M.D.  REMOVED_CASE_ID  WASHINGTON ST., SUITE 546 NEWTON, MA  REMOVED_CASE_ID  (617)964- REMOVED_CASE_ID  SEMINE,A. ALAN M.D. DEPT. OF RADIOLOGY NEWTON, MA  REMOVED_CASE_ID  (617)243- REMOVED_CASE_ID  Edited by: REMOVED_DATE -  REMOVED_CASE_ID  PAT.MURJMARKERS: Breast Disease Related, Presented at Breast CA Conf., Digital photo stored, Tumor case Edited by: REMOVED_DATE -  REMOVED_CASE_ID  PAT.MURJ REMOVED_DATE -  REMOVED_CASE_ID  PAT.MURJ REMOVED_DATE -  REMOVED_CASE_ID  PAT.MURJ REMOVED_DATE -  REMOVED_CASE_ID  PAT.MURJPROCEDURES: ADDENDUM (CNV) (10/25/07- REMOVED_CASE_ID  PAT.DORD) IMMUNOCYTO (10/25/07- REMOVED_CASE_ID  MD.ROSMJ)  REMOVED_ACCESSION_ID  (10/23/07- REMOVED_CASE_ID  PAT.MURJ) IHC-MORPHOMETRI (10/23/07- REMOVED_CASE_ID  PAT.MURJ) Edited by: REMOVED_DATE -  REMOVED_CASE_ID  PAT.MURJ REMOVED_DATE -  REMOVED_CASE_ID  PAT.MURJ REMOVED_DATE -  REMOVED_CASE_ID  PAT.MURJ REMOVED_DATE -  REMOVED_CASE_ID  PAT.DORD REMOVED_DATE -  REMOVED_CASE_ID  PAT.DORD REMOVED_DATE -  REMOVED_CASE_ID  MD.ROSMJ REMOVED_DATE -  REMOVED_CASE_ID  MD.ROSMJ REMOVED_DATE -  REMOVED_CASE_ID  PAT.MURJTISSUES: Breast, needle biopsy - right, lateral Edited by: REMOVED_DATE -  REMOVED_CASE_ID  PAT.MURJFinal: MATTIA,ANTHONY R.MD * REMOVED_DATE <10/23/07- REMOVED_CASE_ID > by MD.MATAN ROSS,MICHAEL J. M.D. * REMOVED_DATE <10/23/07- REMOVED_CASE_ID > by MD.ROSMJ -------------------------------------------------------------------------------------------- ",1,0
-"Accession Number:  REMOVED_ACCESSION_ID  Report Status: FinalType: Surgical Pathology Pathology Report: MS-05- REMOVED_ACCESSION_ID  CASE: MS-05- REMOVED_ACCESSION_ID  REMOVED_PATIENT_NAME  Date Taken: REMOVED_DATE Source Care Unit: Same Day Surgery, WACC 3 Frozen Section Pathologist: None Frozen Section Resident: None Frozen Section Consultant(s): None Consulting Pathologist(s): None Assigned Resident/Path: Michael W Lawlor, M.D., Ph.D. Reports To: MICHELE ANNETTE GADD, M.D. CLINICAL DATA: Right breast re-excision for invasive lobular carcinoma. Status post chemotherapy. FINAL DIAGNOSIS: BREAST (RIGHT, FINAL INFERIOR MARGIN), RE-EXCISION: RESIDUAL INVASIVE LOBULAR CARCINOMA, FEW SMALL FOCI (EACH SPANNING REMOVED_DATE CM, PRESENT IN 2 OF 8 BLOCKS), ONE OF WHICH IS PRESENT REMOVED_DATE CM FROM THE MARGIN; NO EVIDENCE OF ANGIOLYMPHATIC INVASION (SEE NOTE). FOCAL HEALING BIOPSY SITE CHANGES. NOTE: Hormone receptor and Her-2 studies have been previously performed (see addended report:  REMOVED_ACCESSION_ID ). BREAST (RIGHT, INFERIOR/DEEP MARGIN), RE-EXCISION: RESIDUAL INVASIVE LOBULAR CARCINOMA, SCATTERED SMALL FOCI (EACH SPANNING REMOVED_DATE 2 CM, PRESENT IN 3 OF 10 BLOCKS); PRESENT AT THE MARGIN IN ONE FOCUS; NO EVIDENCE OF ANGIOLYMPHATIC INVASION. LOBULAR NEOPLASIA (ATYPICAL LOBULAR HYPERPLASIA). HEALING BIOPSY SITE WITH REACTIVE SQUAMOUS METAPLASIA. CALCIFICATIONS ASSOCIATED WITH BENIGN LOBULES. BREAST (RIGHT, INFERIOR/SUPERFICIAL MARGIN), RE-EXCISION: HEALING BIOPSY SITE. THERE IS NO EVIDENCE OF MALIGNANCY. GROSS DESCRIPTION: Received in formalin,  labeled REMOVE_PATIENT_NAME  patient's name, unit number, and ""right breast final inferior margin? is a specimen consisting of two fragments of breast tissue, measuring REMOVED_DATE x REMOVED_DATE x REMOVED_DATE and REMOVED_DATE x REMOVED_DATE x 0.6cm  respectively. The fragments are oriented to the new surgical margin with a single stitch, and the surface opposite the stitch displays a focally fibrous appearance consistent with the prior biopsy cavity. The stitched side is inked black, the specimen is serially section, and entirely submitted in cassette  REMOVED_ACCESSION_ID . Received in formalin,  labeled REMOVE_PATIENT_NAME  patient's name, unit number, and ""right breast re-excision, inferior deep margin? is a REMOVED_DATE x REMOVED_DATE x 1.0cm fragment of breast tissue that is oriented to the new surgical margin with a stitch. The stitched surface is otherwise unremarkable, but the side opposite the stitch displays a focally hemorrhagic and fibrous surface consistent with the prior biopsy cavity. The stitched surface is inked black. The specimen is serially sectioned, and entirely submitted in cassettes  REMOVED_ACCESSION_ID . Received in formalin,  labeled REMOVE_PATIENT_NAME  patient's name, unit number, and ""right breast re-excision, inferior superficial? is a REMOVED_DATE x REMOVED_DATE x 0.7cm fragment of breast tissue with a stitch designating the new surgical margin, which is inked black. The surface with the stitch is otherwise unremarkable, but the opposite surface displays a fibrous focally hemorrhagic appearance consistent with a prior biopsy site. The specimen is serially sectioned and entirely submitted in cassette  REMOVED_ACCESSION_ID . Gross Dictation by Michael W Lawlor M.D., Ph.D., on REMOVED_DATE Micro/Dx Dictation by Michael W Lawlor M.D., Ph.D., on REMOVED_DATE Final Diagnosis by Kristina Braaten M.D., Electronically signed on REMOVED_DATE PART A: BREAST (RIGHT, FINAL INFERIOR MARGIN), EXCISION PART B: BREAST (RIGHT, INFERIOR/DEEP MARGIN), EXCISION PART C: BREAST (RIGHT, INFERIOR/SUPERFICIAL MARGIN), EXCISION ",1,0
-" REMOVED_CASE_ID  ANNESE,ANNA 71/F <REG REF 08/24> ( REMOVED_CASE_ID ) WIC MASCOLI,NICHOLAS III M.D.--------------------------------------------------------------------------------------------Specimen:  REMOVED_ACCESSION_ID : REMOVED_CASE_ID  SOUT Received: 08/24/09- REMOVED_CASE_ID  Spec Type: - Clinical diagnosis & history: 3mm  cluster of calcifications of right upper central breast; ? fibrocystic changes vs ductal carcinoma in situ Edited by: REMOVED_DATE -  REMOVED_CASE_ID  PAT.MURJ Gross description: The specimen is received in formalin in one container, labeled ""stereo biopsies, right breast calcifications"" and consists of an white cassette designated on the specimen requisition to contain calcifications. It contains four firm, yellowish-pink, glistening needle biopsies aggregating 2 x REMOVED_DATE x 0.3cm , each measuring 0.3cm  in diameter. The specimens are marked with blue ink. Also present, free floating in the container, is a 2 x REMOVED_DATE x 0.3cm  aggregate of firm, yellowish-pink, glistening needle biopsies admixed with blood clot, each measuring 0.3cm  in diameter. The specimens are marked with blue ink. Section code: 1 - tissue in white cassette, 4X all. 2 - free floating tissue, 1 agg. all. Total fixation time is 14 hours. Dictated by: LV Edited by: REMOVED_DATE -  REMOVED_CASE_ID  PAT.MURJ DIAGNOSIS: Right breast, upper central, needle biopsy: Invasive lobular carcinoma. Edited by: REMOVED_DATE -  REMOVED_CASE_ID  PAT.TOCC DESCRIPTIVE COMMENT: NOTE: The focus of invasive carcinoma is 0.3cm  and is associated with abundant microcalcifications. The surrounding stroma is densely fibrotic. No lymphatic/vascular invasion is identified. Immunohistochemical stains for estrogen receptor, progesterone receptor, and Her2/neu have been ordered and the results will be issued as an addendum. Final Diagnosis by: Kenan J. Sauder, M.D. Edited by: REMOVED_DATE -  REMOVED_CASE_ID  PAT.TOCC ADDENDUM REPORTAddendum #1 Entered: 08/27/09- REMOVED_CASE_ID  *** ADDITIONAL DIAGNOSTIC INFORMATION *** This report contains an addendum to the original for the purpose of providing additional diagnostic information. The original diagnosis is unchanged. Immunohistochemical staining on the formalin-fixed, paraffin-embedded block 1 reveals these results for the infiltrating carcinoma:  REMOVED_ACCESSION_ID  (c-erb- REMOVED_ACCESSION_ID ): NEGATIVE (1+) (faint or <10% complete membrane staining)  REMOVED_ACCESSION_ID  (4 REMOVED_ACCESSION_ID , Ventana Medical Systems, FDA approved) is assessed by quantitation of the percent and intensity of tumor cells staining. Total fixation time is 14 hours. ADDENDUM REPORT (Continued) Estrogen and progesterone receptors are not interpretable due to insufficient neoplastic tissue. Recommend repeat staining on subsequent excision specimen.Addendum Final: SAUDER,KENAN J. MD * REMOVED_DATE <08/27/09- REMOVED_CASE_ID > by MD.SAUK Edited by: REMOVED_DATE -  REMOVED_CASE_ID  PAT.DORDCODES:  REMOVED_ACCESSION_ID  - Right breast, N BREANBX - -BREANBX BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-Insufficiency BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-Invasive BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-Obstruction, NO BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-Tumor cells, un BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-Carcinoma, NOS BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-Lobular carcino BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-NCA BREANBX- REMOVED_ACCESSION_ID  - -BREANBX--pexy BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-For BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-Medical BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-Approved BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-Progesterone BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-Faint BREANBX- REMOVED_ACCESSION_ID  - -BREANBX-Estrogen, NOS Edited by: REMOVED_DATE -  REMOVED_CASE_ID  PAT.MURJ REMOVED_DATE -  REMOVED_CASE_ID  PAT.TOCC REMOVED_DATE -  REMOVED_CASE_ID  PAT.TOCC REMOVED_DATE -  REMOVED_CASE_ID  PAT.DORD REMOVED_DATE -  REMOVED_CASE_ID  PAT.DORD REMOVED_DATE -  REMOVED_CASE_ID  PAT.DORDCOPIES TO: MASCOLI,NICHOLAS III M.D.  REMOVED_CASE_ID  WASHINGTON ST, SUITE 546 NEWTON, MA  REMOVED_CASE_ID  REMOVED_DATE SELLAND,DONNA-LEE M.D. NEWTON-WELLESLEY RADIOLOGY NEWTON, MA  REMOVED_CASE_ID  (617)243- REMOVED_CASE_ID MARKERS: Breast Disease Related, Presented at Breast CA Conf., Digital photo stored, Tumor case Edited by: REMOVED_DATE -  REMOVED_CASE_ID  PAT.MURJ REMOVED_DATE -  REMOVED_CASE_ID  PAT.TOCC REMOVED_DATE -  REMOVED_CASE_ID  PAT.TOCC REMOVED_DATE -  REMOVED_CASE_ID  PAT.GILD REMOVED_DATE -  REMOVED_CASE_ID  PAT.MURJPROCEDURES: ADDENDUM (CNV) (08/27/09- REMOVED_CASE_ID  PAT.DORD)  REMOVED_ACCESSION_ID  (08/25/09- REMOVED_CASE_ID  PAT.TOCC) IHC-MORPHOMETRI (08/25/09- REMOVED_CASE_ID  PAT.TOCC) Edited by: REMOVED_DATE -  REMOVED_CASE_ID  PAT.MURJ REMOVED_DATE -  REMOVED_CASE_ID  PAT.TOCC REMOVED_DATE -  REMOVED_CASE_ID  PAT.TOCC REMOVED_DATE -  REMOVED_CASE_ID  PAT.DORD REMOVED_DATE -  REMOVED_CASE_ID  PAT.DORDTISSUES: Breast, needle biopsy - right, upper central Edited by: REMOVED_DATE -  REMOVED_CASE_ID  PAT.MURJFinal: FEEN,DENNIS J. M.D. * REMOVED_DATE <08/25/09- REMOVED_CASE_ID > by MD.FEED SAUDER,KENAN J. MD * REMOVED_DATE <08/25/09- REMOVED_CASE_ID > by MD.SAUK -------------------------------------------------------------------------------------------- ",1,0
+CLINICAL DATA: 
+History: Left breast mass. MRI suspicious appearance. Bil breast 
+augmentation. FH (+) sister age 40 breast CA. 
+Operation: Excisional biopsy, left breast mass. 
+Operative findings: Very firm irregular mass. 
+Clinical Diagnosis: Left breast mass. 
+TISSUE SUBMITTED: 1. Lt breast mass, short suture = superior. Long suture = 
+lateral. 
+GROSS DESCRIPTION: by KINDELBERGER,DAVID W.,M.D. 
+The specimen is received in formalin,  labeled REMOVE_PATIENT_NAME  patient's name, unit 
+number and ""left breast mass, short = superior, long = lateral"", and consists 
+of an irregular fragment of firm, yellow/tan fibroadipose tissue (2.4cm from 
+superior to inferior x 4.3cm from lateral to medial x 2.4cm from anterior to 
+psoterior). A short black suture was placed by the surgeon to indicate the 
+superior aspect of the specimen and a long black suture was placed by the 
+surgeon to indicate the lateral aspect of the specimen. There are multiple, 
+centrally located cysts filled with yellow, gelatinous material. The specimen 
+is composed of approximately 50% fibrous and 50% adipose tissue. The specimen 
+is serially sectioned and entirely submitted for histologic evaluation. The 
+specimen was inked by the pathologist per pathology protocol for the evaluation 
+of margins: posterior = black; anterior = blue; superior = red; inferior = 
+green; lateral = yellow; medial = orange. 
+Micro REMOVED_DATE  left breast mass from medial to lateral, multi frags, ESS. 
+dk 
+Reports to: LOCKHART, DIANE, CATHERINE M.D. 
+SPECIMEN TYPE: BREAST - EXCISIONAL TISSUE W/MARGINS 
+[report_end] ",17580,1,0
 "Accession Number:  REMOVED_ACCESSION_ID  Report Status: Final 
 Type: Surgical Pathology 
-Specimen Type: Consult material 
-Procedure Date: 
-Ordering Provider: BETH ANN LESNIKOSKI M.D. 
-CASE: BS-08- REMOVED_ACCESSION_ID  
- REMOVED_PATIENT_NAME  
-Resident: Rachel L Rucker-Schmidt, M.D. 
-Pathologist: Andrea L Richardson, M.D., Ph.D. 
-PATHOLOGIC DIAGNOSIS: 
-CONSULT SLIDES FROM COOLEY DICKINSON HOSPITAL, NORTHAMPTON, MA: 
-LEFT BREAST, 10 O'CLOCK, CORE NEEDLE BIOPSY FOR AN ABNORMAL MAMMOGRAM 
-( REMOVED_ACCESSION_ID ; 2/14/ REMOVED_CASE_ID ): 
-INVASIVE CARCINOMA with mixed ductal and lobular features, well differentiated 
-(modified Bloom-Richardson grade I/III), measuring at least 0.8cm in this 
-limited specimen. 
-No lymphovascular invasion is identified in this limited specimen. 
-No in situ carcinoma is present in this limited specimen. 
-Special studies were performed at an outside institution with the following 
-results (reviewed): 
-ESTROGEN RECEPTOR POSITIVE 
-PROGESTERONE RECEPTOR POSITIVE 
- REMOVED_ACCESSION_ID /NEU (IHC) NEGATIVE (0-1+) 
- REMOVED_ACCESSION_ID /NEU (FISH) NOT AMPLIFIED (ratio REMOVED_DATE 225=1.3) 
+Pathology Report  REMOVED_ACCESSION_ID  SENTINEL LYMPH NODE 
+Accessioned On: REMOVED_DATE 
+WELCH, WILLIAM, ROBERT, M.D. 
+DIAGNOSIS: by WELCH,WILLIAM ROBERT,M.D. 
+RIGHT BREAST SIMPLE MASTECTOMY AND SENTINEL NODE BIOPSY: 
+LOBULAR INVASIVE CARCINOMA. 
+LOBULAR CARCINOMA IN SITU. 
+METASTATIC CARCINOMA TO LYMPH NODE. 
+SYNOPSIS: 
+INVASIVE CARCINOMA 
+Size - >6.0cm 
+Multifocal? - No 
+Histologic Type - Lobular 
+Histologic Grade (SBR) - I(Well) 
+Nuclear Grade - Low 
+EIC - Positive 
+Lymphovascular invasion - Present 
+Dermal lymphatic invasion - Absent 
+Skin invasion - Absent 
+Skeletal muscle invasion - N/A 
+Final Margins (invasive) 
+Negative (no ink on tumor) - Posterior/deep 
+LOBULAR CARCINOMA IN SITU - Present 
+LYMPH NODES 
+Sentinel lymph nodes (H&E levels examined) - Positive 
+Number of positive nodes - 1 
+Number of nodes examined - 2 
+TOTAL POSITIVE NODES (sentinel + axillary) - REMOVED_DATE 
+OTHER FINDINGS 
+Cysts 
+Biopsy cavity 
+AJCC CLASSIFICATION -  REMOVED_ACCESSION_ID  p REMOVED_ACCESSION_ID  MX 
+SPECIAL STUDIES (ER/PR/HER-2) - Performed elsewhere with the following 
+results 
+NOTE: Immunoperoxidase: Tumor in the node is  REMOVED_ACCESSION_ID / REMOVED_ACCESSION_ID . 
+SURGICAL ADDENDUM: by WELCH,WILLIAM ROBERT,M.D. 
+Tumor cells in the lymph node are positive on immunoperoxidase staining for 
+ REMOVED_ACCESSION_ID / REMOVED_ACCESSION_ID . 
 CLINICAL DATA: 
-History: None given 
-Clinical Diagnosis: IDLC 
-TISSUE SUBMITTED: 
-Consult slides. 
-GROSS DESCRIPTION: 
-Received from Cooley Dickinson Hospital, Pathology Department, 30 Locust 
-Street, Northampton, MA  REMOVED_CASE_ID , are six (6) glass slides. 
-The slides are labeled "" REMOVED_ACCESSION_ID "" and sublabeled ""1/A  REMOVED_ACCESSION_ID "", ""1/A  REMOVED_ACCESSION_ID "", 
-""1/A ER"", ""1/A PR"", ""1A  REMOVED_ACCESSION_ID  HercepTest"" and ""1A Neg Control"", corresponding to 
-a left breast, 10 o'clock, core needle biopsy (0.8 x 1.2cm ) performed on 
-2/14/08, according to the accompanying pathology report bearing the patient's 
-name. 
-Included is a lab report from Genzyme, New York, NY; numbered ""08- REMOVED_CASE_ID -MH"" 
-and dated REMOVED_DATE  referring to Her2/neu by IHC (negative) and Her2/neu by FISH 
-(negative; ratio 1.3), performed on block ""1A"" from the case listed above 
-bearing the patient's name. 
-By his/her signature below, the senior physician certifies that he/she 
-personally conducted a microscopic examination (""gross only"" exam if so stated) 
-of the described specimen(s) and rendered or confirmed the diagnosis(es) 
-related thereto. 
-Final Diagnosis by Andrea L Richardson M.D., Ph.D., Electronically signed on 
-3/5/ REMOVED_CASE_ID  
-[report_end] ",1,0
-"Accession Number:  REMOVED_ACCESSION_ID  Report Status: Amend/Addenda 
+History: Right breast cancer: Invasive lobular carcinoma with LCIS seen in 
+consultation here ( REMOVED_ACCESSION_ID ; 1/4/02). 
+Operation: Right simple mastectomy, sentinel node biopsy. 
+Clinical Diagnosis: Right breast cancer. 
+TISSUE SUBMITTED: 1. Sentinel node blue and hot. 
+2. Right breast, short stitch = superior, long 
+stitch = lateral. 
+O.R. CONSULTATION: 
+SPECIMEN LABELED ""#1, SENTINEL NODE BLUE AND HOT"" (FSA): 
+No tumor seen. 
+GROSS DESCRIPTION: by OH,KIRSTINE YUNG-TING,M.D. 
+The specimen is received fresh in two parts, each  labeled REMOVE_PATIENT_NAME  patient's 
+name and unit number. 
+Part one, labeled ""#1, sentinel node, blue and hot"", and consists of a single 
+fragment of pink-yellow-tan fatty soft tissue (4.5 x REMOVED_DATE x 0.3cm ) with a 
+single lymph node (1.0cm ), which is blue. Half of the lymph node is submitted 
+as FSA. 
+Micro 1: FSA remnant, 1 frag, ESS. 
+Micro 2: non-frozen remnant of FSA, 2 frags, ESS. 
+Part two, labeled ""#2, Right breast"", and consists of a 970 gram mastectomy 
+specimen (23 x 22 x 5cm ) with a pink-tan skin ellipse (21 x 11cm ) with a 
+nipple located in the lower inner quadrant (areola 3.2cm  nipple 1.1cm ) and a 
+3cm scar located in the upper inner quadrant located 3.5cm from the nipple. 
+No skeletal muscle is present on the deep surface. A prior biopsy site is not 
+clearly identified; however a large area has been dyed blue from the surgical 
+procedure. A diffusely tan granular area (6 x 3 x 1.5cm ) is located in the 
+upper quadrant diffusely with closest margin is 1.2cm from the deep margin. 
+Representative sections are submitted. 
+Micro 3: lateral border of areas malignancy to the deep margin, 
+1 frag, RSS. 
+Micro 4: medial border of suspicious area, 1 frag, RSS. 
+Micro REMOVED_DATE  serially submitted sections every 1cm through the suspicious 
+area, 1 frag, RSS. 
+Micro 10: section of nipple, 1 frag, RSS. 
+Micro 11: section of scar site, 1 frag, RSS. 
+Micro REMOVED_DATE  sections of deep margin, 1 frag each, RSS 
+ko 
+Reports to: RHEI, ESTHER M.D. 
+SPECIMEN TYPE: SENTINEL LYMPH NODE 
+ADDITIONAL SPECIMEN TYPE: BREAST MASTECTOMY W/REGIONAL LYMPH NODES 
+[report_end] ",32095,1,0
+"Accession Number:  REMOVED_ACCESSION_ID  Report Status: Final 
 Type: Surgical Pathology 
 Specimen Type: Breast core needle biopsy 
 Procedure Date: REMOVED_DATE 
-Ordering Provider: SUGHRA RAZA M.D. 
+Ordering Provider: KATHERINE S. GIESS M.D. 
+CASE: BS-09- REMOVED_ACCESSION_ID  
+ REMOVED_PATIENT_NAME  
+Resident: Tanya Rege, M.D., Ph.D. 
+Pathologist: Susan Lester, M.D., Ph.D. 
+PATHOLOGIC DIAGNOSIS: 
+RIGHT BREAST, UPPER OUTER, 12:00, 11 G STEREOTACTIC GUIDED CORE NEEDLE BIOPSIES 
+FOR AN IRREGULAR MASS: 
+INVASIVE LOBULAR CARCINOMA, moderately differentiated (modified Bloom- 
+Richardson grade II/III; tubule score: 3, nuclear grade score: 2, mitoses 
+score: 1, total: 6), at least 0.7cm in this limited specimen. 
+No lymphovascular invasion is seen in this limited specimen. 
+LOBULAR CARCINOMA IN SITU is present. 
+Immunoperoxidase studies were performed on formalin fixed tissue with 
+the following results for invasive carcinoma and LCIS (block  REMOVED_ACCESSION_ID ): 
+Estrogen receptor POSITIVE 
+Progesterone receptor POSITIVE 
+ REMOVED_ACCESSION_ID /neu (c-erb- REMOVED_ACCESSION_ID ) NEGATIVE (1+) 
+E-CADHERIN NEGATIVE 
+Note: The carcinoma has a partial alveolar lobular pattern. 
+LEFT BREAST, CENTRAL, 11 G STEREOTACTIC CORE NEEDLE BIOPSIES FOR 
+CALCIFICATIONS: 
+Atypical ductal hyperplasia (see note). 
+Sclerosing adenosis with apocrine metaplasia and numerous calcifications. 
+Note: Atypical ductal hyperplasia would be evaluated best with excision. 
+CLINICAL DATA: 
+HISTORY: 83 year old woman with suspicious ill-defined R mass 12:00 - time in 
+formalin 10:50 am (site #1); and with clustered calcifications central L breast 
+- time in formalin 11:35 am (site #2). 
+BREAST IMAGING FINDING: 
+1. Right: Non-palpable, ill-defined mass on mammo and mass forming irregular 
+border on MRI (site #1) 
+2. Left: Non-palpable calcifications (site #2). 
+LOCATION: 
+1. Right: upper/outer (site #1). 
+2. Left: central (site #2). 
+TYPE OF CORE NEEDLE BIOPSY: 
+1. Right: 11 G (site #1). 
+2. Left: 11 G Stereotactic (site #2). 
+TISSUE SUBMITTED: 
+A/1) Right breast core biopsy in two green cassettes (site #1). 
+B/2) Left breast core biopsy in two white cassettes - A/Ca++ and B/no Ca++ 
+(site #2). 
+GROSS DESCRIPTION: 
+The specimen is received in formalin, in two parts, each  labeled REMOVE_PATIENT_NAME  
+patient's name, unit number. 
+Part A, labeled ""right breast 10:50 a.m."", consists of multiple yellow-white 
+focally hemorrhagic fibrofatty tissues (aggregating REMOVED_DATE x REMOVED_DATE x 0.2cm ), which 
+are received in two green cassettes labeled ""right"". The specimens are 
+submitted in toto. 
+Micro  REMOVED_ACCESSION_ID : 1 green cassette ""right"", multi frags, ESS. 
+Micro  REMOVED_ACCESSION_ID : 1 green cassette ""right"", multi frags, ESS. 
+Part B, labeled ""left breast"", consists of multiple yellow-white focally 
+hemorrhagic fibrofatty tissues (aggregating REMOVED_DATE x REMOVED_DATE x 0.3cm ), which are 
+received in two white cassettes labeled ""A Ca++"" and ""B"". The specimens are 
+submitted in toto. 
+Micro  REMOVED_ACCESSION_ID : ""A Ca++"", multi frags, ESS. 
+Micro  REMOVED_ACCESSION_ID : ""B"", multi frags, ESS. 
+Immunohistochemical studies for estrogen receptor, progesterone receptor, and 
+ REMOVED_ACCESSION_ID /neu were evaluated by manual morphometric analysis using the following 
+criteria: 
+Hormone receptor analysis: 
+positive >10% of nuclei immunoreactive 
+positive - low > 0% - < 10% of nuclei immunoreactive 
+negative 0% of nuclei immunoreactive 
+The lower threshold for clinically significant immunoreactivity has not 
+yet been determined. 
+ REMOVED_ACCESSION_ID /neu analysis: 
+Negative (0): No immunoreactivity or immunoreactivity in <10% 
+of tumor cells. 
+Negative (1+): Faint weak immunoreactivity in >10% of tumor 
+cells but only a portion of the membrane is positive. 
+Equivocal (2+): Weak to moderate complete membrane 
+immunoreactivity in >10% of tumor cells. 
+Positive (3+): Moderate to strong complete membrane 
+immunoreactivity in >30% of tumor cells. 
+Cytoplasmic immunoreactivity alone is scored as a negative result. 
+External controls are evaluated and show appropriate immunoreactivity. 
+Some of the reagents used in these assays may be approved for 
+investigational use only. 
+By his/her signature below, the senior physician certifies that he/she 
+personally conducted a microscopic examination (""gross only"" exam if so stated) 
+of the described specimen(s) and rendered or confirmed the diagnosis(es) 
+related thereto 
+cp/lp 
+CASE NUMBER:  REMOVED_CASE_ID . 
+. 
+Final Diagnosis by Susan Lester M.D., Ph.D., Electronically signed on Monday 
+REMOVED_MONTH 02,  REMOVED_CASE_ID  at 10:47:18AM 
+[report_end] ",44999,0,1
+"Accession Number:  REMOVED_ACCESSION_ID  Report Status: Final 
+Type: Surgical Pathology 
+Pathology Report  REMOVED_ACCESSION_ID  SENTINEL LYMPH NODE 
+Accessioned On: REMOVED_DATE 
+GLICKMAN, JONATHAN, NEIL, M.D.~PH.D. 
+DIAGNOSIS: by GLICKMAN,JONATHAN NEIL,M.D.,PH.D. 
+1) SPECIMEN LABELLED ""SENTINEL NODES WARM AND BLUE"" (including FSA): 
+Seven (7) lymph nodes negative for metastasis. 
+(Levels examined.) 
+2) RIGHT BREAST, LUMPECTOMY: 
+Residual CARCINOMA IN SITU with ductal and lobular features, low nuclear 
+grade (microscopic foci, morphologically similar to previous 
+specimen)(blocks 10, 30). 
+Carcinoma in situ is greater than 1.0cm from all margins. 
+Epithelial hyperplasia. 
+Cysts. 
+No residual invasive carcinoma (entire specimen submitted for histologic 
+examination). 
+Biopsy cavity (3.0cm ) with granulation tissue, fat necrosis, and foreign 
+body giant cell reaction. 
+CLINICAL DATA: 
+History: A 61 year old female with right invasive lobular carcinoma. 
+Operation: Right breast lumpectomy, right sentinel node mapping 
+Clinical Diagnosis: Right breast mass 
+TISSUE SUBMITTED: #1) Sentinel nodes warm and blue 
+#2) Right breast lumpectomy 
+O.R. CONSULTATION: 
+SPECIMEN LABELED ""#1. SENTINEL NODES WARM AND BLUE"", (FSA): 
+No evidence of metastasis. 
+GROSS DESCRIPTION: by LOMBARD,DAVID B.,M.D.,PH.D. 
+The specimen is received fresh in two parts, each  labeled REMOVE_PATIENT_NAME  patient's 
+name and unit number. 
+Part one, labeled ""#1. sentinel nodes warm and blue"", consists of multiple 
+fragments of fatty soft tissue (2 x 2 x 0.5cm in aggregate). Three lymph 
+nodes are identified (1.2cm  0.7cm and 0.6cm in greatest extent, 
+respectively). These lymph nodes were entirely submitted as FSA. The frozen 
+remnant and the non-frozen portion of the specimen are entirely submitted. 
+Micro 1: FSA remnant, 3 frags, ESS 
+Micro REMOVED_DATE  non-frozen portion of specimen, mult frags, ESS 
+Part two, labeled ""#2. right breast lumpectomy"", consists of a fragment of 
+fibroadipose tissue (5.0cm superior to inferior x 6.0cm lateral to medial x 
+3.0cm superficial to deep). The specimen has been inked by the surgeon per 
+pathology protocol for the evaluation of margins: posterior = black; anterior 
+= blue; superior = red; inferior = green; lateral = yellow; medial = orange. 
+A cavity is present in the center of the specimen (3.0 x REMOVED_DATE x 1.5cm ), the 
+interior which is also inked by the surgeon. The specimen is entirely 
+submitted for histologic examination. 
+Micro REMOVED_DATE  lateral margin of specimen, mult frags, ESS 
+Micro REMOVED_DATE  breast tissue around central cavity in specimen, mult frags, ESS 
+Micro REMOVED_DATE  reminder of specimen, mult frags, ESS 
+dl 
+Reports to: RHEI, ESTHER M.D. 
+SPECIMEN TYPE: SENTINEL LYMPH NODE 
+ADDITIONAL SPECIMEN TYPE: BREAST - EXCISIONAL TISSUE W/MARGINS 
+[report_end] ",41515,1,0
+"Accession Number:  REMOVED_ACCESSION_ID  Report Status: Amend/Addenda 
+Type: Surgical Pathology 
+Specimen Type: Sentinel Lymph Nodes(s) 
+Procedure Date: REMOVED_DATE 
+Ordering Provider: JULIAN J PRIBAZ M.D. 
 CASE: BS-08- REMOVED_ACCESSION_ID  
  REMOVED_PATIENT_NAME  
 ********** Addended Report *********** 
-Resident: Rachel L Rucker-Schmidt, M.D. 
-Pathologist: Susan Lester, M.D., Ph.D. 
+Resident: David C. Park, M.D. 
+Pathologist: William R Welch, M.D. 
 PATHOLOGIC DIAGNOSIS: 
-RIGHT BREAST, UPPER INNER, 14 G ULTRASOUND GUIDED CORE NEEDLE BIOPSIES FOR AN 
-IRREGULAR 1 CM MASS: 
-INVASIVE CARCINOMA, with ductal and lobular features, well differentiated 
-(modified Bloom-Richardson grade I/III), measuring at least 1.1cm  
-No lymphovascular invasion is seen in this limited specimen. 
-No in situ carcinoma is seen in this limited specimen. 
-NOTE: Immunohistochemical analysis for estrogen receptor, 
-progesterone receptor, and  REMOVED_ACCESSION_ID /neu will be performed and reported in an 
-addendum. 
+A. SPECIMEN DESIGNATED ""SENTINEL LYMPH NODE, RIGHT AXILLA"" (including FSA): 
+Please see Part C. 
+B. SPECIMEN DESIGNATED ""ADDITIONAL RIGHT AXILLARY CONTENTS"": 
+Please see Part C. 
+C. SPECIMEN DESIGNATED ""RIGHT BREAST, SIMPLE MASTECTOMY, SENTINEL NODE BIOPSY, 
+AND AXILLARY NODE DISSECTION"" (Parts A (including FSA), B, and C): 
+INVASIVE LOBULAR CARCINOMA 
+LOBULAR CARCINOMA IN SITU 
+METASTATIC CARCINOMA TO LYMPH NODES 
+INVASIVE CARCINOMA 
+Size - 5.2cm  0.9cm  0.1cm  0.1cm  0.1cm 
+Multifocal - Yes (see note) 
+Histologic type - Lobular 
+Histologic grade (SBR) - II (Moderate) (6 to 7 points) 
+Tubules - < 10% (3 points) 
+Nuclear grade - High (3 points) 
+Mitotic counts - 1 point 
+EIC - _Absent 
+LVI - _Absent 
+Dermal LVI - _Absent 
+Skin invasion - _Absent 
+Skeletal muscle invasion - Not applicable 
+Final Margins (invasive) 
+Negative (> 0.3cm ) - Deep margin 
+DUCTAL CARCINOMA IN SITU - Absent 
+LOBULAR CARCINOMA IN SITU - Present, extensive 
+LYMPH NODES 
+Sentinel lymph nodes - Positive (3 H&E levels examined) 
+Number of positive nodes - 1 
+Number of nodes examined - 1 
+Axillary lymph nodes - Negative 
+Number of positive nodes - 0 
+Number of nodes examined - 16 
+TOTAL POSITIVE NODES (all specimens)- 1:17 
+Size of largest metastatic focus - 1.2cm 
+Number of nodes w/macrometastases- 1 
+Extranodal extension - Absent 
+OTHER FINDINGS 
+Atypical lobular hyperplasia with pagetoid spread 
+Pagetoid spread of LCIS of lactiferous duct 
+Columnar change 
+Lactiferous duct ectasia 
+AJCC Classification (6th edition) -  REMOVED_ACCESSION_ID   REMOVED_ACCESSION_ID a MX with multiple foci of invasion 
+SPECIAL STUDIES (ER, PR,  REMOVED_ACCESSION_ID ) - Pending 
+NOTE: 
+There are multiple foci (5) of invasive lobular carcinoma (5.2cm  0.9cm REMOVED_DATE 
+cm, 0.1cm  and 0.1cm ) with the 5.2cm and 0.9cm foci separated by 1.2cm  
+All foci of invasive carcinoma have similar histologic features and arose in a 
+background of extensive LOBULAR CARCINOMA IN SITU. 
+D. SPECIMEN DESIGNATED ""LEFT BREAST TISSUE"": 
+DUCTAL CARCINOMA IN SITU, solid and cribriform types, high nuclear 
+grade, with calcifications and necrosis is present in one of twenty (1:20) 
+blocks, as a simple focus (0.25cm ). 
+No microinvasion is identified. 
+DUCTAL CARCINOMA IN SITU is associated with severely atypical columnar 
+cell alteration. 
+LOBULAR CARCINOMA IN SITU, extensive. 
+Margins cannot be assessed in this unoriented specimen containing no 
+fascia. 
+Skin, negative for tumor. 
+(Levels examined.) 
+NOTE: Drs. J. Brock and A Richardson (Breast Pathology Service) concur 
+with the diagnosis of DUCTAL CARCINOMA IN SITU ( REMOVED_ACCESSION_ID ). 
 CLINICAL DATA: 
-HISTORY: 58 year old female with spiculated mass seen on mammo. U/S showed 
-irregular hypoechoic mass. 
-BREAST IMAGING FINDING: 
-1. Right: 10mm  non-palpable irregular mass. 
-LOCATION: 
-1. Right: upper/inner. 
-TYPE OF CORE NEEDLE BIOPSY: 
-1. 14 G Ultrasound. 
+History: Breast cancer. 
+Operation: Right total mastectomy, right sentinel node biopsy. 
+Operative Findings: Not provided. 
+Clinical Diagnosis: Breast cancer. 
 TISSUE SUBMITTED: 
-A/1) Right breast in one pink cassette. 
+A/1) sentinel lymph node - right axilla (fs). 
+B/2) additional right axillary contents. 
+C/3) right breast and axillary contents - short stitch/superior, long 
+stitch/lateral. 
+D/4) left breast tissue - 657 Gm. 
+O.R. CONSULTATION: 
+SPECIMEN LABELED ""#1 - SENTINEL LYMPH NODE, RIGHT AXILLA"" (FSA): 
+Metastatic adenocarcinoma with signet ring cell features. 
+OR Consultation by: Lucian Chirieac, M.D. 
+Resident: LI CHEN, M.D., PH.D./CHRISTIAN J. DAVIDSON, M.D. 
+The senior physician certifies that he/she personally conducted a gross and/or 
+microscopic examination of the described specimen(s) and rendered or confirmed 
+the rapid diagnos(es) related thereto. 
 GROSS DESCRIPTION: 
-The specimen is received in formalin,  labeled REMOVE_PATIENT_NAME  patient's name, unit 
-number, and ""right breast"", and consists of one pink cassette containing 
-multiple pink/tan soft tissues (1.8 x 0. 7x 0.2cm in aggregate). 
-Micro  REMOVED_ACCESSION_ID : Pink cassette contents, multi frags, ESS. 
-lm/lp 
-CASE NUMBER: BS-08- REMOVED_CASE_ID . 
+The specimen is received fresh, in four parts, each  labeled REMOVE_PATIENT_NAME  patient's 
+name and unit number. 
+Part A, ""sentinel lymph node, right axilla"", consists of one tan/blue soft 
+tissue (2.5 x REMOVED_DATE x 0.5cm ) grossly consistent with a lymph node. The lymph 
+node is bisected to reveal a tan/white firm mass (1.1 x REMOVED_DATE x 0.9cm ) 
+consistent with replacement of lymph node with metastatic carcinoma. A 
+representative section (bisected half) is submitted as FSA. 
+Micro  REMOVED_ACCESSION_ID : FSA remnant, 1 frag, ESS. 
+Micro  REMOVED_ACCESSION_ID : Remainder of specimen, 1 frag, ESS. 
+Part B, ""additional right axillary contents"", consists of yellow/tan lobulated 
+soft tissue (5.2 x REMOVED_DATE x 1.0cm ). The specimen is examined for lymph nodes and 
+two lymph node candidates are identified (0.5 x REMOVED_DATE x 0.3cm and REMOVED_DATE x REMOVED_DATE x 
+0.6cm ) and entirely submitted. 
+Micro  REMOVED_ACCESSION_ID : Two lymph node candidates, 2 frags, ESS. 
+Micro  REMOVED_ACCESSION_ID : Remainder of specimen, 1 frag, ESS. 
+Part C, ""right breast and axillary contents, short stitch superior, long stitch 
+lateral"", consists of a  REMOVED_CASE_ID -g total mastectomy specimen (19.5 x REMOVED_DATE x 5.5cm ) 
+with attached axillary tail (14.0 x REMOVED_DATE x 3.0cm ), an unremarkable skin ellipse 
+(15.0 x 7.0cm ) containing an unremarkable nipple (1.5cm in diameter) and 
+areola (5.5 x REMOVED_DATE x 4.0cm ). The specimen is serially sectioned from lateral 
+to medial in eleven slices to reveal a hard white stellate tumor (5.2 x REMOVED_DATE x 
+3.5cm ) located in the upper outer quadrant in slices 2 through 4, and is REMOVED_DATE 
+cm to the deep margin. There is a ? white satellite tumor (0.9 x REMOVED_DATE x 0.5cm ) 
+in slice #4 located 1.3cm anterosuperior (upper outer quadrant) to the 
+stellate tumor and 2.3cm to the deep margin. There is a firm ill-defined 
+white area (3.3 x REMOVED_DATE x 2.5cm ) located 0.9cm medial to the ? satellite tumor 
+and is located 3.2cm from the nearest deep margin. The firm white area is 
+located in the upper outer and upper inner quadrants. The remainder of the 
+specimen consists of 20% unremarkable fibrous tissue and 80% lobulated adipose 
+tissue. The axillary tail is examined for lymph nodes and thirteen lymph node 
+candidates are identified (ranging in size from REMOVED_DATE to 2.0cm in greatest 
+dimension). Representative sections are submitted for histological 
+examination. 
+Micro  REMOVED_ACCESSION_ID : Tumor and deep margin, perpendicular, 1 frag, RSS. 
+Micro  REMOVED_ACCESSION_ID : Tumor, 1 frag each, RSS. 
+Micro  REMOVED_ACCESSION_ID : ? satellite tumor, 1 frag, ESS. 
+Micro  REMOVED_ACCESSION_ID : Firm white area immediately medial to ? satellite tumor, sectioned 
+lateral to medial, 2 frags total, RSS. 
+Micro  REMOVED_ACCESSION_ID : Deep margin associated with firm white area, perpendicular, 1 frag, 
+RSS. 
+Micro  REMOVED_ACCESSION_ID : Fibrous tissue in upper outer quadrant adjacent to tumor, 2 frags, 
+RSS. 
+Micro  REMOVED_ACCESSION_ID : Fibrous tissue in lower outer quadrant, 2 frags, RSS. 
+Micro  REMOVED_ACCESSION_ID : Scant fibrous tissue in lower inner quadrant, 2 frags, RSS. 
+Micro  REMOVED_ACCESSION_ID : Fibrous tissue adjacent to second described white firm area, 2 
+frags, RSS. 
+Micro  REMOVED_ACCESSION_ID : Three axillary lymph node candidates, 3 frags, ESS. 
+Micro  REMOVED_ACCESSION_ID : Four axillary lymph node candidates, 4 frags, ESS. 
+Micro  REMOVED_ACCESSION_ID : Two axillary lymph node candidates, 2 frags, ESS. 
+Micro  REMOVED_ACCESSION_ID : Three axillary lymph node candidates, 3 frags, ESS. 
+Micro  REMOVED_ACCESSION_ID : Largest axillary lymph node candidate, bisected, 2 frags, ESS. 
+Micro  REMOVED_ACCESSION_ID : Nipple, 1 frag, RSS. 
+Part D, ""left breast tissue, 657 g"", consists of a 653-g specimen consisting of 
+a predominant yellow/pink fibroadipose soft tissue fragment (32.0 x REMOVED_DATE x REMOVED_DATE 
+cm) and two attached unremarkable skin ellipses (15.0 x 2.5cm and REMOVED_DATE x REMOVED_DATE 
+cm) with no grossly identifiable fascia. Additionally received are multiple 
+yellow-pink lobulated soft tissue fragments (10.5 x REMOVED_DATE x 2.5cm in aggregate) 
+and two multifocally disrupted skin fragments (15.0 x REMOVED_DATE x 0.5cm and REMOVED_DATE x 
+2.5 x 0.5cm ). The specimen is serially sectioned to reveal approximately 85% 
+unremarkable lobulated adipose tissue and 15% fibrous tissue with a focal hard 
+area (0.4 x REMOVED_DATE x 0.3cm ) that is entirely submitted. Representative sections 
+are submitted for histological examination. 
+Micro  REMOVED_ACCESSION_ID : Fibrous tissue from predominant fibroadipose soft tissue 
+fragments, 5 frags total, RSS. (Micro  REMOVED_ACCESSION_ID  contains focal hard area) 
+Micro  REMOVED_ACCESSION_ID : Fibrous tissue from additionally received fibroadipose soft tissue 
+fragments, 2 frags, RSS. 
+Micro  REMOVED_ACCESSION_ID : Skin, 3 frags, RSS. 
+Micro  REMOVED_ACCESSION_ID : Fibrous tissue, multi frags, ESS. 
+CASE NUMBER:  REMOVED_ACCESSION_ID . 
+DCP/lp 
 By his/her signature below, the senior physician certifies that he/she 
 personally conducted a microscopic examination (""gross only"" exam if so stated) 
 of the described specimen(s) and rendered or confirmed the diagnosis(es) 
 related thereto. 
-Final Diagnosis by Susan Lester M.D., Ph.D., Electronically signed on 
-4/17/ REMOVED_CASE_ID  
-SURGICAL ADDENDUM (4/21/08): 
-Immunoperoxidase studies were performed on formalin fixed tissue with the 
-following results for invasive carcinoma (block  REMOVED_ACCESSION_ID ): 
+Final Diagnosis by William R Welch M.D., Electronically signed on REMOVED_DATE 
+SURGICAL ADDENDUM: 
+Immunoperoxidase studies were performed with the following results for the 
+right breast invasive carcinoma (block  REMOVED_ACCESSION_ID ): 
 Estrogen receptor POSITIVE 
 Progesterone receptor POSITIVE 
- REMOVED_ACCESSION_ID /neu (c-erb- REMOVED_ACCESSION_ID ) NEGATIVE (1+) 
-Hormone receptor analysis: The percent of immunoreactive nuclei in the 
-invasive carcinoma is assessed visually and reported as follows: 
-positive >10% of nuclei immunoreactive 
-positive - low > 0% - < 10% of nuclei immunoreactive 
-negative 0% of nuclei immunoreactive 
-The lower threshold for clinically significant immunoreactivity has not yet 
-been determined. 
- REMOVED_ACCESSION_ID /neu analysis: 
-Negative (0): No immunoreactivity or immunoreactivity in <10% of tumor cells. 
-Negative (1+): Faint weak immunoreactivity in >10% of tumor cells but only a 
-portion of the membrane is positive. 
-Positive (2+):Weak to moderate complete membrane immunoreactivity in >10% of 
-tumor cells. 
-Positive (3+):Moderate to strong complete membrane immunoreactivity in >30% of 
-tumor cells. 
-Cytoplasmic immunoreactivity alone is scored as a negative result. 
-External controls are evaluated and show appropriate Immunoreactivity. 
-Some of the reagents used in these assays may be approved for investigational 
-use only. 
-Addendum #1 by Deborah A Dillon M.D., Electronically signed on REMOVED_DATE 
-[report_end] ",1,0
-"Accession Number:  REMOVED_ACCESSION_ID  Report Status: FinalType: Surgical Pathology Pathology Report:  REMOVED_ACCESSION_ID  ACCESSIONED ON: 20 REMOVED_MONTH 02 at 15:58 CLINICAL DATA: Left breast tissue containing nodular tissue. =============================================================================== *** FINAL DIAGNOSIS *** BREAST (LEFT) (SS-02- REMOVED_CASE_ID ), CORE BIOPSIES: INVASIVE CARCINOMA WITH LOBULAR FEATURES. LOBULAR NEOPLASIA (LOBULAR CARCINOMA IN-SITU). Diagnosis by: MELINDA J. FAN, MD Signed On: 22 REMOVED_MONTH 02 at 11:33 =============================================================================== =============================================================================== SOURCE CARE UNIT: MGH-OUTSIDE LOCATION REPORTS TO: Barbara Lynn Smith, M.D. OUTSIDE INSTITUTION: THE NORTH SHORE MEDICAL CENTER (SALEM HOSPITAL) OUTSIDE PATHOLOGIST: Charles Bockoff, M.D. THE NORTH SHORE MEDICAL CENTER (SALEM HOSPITAL) 81 HIGHLAND AVENUE SALEM, MA, MA  REMOVED_CASE_ID  PART : BREAST (LEFT)(SS-02- REMOVED_CASE_ID ),CORE BIOPSY Date of Procedure: 31-OCT- REMOVED_CASE_ID  Slides: 5 Blocks: 0 ",1,0
+ REMOVED_ACCESSION_ID /neu NEGATIVE (0) 
+Note: These confirm the results reported on the prior core needle biopsy 
+(reviewed as  REMOVED_ACCESSION_ID ). 
+Immunoperoxidase studies were performed with the following results for LCIS in 
+the left breast (block  REMOVED_ACCESSION_ID ): 
+Estrogen receptor POSITIVE 
+Progesterone receptor POSITIVE 
+ REMOVED_ACCESSION_ID /neu NEGATIVE (0) 
+Note: The area of DCIS is no longer present on the deeper levels used for the 
+immunoperoxidase studies. 
+Addendum #1 by Susan Lester M.D., Ph.D., Electronically signed on REMOVED_DATE 
+[report_end] ",101141,0,1
+"Accession Number:  REMOVED_ACCESSION_ID  Report Status: UpdatedType: Surgical Pathology Pathology Report: MS-05- REMOVED_ACCESSION_ID  CASE: MS-05- REMOVED_ACCESSION_ID  REMOVED_PATIENT_NAME  Date Taken: REMOVED_DATE Source Care Unit: Same Day Surgery, WACC 3 Frozen Section Pathologist: None Frozen Section Resident: None Frozen Section Consultant(s): None Consulting Pathologist(s): None Assigned Resident/Path: Christopher K Hysell, M.D. Reports To: MICHELLE C SPECHT, M.D. ********** Addended Report *********** Reason for Addendum #1: Additional Immunohistochemistry Results CLINICAL DATA: Irregular hypoechoic mass of left breast with biopsy showing invasive ductal carcinoma. FINAL DIAGNOSIS: BREAST (LEFT), EXCISION: INVASIVE DUCTAL CARCINOMA WITH ADMIXED LOBULAR FEATURES (SEE TABLE #1). DUCTAL CARCINOMA IN-SITU (SEE TABLE #1). LOBULAR NEOPLASIA (LOBULAR CARCINOMA IN-SITU). HEALING BIOPSY SITE. TABLE OF PATHOLOGICAL FINDINGS #1 INVASIVE CARCINOMA TUMOR SIZE: REMOVED_DATE x REMOVED_DATE x 0.8cm GRADE: REMOVED_DATE LYMPHATIC VESSEL INVASION: Not identified. BLOOD VESSEL INVASION: Single focus - Suspicious. MARGIN OF INVASIVE CARCINOMA: Invasive carcinoma extends to the posterior and superior margins of the specimen along a broad front. LOCATION OF DUCTAL CARCINOMA IN-SITU: Within the region of the mass. GRADE OF DUCTAL CARCINOMA IN-SITU: 1. MARGIN OF DUCTAL CARCINOMA IN-SITU: Ductal carcinoma in-situ extends to < 0.1cm from the posterior margin of the specimen in one focus. STAINS FOR RECEPTORS: Requested on block  REMOVED_ACCESSION_ID . LYMPH NODE (LEFT AXILLA, ""SENTINEL""), EXCISION: METASTATIC CARCINOMA TO ONE LYMPH NODE (SEE TABLE #2). TABLE OF PATHOLOGIC FINDINGS #2 SENTINEL LYMPH NODES TOTAL NUMBER OF POSITIVE LYMPH NODES: 1 TOTAL NUMBER OF LYMPH NODES EXAMINED: 1 Number of lymph nodes with metastases 0.02cm or less (isolated tumor cells): 0 Number of lymph nodes with metastases >0.02cm to 0.2cm (micrometastases): 0 Number of lymph nodes with metastases >0.2cm (macrometastases): 1 Method of detection: Hematoxylin and eosin. Extracapsular extension: Marked Other forms of axillary involvement: None By his/her signature below, the pathologist listed as making the Final Diagnosis certifies that he/she has personally reviewed this case and confirmed or corrected the diagnoses. GROSS DESCRIPTION: Received fresh,  labeled REMOVE_PATIENT_NAME  patient's name, unit number, and ""left breast cancer"", is a 14 x REMOVED_DATE x 2.7cm excisional left breast specimen. The surgeon denotes the lateral edge of the specimen with a long stitch, and the superior edge of the specimen with a short stitch. The specimen is inked as follows: superior - green, inferior - yellow, anterior - blue, posterior - black. The specimen is serially sectioned to reveal a REMOVED_DATE x REMOVED_DATE x 0.8cm stellate yellowish to white fibrous mass with areas of punctate hemorrhage. This mass appears to abut the posterior margin, is 1.0cm from the superior margin, 1.1cm from the anterior margin, and >1cm from the inferior, medial, and lateral margins. The following cassettes are submitted:  REMOVED_ACCESSION_ID : Radial section displaying relation of mass to posterior and superior borders.  REMOVED_ACCESSION_ID : Representative section of mass to anterior margin.  REMOVED_ACCESSION_ID : Additional section of the mass, in this section there will be additional relation to superior margin.  REMOVED_ACCESSION_ID : Representative section of the mass.  REMOVED_ACCESSION_ID : Representative sections of normal appearing breast parenchyma away from mass. Received fresh,  labeled REMOVE_PATIENT_NAME  patient's name, unit number, and "" left sentinel lymph node"", is a REMOVED_DATE x REMOVED_DATE x 2.6cm specimen of fat and lymph node. Within the specimen there is a REMOVED_DATE x REMOVED_DATE x 1.2cm lymph node. The lymph node is firm and cut surface has whitish discoloration in the lymph node and is likely grossly positive. The lymph node is thinly sectioned and two representative sections are submitted in cassette  REMOVED_ACCESSION_ID  and  REMOVED_ACCESSION_ID . The remaining sections of the lymph node are saved in formalin. Gross Dictation by Christopher K Hysell M.D., on REMOVED_DATE Micro/Dx Dictation by Christopher K Hysell M.D., on REMOVED_DATE Micro/Dx Dictation by Christopher K Hysell M.D., on REMOVED_DATE Final Diagnosis by Dennis Sgroi M.D., Electronically signed on REMOVED_DATE ADDENDUM NOTE: REASON: RESULTS OF IMMUNOHISTOCHEMICAL STAINING FOR RECEPTOR PROTEINS Breast (Left, block  REMOVED_ACCESSION_ID ): The tumor cells stain for estrogen receptor protein. The tumor cells stain for progesterone receptor protein. The tumor cells do not show overexpression of HER-2/c-erbB-2. See note. Note: These tests were developed and their performance characteristics determined by the Pathology Department at the Massachusetts General Hospital. They have not been cleared or approved by the U.S. Food and Drug Administration (FDA). The FDA has determined that such clearance or approval is not necessary; this laboratory has established and verified the test's accuracy and precision. Addendum by Atul K Bhan M.D., on REMOVED_DATE Addendum #1 by Atul K Bhan M.D., Electronically signed on REMOVED_DATE PART A: BREAST (LEFT), EXCISION PART B: LYMPH NODE (LEFT AXILLA, ""SENTINEL""), EXCISION ",50679,0,1
+"Accession Number:  REMOVED_ACCESSION_ID  Report Status: UpdatedType: Surgical Pathology Pathology Report: MS-05- REMOVED_ACCESSION_ID  CASE: MS-05- REMOVED_ACCESSION_ID  REMOVED_PATIENT_NAME  Date Taken: REMOVED_DATE Source Care Unit: Same Day Surgery, WACC 3 Frozen Section Pathologist: None Frozen Section Resident: None Frozen Section Consultant(s): None Consulting Pathologist(s): None Assigned Resident/Path: Dennis Sgroi, M.D. Reports To: MICHELE ANNETTE GADD, M.D. ********** Addended Report *********** Reason for Addendum #1: Additional Immunohistochemistry Results CLINICAL DATA: Breast cancer. FINAL DIAGNOSIS: BREAST (LEFT MEDIAL INFERIOR), PARTIAL MASTECTOMY: INVASIVE LOBULAR CARCINOMA (SEE TABLE #1 AND SEE NOTE). LOBULAR NEOPLASIA (ATYPICAL LOBULAR HYPERPLASIA). HEALING BIOPSY SITE. FIBROCYSTIC CHANGES. NOTE: The invasive carcinoma cells lack membrane e-cadherin staining supporting a diagnosis of invasive lobular rather ductal carcinoma. The resection margins of the specimen(s) were inked and microscopically evaluated; see individual gross descriptions. TABLE OF PATHOLOGICAL FINDINGS #1 INVASIVE CARCINOMA TUMOR SIZE: Multiple nodules present in 8 of 12 slides ; the largest measures 1.2cm  the nodules in aggregate measure >2cm  GRADE: 2. LYMPHATIC VESSEL INVASION: Not identified. BLOOD VESSEL INVASION: Not identified. MARGIN OF INVASIVE CARCINOMA: Positive at the inked margin of the specimen (designated by a suture) along a broad front. STAINS FOR RECEPTORS: Requested on block  REMOVED_ACCESSION_ID  BREAST (LEFT NIPPLE), EXCISION: INVASIVE LOBULAR CARCINOMA, SINGLE REMOVED_DATE CM FOCUS, PRESENT REMOVED_DATE CM FROM THE MARGIN DESIGNATED BY A SUTURE (SEE NOTE). LOBULAR NEOPLASIA (ATYPICAL LOBULAR HYPERPLASIA). FIBROCYSTIC CHANGES. HEALING BIOPSY SITE. NOTE: The resection margins of the specimen(s) were inked and microscopically evaluated; see individual gross descriptions. BREAST (LEFT DEEP), EXCISION: INVASIVE LOBULAR CARCINOMA, FIVE MICROSCOPIC FOCI. (0.1 , REMOVED_DATE  REMOVED_DATE  REMOVED_DATE AND REMOVED_DATE CM), ONE FOCUS OF WHICH IS PRESENT AT THE MARGIN DESIGNATED BY A SUTURE ALONG A REMOVED_DATE CM BROAD FRONT. (SEE NOTE). LOBULAR NEOPLASIA (ATYPICAL LOBULAR HYPERPLASIA). FIBROCYSTIC CHANGES WITH CALCIFICATIONS. HEALING BIOPSY SITE. NOTE: The resection margins of the specimen(s) were inked and microscopically evaluated; see individual gross descriptions. BREAST (LEFT) LYMPH NODE, EXCISION: METASTATIC CARCINOMA TO 2 OF 13 LYMPH NODES (SEE TABLE #2 AND SEE NOTE). NOTE: Keratin Immunostains confirm the diagnosis of metastatic carcinoma. TABLE OF PATHOLOGIC FINDINGS #2 SUMMARY OF AXILLARY LYMPH NODES TOTAL NUMBER OF POSITIVE LYMPH NODES: 2 TOTAL NUMBER OF LYMPH NODES EXAMINED: 13 Number of lymph nodes with metastases 0.02cm or less (isolated tumor cells): Number of lymph nodes with metastases >0.02cm to 0.2cm (micrometastases): Number of lymph nodes with metastases >0.2cm (macrometastases): 2 Extracapsular extension: None. Other forms of axillary involvement: None. BREAST (LEFT LATERAL), EXCISION: HEALING BIOPSY SITE, THERE IS NO EVIDENCE OF MALIGNANCY. By his/her signature below, the pathologist listed as making the Final Diagnosis certifies that he/she has personally reviewed this case and confirmed or corrected the diagnoses. GROSS DESCRIPTION: Received fresh,  labeled REMOVE_PATIENT_NAME  patient's name, unit number, and ""left breast partial mastectomy, medial inferior"", is a REMOVED_DATE x REMOVED_DATE x 1.8cm irregular portion of fibroadipose tissue with a stitch denoting the true margin. This margin is marked with black ink. The opposing surface displays a 3.5cm diameter biopsy cavity which has a smooth inner lining, in sectioning no masses or nodules are grossly identified. The tissue consists mainly of adipose tissue with a small amount of intervening soft, white fibrous tissue. The specimen is entirely submitted in  REMOVED_ACCESSION_ID . [There is no specimen for part B, which is confirmed by Dr. Dominguez. Dr. Koerner contacted Dr. Dominguez who is involved in the case. Dr. Dominguez noted that the additional container received labeled ""left axillary node dissection is indeed an axillary node dissection and not an excisional biopsy. This specimen is accession as part F (See below).] Received fresh,  labeled REMOVE_PATIENT_NAME  patient's name, unit number, and ""nipple left breast"", is a REMOVED_DATE x REMOVED_DATE x 1.5cm irregular portion of fibroadipose tissue, with an attached stitch. This margin is marked with black ink. The opposing surface displays a 2.4cm in diameter biopsy cavity, lined by smooth white fibrous tissue. On sectioning no masses or nodules are noted, the tissue consists mainly of adipose tissue with a small amount of intermediated soft, white fibrous tissue, the specimen is entirely submitted as  REMOVED_ACCESSION_ID  to  REMOVED_ACCESSION_ID . Received fresh,  labeled REMOVE_PATIENT_NAME  patient's name, unit number, and ""left breast, deep"", is a REMOVED_DATE x REMOVED_DATE x 1.9cm irregular portion of fibroadipose tissue with an attached stitch. The surface is marked with black ink. The opposing surface displays a 3.0cm in diameter biopsy cavity, lined by smooth, white fibrous tissue, on sectioning no masses or nodules are grossly identified. The tissue consists mainly of adipose tissue with a small amount of intermediate soft, white fibrous tissue, the specimen is submitted as  REMOVED_ACCESSION_ID . Received fresh,  labeled REMOVE_PATIENT_NAME  patient's name, unit number, and "" left lateral"", is an irregular portions of fibroadipose tissue, which are not oriented and measure REMOVED_DATE x REMOVED_DATE x 0.5cm and REMOVED_DATE x REMOVED_DATE x 0.6cm  No masses or nodules are grossly identified. The tissue consists mainly of adipose tissue with a small amount of intervening soft, white fibrous tissue. Each portion is bisected and the specimen is entirely submitted as  REMOVED_ACCESSION_ID . Received fresh,  labeled REMOVE_PATIENT_NAME  patient's name, unit number, and "" left axillary node dissection"", are two irregular portions of adipose tissue, measuring REMOVED_DATE x REMOVED_DATE x 1.5cm and REMOVED_DATE x REMOVED_DATE x 1.9cm  Multiple lymph nodes are located in the fat with soft, tan-cut surfaces which measures up to REMOVED_DATE x REMOVED_DATE x 0.9cm  The lymph nodes are entirely submitted as :  REMOVED_ACCESSION_ID : Three intact lymph nodes candidate.  REMOVED_ACCESSION_ID : Two lymph node candidate.  REMOVED_ACCESSION_ID : One bisected lymph node.  REMOVED_ACCESSION_ID : One bisected lymph node.  REMOVED_ACCESSION_ID : One bisected lymph node.  REMOVED_ACCESSION_ID : One bisected node.  REMOVED_ACCESSION_ID : One bisected node.  REMOVED_ACCESSION_ID : One bisected lymph node.  REMOVED_ACCESSION_ID : One bisected lymph node.  REMOVED_ACCESSION_ID : One lymph node, quadrisected. Gross Dictation by Tim Robinson, on REMOVED_DATE Micro/Dx Dictation by Dennis Sgroi M.D., on REMOVED_DATE Gross Dictation by Dennis Sgroi M.D., on REMOVED_DATE Final Diagnosis by Dennis Sgroi M.D., Electronically signed on REMOVED_DATE ADDENDUM NOTE: REASON: RESULTS OF IMMUNOHISTOCHEMICAL STAINING FOR RECEPTOR PROTEINS Breast (Left Medial Inferior, block  REMOVED_ACCESSION_ID ): The tumor cells stain for estrogen receptor protein. The tumor cells stain for progesterone receptor protein. The tumor cells do not show overexpression of HER-2/c-erbB-2. See note. Note: These tests were developed and their performance characteristics determined by the Pathology Department at the Massachusetts General Hospital. They have not been cleared or approved by the U.S. Food and Drug Administration (FDA). The FDA has determined that such clearance or approval is not necessary; this laboratory has established and verified the test's accuracy and precision. Addendum by Atul K Bhan M.D., on REMOVED_DATE Addendum #1 by Atul K Bhan M.D., Electronically signed on REMOVED_DATE PART A: BREAST (LEFT MEDIAL INFERIOR), PARTIAL MASTECTOMY PART B: BREAST (LEFT NIPPLE), EXCISION PART C: BREAST (LEFT DEEP), EXCISION PART D: BREAST (LEFT LATERAL), EXCISION PART E: BREAST (LEFT) LYMPH NODE, EXCISION ",76073,0,1
+"Accession Number:  REMOVED_ACCESSION_ID  Report Status: Final 
+Type: Surgical Pathology 
+Pathology Report  REMOVED_ACCESSION_ID  SOFT TISSUE BIOPSY 
+Accessioned On: REMOVED_DATE 
+NUCCI, MARISA, ROSE, M.D. 
+DIAGNOSIS: by NUCCI,MARISA ROSE,M.D. 
+1) SPECIMEN LABELED ""AXILLARY SCAR"" (including FSA): 
+INVASIVE CARCINOMA, with predominantly lobular features, moderately 
+differentiated (modified Bloom-Richardson grade II/III), involving 
+fibroadipose tissue. 
+NOTE: The original frozen section was reviewed and atypical cells are present, 
+which in retrospect, represent invasive carcinoma. 
+2) LEFT BREAST, MODIFIED RADICAL MASTECTOMY AND AXIILARY NODE DISSECTION: 
+SUMMARY DIAGNOSIS 
+INVASIVE CARCINOMA 
+DUCTAL CARCINOMA IN SITU 
+METASTATIC CARCINOMA TO AXILLARY LYMPH NODES 
+SYNOPSIS: 
+INVASIVE CARCINOMA 
+Size - at least 5.0cm (see NOTE) 
+Histologic Type - mixed ductal and lobular 
+Histologic Grade (SBR) - II (moderate) 
+Nuclear Grade - intermediate 
+EIC - negative 
+Lymphovascular invasion - absent 
+Dermal lymphatic invasion - absent 
+Skin invasion - absent 
+Skeletal muscle invasion - present, extensive 
+Final Margins (invasive) - 
+Positive (ink on tumor) - deep margin, extensive 
+DUCTAL CARCINOMA IN SITU 
+Types - solid 
+Nuclear grade - intermediate 
+Calcifications in DCIS - absent 
+Central necrosis in DCIS - absent 
+Microinvasion (<0.1cm) - absent 
+Final Margins (DCIS) 
+Negative (>0.3cm ) - deep 
+LOBULAR CARCINOMA IN SITU - absent 
+LYMPH NODES 
+Intramammary Lymph Nodes - positive 
+Number of positive nodes - 1 
+Number of nodes examined - 1 
+Axillary Lymph Nodes - positive 
+Number of positive nodes - 6 
+Number of nodes examined - 9 
+TOTAL POSITIVE NODES - REMOVED_DATE 
+Size of largest metastatic focus - 0.2cm 
+Extranodal extension - absent 
+OTHER FINDINGS 
+Core biopsy site 
+AJCC CLASSIFICATION -  REMOVED_ACCESSION_ID  p REMOVED_ACCESSION_ID  MX 
+SPECIAL STUDIES (ER/PR/HER-2) - performed previously here 
+NOTE: The 3.4cm mass noted on gross examination in the upper mid-portion of 
+the breast corresponds to the portion of the invasive carcinoma that exhibits 
+ductal differentiation. The remainder of the invasive carcinoma, which 
+extensively involves the breast and measures at least 5cm (including 
+involvement of upper inner, upper outer, and lower inner quadrants) 
+predominantly exhibits lobular differentiation. The invasive lobular 
+component extensively infiltrates skeletal muscle and invades through it to 
+the inked deep margin. 
+CLINICAL DATA: 
+History: An 87 with L breast CA. 
+Operation: L MRM. 
+TISSUE SUBMITTED: 1. Axillary scar (FS). 
+2. L breast & axilla. 
+O.R. CONSULTATION: 
+SPECIMEN LABELED ""AXILLARY SCAR"" (FSA): 
+Adipose tissue with focal fibrosis and reactive changes. 
+No carcinoma identified. 
+GROSS DESCRIPTION: by YOU,MINGJIAN JAMES,M.D.,PH.D. 
+The specimen is received fresh in two parts,  labeled REMOVE_PATIENT_NAME  patient's name 
+and unit number. 
+Part one, labeled ""#1 axillary scar"", consists of a fragment of 
+yellow/white/tan soft tissue (1 x REMOVED_DATE x 0.2cm ) and is entirely submitted as 
+FSA. 
+Micro 1: remnants of FSA, 1 frag, ESS. 
+Part two, labeled ""#2 left breast and axillary tail"", consists of a 500-gram 
+breast (22 x 18 x 3cm ) with a white/tan skin ellipse (19 x 8cm ) and an 
+attached axillary tail (8 x 2 x 2cm ). There is a well healed, possible core 
+biopsy penetrating site on the surface of the skin ellipse. The possible 
+biopsy site measures 0.2cm in diameter and is located 3cm from the 
+unremarkable nipple (1.5cm in diameter) and 1.5cm from the superior edge of 
+the specimen. The areola measures 3.9cm in diameter and is unremarkable. The 
+deep margin of the specimen was inked black and sectioned when it was 
+received. At 3.5cm from the possible core biopsy site is a mass (3.4 x REMOVED_DATE x 
+2.5cm ) which is white/tan and solid. Representative sections of the mass are 
+submitted to the tumor bank. The mass is 4.2cm from the deep margin, 3.0cm 
+from the inferior edge of the specimen, 0.5cm from the superior edge of the 
+specimen and is located in the middle of the upper part of the specimen. About 
+5.5cm from the mass there is a pink/tan solid mass (0.7cm in diameter) which 
+is 2cm from the deep margin and 2.5cm from the superior edge of the 
+specimen. This smaller mass is located in the outer upper quadrant of the 
+specimen; the breast tissue between these masses is firm. At 2.5cm from the 
+largest mass there is a white/tan, solid nodule (0.2cm in diameter) which is 
+located at the outer lower quadrant, 5cm from the tail, 4cm from the lateral 
+edge of the breast tissue and 3cm from the deep margin. No biopsy cavity or 
+biopsy sites are identified. In the center of the deep margin, there is an 
+area of skeletal muscle (3.0 x REMOVED_DATE x 0.4cm ). There are nine possible lymph 
+nodes in the axillary tail (the largest measuring 1.3cm in greatest 
+dimension) and entirely submitted. 
+Micro REMOVED_DATE  largest mass, 5 frags, RSS. 
+Micro REMOVED_DATE  largest mass and its relationship to the deep margin, 2 frags, RSS. 
+Micro 9: second largest mass, 1 frag, RSS. 
+Micro 10: small nodule, 1 frag, ESS. 
+Micro 11: upper outer quadrant, 1 frag, RSS. 
+Micro 12: upper inner quadrant, 1 frag, RSS. 
+Micro 13: lower outer quadrant, 1 frag, RSS. 
+Micro 14: lower inner quadrant, 1 frag, RSS. 
+Micro 15: representative section of muscle, 1 frag, RSS. 
+Micro 16: nipple, 1 frag, RSS. 
+Micro 17: skin, possible punctate site, 1 frag, RSS. 
+Micro REMOVED_DATE  9 possible lymph nodes, micro 20 contains a bisected lymph node, 
+10 frags, ESS. 
+mjy 
+Reports to: OSTEEN, ROBERT, T. M.D. 
+SPECIMEN TYPE: SOFT TISSUE BIOPSY 
+ADDITIONAL SPECIMEN TYPE: BREAST MASTECTOMY W/REGIONAL LYMPH NODES 
+[report_end] ",18722,1,0
+"Accession Number:  REMOVED_ACCESSION_ID  Report Status: Final 
+Type: Surgical Pathology 
+Pathology Report  REMOVED_ACCESSION_ID  BREAST CORE NEEDLE BIOPSY(IES) 
+Accessioned On: REMOVED_DATE 
+LESTER, SUSAN, M.D.~PH.D. 
+DIAGNOSIS: by LESTER,SUSAN,M.D.,PH.D. 
+LEFT BREAST, 11 G STEREOTACTIC CORE NEEDLE BIOPSY FOR CALCIFICATIONS: 
+Scattered calcifications in atrophic lobules associated with dense breast 
+stroma. 
+CLINICAL DATA: 
+History:  REMOVED_CASE_ID  - Invasive lobular carcinoma with metastases to lymph nodes, 
+s/p chemotherapy (no radiation). Other microcalcifications left breast sampled 
+today. Operation: 11 G Stereotactic. 
+Operative findings: Calcifications in cores. 
+Clinical Diagnosis: ? DCIS. 
+TISSUE SUBMITTED: 1) Left breast tissue in green cassettes - 
+A = with calcifications, B = no calcifications. 
+GROSS DESCRIPTION: by PREISINGER,ELIZABETH ANN,M.D. 
+The specimen is received in formalin,  labeled REMOVE_PATIENT_NAME  patient's name, unit 
+number, and ""Left breast"", and consists of two (2) green cassettes. One 
+cassette is labeled ""A Ca++"" and contains multiple, soft, fragmented, yellow 
+to white tissue cores (1.3 x REMOVED_DATE x 0.2cm in aggregate). The other cassette is 
+labeled ""B"" and contains similar tissue fragments (1.4 x REMOVED_DATE x 0.2cm in 
+aggregate). 
+Micro 1: ""A Ca++"", multi frags, ESS. 
+Micro 2: ""B"", multi frags, ESS. 
+kks 
+Reports to: TWOHIG, LORRAINE, BERNADETTE, MB 
+SPECIMEN TYPE: BREAST CORE NEEDLE BIOPSY(IES) 
+[report_end] ",84281,1,0
+"Accession Number:  REMOVED_ACCESSION_ID  Report Status: Final Type: Surgical Pathology Pathology Report:  REMOVED_ACCESSION_ID  ACCESSIONED ON: 13 REMOVED_MONTH 95 at 12:35 CLINICAL DATA: {None Provided} =============================================================================== *** FINAL DIAGNOSIS *** BREAST (RIGHT), BIOPSY: INFILTRATING LOBULAR CARCINOMA, extending to the margin of the specimen along a broad front. LOBULAR NEOPLASIA. SEE NOTE. NOTE: The tumor has a histological grade of 1. Blood vessel and lymphatic vessel invasion is not seen. Diagnosis by: Frederick Carl Koerner, M.D. Signed On: 13 REMOVED_MONTH 95 at 13:33 =============================================================================== =============================================================================== SOURCE CARE UNIT: MGH-OUTSIDE LOCATION REPORTS TO: Barbara Lynn Smith, M.D. Michael L Grossbard, M.D. Claire Y Fung, M.D. OUTSIDE INSTITUTION: BETH ISRAEL HOSPITAL (BOS.) OUTSIDE PATHOLOGIST: L. Garcia, MD BETH ISRAEL HOSPITAL/DEPT OF PATHOLOGY 330 BROOKLINE AVENUE BOSTON, MA  REMOVED_CASE_ID  (617) REMOVED_DATE PART : RIGHT BREAST BIOPSY (95- REMOVED_CASE_ID ) Date of Procedure: 28-NOV- REMOVED_CASE_ID  Slides: 1 Blocks: 0 
+[report_end] ",58551,0,1
+"Accession Number:  REMOVED_ACCESSION_ID  Report Status: FinalType: Surgical Pathology Pathology Report:  REMOVED_ACCESSION_ID  OPERATION DATE: 16 REMOVED_MONTH 03 ACCESSIONED ON: 16 REMOVED_MONTH 03 at 15:27 CLINICAL DATA: S/P left mastectomy for DCIS with implant construction in  REMOVED_CASE_ID . New invasive right breast cancer. =============================================================================== *** FINAL DIAGNOSIS *** BREAST (RIGHT), SIMPLE MASTECTOMY: INVASIVE DUCTAL CARCINOMA WITH LOBULAR FEATURES (SEE TABLE #1). DUCTAL CARCINOMA IN-SITU (SEE TABLE #1). FIBROCYSTIC CHANGES WITH INTRADUCTAL PAPILLOMA, RADIAL SCAR, AND COLLAGENOUS SPHERULOSIS. HEALING BIOPSY SITE. TABLE OF PATHOLOGICAL FINDINGS #1 INVASIVE CARCINOMA Tumor size: REMOVED_DATE x REMOVED_DATE x 0.8cm  Grade: REMOVED_DATE Lymphatic vessel invasion: Not identified. Blood vessel invasion: Not identified. Margin of invasive carcinoma: The distances to all margins measure 0.2cm or greater. Location of ductal carcinoma in-situ: Within and beyond the region of the mass. Grade of ductal carcinoma in-situ: REMOVED_DATE Margin of ductal carcinoma in-situ: The distances to all margins measure 0.2cm or greater. Stains for receptors: Requested on block B. LYMPH NODE (RIGHT AXILLA, SENTINEL), EXCISION: TWO LYMPH NODES ARE FREE OF CARCINOMA. (SEE NOTE). NOTE:Keratin-positive tumor cells are not identified on six  REMOVED_ACCESSION_ID .3/Cam5.2 immunostained levels. Diagnosis by: Dennis Sgroi, M.D. Signed On: 23 REMOVED_MONTH 03 at 17:03 =============================================================================== *** IMMUNOHISTOCHEMISTRY Addendum *** RESULTS OF IMMUNOHISTOCHEMICAL STAINING FOR RECEPTOR PROTEINS Breast (Right, block B): The tumor cells stain for estrogen receptor protein. The tumor cells stain for progesterone receptor protein. The tumor cells do not show overexpression of HER-2/c-erbB-2. See note. Note: These tests were developed and their performance characteristics determined by the Pathology Department at the Massachusetts General Hospital. They have not been cleared or approved by the U.S. Food and Drug Administration (FDA). The FDA has determined that such clearance or approval is not necessary; this laboratory has established and verified the test's accuracy and precision. Added by: Atul Kumar Bhan, M.D. Signed On: 24 REMOVED_MONTH 03 at 14:17 GROSS DESCRIPTION: Received fresh,  labeled REMOVE_PATIENT_NAME  patient's name and unit number, and ""right simple mastectomy"" is a 19 x 16 x 7.0cm right simple mastectomy specimen with a short stitch designating superior and a long stitch designating lateral. The overlying REMOVED_DATE x 3.8cm light tan smooth skin ellipse contains a 2.0cm nipple areolar complex which is grossly unremarkable. The anterior surgical margin is inked blue. The posterior is inked black. The specimen is serially sectioned to reveal a REMOVED_DATE x REMOVED_DATE x 0.8cm white-grey firm stellate and gritty mass located in the right upper outer quadrant of the breast. The mass is 2.2cm from the anterior margin, 4.0cm from the posterior margin and 5.0cm from the skin. The remaining breast parenchyma is approximately 90% fatty tissue and 10% fibrous tissue. The fibrous tissue is grossly unremarkable. No lymph nodes are identified. The specimen is submitted as follows: A-D: Tumor submitted entirely. E-F: Representative sections of fibrous tissue away from the tumor. Received fresh in the Frozen Section Lab,  labeled REMOVE_PATIENT_NAME  patient's name and unit number, and ""sentinel node, right axilla"" is a REMOVED_DATE x REMOVED_DATE x 0.6cm fragment of fibrous tissue with two possible nodes identified. The largest one measures 1.5cm and the smallest measures 0.4cm in greatest dimension. The largest lymph node is bisected and both are submitted entirely as Fx#1, now as G. Resident: JULIA TURBINER, M.D. *** INTRA-OPERATIVE DIAGNOSIS *** FROZEN SECTION DIAGNOSIS #1 LYMPH NODE, RIGHT AXILLA SENTINEL BIOPSY: THERE IS NO EVIDENCE OF MALIGNANCY, AWAITS CYTOKERATIN STAIN. O.R. Resident: PAUL N. STAATS, MD O.R. Diagnosis by: Lawrence R. Zukerberg, M.D. =============================================================================== SOURCE CARE UNIT: MGH-INPATIENT (FLR.UNKNOWN) REPORTS TO: Barbara Lynn Smith, M.D. PART A: LYMPH NODE (RIGHT AXILLA, SENTINEL), EXCISION PART B: BREAST(RIGHT),SIMPLE MASTECTOMY ",63248,0,1
 "Accession Number:  REMOVED_ACCESSION_ID  Report Status: Final 
 Type: Surgical Pathology 
 Pathology Report  REMOVED_ACCESSION_ID  OUTSIDE SLIDE CONSULT - BREAST 
 Accessioned On: REMOVED_DATE 
 RICHARDSON, ANDREA, L., M.D.~PH.D. 
 DIAGNOSIS: by RICHARDSON,ANDREA L.,M.D.,PH.D. 
-CONSULT SLIDES FROM LOWELL GENERAL HOSPITAL, LOWELL, MA: 
-LEFT BREAST, WIRE LOCALIZED EXCISION FOR CALCIFICATIONS ( REMOVED_ACCESSION_ID ; 7/2/03): 
-INVASIVE DUCTAL CARCINOMA, with lobular features, moderately 
-differentiated (modified Bloom-Richardson grade II/III), 3.5cm in size. 
-Extensive lymphovascular invasion is present. Multiple foci in multiple 
-slides, away from tumor. 
-Extensive DUCTAL CARCINOMA IN SITU, solid and cribriform types, 
-(intermediate nuclear grade) with necrosis and calcifications present in 
-6 of 6 slides. (EIC positive). 
-Invasive carcinoma is present at multiple margins. 
-DCIS is present at multiple margins. 
+CONSULT SLIDES FROM BERKSHIRE HEALTH SYSTEMS, PITTSFIELD, MA: 
+RIGHT BREAST, EXCISION FOR A MASS ( REMOVED_ACCESSION_ID , 12/30/02): 
+INVASIVE CARCINOMA WITH DUCTAL AND LOBULAR FEATURES, poorly differentiated 
+(modified Bloom-Richardson grade III/III), at least 1.1cm  (See Note). 
+Extensive lymphovascular invasion is seen, including extensive invasion of 
+dermal lymphatics of skin. 
+No in situ component is seen. 
+Invasive carcinoma extends to the edges of the specimen along a broad 
+front (See Note). 
+NOTE: The specimen was received in five fragments, precluding definitive 
+determination of tumor size and status of true margins. 
 Special studies were performed at an outside institution with the following 
 results (not reviewed): 
-ESTROGEN RECEPTOR - POSITIVE 
+ESTROGEN RECEPTOR - LOW POSITIVE 
 PROGESTERONE RECEPTOR - POSITIVE 
- REMOVED_ACCESSION_ID /NEU - NEGATIVE (1+) 
+ REMOVED_ACCESSION_ID /NEU - NEGATIVE (0) 
 CLINICAL DATA: 
 History: None given. 
 TISSUE SUBMITTED: Consult slides. 
-GROSS DESCRIPTION: by WITKIEWICZ,AGNIESKA K.,M.D. 
-Received from Lowell General Hospital, Pathology Department, 295 Varnum 
-Avenue, Lowell, MA  REMOVED_CASE_ID , are six (6) slides. 
-The slides are labeled "" REMOVED_ACCESSION_ID "" and sublabeled ""1"" through ""6"", corresponding 
-to a left breast needle localization biopsy (7 x 6 x 3.5cm ) performed on 
-7/2/03, according to the accompanying pathology report bearing the patient's 
-name. 
-Included is a Lab report from Specialty Laboratories, Santa Monica, CA; their 
-accession number ""003- REMOVED_CASE_ID -I"", referring institution Lowell General 
-Hospital, Lowell, MA; their accession numer "" REMOVED_ACCESSION_ID "" bearing the patient's 
-name. 
-Reports to: MATORY, YVEDT, L. M.D. 
+GROSS DESCRIPTION: by PREISINGER,ELIZABETH ANN,M.D. 
+Received from Berkshire Health Systems Laboratories, Berkshire Medical Center, 
+725 North Street, Pittsfield, MA  REMOVED_CASE_ID , are four (4) slides. 
+The slides are labeled "" REMOVED_ACCESSION_ID "" and sublabeled ""1A RECUT"" through ""1D 
+RECUT"", corresponding to a right breast, skin excision (2.0 x REMOVED_DATE x 0.5cm and 
+1.3 x REMOVED_DATE x0.6cm ) performed on REMOVED_DATE  according to the accompanying 
+pathology report bearing the patient's name. 
+Reports to: UNKNOWN M.D. 
 SPECIMEN TYPE: OUTSIDE SLIDE CONSULT - BREAST 
-[report_end] ",1,0
-"Accession Number:  REMOVED_ACCESSION_ID  Report Status: Amend/Addenda 
+[report_end] ",23024,0,1
+"Accession Number:  REMOVED_ACCESSION_ID  Report Status: Final 
 Type: Surgical Pathology 
-Specimen Type: Breast core needle biopsy 
-Procedure Date: REMOVED_DATE 
-Ordering Provider: MITRA NOROOZIAN M.D. 
-CASE: BS-07- REMOVED_ACCESSION_ID  
+Specimen Type: Consult material 
+Procedure Date: 
+Ordering Provider: KATHERINA ZABICKI M.D. 
+CASE: BS-06- REMOVED_ACCESSION_ID  
  REMOVED_PATIENT_NAME  
-********** Addended Report *********** 
-Resident: Rachel L Rucker-Schmidt, M.D. 
-Pathologist: James L Connolly, M.D. 
+Resident: Rachel E Factor, M.D. 
+Pathologist: Deborah A Dillon, M.D. 
 PATHOLOGIC DIAGNOSIS: 
-RIGHT BREAST, LOWER OUTER, 9 G CORE NEEDLE BIOPSIES FOR A CLUMPED ENHANCEMENT: 
-INVASIVE CARCINOMA with ductal and lobular features, well differentiated 
-(modified Bloom-Richardson grade I/III), multifocal (at least four (4) foci), 
-measuring at least 0.2cm in size in this limited specimen. 
-No lymphovascular invasion is seen in this limited specimen. 
-DUCTAL CARCINOMA IN SITU, solid type, (low to intermediate nuclear grade) is 
-present, focally involving a sclerosing lesion. 
-Necrosis is associated with DCIS, 
-NOTE: Immunohistochemical analysis for estrogen receptor, progesterone 
-receptor, and  REMOVED_ACCESSION_ID /neu will be performed and reported in an addendum. 
+CONSULT SLIDES FROM MASSACHUSETTS GENERAL HOSPITAL, BOSTON, MA: 
+RIGHT BREAST, EXCISION (A), FINAL ANTERIOR, DEEP, SUPERIOR, MEDIAL, LATERAL AND 
+INFERIOR MARGINS (B-G) AND LEFT BREAST EXCISION (H) ( REMOVED_ACCESSION_ID , 8/10/06): 
+RIGHT: 
+INVASIVE LOBULAR CARCINOMA, moderately differentiated (modified 
+Bloom-Richardson grade II/III), measuring at least 1.7cm in the main specimen, 
+with at least six additional foci measuring <0.2cm each (see note). 
+No definite lymphovascular invasion is seen. 
+LOBULAR CARCINOMA IN SITU is present. 
+Invasive carcinoma is present at or <0.1cm from lateral, superior, anterior, 
+posterior and inferior margins and, by report, <0.2cm from the medial margin 
+in the main excision. 
+Invasive carcinoma is present at unoriented tissue edges in the final superior 
+margin (at least three foci, 0.15cm  0.1cm and <0.1cm  block  REMOVED_ACCESSION_ID ) and >0.3cm 
+from the final inferior margin (in three of ten oriented blocks). No definite 
+invasive carcinoma is seen in other final margin specimens. 
+Special studies were performed at an outside institution with the following 
+results (not reviewed): 
+ESTROGEN RECEPTOR POSITIVE 
+PROGESTERONE RECEPTOR POSITIVE 
+ REMOVED_ACCESSION_ID /NEU (IHC) NEGATIVE 
+ REMOVED_ACCESSION_ID /NEU (FISH) NOT AMPLIFIED (ratio=1.1) 
+E-CADHERIN NEGATIVE 
+NOTE: Clinical and radiologic correlation is suggested for best determination 
+of tumor size. 
+This carcinoma could be classified as AJCC (sixth edition) p REMOVED_ACCESSION_ID c NX MX, with 
+multiple foci of invasion. 
+LEFT: 
+Fibrous breast tissue with cysts, columnar cell change and focal epithelial 
+hyperplasia. 
+NOTE: No specific histologic features of a mass-forming lesion are seen. 
+Clinical and radiologic correlation are suggested. 
 CLINICAL DATA: 
-History: 64-year-old female with invasive carcinoma, left breast (known). 
-MRI: Clumped enhancement posterior lower outer right breast with elevated  REMOVED_ACCESSION_ID . 
-Breast imaging findings were non-palpable. The size of the lesion was 21 x 8 
-mm non-mass forming. 
-Operation: 9-G MRI vacuum-assisted 
-Operative Findings: Suspect probably benign. 
-Clinical Diagnosis: Rule out DCIS. 
+History: Right breast density 
+Clinical Diagnosis: ILC 
 TISSUE SUBMITTED: 
-A/1) Right breast, approximately 8 core specimens. 
+Consult slides. 
 GROSS DESCRIPTION: 
-The specimen is received in formalin,  labeled REMOVE_PATIENT_NAME  patient's name, unit 
-number, and ""right breast MRI - biopsy"", and consists of two gray cassettes, 
-each containing multiple cylindrical yellow/tan to pink/tan soft tissues (3.5 x 
-2.2 x 0.4cm in aggregate). 
-Micro  REMOVED_ACCESSION_ID : Gray cassette contents divided, multi frags in each, ESS. 
-CASE NUMBER:  REMOVED_CASE_ID . 
+Received from Massachusetts General Hospital, Pathology Department, Boston, MA 
+ REMOVED_CASE_ID , are thirty-nine (39) glass slides. 
+The slides are labeled "" REMOVED_ACCESSION_ID "" and sublabeled "" REMOVED_ACCESSION_ID "" through "" REMOVED_ACCESSION_ID "", 
+"" REMOVED_ACCESSION_ID "", "" REMOVED_ACCESSION_ID "", "" REMOVED_ACCESSION_ID "", "" REMOVED_ACCESSION_ID "", "" REMOVED_ACCESSION_ID "", "" REMOVED_ACCESSION_ID "", "" REMOVED_ACCESSION_ID "" through "" REMOVED_ACCESSION_ID "", "" REMOVED_ACCESSION_ID "" 
+through "" REMOVED_ACCESSION_ID "", "" REMOVED_ACCESSION_ID "" through "" REMOVED_ACCESSION_ID "", "" REMOVED_ACCESSION_ID "", "" REMOVED_ACCESSION_ID "", "" REMOVED_ACCESSION_ID "" and "" REMOVED_ACCESSION_ID "", 
+corresponding to A) right breast excision (4.5 x REMOVED_DATE x 1.8cm ) B) right breast, 
+final shaved margin anterior, excision (1.5 x REMOVED_DATE x 0.5cm REMOVED_DATE x REMOVED_DATE x 0.2cm  
+and REMOVED_DATE x REMOVED_DATE x 0.4cm ) C) right breast, final shaved margin deep, excision 
+(2.5 x REMOVED_DATE x 0.5cm ) D) right breast, final shaved superior margin, excision 
+(2.5 x REMOVED_DATE x 0.6cm ) E) right breast, final shaved margin medial, excision (2.5 
+x REMOVED_DATE x 0.5cm ) F) right breast, final shaved margin lateral, excision (6.0 x 
+3.0 x 1.2cm ) G) right breast, final shaved inferior margin, excision (4.5 x 
+4.5 x 1.8cm ) H) left breast excision (1.4 x REMOVED_DATE x 0.8cm ) performed on 
+8/10/06, according to the accompanying pathology report bearing the patient's 
+name. 
 By his/her signature below, the senior physician certifies that he/she 
 personally conducted a microscopic examination (""gross only"" exam if so stated) 
 of the described specimen(s) and rendered or confirmed the diagnosis(es) 
 related thereto. 
-Final Diagnosis by James L Connolly M.D., Electronically signed on REMOVED_DATE 
-SURGICAL ADDENDUM: 
-Immunoperoxidase studies were performed on formalin fixed tissue with the 
-following results for invasive carcinoma and DCIS (block  REMOVED_ACCESSION_ID  and  REMOVED_ACCESSION_ID ): 
+Final Diagnosis by Deborah A Dillon M.D., Electronically signed on REMOVED_DATE 
+[report_end] ",99760,0,1
+"Accession Number:  REMOVED_ACCESSION_ID  Report Status: Final 
+Type: Surgical Pathology 
+Pathology Report  REMOVED_ACCESSION_ID  BREAST CORE NEEDLE BIOPSY(IES) 
+Accessioned On: REMOVED_DATE 
+LESTER, SUSAN, M.D.~PH.D. 
+DIAGNOSIS: by LESTER,SUSAN,M.D.,PH.D. 
+RIGHT BREAST, 9:00, 11 G CORE NEEDLE BIOPSIES FOR CALCIFICATIONS AND AN AREA 
+OF SHADOWING: 
+INVASIVE CARCINOMA with mixed ductal and lobular features, measuring at 
+least 0.5cm in size in this limited specimen. 
+No lymphovascular invasion is seen in this limited specimen. 
+No in situ carcinoma is present in this limited specimen. 
+NOTE: The carcinoma invades in dense stroma suggestive of a prior biopsy 
+site. No calcifications are seen. 
+RIGHT BREAST, 12:00, 11 G CORE NEEDLE BIOPSIES FOR CALCIFICATIONS AT THE SITE 
+OF A PRIOR EXCISION: 
+INVASIVE DUCTAL CARCINOMA, moderately differentiated (modified 
+Bloom-Richardson grade II/III), measuring at least 0.5cm in size in this 
+limited specimen. 
+No lymphovascular invasion is seen in this limited specimen. 
+DUCTAL CARCINOMA IN SITU, solid type (intermediate nuclear grade) is 
+present. No necrosis or microcalcifications are associated with DCIS. 
+Stromal calcifications are present. 
+NOTE: The carcinoma is present in an area of dense fibrosis and 
+calcifications, consistent with a prior biopsy site. This carcinoma is 
+morphologically identical to the carcinoma in the first biopsy. 
+Immunohistochemical analysis for estrogen receptor, progesterone 
+receptor, and  REMOVED_ACCESSION_ID /neu will be performed and reported in an addendum. 
+(Clinical history: 48 year old woman with a history of invasive moderately 
+differentiated carcinoma in  REMOVED_CASE_ID  with 13 positive lymph nodes.) 
+SURGICAL ADDENDUM: by LESTER,SUSAN,M.D.,PH.D. 
+FIRST SURGICAL ADDENDUM REMOVED_DATE DR. SUSAN LESTER 
+Immunoperoxidase studies were attempted on block 3, but there is insufficient 
+carcinoma on the deeper levels for interpretation. It would be best to perform 
+these studies after excision. 
+SECOND SURGICAL ADDENDUM REMOVED_DATE DR. SUSAN LESTER 
+At the request of Dr. Harris, studies were performed on the small area of 
+carcinoma in block 1 with the following results for invasive carcinoma: 
 Estrogen receptor POSITIVE 
 Progesterone receptor POSITIVE 
- REMOVED_ACCESSION_ID /neu (c-erb- REMOVED_ACCESSION_ID ) NEGATIVE (0) 
-Hormone receptor analysis: The percent of immunoreactive nuclei in the 
-invasive carcinoma is assessed visually and reported as follows: 
-positive >10% of nuclei immunoreactive 
-positive - low > 0% - < 10% of nuclei immunoreactive 
-negative 0% of nuclei immunoreactive 
-The lower threshold for clinically significant immunoreactivity has not yet 
-been determined. 
- REMOVED_ACCESSION_ID /neu analysis: 
-Negative (0): No immunoreactivity or immunoreactivity in <10% of tumor cells. 
-Negative (1+): Faint weak immunoreactivity in >10% of tumor cells but only a 
-portion of the membrane is positive. 
-Positive (2+):Weak to moderate complete membrane immunoreactivity in >10% of 
-tumor cells. 
-Positive (3+):Moderate to strong complete membrane immunoreactivity in >30% of 
-tumor cells. 
-Cytoplasmic immunoreactivity alone is scored as a negative result. 
-External controls are evaluated and show appropriate Immunoreactivity. 
-Some of the reagents used in these assays may be approved for investigational 
-use only. 
-Addendum #1 by Michael W Bennett M.B., B.C.H., Electronically signed on 
-4/24/ REMOVED_CASE_ID  
-[report_end] ",1,0
+ REMOVED_ACCESSION_ID /neu NEGATIVE (0) 
+By report, the patient's prior breast carcinoma in  REMOVED_CASE_ID  was also ER and PR 
+positive. 
+CLINICAL DATA: 
+History: S/P radiotherapy for right breast carcinoma in  REMOVED_CASE_ID . Now has 
+calcifications at 12:00 excision site and area of shadowing at 9:00 right with 
+calcifications. 
+Operation: 11g ultrasound. 
+TISSUE SUBMITTED: 1. Right 9:00 mass with calcifications - blue cassette 
+- calcifications in A. 
+2. Right 12:00 calcifications - pink cassette - 
+calcifications in A. 
+GROSS DESCRIPTION: by LOMO,LESLEY C.,M.D. 
+The specimen is received in formalin in two parts, each  labeled REMOVE_PATIENT_NAME  
+patient's name and unit number. 
+Part 1, ""Right breast"", consists of two (2) blue cassettes. One cassette 
+is labeled ""A ca++"" and contains multiple, soft, fragmented, yellow to white 
+tissue cores (0.5 x REMOVED_DATE x 0.2cm in aggregate). The other cassette is labeled 
+""B"" and contains similar tissue fragments (2.0 x REMOVED_DATE x 0.2cm in aggregate). 
+Micro 1: ""A"", multi frags, ESS. 
+Micro 2: ""B"", multi frags, ESS. 
+Part 2, ""Right breast #2, consists of two (2) pink cassettes. One cassette is 
+labeled ""A ca++"" and contains multiple, soft, fragmented, yellow to white 
+tissue cores (2.0 x REMOVED_DATE x 0.2cm in aggregate). The other cassette is labeled 
+""B"" and contains similar tissue fragments (1.0 x REMOVED_DATE x 0.2cm in aggregate). 
+Micro 3: ""A"", multi frags, ESS. 
+Micro 4: ""B"", multi frags, ESS. 
+lm 
+Reports to: MEYER, JACK, E. M.D. 
+SPECIMEN TYPE: BREAST CORE NEEDLE BIOPSY(IES) 
+ADDITIONAL SPECIMEN TYPE: BREAST CORE NEEDLE BIOPSY(IES) 
+[report_end] ",92330,0,1
+"Accession Number:  REMOVED_ACCESSION_ID  Report Status: Final 
+Type: Surgical Pathology 
+Pathology Report  REMOVED_ACCESSION_ID  OUTSIDE SLIDE CONSULT - BREAST 
+Accessioned On: REMOVED_DATE 
+LESTER, SUSAN, M.D.~PH.D. 
+DIAGNOSIS: by LESTER,SUSAN,M.D.,PH.D. 
+CONSULT SLIDES FROM QUINCY MEDICAL CENTER, QUINCY, MA: 
+RIGHT BREAST, CORE NEEDLE BIOPSIES FOR A MASS ( REMOVED_ACCESSION_ID ; 10/18/01): 
+INVASIVE AND IN SITU CARCINOMA. 
+RIGHT BREAST, EXCISION, RE-EXCISION OF SUPERIOR/LATERAL MARGIN, AND AXILLARY 
+LYMPH NODES (01- REMOVED_CASE_ID ; 11/8/01): 
+INVASIVE DUCTAL CARCINOMA, with micropapillary and mucinous features, 
+moderately differentiated (modified Bloom-Richardson grade II/III), 1.4cm 
+in size. 
+Extensive lymphovascular invasion is present (multiple foci in multiple 
+blocks). 
+EXTENSIVE DUCTAL CARCINOMA IN SITU, solid, cribriform, and micropapillary 
+types (intermediate nuclear grade) with central necrosis and 
+calcifications, is present in 6 of 7 slides (EIC positive). According to 
+the original report, the area occupied by DCIS measures at least 3cm in 
+size. 
+Invasive carcinoma is focally 0.2cm from the anterior margin. 
+DCIS is present at the posterior/superior margin and the new 
+superior/lateral margin, is 0.2cm from the inferior margin, and is 
+< 0.1cm from the anterior margin in multiple foci. The medial margin is 
+not reported to be involved, but is not clearly seen on the slides 
+reviewed. 
+METASTATIC CARCINOMA is present in one of six lymph nodes (the one 
+designated sentinel node) as multiple small (5 to 10 cells) deposits in 
+the node, measuring < 0.1cm (a micrometastasis). No extranodal invasion 
+is present. 
+Note: This carcinoma would be classified as AJCC  REMOVED_ACCESSION_ID c p REMOVED_ACCESSION_ID a MX. 
+According to the original report, immunoperoxidase studies were performed 
+(results not received). 
+CLINICAL DATA: 
+History: None given. 
+TISSUE SUBMITTED: Consult slides. 
+GROSS DESCRIPTION: by SHAH,RAJSHRI N.,M.D. 
+Received from Quincy Medical Center, 114 Whitwell Street, Quincy, MA  REMOVED_CASE_ID , 
+are fourteen (14) glass slides. 
+One (1) slide is labeled ""01- REMOVED_CASE_ID "" and sublabeled "" REMOVED_ACCESSION_ID "", corresponding to right 
+breast needle biopsy (1.0 x REMOVED_DATE x 0.2cm ) performed on REMOVED_DATE  according to 
+the accompanying pathology report bearing the patient's name. 
+Thirteen (13) slides are labeled ""01- REMOVED_CASE_ID "" and sublabeled "" REMOVED_ACCESSION_ID "", "" REMOVED_ACCESSION_ID "" through 
+"" REMOVED_ACCESSION_ID "", "" REMOVED_ACCESSION_ID  l2"", "" REMOVED_ACCESSION_ID   REMOVED_ACCESSION_ID "", "" REMOVED_ACCESSION_ID   REMOVED_ACCESSION_ID "", "" REMOVED_ACCESSION_ID   REMOVED_ACCESSION_ID "", "" REMOVED_ACCESSION_ID   REMOVED_ACCESSION_ID "", "" REMOVED_ACCESSION_ID   REMOVED_ACCESSION_ID "", "" REMOVED_ACCESSION_ID   REMOVED_ACCESSION_ID "", "" REMOVED_ACCESSION_ID   REMOVED_ACCESSION_ID "" 
+and "" REMOVED_ACCESSION_ID   REMOVED_ACCESSION_ID "", corresponding to A) right axillary sentinel node B) right axillary 
+fat pad (9.5 x REMOVED_DATE x 1.2cm and REMOVED_DATE x REMOVED_DATE x 0.4cm C) right breast biopsy 
+(6.0 x REMOVED_DATE x 3.2cm ) D) right breast superior lateral margin (2.5 x REMOVED_DATE x 
+0.6cm ) performed on REMOVED_DATE  according to the accompanying pathology report 
+bearing the patient's name. 
+Reports to: SCHEIB, ROCHELLE, GAIL M.D. 
+SPECIMEN TYPE: OUTSIDE SLIDE CONSULT - BREAST 
+ADDITIONAL SPECIMEN TYPE: OUTSIDE SLIDE CONSULT - BREAST 
+[report_end] ",36955,1,0
+"Accession Number:  REMOVED_ACCESSION_ID  Report Status: Final 
+Type: Surgical Pathology 
+Pathology Report  REMOVED_ACCESSION_ID  OUTSIDE SLIDE CONSULT - BREAST 
+Accessioned On: REMOVED_DATE 
+RICHARDSON, ANDREA, L., M.D.~PH.D. 
+DIAGNOSIS: by RICHARDSON,ANDREA L.,M.D.,PH.D. 
+CONSULT SLIDES FROM HUBBARD REGIONAL HOSPITAL, WEBSTER, MA: 
+RIGHT BREAST, EXCISION ( REMOVED_ACCESSION_ID ; 3/5/02): 
+INVASIVE CARCINOMA WITH FEATURES OF BOTH DUCTAL AND LOBULAR 
+DIFFERENTIATION, moderately differentiated (modified Bloom-Richardson 
+grade II/III), measuring 3cm by gross report. 
+LOBULAR CARCINOMA IN SITU. 
+No definitive lymphovascular invasion seen. 
+The invasive carcinoma extends into the inked surgical margins focally. 
+Foci of invasive carcinoma are also present in sections submitted as 
+""random sections"". 
+Special studies were performed at an outside institution with the following 
+results (not reviewed): 
+ESTROGEN RECEPTOR - POSITIVE (99%) 
+PROGESTERONE RECEPTOR - POSITIVE (99%) 
+ REMOVED_ACCESSION_ID /NEU - NEGATIVE 
+CLINICAL DATA: 
+History: Appointment REMOVED_DATE 
+TISSUE SUBMITTED: Consult slides 
+GROSS DESCRIPTION: by BAI,HONGWEI,M.D.,PH.D. 
+Received from Hubbard Regional Hospital, Department of Pathology, 340 Thompson 
+Road, Webster, MA  REMOVED_CASE_ID  are eleven (11) slides labeled "" REMOVED_ACCESSION_ID "" and sublabeled 
+""1"", ""1-2"", ""1-3"", ""2"", ""2-2"", ""2-3"", and ""3"" through ""7"", corresponding to 
+right breast tissue obtained on REMOVED_DATE  according to the accompanying 
+pathology report bearing the patient's name. 
+Included is a consultation report for immunohistochemical studies performed at 
+UMass Memorial Medical Center-University Campus, date received REMOVED_DATE  
+referrring institution Hubbard Regional Hospital ( REMOVED_ACCESSION_ID ), bearing the 
+patient's name. 
+Reports to: CAMPOS, SUSANA, MARIA M.D. 
+SPECIMEN TYPE: OUTSIDE SLIDE CONSULT - BREAST 
+[report_end] ",19398,0,1
+"Accession Number:  REMOVED_ACCESSION_ID  Report Status: Final 
+Type: Surgical Pathology 
+Specimen Type: Consult material 
+Procedure Date: 
+Ordering Provider: JENNIFER BELLON M.D. 
+CASE: BS-09- REMOVED_ACCESSION_ID  
+ REMOVED_PATIENT_NAME -AYERS 
+Resident: Mariana A. Stoleru, M.D. 
+Pathologist: Susan Lester, M.D., Ph.D. 
+PATHOLOGIC DIAGNOSIS: 
+CONSULT SLIDES FROM MASSACHUSETTS GENERAL HOSPITAL, BOSTON, MA: 
+RIGHT BREAST, TRAM FLAP RECONSTRUCTION EXCISION, AND AXILLARY LYMPH NODES 
+( REMOVED_ACCESSION_ID ; 5/5/09): 
+INVASIVE LOBULAR CARCINOMA, moderately differentiated (modified Bloom- 
+Richardson grade II/III), 1.5cm  is present invading in dense fibrous 
+tissue associated with normal glands. The glands are most consistent with 
+sweat glands. A core needle biopsy site is present. 
+No lymphovascular invasion is seen. Perineural invasion is present. 
+No carcinoma in situ is seen. 
+No definitive normal breast tissue is present. 
+Invasive carcinoma is closest to the posterior margin (0.15cm ). All 
+other margins are > 0.3cm  
+METASTATIC CARCINOMA is present in 1 of 9 lymph nodes (1 of 2 sentinel 
+nodes). The metastatic deposit measures 0.4cm  Extranodal invasion is 
+present (0.1cm ). In addition, there is a 0.2cm area of invasion in the 
+axillary adipose tissue, not associated with residual nodal tissue. 
+Special studies were performed with the following results (not 
+reviewed): 
+Estrogen receptor POSITIVE 
+Progesterone receptor POSITIVE 
+ REMOVED_ACCESSION_ID /neu (IHC) NEGATIVE 
+ REMOVED_ACCESSION_ID /neu (FISH) NOT AMPLIFIED (1.57/1.55 = REMOVED_DATE 
+Note: The patient has a history of a 5.5cm invasive lobular carcinoma 
+in  REMOVED_CASE_ID  (1 of 5 lymph node positive), and is s/p a right mastectomy 
+( REMOVED_ACCESSION_ID ). She presented with a palpable mass in the tram flap 
+reconstruction. The findings are consistent with a chest wall recurrence of 
+the patient's prior right breast carcinoma. 
+CLINICAL DATA: 
+History: Left breast IDC in  REMOVED_CASE_ID ; s/p excision, left axillary nodal dissection, 
+breast re-excision chemotherapy and radiation therapy. Right breast ILC in 
+ REMOVED_CASE_ID ; s/p modified radical mastectomy; now, with new lump in the right breast. 
+Clinical Diagnosis: ILC - metastatic carcinoma. 
+TISSUE SUBMITTED: 
+Consult slides. 
+GROSS DESCRIPTION: 
+Received from Massachusetts General Hospital, Pathology Department, 55 Fruit 
+Street, Boston, MA  REMOVED_CASE_ID , are sixteen (16) glass slides. 
+The slides are labeled "" REMOVED_ACCESSION_ID "" and sublabeled "" REMOVED_ACCESSION_ID "" through "" REMOVED_ACCESSION_ID "", 
+"" REMOVED_ACCESSION_ID "" through "" REMOVED_ACCESSION_ID "" and "" REMOVED_ACCESSION_ID "" through "" REMOVED_ACCESSION_ID "", corresponding to A) right 
+sentinel lymph node #1 excision (1.5 x REMOVED_DATE x 0.5cm ) B) right axillary sentinel 
+lymph node #2 excision (2.0 x REMOVED_DATE x 0.5cm ) C) right breast excision (6.0 x REMOVED_DATE 
+x 2.2cm ) D) right axillary contents dissection (11.0 x REMOVED_DATE x 1.0cm ) performed 
+on REMOVED_DATE  according to the accompanying pathology report bearing the patient's 
+name. 
+By his/her signature below, the senior physician certifies that he/she 
+personally conducted a microscopic examination (""gross only"" exam if so stated) 
+of the described specimen(s) and rendered or confirmed the diagnosis(es) 
+related thereto. 
+Final Diagnosis by Susan Lester M.D., Ph.D., Electronically signed on Monday 
+May 25,  REMOVED_CASE_ID  at 11:12:44AM 
+[report_end] ",40737,0,1
+"Accession Number:  REMOVED_ACCESSION_ID  Report Status: Final 
+Type: Surgical Pathology 
+Specimen Type: Consult material 
+Procedure Date: 
+Ordering Provider: H. R TYLER M.D. 
+CASE: BS-09- REMOVED_ACCESSION_ID  
+ REMOVED_PATIENT_NAME  
+Resident: Matthias D. Hofer, M.D. 
+Pathologist: Susan Lester, M.D., Ph.D. 
+PATHOLOGIC DIAGNOSIS: 
+CONSULT SLIDES FROM BETH ISRAEL DEACONESS MEDICAL CENTER, BOSTON, MA: 
+RIGHT BREAST, 8:00, CORE NEEDLE BIOPSY FOR A MASS (09- REMOVED_CASE_ID W; 04/07/ REMOVED_CASE_ID ): 
+INVASIVE CARCINOMA with ductal and lobular features, well differentiated 
+(modified Bloom-Richardson grade I/III), at least 0.7cm in this limited 
+specimen. 
+No lymphovascular invasion is seen in this limited specimen. 
+No carcinoma in situ is seen in this limited specimen. 
+Special studies were performed at an outside institution with the 
+following results (not reviewed): 
+ESTROGEN RECEPTOR POSITIVE 
+PROGESTERONE RECEPTOR POSITIVE 
+ REMOVED_ACCESSION_ID /NEU (IHC) EQUIVOCAL 
+ REMOVED_ACCESSION_ID /NEU (FISH) NOT AMPLIFIED (ratio 1.1) 
+CLINICAL DATA: 
+History: Suspicious right breast mass. 
+Clinical Diagnosis: IDLC. 
+TISSUE SUBMITTED: 
+Consult slides. 
+GROSS DESCRIPTION: 
+Received from Beth Israel Deaconess Medical Center, Pathology Department, 330 
+Brookline Avenue, Boston, MA  REMOVED_CASE_ID , are two (2) glass slides. 
+The slides are labeled "" REMOVED_ACCESSION_ID "" and sublabeled ""A  REMOVED_ACCESSION_ID "" and ""B  REMOVED_ACCESSION_ID "", 
+corresponding to a right breast, 8:00, core needle biopsy (0.8cm ) performed on 
+4/7/09, according to the accompanying pathology report bearing the patient's 
+name. 
+By his/her signature below, the senior physician certifies that he/she 
+personally conducted a microscopic examination (""gross only"" exam if so stated) 
+of the described specimen(s) and rendered or confirmed the diagnosis(es) 
+related thereto. 
+Final Diagnosis by Susan Lester M.D., Ph.D., Electronically signed on 
+Tuesday REMOVED_MONTH 14,  REMOVED_CASE_ID  at 03:16:48PM 
+[report_end] ",85146,0,1
+"Accession Number:  REMOVED_ACCESSION_ID  Report Status: Final 
+Type: Surgical Pathology 
+Pathology Report  REMOVED_ACCESSION_ID  BREAST - EXCISIONAL TISSUE W/MARGINS 
+Accessioned On: REMOVED_DATE 
+RUBIN, MARK, A., M.D. 
+DIAGNOSIS: by RUBIN,MARK A.,M.D. 
+SPECIMEN LABELED ""#1. RIGHT BREAST, TISSUE"": 
+LOBULAR BREAST CARCINOMA, 0.2cm  present at the inked resection margin. 
+No lymphovascular invasion is seen. 
+The case was reviewed by Dr. J. Connolly, Breast Pathology, who concurs. 
+SURGICAL ADDENDUM: by LESTER,SUSAN,M.D.,PH.D. 
+The patient has a history of a right breast invasive lobular carcinoma of the 
+upper outer quadrant in  REMOVED_CASE_ID  and now has an MRI enhancing mass in the same 
+region. 
+In this biopsy, there are multiple foci of invasion in 2 of 2 blocks (the 
+largest 0.2cm ) in an area of dense stroma that could represent a prior 
+surgical site. No carcinoma in situ is seen. The carcinoma is moderately 
+differentiated. 
+Immunoperoxidase studies are performed with the following results for invasive 
+carcinoma (block 1): 
+Estrogen receptor POSITIVE 
+Progesterone receptor POSITIVE 
+ REMOVED_ACCESSION_ID /neu NEGATIVE (1+) 
+Note: There is weak granular positivity for  REMOVED_ACCESSION_ID /neu which is interpreted as a 
+negative result. 
+CLINICAL DATA: 
+History: None given. 
+Operation: Right breast biopsy. 
+Clinical Diagnosis: Abnormal right breast MRI. 
+TISSUE SUBMITTED: #1. Right breast tissue. 
+GROSS DESCRIPTION: by HARRIS,MARIAN HESTER,M.D.,PH.D. 
+The specimen is received fresh,  labeled REMOVE_PATIENT_NAME  patient's name, unit number, 
+and ""#1. Right breast tissue"", and consists of two portions of yellow/pink 
+fibroadipose tissue, the larger measuring REMOVED_DATE x REMOVED_DATE x 0.7cm  and the second 
+measuring REMOVED_DATE x REMOVED_DATE x 0.2cm  The portions are unoriented and both are inked 
+black. The larger portion consists of 80-90% adipose tissue with a rim of 
+white fibrous tissue and the smaller portion consists of approximately 60% 
+fibrous tissue and 40% adipose tissue. The specimen is entirely submitted. 
+Micro 1: Larger portion, trisected, 3 frags, ESS. 
+Micro 2: Smaller portion, bisected, 2 frags, ESS. 
+mah 
+Reports to: OSTEEN, ROBERT, T. M.D. 
+SPECIMEN TYPE: BREAST - EXCISIONAL TISSUE W/MARGINS 
+[report_end] ",13436,1,0
+"Accession Number:  REMOVED_ACCESSION_ID  Report Status: Final 
+Type: Surgical Pathology 
+Pathology Report  REMOVED_ACCESSION_ID  SURGICAL MARGIN 
+Accessioned On: REMOVED_DATE 
+LESTER, SUSAN, M.D.~PH.D. 
+DIAGNOSIS: by LESTER,SUSAN,M.D.,PH.D. 
+#1. RIGHT BREAST, ANTERIOR SHAVE MARGIN: 
+Dense breast tissue. 
+Biopsy site. 
+Note: No residual invasive lobular carcinoma identified. 
+#2. RIGHT BREAST, SUPERIOR SHAVE MARGIN: 
+Benign breast tissue. 
+Biopsy site. 
+Note: No residual invasive lobular carcinoma identified. 
+#3. RIGHT BREAST, LATERAL SHAVE MARGIN: 
+Benign breast tissue. 
+Biopsy site. 
+Note: No residual invasive lobular carcinoma identified. 
+#4. RIGHT BREAST, INFERIOR SHAVE MARGIN: 
+Benign breast tissue. 
+Biopsy site. 
+Note: No residual invasive lobular carcinoma identified. 
+CLINICAL DATA: 
+History: S/P right breast wire-localization (6/23/03); s/p neoadjuvent chemo 
+Operation: Right breast re-excision, partial mastectomy 
+Clinical Diagnosis: Right breast ca 
+TISSUE SUBMITTED: Right breast, shave margins - stitch on new margins 
+1) Anterior 
+2) Superior 
+3) Lateral 
+4) Inferior 
+GROSS DESCRIPTION: by CHANG,PRISCILLA S.,M.D.,PH.D. 
+The specimen is received fresh, in four (4) parts, each  labeled REMOVE_PATIENT_NAME  
+patient's name and unit number. 
+Part one, ""1) right breast, anterior shave margin - stitch/new margin"", 
+consists of a piece of breast tissue (3 x REMOVED_DATE x 0.9cm ) with a whipstitch 
+placed by the surgeon on one surface to indicate the new margin. The new 
+margin is inked blue, and the old margin is inked black. Serial sectioning 
+reveals that the specimen is composed of firm, white fibrous tissue. The 
+specimen is entirely submitted. 
+Micro REMOVED_DATE  anterior shave margin, 6 frag, ESS 
+Part two, ""2) right breast, superior shave margin - stitch/new margin"", 
+consists of a piece of breast tissue (3.9 x REMOVED_DATE x 1.3cm ) with a whipstitch 
+placed by the surgeon on one surface to indicate the new margin. Serial 
+sectioning reveals that the specimen is 60% pink/white fibrous tissue. The 
+specimen is entirely submitted. 
+Micro REMOVED_DATE  superior shave margin, 9 frag, ESS 
+Part three, ""3) right breast, lateral shave margin - stitch/new margin"", 
+consists of a piece of breast tissue (4.2 x REMOVED_DATE x 0.8cm ) with a whipstitch 
+placed by the surgeon on one surface to indicate the new margin. The new 
+margin is inked blue, and the old margin is inked black. Serial sectioning 
+reveals that the specimen is 50% pink/tan fibrous tissue. The specimen is 
+entirely submitted. 
+Micro REMOVED_DATE  lateral shave margin, 9 frag, ESS 
+Part four, ""4) right breast, inferior shave margin - stitch/new margin"", 
+consists of a piece of breast tissue (2.5 x REMOVED_DATE x 0.8cm ) with a stitch placed 
+by the surgeon on one surface to indicate the new margin. The new margin is 
+inked blue, and the old margin is inked black. The specimen is entirely 
+submitted. 
+Micro REMOVED_DATE  inferior shave margin, 5 frag, ESS 
+hph 
+Reports to: KAELIN, CAROLYN, MARY, M.PH. M.D. 
+SPECIMEN TYPE: SURGICAL MARGIN 
+ADDITIONAL SPECIMEN TYPE: SURGICAL MARGIN 
+ADDITIONAL SPECIMEN TYPE: SURGICAL MARGIN 
+ADDITIONAL SPECIMEN TYPE: SURGICAL MARGIN 
+[report_end] ",12791,1,0
