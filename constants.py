@@ -2,21 +2,8 @@ import datetime
 import pickle as p
 
 MODE = "TAGHIAN"
-analyzeBoth = False
-if analyzeBoth:
-  submode = "Analyze both"
-else:
-  submode = "no"
-
 baseline = False
 
-#Shared constants for creating episodes
-dataPath = "rawBreastPathReport.p"
-outPath = "reportDB.p"
-episodePath = "episodeDB.p"
-goldDataPath = 'goldPathReports.p'
-JSONReportPath = "reportDB.json"
-JSONEpisodePath = "episodeDB.json"
 
 def replaceSpaces(label):
     return '_'.join(str(label).split())
@@ -41,7 +28,7 @@ if MODE == "TAGHIAN":
 
   diagnoses = [
   'Are there positive LN?', u'ITC ', u'PR',  
-  u'Her2 (Fish)', u'ER', 'ECE', 'LVI', 'BVI',
+  'Her2 (Fish)', u'ER', 'ECE', 'LVI', 'BVI',
   'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 
   'Red ADH', 'Red BreastSide', 'Red FlatEpithelial','Red BluntAdenosis', 
   'Red LobularNeoplasia', 'cancer', 'atypia', 'BiopsyType', 
@@ -49,13 +36,14 @@ if MODE == "TAGHIAN":
   'Red InsituNOS', 'Red CancerInvInsituNOS', 'Red SuspiciousForPhyllodes', 'Oncotype score', 'TumorGrade',
   'Red CancerSuspicious', 'Red TubularCancer']
 
+
   const_cancers = [
   'Red ILC','Red DCIS', 'Red IDC', 
-  'cancer', 'Red CancerNOS', 'Red InvasiveSuspicious', 'Red InsituNOS', 'Red CancerInvInsituNOS', 
-  'Red CancerSuspicious', 'Red TubularCancer']
+  'cancer', 'Red CancerNOS', 'Red InsituNOS', 'Red CancerInvInsituNOS', 'Red TubularCancer']
 
   const_atypias = [
-  'Red ALH','Red ADH', 'Red FlatEpithelial','Red LobularNeoplasia','Red ADH_DCIS'
+  'Red ALH','Red ADH', 'Red FlatEpithelial','Red LobularNeoplasia','Red ADH_DCIS', 'Red LCIS', 'Red Phylodes',
+  #'Red SuspiciousForPhyllodes'  
   ]
   
   if baseline:
@@ -220,10 +208,12 @@ if MODE == "TAGHIAN":
 
   cols = diagnoses + metaData + ['Report_Text_Segmented', 'Report_Text', "Preprocessed_Report_Text"]
 
-  outPath = "reportDB+new.p"
-  episodePath = "episodeDB+new.p"
-  JSONReportPath = "reportDB+red.json"
-  JSONEpisodePath = "episodeDB+red.json"
+  outPath = "../reportDB+new.p"
+  dataPath = "../rawBreastPathReport.p"
+
+  episodePath = "../episodeDB+new.p"
+  JSONReportPath = "../reportDB+red.json"
+  JSONEpisodePath = "../episodeDB+red.json"
 
 
 

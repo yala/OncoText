@@ -8,6 +8,8 @@ deiden_AllOthr*
 goldPath*
 *.xls*
 *.xml
+*.csv
+*.txt
 taghian/*.p
 rawBreastPathReport.p
 rawBreastPathReport.bak.p
