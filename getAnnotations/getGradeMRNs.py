@@ -19,6 +19,8 @@ potentialNot3   = [r for r in db if not( 'grade' in r['Report_Text'].lower() or 
 potentailGrade4 = [r for r in db if 'grade' in r['Report_Text'].lower() or 'differentia' in r['Report_Text'].lower() ][400:450]
 potentialNot4   = [r for r in db if not( 'grade' in r['Report_Text'].lower() or 'differentia' in r['Report_Text'].lower() )][150:250]
 
+
+
 exportMolly = potentailGrade4 + potentialNot4
 # exportLaura = potentialNot3 + potentailGrade3
 
@@ -40,3 +42,20 @@ for export, path in [ #(exportLaura,exportPath+'Laura.csv'),
         writer.writerows(exportRecors)
     
 
+potentailSus = [r for r in db if r['Red Phylodes'] == 'Absent'][0:100]
+for export, path in [ 
+    (potentailSus, 'unlabledSuspForPhyllodes.csv')]:
+    exportRecors = []
+
+    for e in export:
+        exportRecors.append({
+            'ReportID': e['ReportID'],
+            'text': e['Report_Text'],
+            'SuspiciousForPhyllodes'  : ''
+            })
+
+    keys = ['ReportID', 'text', 'SuspiciousForPhyllodes']
+    with open(path, "wb") as outCSV:
+        writer = DictWriter(outCSV, keys)
+        writer.writeheader()
+        writer.writerows(exportRecors)

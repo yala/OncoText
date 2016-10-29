@@ -148,4 +148,28 @@ print "misses", misses
 print "Count gold", countGold
 print "countDif", countDif
 
+for r in redReps:
+    if ('Correct' in r and r['Correct'] == 'Y') or ('TaghianGold' in r and r['TaghianGold'] == 1): 
+        if ('TaghianGold' in r and r['TaghianGold'] == 1):
+            print "mmhmm"
+            for c in cancers:
+                if c in r and r[c] == 'Present':
+                    r['cancer'] = 'Present'
+
+        if not 'cancer' in r:
+            r['cancer'] = 'Absent'
+
+        if ('Correct' in r and r['Correct'] == 'Y') or ('TaghianGold' in r and r['TaghianGold'] == 1): 
+            print "guchi"
+            for a in atypias:
+                if a in r and r[a] == 'Present':
+                    r['atypia'] = 'Present'
+
+        if not 'atypia' in r:
+            r['atypia'] = 'Absent'
+
+print 'numCacnr', len([r for r in reps if 'cancer' in r and r['cancer'] == 'Present']) , len([r for r in reps if 'cancer' in r and r['cancer'] == 'Absent'])
+print 'numAtypia', len([r for r in reps if 'atypia' in r and r['atypia'] == 'Present']) , len([r for r in reps if 'atypia' in r and r['atypia'] == 'Absent']) 
+
+
 p.dump(redReps, open('../reportDB+red+clean.p', 'wb'))

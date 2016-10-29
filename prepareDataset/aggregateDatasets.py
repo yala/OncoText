@@ -75,7 +75,7 @@ def parseGradesLS():
 
     print len(textToGrade)
 
-    p.dump(textToGrade, open('grades.p','wb'))
+    p.dump(textToGrade, open('data/grades.p','wb'))
 
     return textToGrade
 
@@ -353,15 +353,17 @@ def processSusPhyllodes(allPathReps, outDB, outDBRepIds):
     mrnSus = {}
     mrnKey = 'MRNPlusX'
     susKey = 'HxOfOrSuspiciousForPhyllodes'
+    phyKey = "Phylodes"
     for row in phylodesDb:
         mrn = str(row[mrnKey])
         if not susKey in row or row[susKey] == None:
             continue
         sus = row[susKey]
+        phy = row[phyKey]
         if mrn in mrnSus:
             mrnSus[mrn] = 'SKIP'
         else:
-            mrnSus[mrn] = sus
+            mrnSus[mrn] = (sus,phy)
 
     print "num mrnSus", len([m for m in mrnSus if not mrnSus[m] == "SKIP"])
 
@@ -377,7 +379,10 @@ def processSusPhyllodes(allPathReps, outDB, outDBRepIds):
 
     susKey = 'Red SuspiciousForPhyllodes'
     if not susKey in outDB:
-        outDB['Red SuspiciousForPhyllodes'] = []    
+        outDB[susKey] = [] 
+    phyKey =  'Red Phylodes'  
+    if not susKey in outDB:
+        outDB[phyKey] = []    
     ## do allignmnet on the ones
     for rep in allPathReps:
         mrn = rep['MRNPlusX']
@@ -385,19 +390,25 @@ def processSusPhyllodes(allPathReps, outDB, outDBRepIds):
         if not criteria:
             continue
 
-        sus = 'Present' if str(mrnSus[mrn]) == '1' else 'Absent'
-        rep['Red SuspiciousForPhyllodes'] = sus
-        outDB['Red SuspiciousForPhyllodes'].append(rep)
+        sus = 'Present' if str(mrnSus[mrn][0]) == '1' else 'Absent'
+        phy = 'Present' if str(mrnSus[mrn][1]) == '1' else 'Absent'
+        rep[susKey] = sus
+        rep[phyKey] = phy
+        outDB[susKey].append(rep)
+        outDB[phyKey].append(rep)
         if not rep['ReportID'] in outDBRepIds:
             outDBRepIds[rep['ReportID']] = {}
-        outDBRepIds[rep['ReportID']]['Red SuspiciousForPhyllodes'] = sus
+        outDBRepIds[rep['ReportID']][susKey] = sus
+        outDBRepIds[rep['ReportID']][phyKey] = phy
 
 
     ## print stats
     print "sus phyllodes has", len(outDB['Red SuspiciousForPhyllodes'])
     vals = [r['Red SuspiciousForPhyllodes'] for r in outDB['Red SuspiciousForPhyllodes'] ]
-    print len([v for v in vals if v == 'Present']), "present, ", len([v for v in vals if v == 'Absent']), "absent"
-
+    print "SusPhylodes", len([v for v in vals if v == 'Present']), "present, ", len([v for v in vals if v == 'Absent']), "absent"
+    vals = [r['Red Phylodes'] for r in outDB['Red Phylodes'] ]
+    print "Phylodes",len([v for v in vals if v == 'Present']), "present, ", len([v for v in vals if v == 'Absent']), "absent"
+    raw_input()
     return False
 
 def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen ):
@@ -532,6 +543,10 @@ def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen 
     print "num oncoscores", len(outDB[extraction])
     return False
 
+def  processDisagreements(allPathReps, outDB, outDBRepIds):
+    print "called process disagrements"
+
+
 def buildDB(db, grades, redmap, allPathReps, debug = False):
     outDBReps = []
     outDBRepIds = {}
@@ -552,6 +567,7 @@ def buildDB(db, grades, redmap, allPathReps, debug = False):
     processGradeData(grades, allPathReps, outDB, outDBRepIds)
     processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen )
     processSusPhyllodes(allPathReps, outDB, outDBRepIds)
+    processDisagreements(allPathReps, outDB, outDBRepIds)
     ## Now we print label distrubtions for generating maps and in constants
     printLabelDist(outDB)
     assert len(outDBReps) == 0
@@ -656,7 +672,7 @@ if __name__ == "__main__":
         print "Running findMatchingReports"
         if not preprocessDBBool:
             print "Loading redcapMRNDB.p"
-            mrnDB = p.load(open('redcapMRNDB.p','rb'))
+            mrnDB = p.load(open('data/redcapMRNDB.p','rb'))
         joinedDB = findMatchingReports(mrnDB, allPathReps, True)
     
     if buildDBsBool:
@@ -664,11 +680,11 @@ if __name__ == "__main__":
             allPathReps = p.load(open(rawDBPath, 'rb'))
 
         if not findMatchingReportsBool:
-            joinedDB =  p.load(open('redcapWithPathReps.p', 'rb'))
+            joinedDB =  p.load(open('data/redcapWithPathReps.p', 'rb'))
         if not parseXLSBool:
-            redmap = p.load(open('redmap.p', 'rb'))
+            redmap = p.load(open('data/redmap.p', 'rb'))
         if not parseExternal:
-            grades = p.load(open('grades.p','rb'))
+            grades = p.load(open('data/grades.p','rb'))
         dBs, redReps = buildDB(joinedDB, grades, redmap, allPathReps,  True)
 
     if exportToRepsDBBool:
