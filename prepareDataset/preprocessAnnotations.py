@@ -19,33 +19,14 @@ for r in redReps:
         countGold += 1
 
         if surgDiag in r:
-            if debug:
-                print '----------------------'
-                print "SURGERY TYPE", r[surgDiag]
-                print "Report text:"
-                print r['Report_Text']
-                print r[surgDiag]
-                print "****************"
-                raw_input()
             if r[surgDiag] in ['2nd Re-Excision', '1st Re-Excision', 'Excisional biopsy (Lumpectomy)']:
                 r[biopTypeDiag] = "Excision"
-                countDif += 1
         elif biopDiag in r:
-            if debug:
-                print '----------------------'
-                print "BIOPSY TYPE", r[biopDiag]
-                print "Report text:"
-                print r['Report_Text']
-                print r[biopDiag]
-                print "****************"
-                raw_input()
             if r[biopDiag] in ['Needle biopsy',  'Core biopsy',  'Incisional biopsy']:
                 r[biopTypeDiag] = "Incision"
-                countDif += 1
 
         if (surgDiag in r or biopDiag in r) and not biopTypeDiag in r:
             r[biopTypeDiag] = "No_breast_biopsy"
-            countDif += 1
 
 
         for d in ['ER', 'PR', 'Her2 (Fish)']:
@@ -55,56 +36,47 @@ for r in redReps:
         if 'ECE' in r:
             if r['ECE'] in ['Yes, (macroscopic)', 'Yes (macroscopic)', 'Yes, (microscopic)', 'Yes (microscopic)', 'Yes (Micro)', 'Yes (Macro)']:
                 r['ECE'] = 'Yes'
-                countDif += 1
 
             if r['ECE'] == 'Not_Reported':
                 r['ECE'] = 'No '
-                countDif += 1
 
 
         if 'TumorGrade' in r:
             if "grade III" in r['TumorGrade']:
                 r['TumorGrade'] = 'Poor_(grade_III)_Undifferentiated'
-                countDif += 1
             
             elif  "grade II" in r['TumorGrade']:
                 r['TumorGrade'] = 'Moderate_(grade_II)'
-                countDif += 1                
+
             elif  "grade I" in r['TumorGrade']:
                 r['TumorGrade'] = 'Well_differentiated_(grade_I)'
-                countDif += 1
+                
             elif r['TumorGrade'] == 'Not assessed':
                 r['TumorGrade'] = 'Not_assessed'
-                countDif += 1
 
         if 'Oncotype score' in r:
             if r['Oncotype score'] == 'Low risk':
                 r['Oncotype score'] = 'Low_risk'
-                countDif +=1
+
             if r['Oncotype score'] == 'High risk':
                 r['Oncotype score'] = 'High_risk'
-                countDif += 1
 
         if 'LVI' in r:
             if r['LVI'] == 'Suspicious':
                 r['LVI'] = 'No'
-                countDif += 1
 
         if 'BVI' in r:
             if r['BVI'] == 'Suspicious':
                 r['BVI'] = 'No'
-                countDif += 1
 
         if 'ITC ' in r:
             if r['ITC '] == 'Not Reported':
                 r['ITC '] = 'No'
-                countDif += 1
 
         if 'ECE' in r:
             if r['ECE'] == 'Not Reported':
                 r['ECE'] = 'No'
-                countDif += 1
-misses = set({})
+
 for r in redReps:
     if ('TaghianGold' in r and r['TaghianGold'] == 1 )or ('Correct' in r and r['Correct'] == 'Y'):
         for d in HueAnotationSource:
@@ -120,10 +92,9 @@ for r in redReps:
                     continue
             if str(r[d]) == '1':
                 r[target] = 'Present'
-                countDif += 1
+
             if str(r[d]) == '0':
                 r[target] = 'Absent'
-                countDif += 1
 
             if 'BreastSide' in r:
                 r['Red BreastSide'] = "RIGHT" if r['BreastSide'] in ['RIGHT',1, '1'] else 'LEFT'
@@ -136,22 +107,19 @@ for r in redReps:
 
             if r[d] in ["Checked", "Unifocal", "Multifocal", "Unifocal or multifocal" ]:
                 r[target] = "Present"
-                countDif +=1
+
             elif r[d] in ["Unchecked", "None"]:
                 r[target] = "Absent"
             else:
-                print d
                 misses.add(r[d])
 
 
-print "misses", misses
 print "Count gold", countGold
-print "countDif", countDif
 
 for r in redReps:
     if ('Correct' in r and r['Correct'] == 'Y') or ('TaghianGold' in r and r['TaghianGold'] == 1): 
         if ('TaghianGold' in r and r['TaghianGold'] == 1):
-            print "mmhmm"
+
             for c in cancers:
                 if c in r and r[c] == 'Present':
                     r['cancer'] = 'Present'
@@ -160,7 +128,6 @@ for r in redReps:
             r['cancer'] = 'Absent'
 
         if ('Correct' in r and r['Correct'] == 'Y') or ('TaghianGold' in r and r['TaghianGold'] == 1): 
-            print "guchi"
             for a in atypias:
                 if a in r and r[a] == 'Present':
                     r['atypia'] = 'Present'

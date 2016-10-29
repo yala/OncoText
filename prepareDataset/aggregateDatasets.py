@@ -61,11 +61,11 @@ def parseXLS(inp, out):
     return data
 
 def parseRedCapXLS():
-    return parseXLS('redcap.xlsx', 'redcap.p')
+    return parseXLS('data/redcap.xlsx', 'data/redcap.p')
    
 def parseGradesLS():
-    grades1 =  parseXLS('../externalDataSources/Grades.xlsx', 'gradesXls.p')
-    grades2 =  parseXLS('../externalDataSources/Grades_2.xlsx', 'gradesXls2.p')
+    grades1 =  parseXLS('../externalDataSources/Grades.xlsx', 'data/gradesXls.p')
+    grades2 =  parseXLS('../externalDataSources/Grades_2.xlsx', 'data/gradesXls2.p')
     grades = grades1 + grades2
     print "preprocessing grades db"
     textToGrade = {}
@@ -82,7 +82,7 @@ def parseGradesLS():
 
 def parseMapXLS():
     print "loading wb mp"
-    wb = xl.load_workbook('redmap.xlsx')
+    wb = xl.load_workbook('data/redmap.xlsx')
 
     print "getting sheet"
     sheet = wb.get_active_sheet()
@@ -126,7 +126,7 @@ def parseMapXLS():
         
     print 'dumping redmap.p'
     print "legend", legend
-    p.dump(data, open('redmap.p', 'wb'))
+    p.dump(data, open('data/redmap.p', 'wb'))
     return data
 
 
@@ -152,7 +152,7 @@ def preprocessDB(data, save=False):
     print "Number of unique MRNs in recap DB", len(mrnDB)
 
     if save:
-        p.dump(mrnDB, open('redcapMRNDB.p', 'wb'))
+        p.dump(mrnDB, open('data/redcapMRNDB.p', 'wb'))
 
     return mrnDB
 
@@ -207,7 +207,7 @@ def findMatchingReports(db, pathReps, save=False):
 
     
     if save:
-        p.dump(joinedDB, open('redcapWithPathReps.p', 'wb'))
+        p.dump(joinedDB, open('data/redcapWithPathReps.p', 'wb'))
 
     print "Size of taghian hughes MRN overlap", len(joinedDB)
     print "Count Aligned ", countAligned
@@ -348,7 +348,7 @@ def processGradeData(grades, allPathReps, outDB, outDBRepIds):
     return False
 
 def processSusPhyllodes(allPathReps, outDB, outDBRepIds):
-    phylodesDb = parseXLS('../externalDataSources/susPhyllodes.xlsx', 'susPhyllodes.p')
+    phylodesDb = parseXLS('../externalDataSources/susPhyllodes.xlsx', 'data/susPhyllodes.p')
     ## build Mrn -> sus for phyllodes 
     mrnSus = {}
     mrnKey = 'MRNPlusX'
@@ -418,16 +418,16 @@ def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen 
     extKey = 'Dx Score'
     if loadBool:
         externalPath =  '../externalDataSources/oncoscore.xlsx'
-        extOncos =  parseXLS(externalPath, "oncoscoreList.p")   
+        extOncos =  parseXLS(externalPath, "data/oncoscoreList.p")   
         mrnToOnc = {}
         for row in extOncos:
             mrn = normalizeMRN(row['MRNPlusX'])
             if not mrn in mrnToOnc:
                 mrnToOnc[mrn] = []    
             mrnToOnc[mrn].append(row)
-        p.dump(mrnToOnc, open('oncoscoreDb.p','wb'))
+        p.dump(mrnToOnc, open('data/oncoscoreDb.p','wb'))
     else:
-        mrnToOnc = p.load(open('oncoscoreDb.p','rb'))
+        mrnToOnc = p.load(open('data/oncoscoreDb.p','rb'))
     print "len mrnToOnc", len(mrnToOnc), type(mrnToOnc.keys()[0])
 
     #process redcap
@@ -592,8 +592,8 @@ def buildDB(db, grades, redmap, allPathReps, debug = False):
             outDBReps.append( report )
                 
 
-    p.dump(outDBReps, open('allExtractionReps.p', 'wb'))
-    p.dump(outDB, open('allExtractionDBs.p', 'wb'))
+    p.dump(outDBReps, open('data/allExtractionReps.p', 'wb'))
+    p.dump(outDB, open('data/allExtractionDBs.p', 'wb'))
     for extraction in outDB:
         print "Number of ",extraction," reps and path reps equiv", len(outDB[extraction])
     print "Num extractions", len(outDB)
@@ -664,8 +664,8 @@ if __name__ == "__main__":
         print 'Running preprocessDB'
         if not parseXLSBool:
             print "Loading redcap file and map"
-            redcap = p.load(open('redcap.p', 'rb'))
-            redmap = p.load(open('redmap.p', 'rb'))
+            redcap = p.load(open('data/redcap.p', 'rb'))
+            redmap = p.load(open('data/redmap.p', 'rb'))
         mrnDB = preprocessDB(redcap, True)
 
     if findMatchingReportsBool:
@@ -689,8 +689,8 @@ if __name__ == "__main__":
 
     if exportToRepsDBBool:
         if not buildDBsBool:
-            redReps =     p.load(open('allExtractionReps.p', 'rb'))
-        print "Validate red path reps", 'allExtractionReps.p'
+            redReps =     p.load(open('data/allExtractionReps.p', 'rb'))
+        print "Validate red path reps", 'data/allExtractionReps.p'
         # validateRepsDB(redReps, True, True)
         exportRepDB(redReps, allPathReps)
 
