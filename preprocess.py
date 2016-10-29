@@ -68,6 +68,8 @@ if __name__ == "__main__":
     
     for rep in allData:
         lowerCaseText = rep['Report_Text'].lower()
+        if 'BreastSide' in rep:
+            rep['ruleBreastSide'] = copy.deepcopy(rep['BreastSide'])
 
         if not ("right" in lowerCaseText or "left" in lowerCaseText) or not 'breast' in lowerCaseText:
             if seenStrg < maxStrg:
@@ -133,23 +135,25 @@ if __name__ == "__main__":
     newData = unicodeToDatetime(newData)
 
     ## Print out data dist 
-    print "New Data has len", len(newData), "As compared to", len(allData)
-    print "Num reports", reportCount, "over ", len(set([r['MRNPlusX'] for r in allData])), "aka", len(newData), "rows"
-    print "rowcount should be", rowCount
-    key = "Report_Text"
-    for inst in ["MGH", "NWH", "BWH"]:
-        print inst
-        instReps = [r for r in newData if r['Institution']==inst]
-        numReps = len(instReps)
-        numPatients = len(set( [r['MRNPlusX'] for r in instReps ] ))
-        avgLen = sum([ len(r[key].split()) for r in instReps])/ numReps 
-        range =  max([ len(r[key].split()) for r in instReps]) - min([ len(r[key].split()) for r in instReps])
-        print "avglen", avgLen, "range", range, "numreps", numReps
-        print "num paitents", numPatients
-    
-    print "Avglen overall", sum([len(r[key].split() ) for r in newData])/len(newData)
-    
-    print "overallRange", max([len(r[key].split() ) for r in newData]) - min([len(r[key].split() ) for r in newData])
+    printDataDist = False
+    if printDataDist:
+        print "New Data has len", len(newData), "As compared to", len(allData)
+        print "Num reports", reportCount, "over ", len(set([r['MRNPlusX'] for r in allData])), "aka", len(newData), "rows"
+        print "rowcount should be", rowCount
+        key = "Report_Text"
+        for inst in ["MGH", "NWH", "BWH"]:
+            print inst
+            instReps = [r for r in newData if r['Institution']==inst]
+            numReps = len(instReps)
+            numPatients = len(set( [r['MRNPlusX'] for r in instReps ] ))
+            avgLen = sum([ len(r[key].split()) for r in instReps])/ numReps 
+            range =  max([ len(r[key].split()) for r in instReps]) - min([ len(r[key].split()) for r in instReps])
+            print "avglen", avgLen, "range", range, "numreps", numReps
+            print "num paitents", numPatients
+        
+        print "Avglen overall", sum([len(r[key].split() ) for r in newData])/len(newData)
+        
+        print "overallRange", max([len(r[key].split() ) for r in newData]) - min([len(r[key].split() ) for r in newData])
     
         
     p.dump(newData, open('rawBreastPathReport.p', 'wb'))

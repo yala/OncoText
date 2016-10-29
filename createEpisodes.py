@@ -83,7 +83,6 @@ def retagLabels(oldLabels, newLabels):
     assert len(oldLabels[0]) == len(cols) or not 'DOBPlusX' in oldLabels[0]
     results = []
     for i in range(len(oldLabels)):
-        print len(newLabels[i]) , len(diagnoses)
         assert len(newLabels[i]) == len(diagnoses)
         combinedLabels = newLabels[i] + oldLabels[i][len(diagnoses):]
         if 'PLACEHOLDER' in combinedLabels:
