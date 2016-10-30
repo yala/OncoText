@@ -75,8 +75,8 @@ def binarizeFilesForClassification(write = True):
     export = not write
     ## gen train data
 
-    trainReports, trainLabels = getLabelsAndReports(trainData, export)
-    restReports,  restLabels =  getLabelsAndReports(remainData, export)
+    trainReports, trainLabels = getLabelsAndReports(trainData)
+    restReports,  restLabels =  getLabelsAndReports(remainData)
     assert len(restReports) == len(remainData)
     stem = allDataStem
 
