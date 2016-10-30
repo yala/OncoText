@@ -113,7 +113,6 @@ def buildExport(exportData, data, startIdx):
 # If export is true, returns only diagnoses, if false, also returns metaData
 def getLabelsAndReports(data):
     reports = [d[reportTextKey] for d in data]
-    cleanReports = preprocessReports(reports)
 
     labels = []
 
@@ -142,11 +141,11 @@ def getLabelsAndReports(data):
 
             diags.append(sample['Report_Text_Segmented'])
             diags.append(sample['Report_Text'])
-            diags.append(cleanReports[i])
+            diags.append(reports[i])
 
         labels.append(diags)
 
-    return cleanReports, labels
+    return reports, labels
 
 
 def say(s):
