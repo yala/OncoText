@@ -14,8 +14,10 @@ labelDict = constantValidLabelDict
 
 def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem):
     writeNameFiles(stem)
+
+    trainSuf = 'data'
+    testSuf = 'test'
     for indx, diag in enumerate(diagnoses):
-        trainStem, trainSuf = trainOutPath.split('.')
         trainStem = stem
         with open(trainStem+"_"+replaceSpaces(diag)+"."+trainSuf, "wb") as f: 
             for a in range(len(trainReports)):                
@@ -31,8 +33,6 @@ def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem):
 
         print "Saved", trainStem+"_"+replaceSpaces(diag)+"."+trainSuf
 
-    
-        testStem, testSuf = testOutPath.split('.')
         testStem = stem
         with open(testStem+"_"+replaceSpaces(diag)+"."+testSuf, "wb") as f: 
             for b in range(len(testReports)):   
