@@ -156,15 +156,8 @@ def validateRepsDB(reps, flex = False, dirty = False):
 
 
 
-if __name__ == "__main__":
-
-    verbose = False
-    trainBool = False
-    exportBool = not trainBool
-
-    train = trainBool
-    if train:
-        binarizeFilesForClassification()
+if __name__ == "__main__": 
+    binarizeFilesForClassification()
 
 
 
