@@ -47,7 +47,7 @@ def binarizeFilesForClassification():
 
     print "Parse Result Files"
     
-    classifierLabels = parseResultsFiles( "classification_results/Breast/red_class_results_all_")
+    classifierLabels = parseResultsFiles( "../classification_results/Breast/red_class_results_all_")
 
     print "Retag Labels"
     restLabels = retagLabels(restLabels, classifierLabels)
@@ -138,7 +138,6 @@ def getLabelsAndReports(data):
 
             diags.append(sample['Report_Text_Segmented'])
             diags.append(sample['Report_Text'])
-            diags.append(reports[i])
 
         labels.append(diags)
 
