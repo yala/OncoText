@@ -21,10 +21,6 @@ targets = [
     'InvasiveSuspicious', 'CancerSuspicious'
  ]
 
-targets = [
-     'LCIS',  'IDC'
- ]
-
 
 def buildDict(data, debug = False):
     resultDict = {}
@@ -73,8 +69,6 @@ for diag in targets:
         if not ('ruleBreastSide' in ruleBasedData[repID] and ruleBasedDict[repID]['ruleBreastSide'] == mlDict[repID]['Red BreastSide']):
             continue
 
-
-
         if diag in ruleBasedDict[repID]:
             ruleLabel = ruleBasedDict[repID][diag]
             if ruleLabel in ['1', "RIGHT"]:
@@ -118,35 +112,35 @@ print "Total ratio rulePosAndML_Negative/All", sum([countsDetecs[diag] for diag 
 print "Total num Articles", len(disaArticles)
 print "% /diasgree on a report Level", len(disaArticles) *1. / len(ruleBasedDict)
 
-p.dump(disagreement, open("DisagreementDict.p", 'wb'))
+# p.dump(disagreement, open("DisagreementDict.p", 'wb'))
 
-allDisagreements = []
-for diag in disagreement:
-    if  diag == "BreastSide":
-        continue
-    exportAll = disagreement[diag]
-    random.shuffle(exportAll)
-    export = exportAll[:60]
+# allDisagreements = []
+# for diag in disagreement:
+#     if  diag == "BreastSide":
+#         continue
+#     exportAll = disagreement[diag]
+#     random.shuffle(exportAll)
+#     export = exportAll[:60]
 
-    allDisagreements.extend( [r['ReportID'] for r in exportAll[120:]])
+#     allDisagreements.extend( [r['ReportID'] for r in exportAll[120:]])
 
 
-disagreementReps = [r for r in mlData if r['ReportID'] in allDisagreements]
-random.shuffle(disagreementReps)
+# disagreementReps = [r for r in mlData if r['ReportID'] in allDisagreements]
+# random.shuffle(disagreementReps)
 
-path = "disagreementsForMolly/disagreement_on_all.csv"
+# path = "disagreementsForMolly/disagreement_on_all.csv"
 
-for diag in diagnoses:
-    annotationName = "MG "+diag
-    for r in disagreementReps:
-        r[annotationName] = ''
-keys = disagreementReps[0].keys()
-print len(disagreementReps)
-print keys
-with open(path, "wb") as outCSV:
-    writer = DictWriter(outCSV, keys)
-    writer.writeheader()
-    writer.writerows(disagreementReps)
+# for diag in diagnoses:
+#     annotationName = "MG "+diag
+#     for r in disagreementReps:
+#         r[annotationName] = ''
+# keys = disagreementReps[0].keys()
+# print len(disagreementReps)
+# print keys
+# with open(path, "wb") as outCSV:
+#     writer = DictWriter(outCSV, keys)
+#     writer.writeheader()
+#     writer.writerows(disagreementReps)
 
 
 

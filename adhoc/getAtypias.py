@@ -15,7 +15,6 @@ atypias = ['Red ADH', 'Red ALH' ]
  
 
 "Later need all atypias including LCIS with no prior or concurrent cancer (Less urgent.  I want to find all atypias in males."
-
  
 
 dataPath = "../reportDB+new.p"
