@@ -48,6 +48,19 @@ def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem):
 
         print "Saved", testStem+"_"+replaceSpaces(diag)+"."+testSuf
 
+def writeNameFiles(stem):
+    for diag in diagnoses:
+        with open(stem+"_"+replaceSpaces(diag)+".names", "wb") as f:
+            if MODE == "Breast":
+                if diag == u'BreastSide':
+                    labels = "RIGHT, LEFT.\n"
+                else:
+                    labels = diag + ", " + "no_"+diag+".\n"
+            elif MODE == "TAGHIAN":
+                labels = ", ".join(labelDict[diag])+".\n"
+            features = "pathReport : text.\n"
+            f.write(labels)
+            f.write(features)
 
 # Set write to true to generate train and test files for classification. 
 # Set write to false to collace files for export
