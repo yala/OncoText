@@ -18,7 +18,7 @@ if __name__ == "__main__":
 
     buildLabelDictsBool = False
 
-    redmap = p.load(open('../prepareDataset/data/redmap.p', 'rb'))
+    redmap = p.load(open('../preprocessDataset/data/redmap.p', 'rb'))
     dB  = p.load(open('../reportDB+red+clean.p', 'rb'))
     if buildLabelDictsBool:
         allLabelDict = {}    
@@ -57,7 +57,7 @@ if __name__ == "__main__":
 
         print "Len filiteredDB", len(filteredDB)
 
-        alignTest = False
+        alignTest = True
         if not mode in MixedAnotations or not alignTest:
 
             # Reshuffle DB until there is some amount of each label on each side
