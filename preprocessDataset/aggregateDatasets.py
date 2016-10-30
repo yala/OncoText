@@ -2,6 +2,7 @@ import pickle as p
 import openpyxl as xl
 import sys
 sys.path.append("..")
+sys.path.append("../buildNewDataset")
 from constants import *
 import datetime
 from createEpisodes import validateRepsDB
@@ -117,7 +118,6 @@ def parseMapXLS():
 
             if not legend == ['Column name', 'Mapped to ', 'comments', 'type']:
                 print legend
-                raw_input()
 
         else:
             print 'processing legend row'
@@ -408,7 +408,6 @@ def processSusPhyllodes(allPathReps, outDB, outDBRepIds):
     print "SusPhylodes", len([v for v in vals if v == 'Present']), "present, ", len([v for v in vals if v == 'Absent']), "absent"
     vals = [r['Red Phylodes'] for r in outDB['Red Phylodes'] ]
     print "Phylodes",len([v for v in vals if v == 'Present']), "present, ", len([v for v in vals if v == 'Absent']), "absent"
-    raw_input()
     return False
 
 def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen ):
@@ -534,17 +533,112 @@ def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen 
                      print rep[extraction], rep['MRNPlusX'], oncDate
                      print rep['Report_Date_TimePlusX']
                      print [r['Report_Date_TimePlusX'] for r in relevantReps]
-                     raw_input()
                 if normalizeMRN(mrnOnc) == "05413985":
                     print "rep chosen", rep['Report_Text']
                     print onc
-                    raw_input()
                 break
     print "num oncoscores", len(outDB[extraction])
     return False
 
+def processTabbedExcel(path, out):
+    print "loading wb"
+    wb = xl.load_workbook(path)
+    output = {}
+    sheetNames = wb.sheetnames
+    for name in sheetNames:
+        sheet = wb.get_sheet_by_name(name)
+
+        data = []
+
+        legendRowBool = True
+        print "Getting iterator"
+        legend = []
+        targets = ['Correct','ReportID']
+        for row in sheet.iter_rows():
+            rowDict = {}
+            for indx, col in enumerate(row):
+                if legendRowBool:
+                    if not col.value in legend:
+                        newName = col.value
+                        legend.append(newName)
+                    else:
+                        counter = 2
+                        newName = str(counter) + " " + col.value
+                        while newName in legend:
+                            counter += 1
+                            newName = str(counter) + " " + col.value
+                        legend.append(newName)
+                else:
+                    if legend[indx] in targets:
+                        rowDict[legend[indx]] = col.value
+
+
+
+            if not legendRowBool:
+                if reduce( (lambda x, y:  x and y) , [t in rowDict and not rowDict[t] == None for t in targets]):
+                    data.append(rowDict)
+            else:
+                print 'processing legend row'
+
+            legendRowBool = False
+                
+        print 'dumping'
+        print "legend", legend
+
+        output[name] = data
+
+    p.dump(output, open(out, 'wb'))
+    return output
+
+
 def  processDisagreements(allPathReps, outDB, outDBRepIds):
     print "called process disagrements"
+    disagreementsPaths = '../externalDataSources/disagreements_MG.xlsx'
+    disaDbPath = "data/disagreement_MG_Oct.p"
+    scrape = False
+    if scrape:
+        disgreements = processTabbedExcel(disagreementsPaths, disaDbPath)
+    else:
+        disgreements = p.load(open(disaDbPath,'rb'))
+
+    keyToDiag = {
+        u'disagreement_on_TubularCancer.c':'Red TubularCancer',
+        u'ILC': 'Red ILC',
+        u'FlatEpithelial':'Red FlatEpithelial',
+        u'INSITUNOS': 'Red InsituNOS',
+        u'tubular cancer':'Red TubularCancer',
+        u'blunt adenosis':'Red BluntAdenosis',
+        u'CancerSuspicious':'Red CancerSuspicious',
+        u'CancerNOS': 'Red CancerNOS',
+        u'CancerInvInsituNOS':'Red CancerInvInsituNOS',
+        u'Invasive Suspicious':'Red InvasiveSuspicious',
+        u'IDC':'Red IDC',
+        u'phyllodes': 'Red Phylodes'}
+
+    for key  in keyToDiag:
+        updates = disgreements[key]
+        if len(updates) == 0:
+            continue
+        targetDiag = keyToDiag[key]
+        for annotation in updates:
+            repId = annotation['ReportID']
+            label = "Present" if annotation['Correct'] == 1 else 'Absent'
+
+            rep = [r for r in allPathReps if r['ReportID']==repId][0]
+
+            rep[targetDiag] = label
+
+            if not targetDiag in outDB:
+                outDB[targetDiag] = []
+            if not repId in outDBRepIds:
+                outDBRepIds[repId] = {}
+
+            outDB[targetDiag].append(rep)
+            outDBRepIds[repId][targetDiag] = label
+        
+        print "Num of ", targetDiag, "annotations", len(outDB[targetDiag])
+
+    return False
 
 
 def buildDB(db, grades, redmap, allPathReps, debug = False):
@@ -562,7 +656,7 @@ def buildDB(db, grades, redmap, allPathReps, debug = False):
 
     #Investigative Counts
     yetToPrintBool = True
-    
+
     processRedcapData(db, colSeqs, types, outDB, outDBRepIds, toSee, seen)
     processGradeData(grades, allPathReps, outDB, outDBRepIds)
     processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen )
@@ -576,19 +670,13 @@ def buildDB(db, grades, redmap, allPathReps, debug = False):
         if report['ReportID'] in outDBRepIds:
             report['TaghianGold'] = 1
             for extraction in outDBRepIds[report['ReportID']]:
-                assert MODE == "TAGHIAN" and (extraction in types or extraction in externalList)
                 if extraction in report: ## This is to catch things like DCIS which are both in Taghian and Hughes dB
                     continue
                 else:
                     report[extraction] = outDBRepIds[report['ReportID']][extraction]
 
 
-
-                # assert report['Report_Text'] in [r['Report_Text'] for r in  outDB[extraction]]
-
-
             assert 'TaghianGold' in report and report['TaghianGold'] == 1
-            assert len( [t for t in list(types)+externalList if t in report ] ) > 0
             outDBReps.append( report )
                 
 
@@ -597,7 +685,7 @@ def buildDB(db, grades, redmap, allPathReps, debug = False):
     for extraction in outDB:
         print "Number of ",extraction," reps and path reps equiv", len(outDB[extraction])
     print "Num extractions", len(outDB)
-    print "num extractions over 500 reps", len([ extraction for extraction in types if len(outDB[extraction]) > 500 and extraction not in filtOutList])
+    print "num extractions over 500 reps", len([ extraction for extraction in types if len(outDB[extraction]) > 500 ])
     print "Num path reps", len(outDBReps)
     print "Num path rep IDs", len(outDBRepIds)
     assert len(outDBReps) > 5000
@@ -655,7 +743,6 @@ if __name__ == "__main__":
 
     if parseMapBool:
         redmap = parseMapXLS()
-
 
     if parseExternal:
         grades = parseGradesLS()
