@@ -153,6 +153,11 @@ def parseResultsFiles(stem, debug = False):
     for diag in diagnoses:
         with open(stem+replaceSpaces(diag)+".txt", "rb") as f:
             samples = f.readlines()
+
+        if len(samples) == 0:
+            print "Following file missing annotations"
+            print diag
+            assert False
         if i == 0:
             for k in range(len(samples)):
                 results.append([])
