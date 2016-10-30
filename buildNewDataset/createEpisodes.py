@@ -133,10 +133,7 @@ def getLabelsAndReports(data):
             if (meta == "Correct"  or meta == "DOBPlusX") and not meta in sample:
                 diags.append(0)
             else:
-                if not( sample[meta] in [0,1]):
-                    print "meta", meta
-                    print sample[meta]
-                    assert False
+                assert meta in sample
                 diags.append(sample[meta])
 
             diags.append(sample['Report_Text_Segmented'])
