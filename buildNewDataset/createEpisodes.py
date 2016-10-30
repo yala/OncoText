@@ -136,8 +136,8 @@ def getLabelsAndReports(data):
                 assert meta in sample
                 diags.append(sample[meta])
 
-            diags.append(sample['Report_Text_Segmented'])
-            diags.append(sample['Report_Text'])
+        diags.append(sample['Report_Text_Segmented'])
+        diags.append(sample['Report_Text'])
 
         labels.append(diags)
 
@@ -355,14 +355,8 @@ def buildEpisodes(data, labelMaxDXBool, debug = False):
                 continue
             episode[label] = reports[0][label]
 
-        for diag in hueLabels:
-            orResults = 0
-            for rep in reports:
-                orResults = orResults or rep[diag]
-            episode[diag] = orResults
 
-
-        for diag in labelsForEpisodes:
+        for diag in diagnoses:
             res = defaultLabelDict[diag]
             lastRep = ''
             for rep in reports:
@@ -390,17 +384,14 @@ def buildEpisodes(data, labelMaxDXBool, debug = False):
             episode['Num_Reports'] = len(reports)
             episode['Institution'] = reports[-1]['Institution']
 
-            if MODE == "Breast":
-                assert set(episode.keys() + ['DOBPlusX']) == set(diagnoses + metaData + (['MaxDX'] if labelMaxDXBool else [] )+['EndEpisode_Date_TimePlusX', 'Num_Reports', 'EpisodeID', 'DOBPlusX'])
             
-            if MODE == "TAGHIAN":
-                assert set(episode.keys() + ['DOBPlusX']) == set(labelsForEpisodes + hueLabels + metaData + (['MaxDX'] if labelMaxDXBool else [] )+['EndEpisode_Date_TimePlusX', 'Num_Reports', 'EpisodeID', 'DOBPlusX'])
+        assert set(episode.keys() + ['DOBPlusX']) == set(labelsForEpisodes + hueLabels + metaData + (['MaxDX'] if labelMaxDXBool else [] )+['EndEpisode_Date_TimePlusX', 'Num_Reports', 'EpisodeID', 'DOBPlusX'])                
 
         episodeDB.append(episode)
 
-    if MODE == "TAGHIAN":
-        for diag in labelsForEpisodes:
-            print "count double label in ", countWeird[diag], "for diag", diag
+
+    for diag in labelsForEpisodes:
+        print "count double label in ", countWeird[diag], "for diag", diag
 
     print "Num Reps", len(reportsDB)
     print "Num Epis", len(episodeDB)
@@ -411,11 +402,12 @@ def buildEpisodes(data, labelMaxDXBool, debug = False):
 if __name__ == "__main__":        
     print "Calling export"
     reportDB = binarizeFilesForClassification()
+
     print "Calling labelMaxDXBool"
     getMaxDX(reportDB)
 
     print "Calling build episode"
-    reportDB, episodeDB = buildEpisodes(reportDB, labelMaxDXBool)
+    reportDB, episodeDB = buildEpisodes(reportDB, True)
 
     p.dump( reportDB, open(outPath, 'wb'))
     p.dump( episodeDB, open(episodePath, 'wb'))
