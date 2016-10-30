@@ -1,9 +1,6 @@
 import pickle as p
 import re
 import random
-from genBoostexaFiles import diagnoses
-from genBoostexaFiles import genTrainTestFiles
-from genBoostexaFiles import filterGold
 import datetime
 import pprint
 from operator import itemgetter
