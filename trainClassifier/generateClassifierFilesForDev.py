@@ -18,7 +18,7 @@ if __name__ == "__main__":
 
     buildLabelDictsBool = False
 
-    redmap = p.load(open('../prepareDataset/data/redmap.p', 'rb'))
+    redmap = p.load(open('../preprocessDataset/data/redmap.p', 'rb'))
     dB  = p.load(open('../reportDB+red+clean.p', 'rb'))
     if buildLabelDictsBool:
         allLabelDict = {}    
