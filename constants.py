@@ -192,7 +192,7 @@ if MODE == "TAGHIAN":
   allDataStem = "../boostexer/breast/unlabled/red_all"
 
 
-  cols = diagnoses + metaData + ['Report_Text_Segmented', 'Report_Text', "Preprocessed_Report_Text"]
+  cols = diagnoses + metaData + ['Report_Text_Segmented', 'Report_Text']
 
   outPath = "../reportDB+new.p"
   dataPath = "../rawBreastPathReport.p"
