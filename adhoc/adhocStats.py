@@ -18,18 +18,28 @@ def getIncis(reps):
         if len(mrnToReps[mrn]) < 0:
             continue
         reps = sorted( mrnToReps[mrn],key=itemgetter('Report_Date_TimePlusX') )
-        results.append(reps[0])
+
+
+        
+        if True:
+            for r in reps:
+                if r['BiopsyType'] == 'Incision' and r['Institution'] == 'MGH': #needle' in r['Report_Text'].lower() and 'biopsy' in r['Report_Text'].lower():# \
+                #and not 'surgery' in r['Report_Text'].lower() and not 'excision' in r['Report_Text'].lower():
+                    results.append(r)
+        else:
+            results.append(reps[0])
 
     return results
 
 def getAtypTime(reps):
     def inYear(r):
         y = r['Report_Date_TimePlusX'].year
-        return (y > 2007 and y <= 2011)  or (y>= 2013 and y<=2016)
+        return True
+        #return (y > 2007 and y <= 2011)  or (y>= 2013 and y<=2016)
 
     results = [r for r in reps if inYear(r) and r['Institution']=='MGH']
-
-    return results
+    return reps
+    # return results
 
 
 def getAtypTime2(reps):
@@ -115,7 +125,7 @@ def buildIncisExisMap(incis):
 
             def validFollowup(d):
                 useExis = False
-                return ( not useExis or d['BiopsyType'] == 'Excision') and dateDif(d) > 0  and dateDif(d) < 185
+                return ( not useExis or d['BiopsyType'] == 'Excision') and dateDif(d) > 0  and dateDif(d) < 365.*5
 
             if validFollowup(r):
                 ieMap[inc['ReportID']]['exisList'].append(r)
@@ -128,12 +138,16 @@ def buildIncisExisMap(incis):
 
             ieMap[repId]['excis'] = exis[0]
             
-            outMap[repId] = {'incis': ieMap[repId]['incis'], 'excis':exis[0] }
+            outMap[repId] = {'incis': ieMap[repId]['incis'], 'excis':exis }
 
     return outMap
 
 def rowUpgrade(row):
-    return hasCancer(row['excis'])
+    for exis in row['excis']:
+        if hasCancer(exis):
+            return True
+
+    return False
 
 def buildTableCounts(upgrades):
     print " ,"+",".join(cancers)
@@ -208,28 +222,42 @@ incis = getIncis(reps)
 
 print "num incisions", len(incis), round(len(incis)*1./len(reps),2)
 
-atypias = const_atypias
+incisNum = len([r['MRNPlusX'] for r in incis])
+
+atypias = [
+  'Red ALH','Red ADH','Red ADH_DCIS', 'Red LCIS'
+  ]
 
 cancers = const_cancers
 
 
 
-print "ADH vs ALH in incis", len([r for r in incis if hasCat(r, ['Red ADH','Red ALH'])])
+print "ADH vs ALH in incis", len([ r['MRNPlusX'] for r in incis if hasCat(r, ['Red ADH','Red ALH']) and not hasCancer(r)] )
 
 
 bengin = [a for a in incis if not hasCancer(a)]
 benginAtyp = [a for a in incis if hasAtyp(a) and not hasCancer(a)]
 
+print "num incis with benging", len(bengin)
+print "num incis with atyp and no canc", len(benginAtyp)
+
 candidates = getAtypTime(reps)
 filtCandidate = [r for r in candidates if hasAtyp(r) and not hasCancer(r) ]
 exportCandidate = [ {'MRNPlusX':r['MRNPlusX']} for r in filtCandidate]
-print "num atyp", len(set([r['MRNPlusX'] for r in filtCandidate ]))
+
+
+numAtyps = len([r['MRNPlusX'] for r in filtCandidate ])
+# print "num atyp", numAtyps, numAtyps*1./incisNum
 
 
 ieMapAtyp = buildIncisExisMap(benginAtyp)
+
 atypNoFollow = noFollow(benginAtyp, ieMapAtyp)
 print 
 print 
+
+
+patientsFollow = [ieMapAtyp]
 print "num followup from benignAtyp", len(ieMapAtyp), round(len(ieMapAtyp)*1./len(benginAtyp),2)
 
 ieMap = buildIncisExisMap(bengin)
@@ -242,24 +270,24 @@ upgradesAtyp = [ ieMapAtyp[i] for i in ieMapAtyp if rowUpgrade(ieMapAtyp[i])]
 print 'overall upgrade from benignAtyp', len(upgradesAtyp), round(len(upgradesAtyp)*1./len(ieMapAtyp),2)
 
 
-examples = [ieMap[i]['incis'] for i in ieMap if not hasAtyp(ieMap[i]['incis']) ]
-examples2 = [ieMap[i]['excis'] for i in ieMap if not hasAtyp(ieMap[i]['incis']) ]
+# examples = [ieMap[i]['incis'] for i in ieMap if not hasAtyp(ieMap[i]['incis']) ]
+# examples2 = [ieMap[i]['excis'] for i in ieMap if not hasAtyp(ieMap[i]['incis']) ]
 
-print "len export", len(examples)
-print "len export2", len(examples2)
-print "len noFollow", len(atypNoFollow)
-print "lenExportCandidate", len(exportCandidate)
+# print "len export", len(examples)
+# print "len export2", len(examples2)
+# print "len noFollow", len(atypNoFollow)
+# print "lenExportCandidate", len(exportCandidate)
 
 
 
-keys = examples[0].keys() 
-keys2 = exportCandidate[0].keys()
+# keys = examples[0].keys() 
+# keys2 = exportCandidate[0].keys()
 
-with open("atypiaMRNs.csv", "wb") as outCSV:
+# with open("atypiaMRNs.csv", "wb") as outCSV:
 
-    writer = DictWriter(outCSV, keys2)#,  delimiter = "$")
-    writer.writeheader()
-    writer.writerows(exportCandidate)
+#     writer = DictWriter(outCSV, keys2)#,  delimiter = "$")
+#     writer.writeheader()
+#     writer.writerows(exportCandidate)
 
 
 # with open("benignLeadingToExcision.csv", "wb") as outCSV:

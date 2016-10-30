@@ -88,7 +88,9 @@ for r in redReps:
             if target in r:
                 if r[target] in ["Present", "Absent"]:
                     print "Skiping because already writen"
-                    assert (r[d] == '1' and r[target] == "Present") or (r[d] == '0' and r[target] == "Absent")
+                    if not (r[d] == '1' and r[target] == "Present") or (r[d] == '0' and r[target] == "Absent"):
+                        print r[d], r[target]
+
                     continue
             if str(r[d]) == '1':
                 r[target] = 'Present'
@@ -120,7 +122,7 @@ for r in redReps:
     if ('Correct' in r and r['Correct'] == 'Y') or ('TaghianGold' in r and r['TaghianGold'] == 1): 
         if ('TaghianGold' in r and r['TaghianGold'] == 1):
 
-            for c in cancers:
+            for c in const_cancers:
                 if c in r and r[c] == 'Present':
                     r['cancer'] = 'Present'
 
@@ -128,13 +130,14 @@ for r in redReps:
             r['cancer'] = 'Absent'
 
         if ('Correct' in r and r['Correct'] == 'Y') or ('TaghianGold' in r and r['TaghianGold'] == 1): 
-            for a in atypias:
+            for a in const_atypias:
                 if a in r and r[a] == 'Present':
                     r['atypia'] = 'Present'
 
         if not 'atypia' in r:
             r['atypia'] = 'Absent'
 
+reps = redReps
 print 'numCacnr', len([r for r in reps if 'cancer' in r and r['cancer'] == 'Present']) , len([r for r in reps if 'cancer' in r and r['cancer'] == 'Absent'])
 print 'numAtypia', len([r for r in reps if 'atypia' in r and r['atypia'] == 'Present']) , len([r for r in reps if 'atypia' in r and r['atypia'] == 'Absent']) 
 

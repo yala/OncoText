@@ -36,8 +36,8 @@ def binarizeFilesForClassification():
     
     ## gen train data
 
-    trainReports, trainLabels = getLabelsAndReports(trainData, export)
-    restReports,  restLabels =  getLabelsAndReports(remainData, export)
+    trainReports, trainLabels = getLabelsAndReports(trainData)
+    restReports,  restLabels =  getLabelsAndReports(remainData)
     assert len(restReports) == len(remainData)
 
     stem = allDataStem
@@ -162,14 +162,14 @@ def parseResultsFiles(stem, debug = False):
             for k in range(len(samples)):
                 results.append([])
 
-       if MODE == "TAGHIAN":
-            labels = []
-            for sample in samples:
-                rawProbs = [float(s) for s in sample.split()]
-                rawGuessProbs = rawProbs[len(rawProbs)/2:]
-                guessIndx = rawGuessProbs.index(max(rawGuessProbs))
-                guessText = labelDict[diag][guessIndx]
-                labels.append(guessText)
+       
+        labels = []
+        for sample in samples:
+            rawProbs = [float(s) for s in sample.split()]
+            rawGuessProbs = rawProbs[len(rawProbs)/2:]
+            guessIndx = rawGuessProbs.index(max(rawGuessProbs))
+            guessText = labelDict[diag][guessIndx]
+            labels.append(guessText)
 
         if debug:
             numExamples  = 10
@@ -410,7 +410,7 @@ def buildEpisodes(data, labelMaxDXBool, debug = False):
 
 if __name__ == "__main__":        
     print "Calling export"
-    reportDB = binarizeFilesForClassification(False)
+    reportDB = binarizeFilesForClassification()
     print "Calling labelMaxDXBool"
     getMaxDX(reportDB)
 

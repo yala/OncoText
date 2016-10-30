@@ -348,7 +348,11 @@ def processGradeData(grades, allPathReps, outDB, outDBRepIds):
     return False
 
 def processSusPhyllodes(allPathReps, outDB, outDBRepIds):
-    phylodesDb = parseXLS('../externalDataSources/susPhyllodes.xlsx', 'data/susPhyllodes.p')
+    scrape = False
+    if scrape:
+        phylodesDb = parseXLS('../externalDataSources/susPhyllodes.xlsx', 'data/susPhyllodes.p')
+    else: 
+        phylodesDb = p.load(open('data/susPhyllodes.p','rb'))
     ## build Mrn -> sus for phyllodes 
     mrnSus = {}
     mrnKey = 'MRNPlusX'

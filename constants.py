@@ -53,12 +53,14 @@ if MODE == "TAGHIAN":
   'ADH_DCIS', 'Phylodes', 'CancerNOS', 'InvasiveSuspicious', 'InsituNOS', 'CancerInvInsituNOS','CancerSuspicious',
   'TubularCancer' ]
   diagSkip = ['ALH', 'ILC']
+  BiopAnotationSource= [a + " Biop" for a in HueAnotationSource  if not a in diagSkip]
+  SurgAnotationSource= [a + " Surg" for a in HueAnotationSource  if not a in diagSkip]
 
 
   MixedAnotations= ["Red "+d for d in HueAnotationSource]
 
 
-  redRawDBPath = 'reportDB+red+clean.p'
+  redRawDBPath = '../reportDB+red+clean.p'
 
   defaultLabelDict = { 'Are there positive LN?': 'No', 'Type of sampled LN (choice=None)':'Unchecked', 'ITC ':'No', 'PR':'Unknown',
       'Type of sampled LN (choice=SLNB (Sentinel LN Biopsy))': 'Unchecked', 'Type of Surgery':'not_surgery', 'BiopsyType':'No_breast_biopsy',

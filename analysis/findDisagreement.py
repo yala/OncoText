@@ -7,7 +7,7 @@ from csv import DictWriter
 
 random.seed(1)
 
-ruleBasedData = p.load(open('../'+dataPath, 'rb'))
+ruleBasedData = p.load(open(dataPath, 'rb'))
 mlData = p.load(open('../reportDB+new.p', 'rb'))
 
 targets = [
