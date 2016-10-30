@@ -184,12 +184,12 @@ if MODE == "TAGHIAN":
 
 
 
-  trainOutPath = "boostexer/breast/taghian/red.data"
-  testOutPath = "boostexer/breast/taghian/red.test"
-  devOutPath = "boostexer/breast/taghian/red.dev"
+  trainOutPath = "../boostexer/breast/taghian/red.data"
+  testOutPath = "../boostexer/breast/taghian/red.test"
+  devOutPath = "../boostexer/breast/taghian/red.dev"
 
 
-  allDataStem = "boostexer/breast/unlabled/red_all"
+  allDataStem = "../boostexer/breast/unlabled/red_all"
 
 
   cols = diagnoses + metaData + ['Report_Text_Segmented', 'Report_Text', "Preprocessed_Report_Text"]
