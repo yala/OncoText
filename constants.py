@@ -19,12 +19,7 @@ if MODE == "TAGHIAN":
   lauraDictToIndx = {'Biposy 1':0, 'Biopsy 2':1, 'Biopsy 3':2, 'Surgery 1':3, 'Surgery2':4, 'Surgery 3':5}
   maxedOutDictToIndx = {'Oncotype score':-1, 'Oncotype date':-1}  
   maxedOutList = ['Oncotype score', 'Oncotype date']
-  externalList = ['TumorGrade', 'Red SuspiciousForPhyllodes']  
-
-  filtOutList = ['DCIS', 'LCIS', 'ILC', 'Mixed Inv Duct and Lob canc', 'IDC', 'ALH', 'hospital', 'Her2 (Fish)-val', \
-  'IDC with lobular features', 'date', 'ADH', 'Her2 (immunochem)', 'Her2 (Fish)- val', 'ALND (#sampled)', 'Number of LN with > 0.2 cm', 'Micro or Gross',
-  'Number of LN with < =0.02 cm', 'Method size', 'Radical Mastectomy']
-  # TODO Remove ECE and debug why bad class name    Micro or Gross   Number of LN with < =0.02 cm Method size
+  externalList = ['TumorGrade', 'Red SuspiciousForPhyllodes', 'Red Phylodes']  
 
   diagnoses = [
   'Are there positive LN?', u'ITC ', u'PR',  
@@ -58,8 +53,6 @@ if MODE == "TAGHIAN":
   'ADH_DCIS', 'Phylodes', 'CancerNOS', 'InvasiveSuspicious', 'InsituNOS', 'CancerInvInsituNOS','CancerSuspicious',
   'TubularCancer' ]
   diagSkip = ['ALH', 'ILC']
-  BiopAnotationSource= [a + " Biop" for a in HueAnotationSource  if not a in diagSkip]
-  SurgAnotationSource= [a + " Surg" for a in HueAnotationSource  if not a in diagSkip]
 
 
   MixedAnotations= ["Red "+d for d in HueAnotationSource]
@@ -81,20 +74,14 @@ if MODE == "TAGHIAN":
 
   extractions = [u'Max Tumor Size', 'Non Sentinel LN (# Malignant)', 'Sentinel LN (# Sampled)']
 
-##TODO
-##  getList = ['LVI','ECE', 'BVI' , 'Grade', Max Tumor Size, num lymph node pos vs neg, ]
-##  Make Interface labels clearer
-## Support categorical filtering
+
 
   constantValidLabelDict = {'Are there positive LN?': ['Yes', 'No'],
     'ECE': ['Yes', 'No'],
     'ER': ['Unknown', 'Negative', 'Positive'],
     'Her2 (Fish)': ['Unknown', 'Negative', 'Positive'],
     'ITC ': ['Yes', 'No'],
-    # 'Nipple sparing Mastectomy': ['Checked', 'Unchecked'],
-    'PR': ['Unknown', 'Negative', 'Positive'],
-    # 'Simple Mastectomy': ['Checked', 'Unchecked'],
-    # 'Type of Surgery': ['Mastectomy',  '2nd_Re-Excision', 'not_surgery', '1st_Re-Excision', 'Excisional_biopsy_(Lumpectomy)'],
+    'PR': ['Unknown', 'Negative', 'Positive'],    
     'BiopsyType': ['Incision', 'Excision', 'No_breast_biopsy'],
     'ECE': ['Yes', 'No'],
     'LVI': ['Yes', 'No', 'Not_reported'],
@@ -158,10 +145,6 @@ if MODE == "TAGHIAN":
     'Red TubularCancer':['Present','Absent']
     }
 
-
-  JSONLabelDict = {
-  }
-
   JSONLabelNameDict = {
     'Her2 (Fish)': 'Her2',
     'Type of Surgery':'Type_of_Surgery',
@@ -194,10 +177,11 @@ if MODE == "TAGHIAN":
     'Red CancerSuspicious': 'CancerSuspicious', 
     'Red TubularCancer': 'TubularCancer'
     }
+
   labelsForEpisodes = diagnoses
 
 
-      # Constants for genBoostexaFiles
+
   trainOutPath = "boostexer/breast/taghian/red.data"
   testOutPath = "boostexer/breast/taghian/red.test"
   devOutPath = "boostexer/breast/taghian/red.dev"
@@ -214,7 +198,3 @@ if MODE == "TAGHIAN":
   episodePath = "../episodeDB+new.p"
   JSONReportPath = "../reportDB+red.json"
   JSONEpisodePath = "../episodeDB+red.json"
-
-
-
-  
