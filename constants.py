@@ -3,7 +3,7 @@ import pickle as p
 
 MODE = "TAGHIAN"
 baseline = False
-
+submode=False
 
 def replaceSpaces(label):
     return '_'.join(str(label).split())
