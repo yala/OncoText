@@ -4,7 +4,7 @@ import pickle as p
 import re
 import random
 from constants import *
-from createEpisodes import preprocessReports
+from generateClassifierFilesForProd import preprocessReports
 import datetime
 
 random.seed(0)
