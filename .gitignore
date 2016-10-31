@@ -1,4 +1,5 @@
 # large files
+*.DS_Store
 *_all_*.test
 episodeDB.p
 episodeDB*
