@@ -14,9 +14,9 @@ taghian/*.p
 rawBreastPathReport.p
 rawBreastPathReport.bak.p
 analysis/DisagreementDict.p
-boostexer/breast/unlabled/*.names
-boostexer/breast/unlabled/*.data
-boostexer/breast/unlabled/*.test
+*.names
+*.data
+*.test
 *.p
 *.shyp
 *.swp
