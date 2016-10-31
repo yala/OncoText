@@ -4,7 +4,7 @@ import pickle as p
 import re
 import random
 from constants import *
-from createEpisodes import preprocessReports
+from generateClassifierFilesForProd import preprocessReports
 import datetime
 
 random.seed(0)
@@ -57,7 +57,7 @@ if __name__ == "__main__":
 
         print "Len filiteredDB", len(filteredDB)
 
-        alignTest = True
+        alignTest = False
         if not mode in MixedAnotations or not alignTest:
 
             # Reshuffle DB until there is some amount of each label on each side

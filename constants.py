@@ -3,7 +3,7 @@ import pickle as p
 
 MODE = "TAGHIAN"
 baseline = False
-
+submode=False
 
 def replaceSpaces(label):
     return '_'.join(str(label).split())
@@ -30,7 +30,11 @@ if MODE == "TAGHIAN":
   'Red ADH_DCIS', 'Red Phylodes', 'Red CancerNOS', 'Red InvasiveSuspicious', 
   'Red InsituNOS', 'Red CancerInvInsituNOS', 'Red SuspiciousForPhyllodes', 'Oncotype score', 'TumorGrade',
   'Red CancerSuspicious', 'Red TubularCancer']
-
+  
+  diagnoses = [
+    'Red IDC', 'Red ILC', 'Red TubularCancer', 'Red BluntAdenosis', 'Red InsituNOS', 'Red CancerNOS', 'Red CancerInvInsituNOS',
+    'Red InvasiveSuspicious', 'Red CancerSuspicious'
+    ]
 
   const_cancers = [
   'Red ILC','Red DCIS', 'Red IDC', 

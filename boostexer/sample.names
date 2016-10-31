@@ -1,7 +1,0 @@
-rich, smart, happy.
-age:             continuous.
-income:          continuous.
-sex:             male, female.
-highest-degree:  none, high-school, bachelors, masters, phd.
-goal-in-life:    text.
-hobbies:         scoredtext.

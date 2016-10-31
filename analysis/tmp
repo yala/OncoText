@@ -1,0 +1,156 @@
+Calling interpret for  ../classification_results/Breast/class_results_
+diagnoses ['Red IDC', 'Red ILC', 'Red TubularCancer', 'Red BluntAdenosis', 'Red InsituNOS', 'Red CancerNOS', 'Red CancerInvInsituNOS', 'Red InvasiveSuspicious', 'Red CancerSuspicious']
+---------------------------
+Red IDC Present
+Number of gold 177.0
+Number guessed 173
+Red IDC Present truePos, falsePos, trueNeg, falseNeg: 168 5 318 9
+Red IDC Present percision, recall, f1: 0.971098265896 , 0.949152542373 , 0.96
+Red IDC Present sensitivity, specifcity: 0.949152542373 , 0.984520123839
+Diag Red IDC Present , Num Mistakes: 14 , error rate 0.028
+---------------------------
+Red IDC Absent
+Number of gold 323.0
+Number guessed 327
+Red IDC Absent truePos, falsePos, trueNeg, falseNeg: 318 9 168 5
+Red IDC Absent percision, recall, f1: 0.97247706422 , 0.984520123839 , 0.978461538462
+Red IDC Absent sensitivity, specifcity: 0.984520123839 , 0.949152542373
+Diag Red IDC Absent , Num Mistakes: 14 , error rate 0.028
+---------------------------
+Red ILC Present
+Number of gold 8.0
+Number guessed 6
+Red ILC Present truePos, falsePos, trueNeg, falseNeg: 6 0 492 2
+Red ILC Present percision, recall, f1: 1.0 , 0.75 , 0.857142857143
+Red ILC Present sensitivity, specifcity: 0.75 , 1.0
+Diag Red ILC Present , Num Mistakes: 2 , error rate 0.004
+---------------------------
+Red ILC Absent
+Number of gold 492.0
+Number guessed 494
+Red ILC Absent truePos, falsePos, trueNeg, falseNeg: 492 2 6 0
+Red ILC Absent percision, recall, f1: 0.995951417004 , 1.0 , 0.997971602434
+Red ILC Absent sensitivity, specifcity: 1.0 , 0.75
+Diag Red ILC Absent , Num Mistakes: 2 , error rate 0.004
+---------------------------
+Red TubularCancer Present
+Number of gold 0.0
+Number guessed 0
+Red TubularCancer Present truePos, falsePos, trueNeg, falseNeg: 0 0 500 0
+Red TubularCancer Present percision, recall, f1: 1 , 1 , 1.0
+Red TubularCancer Present sensitivity, specifcity: 1 , 1.0
+Diag Red TubularCancer Present , Num Mistakes: 0 , error rate 0.0
+---------------------------
+Red TubularCancer Absent
+Number of gold 500.0
+Number guessed 500
+Red TubularCancer Absent truePos, falsePos, trueNeg, falseNeg: 500 0 0 0
+Red TubularCancer Absent percision, recall, f1: 1.0 , 1.0 , 1.0
+Red TubularCancer Absent sensitivity, specifcity: 1.0 , 1
+Diag Red TubularCancer Absent , Num Mistakes: 0 , error rate 0.0
+---------------------------
+Red BluntAdenosis Present
+Number of gold 1.0
+Number guessed 1
+Red BluntAdenosis Present truePos, falsePos, trueNeg, falseNeg: 1 0 499 0
+Red BluntAdenosis Present percision, recall, f1: 1.0 , 1.0 , 1.0
+Red BluntAdenosis Present sensitivity, specifcity: 1.0 , 1.0
+Diag Red BluntAdenosis Present , Num Mistakes: 0 , error rate 0.0
+---------------------------
+Red BluntAdenosis Absent
+Number of gold 499.0
+Number guessed 499
+Red BluntAdenosis Absent truePos, falsePos, trueNeg, falseNeg: 499 0 1 0
+Red BluntAdenosis Absent percision, recall, f1: 1.0 , 1.0 , 1.0
+Red BluntAdenosis Absent sensitivity, specifcity: 1.0 , 1.0
+Diag Red BluntAdenosis Absent , Num Mistakes: 0 , error rate 0.0
+---------------------------
+Red InsituNOS Present
+Number of gold 2.0
+Number guessed 1
+Red InsituNOS Present truePos, falsePos, trueNeg, falseNeg: 0 1 497 2
+Red InsituNOS Present percision, recall, f1: 0.0 , 0.0 , 1
+Red InsituNOS Present sensitivity, specifcity: 0.0 , 0.997991967871
+Diag Red InsituNOS Present , Num Mistakes: 3 , error rate 0.006
+---------------------------
+Red InsituNOS Absent
+Number of gold 498.0
+Number guessed 499
+Red InsituNOS Absent truePos, falsePos, trueNeg, falseNeg: 497 2 0 1
+Red InsituNOS Absent percision, recall, f1: 0.995991983968 , 0.997991967871 , 0.996990972919
+Red InsituNOS Absent sensitivity, specifcity: 0.997991967871 , 0.0
+Diag Red InsituNOS Absent , Num Mistakes: 3 , error rate 0.006
+---------------------------
+Red CancerNOS Present
+Number of gold 7.0
+Number guessed 3
+Red CancerNOS Present truePos, falsePos, trueNeg, falseNeg: 3 0 493 4
+Red CancerNOS Present percision, recall, f1: 1.0 , 0.428571428571 , 0.6
+Red CancerNOS Present sensitivity, specifcity: 0.428571428571 , 1.0
+Diag Red CancerNOS Present , Num Mistakes: 4 , error rate 0.008
+---------------------------
+Red CancerNOS Absent
+Number of gold 493.0
+Number guessed 497
+Red CancerNOS Absent truePos, falsePos, trueNeg, falseNeg: 493 4 3 0
+Red CancerNOS Absent percision, recall, f1: 0.991951710262 , 1.0 , 0.99595959596
+Red CancerNOS Absent sensitivity, specifcity: 1.0 , 0.428571428571
+Diag Red CancerNOS Absent , Num Mistakes: 4 , error rate 0.008
+---------------------------
+Red CancerInvInsituNOS Present
+Number of gold 0.0
+Number guessed 0
+Red CancerInvInsituNOS Present truePos, falsePos, trueNeg, falseNeg: 0 0 500 0
+Red CancerInvInsituNOS Present percision, recall, f1: 1 , 1 , 1.0
+Red CancerInvInsituNOS Present sensitivity, specifcity: 1 , 1.0
+Diag Red CancerInvInsituNOS Present , Num Mistakes: 0 , error rate 0.0
+---------------------------
+Red CancerInvInsituNOS Absent
+Number of gold 500.0
+Number guessed 500
+Red CancerInvInsituNOS Absent truePos, falsePos, trueNeg, falseNeg: 500 0 0 0
+Red CancerInvInsituNOS Absent percision, recall, f1: 1.0 , 1.0 , 1.0
+Red CancerInvInsituNOS Absent sensitivity, specifcity: 1.0 , 1
+Diag Red CancerInvInsituNOS Absent , Num Mistakes: 0 , error rate 0.0
+---------------------------
+Red InvasiveSuspicious Present
+Number of gold 0.0
+Number guessed 0
+Red InvasiveSuspicious Present truePos, falsePos, trueNeg, falseNeg: 0 0 500 0
+Red InvasiveSuspicious Present percision, recall, f1: 1 , 1 , 1.0
+Red InvasiveSuspicious Present sensitivity, specifcity: 1 , 1.0
+Diag Red InvasiveSuspicious Present , Num Mistakes: 0 , error rate 0.0
+---------------------------
+Red InvasiveSuspicious Absent
+Number of gold 500.0
+Number guessed 500
+Red InvasiveSuspicious Absent truePos, falsePos, trueNeg, falseNeg: 500 0 0 0
+Red InvasiveSuspicious Absent percision, recall, f1: 1.0 , 1.0 , 1.0
+Red InvasiveSuspicious Absent sensitivity, specifcity: 1.0 , 1
+Diag Red InvasiveSuspicious Absent , Num Mistakes: 0 , error rate 0.0
+---------------------------
+Red CancerSuspicious Present
+Number of gold 1.0
+Number guessed 0
+Red CancerSuspicious Present truePos, falsePos, trueNeg, falseNeg: 0 0 499 1
+Red CancerSuspicious Present percision, recall, f1: 1 , 0.0 , 0.0
+Red CancerSuspicious Present sensitivity, specifcity: 0.0 , 1.0
+Diag Red CancerSuspicious Present , Num Mistakes: 1 , error rate 0.002
+---------------------------
+Red CancerSuspicious Absent
+Number of gold 499.0
+Number guessed 500
+Red CancerSuspicious Absent truePos, falsePos, trueNeg, falseNeg: 499 1 0 0
+Red CancerSuspicious Absent percision, recall, f1: 0.998 , 1.0 , 0.998998998999
+Red CancerSuspicious Absent sensitivity, specifcity: 1.0 , 0.0
+Diag Red CancerSuspicious Absent , Num Mistakes: 1 , error rate 0.002
+---------------------------
+Overall
+Number of gold 4500.0
+Number guessed 4500
+truePos, falsePos, trueNeg, falseNeg: 4476 24 4476 24
+../classification_results/Breast/class_results_ Overall percision, recall, f1: 0.994666666667 , 0.994666666667 , 0.994666666667
+../classification_results/Breast/class_results_ Overall sensitivity, specifcity: 0.994666666667 , 0.994666666667
+../classification_results/Breast/class_results_ Overall Num Mistakes: 48 , error rate 0.00533333333333
+Average F1 vs aggregated one: 0.910306975884 0.994666666667
+Done
