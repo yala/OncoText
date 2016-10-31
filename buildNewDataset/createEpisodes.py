@@ -13,7 +13,7 @@ labelDict = constantValidLabelDict
 
 # Set write to true to generate train and test files for classification. 
 # Set write to false to collace files for export
-def binarizeFilesForClassification():
+def aggregateResults():
     allDataPath = redRawDBPath
     allData = p.load(open(allDataPath, 'rb'))
 
@@ -401,7 +401,7 @@ def buildEpisodes(data, labelMaxDXBool, debug = False):
 
 if __name__ == "__main__":        
     print "Calling export"
-    reportDB = binarizeFilesForClassification()
+    reportDB = aggregateResults()
 
     print "Calling labelMaxDXBool"
     getMaxDX(reportDB)
