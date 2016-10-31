@@ -22,14 +22,16 @@ if MODE == "TAGHIAN":
   externalList = ['TumorGrade', 'Red SuspiciousForPhyllodes', 'Red Phylodes']  
 
   diagnoses = [
-  'Are there positive LN?', u'ITC ', u'PR',  
-  'Her2 (Fish)', u'ER', 'ECE', 'LVI', 'BVI',
-  'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 
-  'Red ADH', 'Red BreastSide', 'Red FlatEpithelial','Red BluntAdenosis', 
-  'Red LobularNeoplasia', 'cancer', 'atypia', 'BiopsyType', 
-  'Red ADH_DCIS', 'Red Phylodes', 'Red CancerNOS', 'Red InvasiveSuspicious', 
-  'Red InsituNOS', 'Red CancerInvInsituNOS', 'Red SuspiciousForPhyllodes', 'Oncotype score', 'TumorGrade',
-  'Red CancerSuspicious', 'Red TubularCancer']
+    'Are there positive LN?', u'ITC ', u'PR',  
+    'Her2 (Fish)', u'ER', 'ECE', 'LVI', 'BVI',
+    'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 
+    'Red ADH', 'Red BreastSide', 'Red FlatEpithelial','Red BluntAdenosis', 
+    'Red LobularNeoplasia', 'cancer', 'atypia', 'BiopsyType', 
+    'Red ADH_DCIS', 'Red Phylodes', 
+    'Red CancerNOS', 'Red InvasiveSuspicious', 
+    'Red InsituNOS', 'Red CancerInvInsituNOS', 'Red SuspiciousForPhyllodes',# 'Oncotype score', 'TumorGrade',
+    'Red CancerSuspicious', 'Red TubularCancer'
+  ]
 
 
   const_cancers = [
@@ -180,7 +182,7 @@ if MODE == "TAGHIAN":
     'Red TubularCancer': 'TubularCancer'
     }
 
-  labelsForEpisodes = diagnoses
+  labelsForEpisodes = diagnoses 
 
 
 
