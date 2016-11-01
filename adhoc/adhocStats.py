@@ -125,7 +125,7 @@ def buildIncisExisMap(incis):
 
             def validFollowup(d):
                 useExis = False
-                return ( not useExis or d['BiopsyType'] == 'Excision') and dateDif(d) > 0  and dateDif(d) < 365.*5
+                return ( not useExis or d['BiopsyType'] == 'Excision') and dateDif(d) > 0  and dateDif(d) < 365./2
 
             if validFollowup(r):
                 ieMap[inc['ReportID']]['exisList'].append(r)
@@ -149,13 +149,21 @@ def rowUpgrade(row):
 
     return False
 
+def rowUpgradeCat(row, cat):
+    for exis in row['excis']:
+        if hasCat(exis,cat):
+            return True
+
+    return False
+
+
 def buildTableCounts(upgrades):
     print " ,"+",".join(cancers)
     for atyp in atypias:
         rowStr = atyp
         for cancer in cancers:
             seed = [u for u in upgrades if hasCat(u['incis'],[atyp]) ]
-            countTile = len([u for u in seed if hasCat(u['excis'],[cancer]) ])
+            countTile = len([u for u in seed if rowUpgradeCat(u,[cancer]) ])
             rowStr += "," + str(countTile)
         print rowStr
 
@@ -164,7 +172,7 @@ def buildTableCounts(upgrades):
     for cancer in cancers:
         seed = [u for u in upgrades if not hasAtyp(u['incis']) ]
         countTile = len([u for u in seed if 
-            hasCat(u['excis'],[cancer])])
+            rowUpgradeCat(u,[cancer])])
         rowStr += "," +  str(countTile)
 
     print rowStr
@@ -177,23 +185,36 @@ def buildTablePerc(upgrades):
         rowStr = atyp
         for cancer in cancers:
             seed = [u for u in upgrades if hasCat(u['incis'],[atyp]) ]
-            countTile = round(len([u for u in seed if hasCat(u['excis'],[cancer]) ])*1./len(seed),2)
+            if len(seed) == 0:
+                continue
+            countTile = round(len([u for u in seed if rowUpgradeCat(u ,[cancer]) ])*1./len(seed),2)
             rowStr += "," + str(countTile)
         print rowStr
 
     ## benign row
     rowStr = "benign"
     seed = [u for u in upgrades if not hasAtyp(u['incis']) ]
-    print "num sarcoma in ~benign~ set", \
-        len([u for u in upgrades if  'sarcoma' in u['incis']['Report_Text_Segmented'].lower()  ])
+    if len(seed) == 0:
+        return 0
 
     for cancer in cancers:
-        countTile = round(len([u for u in seed if hasCat(u['excis'],[cancer])]) *1. / len(seed), 2)
+        countTile = round(len([u for u in seed if rowUpgradeCat(u,[cancer])]) *1. / len(seed), 2)
         rowStr += "," +  str(countTile)
 
     print rowStr
 
     return 0
+
+def buildSourceTablePerc(ieMap):
+    for atyp in atypias:
+        def isCohort(row):
+            return hasCat(row['incis'], [atyp]) and rowUpgrade(row)
+
+        seed = [ieMap[i] for i in ieMap if hasCat(ieMap[i]['incis'], [atyp])]
+        countUpgrades = [ieMap[i] for i in ieMap if isCohort(ieMap[i])]
+
+        print atyp, "Upgrades:", len(countUpgrades), "Total", len(seed), \
+            ", perc Upgrade", round(len(countUpgrades)*1./len(seed),2)
 
 def noFollowDist(db, ieMap):
 
@@ -213,9 +234,9 @@ def noFollow(db, ieMap):
 
 
 
-reps = p.load(open('../reportDB+new+rule.p','rb'))
+reps = p.load(open('../reportDB+new.p','rb'))
 
-print "num reps", len(reps)
+print "num reps", len([r for r in reps if r['Institution']=='MGH'])
 
 incis = getIncis(reps)
 
@@ -224,9 +245,7 @@ print "num incisions", len(incis), round(len(incis)*1./len(reps),2)
 
 incisNum = len([r['MRNPlusX'] for r in incis])
 
-atypias = [
-  'Red ALH','Red ADH','Red ADH_DCIS', 'Red LCIS'
-  ]
+atypias = const_atypias
 
 cancers = const_cancers
 
@@ -268,6 +287,9 @@ print 'overall upgrade from benign', len(upgrades), round(len(upgrades)*1./len(i
 
 upgradesAtyp = [ ieMapAtyp[i] for i in ieMapAtyp if rowUpgrade(ieMapAtyp[i])]
 print 'overall upgrade from benignAtyp', len(upgradesAtyp), round(len(upgradesAtyp)*1./len(ieMapAtyp),2)
+
+buildSourceTablePerc(ieMapAtyp)
+buildTablePerc(upgradesAtyp)
 
 
 # examples = [ieMap[i]['incis'] for i in ieMap if not hasAtyp(ieMap[i]['incis']) ]
