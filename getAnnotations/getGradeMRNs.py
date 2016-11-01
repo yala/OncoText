@@ -7,54 +7,64 @@ exportPath = "gradeUnlabeled"
 db = p.load( open (dataPath, 'rb'))
 
 
-potentailGrade = [r for r in db if 'grade' in r['Report_Text'].lower() or 'differentia' in r['Report_Text'].lower() ][:100]
-potentialNot   = [r for r in db if not( 'grade' in r['Report_Text'].lower() or 'differentia' in r['Report_Text'].lower() )][:50]
+# potentailGrade = [r for r in db if 'grade' in r['Report_Text'].lower() or 'differentia' in r['Report_Text'].lower() ][:100]
+# potentialNot   = [r for r in db if not( 'grade' in r['Report_Text'].lower() or 'differentia' in r['Report_Text'].lower() )][:50]
 
-potentailGrade2 = [r for r in db if 'grade' in r['Report_Text'].lower() or 'differentia' in r['Report_Text'].lower() ][100:200]
-potentialNot2   = [r for r in db if not( 'grade' in r['Report_Text'].lower() or 'differentia' in r['Report_Text'].lower() )][50:100]
+# potentailGrade2 = [r for r in db if 'grade' in r['Report_Text'].lower() or 'differentia' in r['Report_Text'].lower() ][100:200]
+# potentialNot2   = [r for r in db if not( 'grade' in r['Report_Text'].lower() or 'differentia' in r['Report_Text'].lower() )][50:100]
 
-potentailGrade3 = [r for r in db if 'grade' in r['Report_Text'].lower() or 'differentia' in r['Report_Text'].lower() ][300:400]
-potentialNot3   = [r for r in db if not( 'grade' in r['Report_Text'].lower() or 'differentia' in r['Report_Text'].lower() )][100:150]
+# potentailGrade3 = [r for r in db if 'grade' in r['Report_Text'].lower() or 'differentia' in r['Report_Text'].lower() ][300:400]
+# potentialNot3   = [r for r in db if not( 'grade' in r['Report_Text'].lower() or 'differentia' in r['Report_Text'].lower() )][100:150]
 
-potentailGrade4 = [r for r in db if 'grade' in r['Report_Text'].lower() or 'differentia' in r['Report_Text'].lower() ][400:450]
-potentialNot4   = [r for r in db if not( 'grade' in r['Report_Text'].lower() or 'differentia' in r['Report_Text'].lower() )][150:250]
+# potentailGrade4 = [r for r in db if 'grade' in r['Report_Text'].lower() or 'differentia' in r['Report_Text'].lower() ][400:450]
+# potentialNot4   = [r for r in db if not( 'grade' in r['Report_Text'].lower() or 'differentia' in r['Report_Text'].lower() )][150:250]
+
+
+papilQuery = [' papillary', 'papilloma', 'papil','pappil']
+def hasText(query, r):
+    for q in query:
+        if q in r['Report_Text_Segmented'].lower():
+            return True
+    return False
+
+
+potentialPapill = [r for r in db if hasText(papilQuery, r)]
 
 
 
-exportMolly = potentailGrade4 + potentialNot4
+# exportMolly = potentailGrade4 + potentialNot4
 # exportLaura = potentialNot3 + potentailGrade3
 
-for export, path in [ #(exportLaura,exportPath+'Laura.csv'),
-    (exportMolly, exportPath+'Molly.csv')]:
-    exportRecors = []
+# for export, path in [ #(exportLaura,exportPath+'Laura.csv'),
+#     (exportMolly, exportPath+'Molly.csv')]:
+#     exportRecors = []
 
-    for e in export:
-        exportRecors.append({
-            'ReportID': e['ReportID'],
-            'text': e['Report_Text'],
-            'TumorGrade'  : ''
-            })
+#     for e in export:
+#         exportRecors.append({
+#             'ReportID': e['ReportID'],
+#             'text': e['Report_Text'],
+#             'TumorGrade'  : ''
+#             })
 
-    keys = ['ReportID', 'text', 'TumorGrade']
-    with open(path, "wb") as outCSV:
-        writer = DictWriter(outCSV, keys)
-        writer.writeheader()
-        writer.writerows(exportRecors)
+#     keys = ['ReportID', 'text', 'TumorGrade']
+#     with open(path, "wb") as outCSV:
+#         writer = DictWriter(outCSV, keys)
+#         writer.writeheader()
+#         writer.writerows(exportRecors)
     
-
-potentailSus = [r for r in db if r['Red Phylodes'] == 'Absent'][0:100]
 for export, path in [ 
-    (potentailSus, 'unlabledSuspForPhyllodes.csv')]:
+    (potentialPapill, 'papilAnnotations.csv')]:
     exportRecors = []
 
     for e in export:
         exportRecors.append({
             'ReportID': e['ReportID'],
+            'Institution': e['Institution'],
             'text': e['Report_Text'],
-            'SuspiciousForPhyllodes'  : ''
+            'Papill'  : ''
             })
-
-    keys = ['ReportID', 'text', 'SuspiciousForPhyllodes']
+    print "Num exported", len(export)
+    keys = ['ReportID', 'Institution','text', 'Papill']
     with open(path, "wb") as outCSV:
         writer = DictWriter(outCSV, keys)
         writer.writeheader()
