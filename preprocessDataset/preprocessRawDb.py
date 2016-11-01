@@ -53,16 +53,11 @@ def unicodeToDatetime(db):
 
     return newDb
 
-if __name__ == "__main__":
 
-    allData = p.load(open('../rawBreastPathReport.bak.p', 'rb'))
-    print "Len all data, then num patients", len(allData), len(set([r['MRNPlusX'] for r in allData]))
+def main(allData):
     newData = []
 
-    seen = 0
-    seenStrg = 0
-    maxStrg = -1
-    maxSeen = -1
+
 
     reportCount = 0
     rowCount = 0
@@ -72,15 +67,8 @@ if __name__ == "__main__":
         lowerCaseText = rep['Report_Text'].lower()
         if 'BreastSide' in rep:
             rep['ruleBreastSide'] = copy.deepcopy(rep['BreastSide'])
-
-        if not ("right" in lowerCaseText or "left" in lowerCaseText) or not 'breast' in lowerCaseText:
-            if seenStrg < maxStrg:
-                seenStrg += 1
-                print rep['Report_Text']
-                raw_input()
-            continue
-        else:
-            reportCount +=1 
+        
+        reportCount +=1 
 
         ## Handle Bilaterals
         if "right" in lowerCaseText and "left" in lowerCaseText:
@@ -96,7 +84,6 @@ if __name__ == "__main__":
                 repId +=1
                 newData.append(rep) 
 
-
             ## Make 2 reps for rest of bilats
             else:
                 for side in ["RIGHT", "LEFT"]:
@@ -107,12 +94,6 @@ if __name__ == "__main__":
                     repId +=1
                     newData.append(copy.deepcopy(newRep))
 
-                    if seen < maxSeen:
-                        seen +=1 
-                        print "orig Text", lowerCaseText
-                        print "new text", newTexts[side]
-                        print "side", side
-                        raw_input()
 
         else: ## unilat case,
             rowCount += 1
@@ -136,26 +117,11 @@ if __name__ == "__main__":
     # Clean dates to python datetime
     newData = unicodeToDatetime(newData)
 
-    ## Print out data dist 
-    printDataDist = False
-    if printDataDist:
-        print "New Data has len", len(newData), "As compared to", len(allData)
-        print "Num reports", reportCount, "over ", len(set([r['MRNPlusX'] for r in allData])), "aka", len(newData), "rows"
-        print "rowcount should be", rowCount
-        key = "Report_Text"
-        for inst in ["MGH", "NWH", "BWH"]:
-            print inst
-            instReps = [r for r in newData if r['Institution']==inst]
-            numReps = len(instReps)
-            numPatients = len(set( [r['MRNPlusX'] for r in instReps ] ))
-            avgLen = sum([ len(r[key].split()) for r in instReps])/ numReps 
-            range =  max([ len(r[key].split()) for r in instReps]) - min([ len(r[key].split()) for r in instReps])
-            print "avglen", avgLen, "range", range, "numreps", numReps
-            print "num paitents", numPatients
-        
-        print "Avglen overall", sum([len(r[key].split() ) for r in newData])/len(newData)
-        
-        print "overallRange", max([len(r[key].split() ) for r in newData]) - min([len(r[key].split() ) for r in newData])
-    
-        
+    return newData
+
+
+if __name__ == "__main__":
+
+    allData = p.load(open('../rawBreastPathReport.bak.p', 'rb'))
+    newData = main(allData)
     p.dump(newData, open('../rawBreastPathReport.p', 'wb'))

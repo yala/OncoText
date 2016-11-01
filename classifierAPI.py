@@ -1,77 +1,103 @@
 import pickle as p
+from constants import *
+import sys
+sys.path.append("buildNewDataset")
+sys.path.append("trainClassifier")
+sys.path.append("preprocessDataset")
+import preprocessRawDb
+import createEpisodes
+import generateClassifierFilesForProd
+import generateClassifierFilesForDev
+import subprocess
+from flask import Flask
+from flask import render_template
+from flask import request
 
 rawPath = "reportDB+red+clean.p"
-
-diagnoses = [
-  u'Are there positive LN?', u'ITC ', u'PR',  
-  u'Her2 (Fish)', u'ER', 'ECE', 'LVI', 'BVI',
-  'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 
-  'Red IDC', 'Red ADH', u'LobularNeoplasia', 
-  'FlatEpithelial', 'BluntAdenosis','BreastSide',
-  'cancer', 'atypia']
-
-diagToValue = {'Are there positive LN?': ['Yes', 'No'],
-    'ECE': ['Yes', 'No'],
-    'ER': ['Unknown', 'Negative', 'Positive'],
-    'Her2 (Fish)': ['Unknown', 'Negative', 'Positive'],
-    'ITC ': ['Yes', 'No'],
-    'Nipple sparing Mastectomy': ['Checked', 'Unchecked'],
-    'PR': ['Unknown', 'Negative', 'Positive'],
-    'Simple Mastectomy': ['Checked', 'Unchecked'],
-    'Type of Surgery': ['Mastectomy',  '2nd_Re-Excision', 'not_surgery', '1st_Re-Excision', 'Excisional_biopsy_(Lumpectomy)'],
-    'Type of biopsy': ['Incisional_biopsy',  'Fine_needle_aspiration_(FNA)', 'No_breast_biopsy', 'Core_biopsy', 'Needle_biopsy'],
-    'Type of sampled LN (choice=ALND (Axillary LN Dissection))': ['Checked', 'Unchecked'],
-    'Type of sampled LN (choice=None)': ['Checked', 'Unchecked'],
-    'Type of sampled LN (choice=SLNB (Sentinel LN Biopsy))': ['Checked', 'Unchecked'],
-    'ECE': ['Yes', 'No'],
-    'LVI': ['Yes', 'No', 'Not_reported'],
-    'BVI': ['Yes', 'No', 'Not_reported'],
-    'TumorGrade': ['Well_differentiated_(grade_I)', 'Moderate_(grade_II)', 'Poor_(grade_III)_Undifferentiated', 'Not_assessed'],
-    'Red DCIS':  ['Present','Absent'], 
-    'Red LCIS': ['Present','Absent'], 
-    'Red IDC': ['Present','Absent'], 
-    'Red ILC': ['Present','Absent'], 
-    'Red ALH': ['Present','Absent'], 
-    'Red ADH': ['Present','Absent'],
-    'FlatEpithelial': ['Present','Absent'],
-    'BluntAdenosis' : ['Present','Absent'],
-    'BreastSide' : ['Right', 'Left']
-    'cancer': ['cancer','no_cancer'],
-    'atypia': ['atypia','no_atypia'],
-    }
+dbPath = "reportDB.p"
 
 
+raws = p.load(open(rawPath,'rb'))
+def isAnnotation(r):
+    return ('TaghianGold' in r and 'TaghianGold' == 1 ) or ('Correct' in r and r['Correct'] == 'Y')
+base = []
+for r in raws:
+    r['Owner'] = 'default'
+    if isAnnotation(r)
+    base.append(r)
 
-## Given a list of dicts, where  each dict represent a report:
+try:
+    db = p.load(open(dbPath, 'rb'))
+except Exception, e:
+    db = {'default': base }
+
+RequiredPreprocessFields = ['Report_Text']
+RequiredTrainDbFields = ['Report_ID', 'Report_Text_Segmented']
+models = ['Boost', 'MaxEnt', 'CNN'] # MaxEnt and CNN not ready
+
+
+## Given a JSON list of dicts, where  each dict represent a report:
 ## Parse the dict for daignoses, and add annotations if found
 ## Example:
 ## [ {Report_Text: }]
 ## @return: 0
-def addTraining(trainDB):
-    ## Can assume reports all ready preprocessed into left/right
-    ## Some annotations per report
-    ## gen boostexer files, and continue training. add to existing files
+def addData(data, name='default', raw=False, save=False):
+    # Preprocess bilaterals if need be
+    if raw:
+        data = preprocessReports(data)
+
+    validateTrainDb(data)
+
+    if not name in db:
+        db[name] = base
+    ## mark the files to note as annoations
+    for r in data:
+        r['Owner'] == name
+        for d in diagnoses:
+            if d in r:
+                r['TaghianGold'] = 1
+
+    db[name].extend(data)
+
+    if save:
+        p.dump(db, open(dbPath))
+
     return 0
 
-## Generates test files for given testDB, and kick off model. Note, this is async.
+## Does all necessary preprocessing for the model on the dataset
+## model specifies the underlying model used, Boost is what Adam used
+## mode refers to training the model for development (so you can call evaluate and 
+## interpretDb) or Prod for production, where all annotations are used
 ## Return 0
-def evaluate(testDB=None, name='default'):
-    ## if testDB specified (#global), then make that test/set
-    ## Hit's bash script to run and eval on that testset
+def updateTrainSet(name='default', model='Boost', mode="Dev"):
+    assert model in models
+    assert mode in ["Prod", "Dev"]
+    if model == "Boost":
+        ## Generate relevant files in some directory with a name path
+        stem = "boostexer/breast/api/"+name+"_"
+        if mode == "Prod":
+            generateClassifierFilesForProd.binarizeFilesForClassification(mode+"_"+db[name], stem)
+        else:
+            generateClassifierFilesForDev.binarizeFilesForClassification(mode+"_"+db[name], stem)
+        
+
+    elif model == "MaxEnt" or model == "CNN":
+        ## Run vectorizer to get features
+        raise NameError("Model type not supported")
     return 0
 
-
-## Takes all unlabled data and produces relevant files, and kick off classification. 
-## Note, this is async.
-## Return 0
-def predict(testDB=None, name='default'):
-    ## if testDB specified (#global), then make that test/set
-    ## Hit's bash script to run and eval on that testset
+## Kicks off job to retrain model and label the corresping data
+## Use dev to train model without heldout test to get numbers
+## use prod to use all labeled data as train, and then run on all unlabeled
+def train(name="default", mode="Dev"):
+    shellScript = "./boostexer/breast/api/runModel.sh "+mode+"_"+name
+    subprocess.call(shellScript, shell=True)
     return 0
+
 
 ## Assume evaluate has been run. Interpret results from last eval
 def interpretResults(name='default'):
-    ##
+    ## 
     return 0
 
 ## Asume predict has been run, this consolidates the predict raw files into a DB 
@@ -83,19 +109,34 @@ def getPredictions(db, name='default'):
     reportDb, episodeDb = []
     return 0
 
-## Kicks off job to retrain model
-## Return 0
-def retrain()
-    return 0
 
 
+################ Helpers ######################
+def validateTrainDb(trainDb):
+    for r in trainDb:
+        assert 'Report_Text_Segmented' in r and 'ReportID' in r
 
-## Notes:
-# Handling namespaces. Want to support diff people having diff unlabled data to view
-# One cannical train source
+        for d in diagnoses:
+            if d in r:
+                assert r[d] in constantValidLabelDict[d]
 
-def populateDefault():
+## Given a list of dicts, where  each dict represent a report:
+## If the report text covers a single breast, we assign it an id and nothing happens
+## If the report contains 2 breasts, automatically parse it into two reports, assign them
+## both ids. 
+## @return: the preprocessed reports
+def preprocessReports(reports):
+    ## Can assume reports all ready preprocessed into left/right
+    ## Some annotations per report
+    ## gen boostexer files, and continue training. add to existing files
+    for r in reports:
+        assert 'Report_Text' in r
+
+    results = preprocessRawDb(reports)
+    return results
+
+## Call this to initialize datastrucutres
+if __name__ == "__main__":
+    print "Begin API"
 
 
-## Convert legacy db format to format specified in daigToValue
-def normalizeDb()

@@ -64,9 +64,8 @@ def writeNameFiles(stem):
 
 # Set write to true to generate train and test files for classification. 
 # Set write to false to collace files for export
-def binarizeFilesForClassification(write = True):
-    allDataPath = redRawDBPath
-    allData = p.load(open(allDataPath, 'rb'))
+def binarizeFilesForClassification(allData, stem, write = True):
+    
 
     #valid input db isn't corrupted
 
@@ -83,7 +82,6 @@ def binarizeFilesForClassification(write = True):
     # Since the training error is ~0, this wont hurt us.
     
     remainData = allData
-    print "Num remainData with DOBs", len([d for d in remainData if 'DOBPlusX' in d and not d['DOBPlusX'] == 0]), "/", len(remainData)
     
     export = not write
     ## gen train data
@@ -91,7 +89,6 @@ def binarizeFilesForClassification(write = True):
     trainReports, trainLabels = getLabelsAndReports(trainData)
     restReports,  restLabels =  getLabelsAndReports(remainData)
     assert len(restReports) == len(remainData)
-    stem = allDataStem
 
     genTrainTestFiles(trainReports, trainLabels, restReports, restLabels, stem)
 
@@ -170,6 +167,8 @@ def validateRepsDB(reps, flex = False, dirty = False):
 
 
 if __name__ == "__main__": 
+    allDataPath = redRawDBPath
+    allData = p.load(open(allDataPath, 'rb'))
     binarizeFilesForClassification()
 
 
