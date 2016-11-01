@@ -1,0 +1,82 @@
+len rule data 108114
+len ml data 108114
+Num labled rule samples 79959
+Num labled ML samples 108114
+----
+ALH 854 0.011
+Num rule peredict 1, ML predicts 0: 205
+Num rule peredict 0, ML predicts 1: 649
+Ratio disagree rule pos  0.240046838407
+********************
+----
+ADH 1800 0.023
+Num rule peredict 1, ML predicts 0: 501
+Num rule peredict 0, ML predicts 1: 1299
+Ratio disagree rule pos  0.278333333333
+********************
+----
+ADH_DCIS 219 0.003
+Num rule peredict 1, ML predicts 0: 87
+Num rule peredict 0, ML predicts 1: 132
+Ratio disagree rule pos  0.397260273973
+********************
+----
+LCIS 1301 0.016
+Num rule peredict 1, ML predicts 0: 500
+Num rule peredict 0, ML predicts 1: 801
+Ratio disagree rule pos  0.384319754035
+********************
+----
+ILC 1169 0.015
+Num rule peredict 1, ML predicts 0: 870
+Num rule peredict 0, ML predicts 1: 299
+Ratio disagree rule pos  0.744225834046
+********************
+----
+DCIS 3207 0.04
+Num rule peredict 1, ML predicts 0: 2194
+Num rule peredict 0, ML predicts 1: 1013
+Ratio disagree rule pos  0.684128468974
+********************
+----
+IDC 3030 0.038
+Num rule peredict 1, ML predicts 0: 1940
+Num rule peredict 0, ML predicts 1: 1090
+Ratio disagree rule pos  0.640264026403
+********************
+----
+InsituNOS 817 0.01
+Num rule peredict 1, ML predicts 0: 733
+Num rule peredict 0, ML predicts 1: 84
+Ratio disagree rule pos  0.897184822521
+********************
+----
+CancerNOS 2399 0.03
+Num rule peredict 1, ML predicts 0: 2315
+Num rule peredict 0, ML predicts 1: 84
+Ratio disagree rule pos  0.964985410588
+********************
+----
+CancerInvInsituNOS 364 0.005
+Num rule peredict 1, ML predicts 0: 363
+Num rule peredict 0, ML predicts 1: 1
+Ratio disagree rule pos  0.997252747253
+********************
+----
+InvasiveSuspicious 379 0.005
+Num rule peredict 1, ML predicts 0: 379
+Num rule peredict 0, ML predicts 1: 0
+Ratio disagree rule pos  1.0
+********************
+----
+CancerSuspicious 133 0.002
+Num rule peredict 1, ML predicts 0: 131
+Num rule peredict 0, ML predicts 1: 2
+Ratio disagree rule pos  0.984962406015
+********************
+num articles visited 78435
+Total num Disagreement 15672
+% /disagree on a label Level 0.0163333708526
+Total ratio rulePosAndML_Negative/All 0.651990811639
+Total num Articles 11960
+% /diasgree on a report Level 0.149576658037
