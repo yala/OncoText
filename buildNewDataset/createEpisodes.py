@@ -232,6 +232,7 @@ def getMaxDXSingleReport(report):
 
 ## Flex (for flexible) flag means we runs asserts on a label only if it is present in the sample
 ## We don't enforce that all labels are present. this is useful for pre-complete dbs
+## dirty flag is useful for when we aren't enforcing that the values are in the label dict, pre-preprocess
 def validateRepsDB(reps, flex = False, dirty = False):
     for r in reps:
         checks = diagnoses + hueLabels if MODE == "TAGHIAN" else diagnoses
