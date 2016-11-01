@@ -19,10 +19,10 @@ for r in redReps:
         countGold += 1
 
         if surgDiag in r:
-            if r[surgDiag] in ['2nd Re-Excision', '1st Re-Excision', 'Excisional biopsy (Lumpectomy)']:
+            if r[surgDiag] in ['2nd Re-Excision', '1st Re-Excision', 'Excisional biopsy (Lumpectomy)', 'Incisional biopsy']:
                 r[biopTypeDiag] = "Excision"
         elif biopDiag in r:
-            if r[biopDiag] in ['Needle biopsy',  'Core biopsy',  'Incisional biopsy']:
+            if r[biopDiag] in ['Needle biopsy',  'Core biopsy']:
                 r[biopTypeDiag] = "Incision"
 
         if (surgDiag in r or biopDiag in r) and not biopTypeDiag in r:
