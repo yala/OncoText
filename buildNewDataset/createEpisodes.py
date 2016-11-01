@@ -13,7 +13,7 @@ labelDict = constantValidLabelDict
 
 # Set write to true to generate train and test files for classification. 
 # Set write to false to collace files for export
-def aggregateResults():
+def aggregateResults(stem):
     allDataPath = redRawDBPath
     allData = p.load(open(allDataPath, 'rb'))
 
@@ -40,14 +40,12 @@ def aggregateResults():
     restReports,  restLabels =  getLabelsAndReports(remainData)
     assert len(restReports) == len(remainData)
 
-    stem = allDataStem
-
 
     exportableData = {}
 
     print "Parse Result Files"
     
-    classifierLabels = parseResultsFiles( "../classification_results/Breast/red_class_results_all_")
+    classifierLabels = parseResultsFiles( "../"+stem)
 
     print "Retag Labels"
     restLabels = retagLabels(restLabels, classifierLabels)
@@ -400,18 +398,20 @@ def buildEpisodes(data, labelMaxDXBool, debug = False):
     return reportsDB, episodeDB
 
 
-if __name__ == "__main__":        
+def main(save=False, stem):
     print "Calling export"
-    reportDB = aggregateResults()
-
+    reportsDB = aggregateResults(stem)
     print "Calling labelMaxDXBool"
     getMaxDX(reportDB)
-
     print "Calling build episode"
     reportDB, episodeDB = buildEpisodes(reportDB, True)
+    if save:
+        p.dump( reportDB, open(outPath, 'wb'))
+        p.dump( episodeDB, open(episodePath, 'wb'))
+    reportDB, episodeDB
 
-    p.dump( reportDB, open(outPath, 'wb'))
-    p.dump( episodeDB, open(episodePath, 'wb'))
+if __name__ == "__main__":        
+    main(save=True, "classification_results/Breast/red_class_results_all_")
 
 
 

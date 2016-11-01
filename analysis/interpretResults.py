@@ -10,9 +10,153 @@ diagSamples = {}
 catergoryVerbose= True
 overallVerbose= True
 
+def main(stem):
+    redmap = p.load(open('../preprocessDataset/data/redmap.p', 'rb'))
+    diagLabelDict = constantValidLabelDict
+
+    print "Calling interpret for ", stem
+    print "diagnoses", diagnoses
+    for diag in diagnoses:
+        diagFile = '_'.join(diag.split())
+        diagFile = '_'.join(diagFile.split('/'))
+        with open(stem+diagFile+".txt", 'rb') as f:
+           diagSamples[diag] = f.readlines()
+
+
+    gold = {}
+    guessed = {}
+    for d in diagnoses:
+        labels = diagLabelDict[d]
+        gold[d] = {}
+        guessed[d] = {}
+        for l in labels:
+            gold[d][l] = []
+            guessed[d][l] = []
+        gold[d]['overall'] = []
+        guessed[d]['overall'] = []
+
+
+    for diag in diagnoses:
+        samples = diagSamples[diag]    
+        labels = diagLabelDict[diag]
+
+        for row, sample in enumerate(samples):
+            for labelIndx, label in enumerate(labels):
+
+                goldsAndPredictions = [float(f) for f in sample.split()]
+
+                assert len(goldsAndPredictions) % 2 == 0
+                golds = []
+                guesses = []
+
+                goldsVec = goldsAndPredictions[:len(goldsAndPredictions)/2]
+                
+                guessedVec = goldsAndPredictions[len(goldsAndPredictions)/2:]
+
+                assert len(goldsVec) == len(guessedVec)
+               
+
+                gold[diag][label].append(goldsVec[labelIndx])
+                gold[diag]['overall'].append(goldsVec[labelIndx])
+    
+                predictionIndx = guessedVec.index(max(guessedVec))
+                if labelIndx == predictionIndx:
+                    prediction = 1
+                else:
+                    prediction = 0
+
+                guessed[diag][label].append(prediction)
+                guessed[diag]['overall'].append(prediction)
+
+
+    results = []
+    overallGold = []
+    overallGuessed = []
+    for diag in diagnoses:    
+        labels = diagLabelDict[diag]
+        for label in labels if True else ['overall']:
+            if len(labels) == 2 and label == labels[-1] and False: 
+                continue
+            if submode == "Analyze both" and diag in hueLabels and label == 0 and False:
+                continue
+            resultDict = {}
+            resultDict['Name'] = diag + " " + str(label)
+            defualt = 1
+            
+            overallGold.extend(gold[diag][label])
+            overallGuessed.extend(guessed[diag][label])
+            truePos = sum([guessed[diag][label][i] == 1 and gold[diag][label][i] == 1 for i in range(len(gold[diag][label]))])
+            falsePos = sum([guessed[diag][label][i] == 1 and gold[diag][label][i] == 0 for i in range(len(gold[diag][label]))])
+            trueNeg  = sum([guessed[diag][label][i] == 0 and gold[diag][label][i] == 0 for i in range(len(gold[diag][label]))])
+            falseNeg = sum([guessed[diag][label][i] == 0 and gold[diag][label][i] == 1 for i in range(len(gold[diag][label]))])
+
+
+            percision = 1. * truePos / (truePos + falsePos) if (truePos + falsePos) > 0 else defualt
+            recall    =  1. * truePos / (truePos + falseNeg) if (truePos + falseNeg) > 0 else defualt
+            f1        =  2. * (percision * recall)  / (percision + recall) if (percision + recall) >0 else defualt
+
+            sensitivity = recall
+            specifcity = 1.* trueNeg / (trueNeg + falsePos) if (trueNeg + falsePos) >0 else defualt
+
+            numMistakes = (falsePos + falseNeg)
+            errorRate = (falsePos + falseNeg)*1./ (len(gold[diag][label]) if len(gold[diag][label]) > 0 else defualt)
+
+            resultDict['percision'] = percision
+            resultDict['recall'] = recall
+            resultDict['f1'] = f1
+            resultDict['sensitivity'] = sensitivity
+            resultDict['specifcity'] = specifcity
+            resultDict['numMistakes'] = numMistakes
+            resultDict['errorRate']   = errorRate
+
+            results.append(resultDict)
+
+    oResultDict = {}
+    oResultDict['Name'] = 'Overall'
+
+    oResultDict['num gold'] = sum(overallGold)
+    oResultDict['num geussed'] = sum(overallGuessed)
+
+    truePos = sum([overallGold[i] == 1 and overallGuessed[i] == 1 for i in range(len(overallGold))])
+    falsePos = sum([overallGold[i] == 0 and overallGuessed[i] == 1 for i in range(len(overallGold))])
+    trueNeg  = sum([overallGold[i] == 0 and overallGuessed[i] == 0 for i in range(len(overallGold))])
+    falseNeg = sum([overallGold[i] == 1 and overallGuessed[i] == 0 for i in range(len(overallGold))])
+
+
+    percision = 1. * truePos / (truePos + falsePos) if (truePos + falsePos) > 0 else defualt
+    recall    =  1. * truePos / (truePos + falseNeg) if (truePos + falseNeg) > 0 else defualt
+    f1        =  2. * (percision * recall)  / (percision + recall) if (percision + recall) >0 else defualt
+
+    avgF1 = sum([r['f1'] for r in results])/ len(results)
+
+
+    sensitivity = recall
+    specifcity = 1.* trueNeg / (trueNeg + falsePos) if (trueNeg + falsePos) >0 else defualt
+
+    numMistakes = (falsePos + falseNeg)
+    errorRate = (falsePos + falseNeg)*1./(truePos+falsePos+falseNeg+trueNeg)
+
+    oResultDict['percision'] = percision
+    oResultDict['recall'] = recall
+    oResultDict['f1'] = f1
+    oResultDict['sensitivity'] = sensitivity
+    oResultDict['specifcity'] = specifcity
+    oResultDict['numMistakes'] = numMistakes
+    oResultDict['errorRate']   = errorRate
+
+    results.append(oResultDict)
+    
+    rowLevelDict = {}
+    diagNames = []
+
+    if MODE == "TAGHIAN":
+        diagNames = MixedAnotations
+
+    return results
+
 
 if __name__ == "__main__":
-
+    ## LEGACY
     stem = sys.argv[1]
 
     labels = ['Positive']

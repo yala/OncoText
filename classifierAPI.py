@@ -4,10 +4,12 @@ import sys
 sys.path.append("buildNewDataset")
 sys.path.append("trainClassifier")
 sys.path.append("preprocessDataset")
+sys.path.append("analysis")
 import preprocessRawDb
 import createEpisodes
 import generateClassifierFilesForProd
 import generateClassifierFilesForDev
+import interpretResults
 import subprocess
 from flask import Flask
 from flask import render_template
@@ -74,11 +76,11 @@ def updateTrainSet(name='default', model='Boost', mode="Dev"):
     assert mode in ["Prod", "Dev"]
     if model == "Boost":
         ## Generate relevant files in some directory with a name path
-        stem = "boostexer/breast/api/"+name+"_"
+        stem = "boostexer/breast/api/"+mode+"_"+name+"_"
         if mode == "Prod":
-            generateClassifierFilesForProd.binarizeFilesForClassification(mode+"_"+db[name], stem)
+            generateClassifierFilesForProd.binarizeFilesForClassification(db[name], stem)
         else:
-            generateClassifierFilesForDev.binarizeFilesForClassification(mode+"_"+db[name], stem)
+            generateClassifierFilesForDev.binarizeFilesForClassification(db[name], stem)
         
 
     elif model == "MaxEnt" or model == "CNN":
@@ -98,7 +100,11 @@ def train(name="default", mode="Dev"):
 ## Assume evaluate has been run. Interpret results from last eval
 def interpretResults(name='default'):
     ## 
-    return 0
+    stem="../classification_results/Breast/class_results_"
+
+    results = interpretResults("../classification_results/API/Dev_"+name+"_")
+
+    return results
 
 ## Asume predict has been run, this consolidates the predict raw files into a DB 
 ## returns reportDb, episodeDB
@@ -106,10 +112,8 @@ def interpretResults(name='default'):
 ## episodeDb -> reportDb consolidated into windows of diff reports on same month in 6 month
 ## consecutive period
 def getPredictions(db, name='default'):
-    reportDb, episodeDb = []
-    return 0
-
-
+    reportDb, episodeDb = createEpisodes.main(stem="classification_results/API/Prod_"+name)
+    return reportDb, episodeDb
 
 ################ Helpers ######################
 def validateTrainDb(trainDb):
