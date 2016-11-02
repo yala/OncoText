@@ -55,9 +55,16 @@ def getAtypIncis(reps):
                     date = r['Report_Date_TimePlusX']
                     def priorCancer():
                         canc = []
-                        for j in range(i):
+                        for j in range(len(reps)):
+                            if str(r['MRNPlusX']) in ['4054548', '2315971', '4974054', '1508964', '5585066']:
+                                print reps[j]['Report_Date_TimePlusX'], 'in comparison to', r['Report_Date_TimePlusX']
+                                print 'rep[j] text is', reps[j]['Report_Text']
+                                print 'rep[j] segmented text is', reps[j]['Report_Text_Segmented']
+                                print 'idc classif', reps[j]['Red IDC']
+                                print 'ilc classif', reps[j]['Red ILC']
+                                # raw_input()
                             rj  = reps[j]
-                            if hasCancer(rj) and (date-rj['Report_Date_TimePlusX']).days < 90:
+                            if hasCancer(rj) and abs((date-rj['Report_Date_TimePlusX']).days) < 30:
                                 canc.append(rj)
                         return canc
                     if len(priorCancer()) == 0:
@@ -72,6 +79,20 @@ def getAtypIncis(reps):
     results = [resultDict[k] for k in resultDict]
 
     return results
+
+def atypsOverTime(reps):
+
+    ranges = [ (0, 1990), (1990, 1995), (1995, 2000), (2000, 2005), (2005,2010), (2010,2015)]
+    for ran in range(1990, 2015, 2):
+        low = ran
+        high = low + 2
+        def yearFilt(r):
+            return r['Report_Date_TimePlusX'].year > low and r['Report_Date_TimePlusX'].year <= high
+
+        seed = [r for r in reps if yearFilt(r) and r['Institution']=="MGH"]
+        numPatients = len(set([r['MRNPlusX'] for r in seed]))
+        numPatientsAtyp = len(set([r['MRNPlusX'] for r in seed if hasAtyp(r)]))
+        print "in years", low, high, "percent atyp is ", numPatientsAtyp*1. / numPatients, ",num patients in range is", numPatients
 
 def getAtypTime(reps):
     def inYear(r):
@@ -159,7 +180,7 @@ def getFollowup(rep):
     #     and dateDif(r) > 0  and dateDif(r) < 185] 
 
     exis = [r for r in reps if r['MRNPlusX'] == mrn and r['Red BreastSide'] == rep['Red BreastSide']
-        and dateDif(r) > 0  and dateDif(r) < 185] 
+        and dateDif(r) > 0  and dateDif(r) < 365] 
 
     exis = sorted( exis, key=itemgetter('Report_Date_TimePlusX') )
 
@@ -308,6 +329,7 @@ def noFollow(db, ieMap):
 
 reps = p.load(open('../reportDB+new.p','rb'))
 
+
 print "num patients", len(set([r['MRNPlusX'] for r in reps if r['Institution']=='MGH']))
 
 incis = getIncis(reps)
@@ -321,6 +343,7 @@ atypias = const_atypias
 
 cancers = const_cancers
 
+atypsOverTime(reps)
 
 
 print "ADH vs ALH in incis", len([ r['MRNPlusX'] for r in incis if hasCat(r, ['Red ADH','Red ALH']) and not hasCancer(r)] )
