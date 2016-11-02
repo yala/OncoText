@@ -10,7 +10,7 @@ sys.path.append("..")
 from constants import *
 
 
-def portToJSON(data, path, episodeMode = False):
+def portToJSON(data, path=None, episodeMode = False, write=False):
     for report in data:
         try:
             if not isinstance(report['Report_Date_TimePlusX'], str):
@@ -53,12 +53,15 @@ def portToJSON(data, path, episodeMode = False):
         report["FakeMRN"] = mrn
         assert "EIC" in report
 
-    chunkLen = len(data)/10
-    for i in range(10):    
-        jsonData = json.dumps(data[i* chunkLen : (i+1)*chunkLen])
-        print "Len data to dump to JSON", len(jsonData)
-        with open(path.split('.')[0]+'_'+str(i)+".json", 'wb') as f:
-            f.write(jsonData)
+    if write:
+        chunkLen = len(data)/10
+        for i in range(10):    
+            jsonData = json.dumps(data[i* chunkLen : (i+1)*chunkLen])
+            print "Len data to dump to JSON", len(jsonData)
+            with open(path.split('.')[0]+'_'+str(i)+".json", 'wb') as f:
+                f.write(jsonData)
+    else:
+        return json.dumps(data)
 
 if __name__ == "__main__":
 
@@ -66,9 +69,9 @@ if __name__ == "__main__":
     episodeDB = p.load( open(episodePath, 'rb'))
 
     print "Dumping ReportDB"
-    portToJSON(reportDB, JSONReportPath)
+    portToJSON(reportDB, JSONReportPath, write=True)
     print "Dumping EpisodeDB"
-    portToJSON(episodeDB, JSONEpisodePath, True)
+    portToJSON(episodeDB, JSONEpisodePath, True, write=True)
 
 
 

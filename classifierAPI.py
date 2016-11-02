@@ -6,6 +6,7 @@ sys.path.append("trainClassifier")
 sys.path.append("preprocessDataset")
 sys.path.append("analysis")
 import createEpisodes
+import exportToJSON
 import generateClassifierFilesForProd
 import generateClassifierFilesForDev
 import preprocessRawDb
@@ -175,8 +176,11 @@ def getPredictions():#name='default'):
 
     print "Calling build episode"
     reportDB, episodeDB = createEpisodes.buildEpisodes(reportDB, True)
+
+    reportDBJ = exportToJSON.portToJSON(reportDB)    
+    episodeDBJ = exportToJSON.portToJSON(episodeDB,episodeMode=True)    
     
-    return json.dumps({'reportDB':reportDB, 'episodeDB': episodeDB})
+    return json.dumps({'reportDB':reportDBJ, 'episodeDB': episodeDBJ})
 
 ################ Helpers ######################
 def validateTrainDb(trainDb):
