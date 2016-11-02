@@ -19,7 +19,7 @@ def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem):
     testSuf = 'test'
     for indx, diag in enumerate(diagnoses):
         trainStem = stem
-        with open(trainStem+"_"+replaceSpaces(diag)+"."+trainSuf, "wb") as f: 
+        with open(trainStem+replaceSpaces(diag)+"."+trainSuf, "wb") as f: 
             for a in range(len(trainReports)):                
                 if trainLabels[a][indx] in labelDict[diag]:
                     label = trainLabels[a][indx]
@@ -31,10 +31,10 @@ def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem):
                 assert not "\n" in report
                 f.write(report + ", " + label + '.\n')
 
-        print "Saved", trainStem+"_"+replaceSpaces(diag)+"."+trainSuf
+        print "Saved", trainStem+replaceSpaces(diag)+"."+trainSuf
 
         testStem = stem
-        with open(testStem+"_"+replaceSpaces(diag)+"."+testSuf, "wb") as f: 
+        with open(testStem+replaceSpaces(diag)+"."+testSuf, "wb") as f: 
             for b in range(len(testReports)):   
                 if testLabels[b][indx] in labelDict[diag]:
                     label = testLabels[b][indx]
@@ -46,11 +46,11 @@ def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem):
                 assert not "\n" in report
                 f.write(report + ", " + label + '.\n')
 
-        print "Saved", testStem+"_"+replaceSpaces(diag)+"."+testSuf
+        print "Saved", testStem+replaceSpaces(diag)+"."+testSuf
 
 def writeNameFiles(stem):
     for diag in diagnoses:
-        with open(stem+"_"+replaceSpaces(diag)+".names", "wb") as f:
+        with open(stem+replaceSpaces(diag)+".names", "wb") as f:
             if MODE == "Breast":
                 if diag == u'BreastSide':
                     labels = "RIGHT, LEFT.\n"
