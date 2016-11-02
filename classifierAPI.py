@@ -15,6 +15,10 @@ import subprocess
 from flask import Flask
 from flask import render_template
 from flask import request
+import json
+
+app = Flask(__name__)
+
 
 rawPath = "reportDB+red+clean.p"
 dbPath = "reportDB.p"
@@ -44,7 +48,12 @@ models = ['Boost', 'MaxEnt', 'CNN'] # MaxEnt and CNN not ready
 ## Example:
 ## [ {Report_Text: }]
 ## @return: 0
-def addData(data, name='default', raw=False, save=False):
+@app.route("/addData", methods=['POST'])
+def addData()#data, name='default', raw=False, save=False):
+    data = request.args.get("data") or "default"
+    name = request.args.get("name") or "default"
+    raw = request.args.get("raw") or False
+    save = request.args.get("save") or False
     # Preprocess bilaterals if need be
     if raw:
         data = preprocessReports(data)
@@ -72,7 +81,11 @@ def addData(data, name='default', raw=False, save=False):
 ## mode refers to training the model for development (so you can call evaluate and 
 ## interpretDb) or Prod for production, where all annotations are used
 ## Return 0
-def updateTrainSet(name='default', model='Boost', mode="Dev"):
+@app.route("/updateTrainSet", methods=['GET'])
+def updateTrainSet():#name='default', model='Boost', mode="Dev"):
+    name = request.args.get("name") or "default"
+    model = request.args.get("model") or False
+    mode = request.args.get("mode") or "Dev"
     assert model in models
     assert mode in ["Prod", "Dev"]
     if model == "Boost":
@@ -92,15 +105,21 @@ def updateTrainSet(name='default', model='Boost', mode="Dev"):
 ## Kicks off job to retrain model and label the corresping data
 ## Use dev to train model without heldout test to get numbers
 ## use prod to use all labeled data as train, and then run on all unlabeled
-def trainAndPredict(name="default", mode="Dev"):
-    shellScript = "./boostexer/breast/api/runModel.sh "+mode+"_"+name
+@app.route("/trainAndPredict", methods=['GET'])
+def trainAndPredict():#name="default", mode="Dev"):
+    name = request.args.get("name") or "default"
+    mode = request.args.get("mode") or "Dev"
+    shellScript = "./boostexer/breast/api/trainModel.sh "+mode+"_"+name
     subprocess.call(shellScript, shell=True)
     return 0
 
 ## Kicks off job to retrain model and label the corresping data
 ## Use dev to train model without heldout test to get numbers
 ## use prod to use all labeled data as train, and then run on all unlabeled
-def predict(name="default", mode="Dev"):
+@app.route("/predict", methods=['GET'])
+def predict():#name="default", mode="Dev"):
+    name = request.args.get("name") or "default"
+    mode = request.args.get("mode") or "Dev"
     shellScript = "./boostexer/breast/api/runModel.sh "+mode+"_"+name
     subprocess.call(shellScript, shell=True)
     return 0
@@ -109,8 +128,9 @@ def predict(name="default", mode="Dev"):
 
 
 ## Assume evaluate has been run. Interpret results from last eval
-def interpretResults(name='default'):
-    ## 
+@app.route("/results", methods=['GET'])
+def interpretResults()#name='default'):
+    name = request.args.get("name") or "default"
     stem="../classification_results/Breast/class_results_"
     results = interpretResults("../classification_results/API/Dev_"+name+"_")    
     return results
@@ -120,7 +140,10 @@ def interpretResults(name='default'):
 ## reportDb -> reportlevel details (keep repID const) for all extractions on all unlabeled
 ## episodeDb -> reportDb consolidated into windows of diff reports on same month in 6 month
 ## consecutive period
-def getPredictions(name='default'):
+@app.route("/getPredictions", methods=['GET'])
+def getPredictions():#name='default'):
+    name = request.args.get("name") or "default"
+
     reportDb, episodeDb = createEpisodes.main(db[name],stem="classification_results/API/Prod_"+name)
     
     filtData = createEpisodes.removeUnexpectedColumns(db[name])
@@ -144,7 +167,7 @@ def getPredictions(name='default'):
     print "Calling build episode"
     reportDB, episodeDB = buildEpisodes(reportDB, True)
 
-    return reportDB, episodeDB
+    return json.dumps({'reportDB':reportDB, 'episodeDB':, episodeDB})
 
 ################ Helpers ######################
 def validateTrainDb(trainDb):
@@ -173,5 +196,6 @@ def preprocessReports(reports):
 ## Call this to initialize datastrucutres
 if __name__ == "__main__":
     print "Begin API"
+    app.run(host="0.0.0.0")
 
 

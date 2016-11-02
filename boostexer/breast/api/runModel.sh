@@ -7,21 +7,18 @@ stem="$1"
 outStem="../../../classification_results/API/$1"
 
 for name in "${pathTypes1[@]}"; do
-    ./../../boostexter -n 400 -W 4 -N ngram -S $stem$name - V &&
     touch $outStem$name.txt &&
     ./../../boostexter -C -S $stem$name < $stem$name.test  > $outStem$name.txt &
 done
 wait
 echo "Done p1"
 for name in "${pathTypes2[@]}"; do
-    ./../../boostexter -n 400 -W 4 -N ngram -S $stem$name - V &&
     touch $outStem$name.txt &&
     ./../../boostexter -C -S $stem$name < $stem$name.test  > $outStem$name.txt &
 done
 wait
 echo "Done p2"
 for name in "${pathTypes3[@]}"; do
-    ./../../boostexter -n 400 -W 4 -N ngram -S $stem$name - V &&
     touch $outStem$name.txt &&
     ./../../boostexter -C -S $stem$name < $stem$name.test  > $outStem$name.txt &
 done
@@ -29,7 +26,6 @@ wait
 echo "Done p3"
     
 for name in "${pathTypes4[@]}"; do
-    ./../../boostexter -n 400 -W 4 -N ngram -S $stem$name - V &&
     touch $outStem$name.txt &&
     ./../../boostexter -C -S $stem$name < $stem$name.test  > $outStem$name.txt &
 done
