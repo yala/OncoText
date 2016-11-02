@@ -9,7 +9,7 @@ The following API let's you add training data, train models, get performance inf
 Method: Post  <br />
 Params: Data, Name, Raw, Save <br />
 Description: The way to add labeled or unlabled data to the tool.  <br />
-- [ ] Tested <br />
+- [x] Tested <br />
  <br />
 Data - The list of pathology reports, strucuted as a json list of dicts. Empty by default. <br />
 Name - Specifies user, default is mgh user, which is named "default" <br />
@@ -22,7 +22,7 @@ Example: curl -X "POST" -H "Cache-Control: no-cache" "http://rosetta2.csail.mit.
 Method: Get <br />
 Params: Name, Model, Mode <br />
 Description: Generates a set of files necessary for training and using the model. Must be done everytime you addData, labeled or unlabeled.  <br />
-- [ ] Tested <br />
+- [x] Tested <br />
  <br />
 Name - Specifies user, default is mgh user, which is named "default" <br />
 Model- Specifies model to run. Currently only Boosting is supported, and default is "Boost" <br />
@@ -34,7 +34,7 @@ Example: curl -X "GET" -H "Cache-Control: no-cache" "http://rosetta2.csail.mit.e
 Method: Get <br />
 Params: Name, Mode <br />
 Description: Trains the boosting model on previously generated datafiles from updateTrainSet/. Once training complete, runs the model on the Test or Unlabeled set.  <br />
-- [ ] Tested <br />
+- [x] Tested <br />
  <br />
 Name - Specifies user, default is mgh user, which is named "default" <br />
 Mode - Options are "Dev" or "Prod". Dev run's the model on the Train/Test split of annotations, while "Prod" predicts values for the entire dataset (of mostly unlabeled data). <br />
@@ -45,7 +45,7 @@ Example: curl -X "GET" -H "Cache-Control: no-cache" "http://rosetta2.csail.mit.e
 Method: Get <br />
 Params: Name, Model, Mode <br />
 Description: Same as trainAndPredict, but does not retrain the model.  <br />
-- [ ] Tested <br />
+- [x] Tested <br />
  <br />
 Name - Specifies user, default is mgh user, which is named "default" <br />
 Mode - Options are "Dev" or "Prod". Dev run's the model on the Train/Test split of annotations, while "Prod" predicts values for the entire dataset (of mostly unlabeled data). <br />
@@ -56,7 +56,7 @@ Example: curl -X "GET" -H "Cache-Control: no-cache" "http://rosetta2.csail.mit.e
 Method: Get <br />
 Params: Name <br />
 Description: Given a "Dev" model has called train and predict, this returns a josn dictionary of dictionaries where each dict is the performance (accuracy, fscore) of an extracted category on the test set.  <br />
-- [ ] Tested <br />
+- [x] Tested <br />
  <br />
 Name - Specifies user, default is mgh user, which is named "default" <br />
 
