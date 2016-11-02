@@ -36,6 +36,7 @@ for r in raws:
 try:
     db = p.load(open(dbPath, 'rb'))
 except Exception, e:
+    print "Init db"
     db = {'default': base }
 
 RequiredPreprocessFields = ['Report_Text']
@@ -45,15 +46,21 @@ models = ['Boost', 'MaxEnt', 'CNN'] # MaxEnt and CNN not ready
 
 ## Given a JSON list of dicts, where  each dict represent a report:
 ## Parse the dict for daignoses, and add annotations if found
+##  @name specifies user, izzy don't worry about this
+## @raw specifies if the data has been preprocessed before, 
+## @save specifies if i should resave what you gave me to the db file
 ## Example:
 ## [ {Report_Text: }]
 ## @return: 0
 @app.route("/addData", methods=['POST'])
 def addData():#data, name='default', raw=False, save=False):
-    data = json.loads(request.args.get("data")) or []
+    data = request.args.get("data") or []
     name = request.args.get("name") or "default"
     raw = request.args.get("raw") or False
     save = request.args.get("save") or False
+
+    if not data == []:
+        data = json.loads(data)
     # Preprocess bilaterals if need be
     if raw:
         data = preprocessReports(data)
@@ -61,6 +68,7 @@ def addData():#data, name='default', raw=False, save=False):
     validateTrainDb(data)
 
     if not name in db:
+        print "Adding", name, "to db"
         db[name] = base
     ## mark the files to note as annoations
     for r in data:
@@ -74,7 +82,7 @@ def addData():#data, name='default', raw=False, save=False):
     if save:
         p.dump(db, open(dbPath))
 
-    return 0
+    return "Success"
 
 ## Does all necessary preprocessing for the model on the dataset
 ## model specifies the underlying model used, Boost is what Adam used
@@ -84,7 +92,7 @@ def addData():#data, name='default', raw=False, save=False):
 @app.route("/updateTrainSet", methods=['GET'])
 def updateTrainSet():#name='default', model='Boost', mode="Dev"):
     name = request.args.get("name") or "default"
-    model = request.args.get("model") or False
+    model = request.args.get("model") or "Boost"
     mode = request.args.get("mode") or "Dev"
     assert model in models
     assert mode in ["Prod", "Dev"]
@@ -100,7 +108,7 @@ def updateTrainSet():#name='default', model='Boost', mode="Dev"):
     elif model == "MaxEnt" or model == "CNN":
         ## Run vectorizer to get features
         raise NameError("Model type not supported")
-    return 0
+    return "Success"
 
 ## Kicks off job to retrain model and label the corresping data
 ## Use dev to train model without heldout test to get numbers
@@ -109,9 +117,9 @@ def updateTrainSet():#name='default', model='Boost', mode="Dev"):
 def trainAndPredict():#name="default", mode="Dev"):
     name = request.args.get("name") or "default"
     mode = request.args.get("mode") or "Dev"
-    shellScript = "./boostexer/breast/api/trainModel.sh "+mode+"_"+name
+    shellScript = "./boostexer/breast/api/trainModel.sh "+mode+"_"+name+"_"
     subprocess.call(shellScript, shell=True)
-    return 0
+    return "Success"
 
 ## Kicks off job to retrain model and label the corresping data
 ## Use dev to train model without heldout test to get numbers
@@ -120,9 +128,9 @@ def trainAndPredict():#name="default", mode="Dev"):
 def predict():#name="default", mode="Dev"):
     name = request.args.get("name") or "default"
     mode = request.args.get("mode") or "Dev"
-    shellScript = "./boostexer/breast/api/runModel.sh "+mode+"_"+name
+    shellScript = "./boostexer/breast/api/runModel.sh "+mode+"_"+name+"_"
     subprocess.call(shellScript, shell=True)
-    return 0
+    return "Success"
 
 
 
