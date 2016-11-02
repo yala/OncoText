@@ -154,7 +154,7 @@ def getResults():#name='default'):
 def getPredictions():#name='default'):
     name = request.args.get("name") or "default"
 
-    reportDb, episodeDb = createEpisodes.main(db[name],stem="classification_results/API/Prod_"+name)
+    reportDb, episodeDb = createEpisodes.run(db[name],stem="classification_results/API/Prod_"+name)
     
     filtData = createEpisodes.removeUnexpectedColumns(db[name])
     print "Calling export"

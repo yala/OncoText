@@ -396,7 +396,7 @@ def buildEpisodes(data, labelMaxDXBool, debug = False):
     return reportsDB, episodeDB
 
 
-def main(allData, stem, save=False):
+def run(allData, stem, save=False):
     filtData = removeUnexpectedColumns(allData)     
     print "Calling export"
     reportsDB = aggregateResults(filtData, stem)
@@ -421,7 +421,7 @@ def removeUnexpectedColumns(allData):
 if __name__ == "__main__": 
     allDataPath = redRawDBPath
     allData = p.load(open(allDataPath, 'rb'))  
-    main(allData, "classification_results/Breast/red_class_results_all_", save=True)
+    run(allData, "classification_results/Breast/red_class_results_all_", save=True)
 
 
 
