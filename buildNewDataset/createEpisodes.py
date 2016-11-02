@@ -416,7 +416,7 @@ def removeUnexpectedColumns(allData):
         for k in r:
             if not k in cols:
                 del r[k]
-    return r[k]
+    return cleanData
 
 if __name__ == "__main__": 
     allDataPath = redRawDBPath

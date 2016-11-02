@@ -153,12 +153,10 @@ def getResults():#name='default'):
 @app.route("/getPredictions", methods=['GET'])
 def getPredictions():#name='default'):
     name = request.args.get("name") or "default"
-
-    reportDb, episodeDb = createEpisodes.run(db[name],stem="classification_results/API/Prod_"+name)
     
     filtData = createEpisodes.removeUnexpectedColumns(db[name])
     print "Calling export"
-    reportsDBAll = aggregateResults(filtData, stem)
+    reportsDBAll = createEpisodes.aggregateResults(filtData, stem)
     reportsDBAll = sorted( reportsDBAll, key=itemgetter('Report_ID') )
     rawData  = sorted( db[name], key=itemgetter('Report_ID') )
 
@@ -173,9 +171,9 @@ def getPredictions():#name='default'):
             reportDB.append(reportsDBAll[i])
 
     print "Calling labelMaxDXBool"
-    getMaxDX(reportDB)
+    createEpisodes.getMaxDX(reportDB)
     print "Calling build episode"
-    reportDB, episodeDB = buildEpisodes(reportDB, True)
+    reportDB, episodeDB = createEpisodes.buildEpisodes(reportDB, True)
 
     return json.dumps({'reportDB':reportDB, 'episodeDB': episodeDB})
 
