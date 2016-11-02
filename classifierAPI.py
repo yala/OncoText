@@ -117,8 +117,12 @@ def updateTrainSet():#name='default', model='Boost', mode="Dev"):
 def trainAndPredict():#name="default", mode="Dev"):
     name = request.args.get("name") or "default"
     mode = request.args.get("mode") or "Dev"
-    shellScript = "./boostexer/breast/api/trainModel.sh "+mode+"_"+name+"_"
-    subprocess.call(shellScript, shell=True)
+    shellScript1 = "cd boostexer/breast/api/"
+    shellScript2 = ".trainModel.sh "+mode+"_"+name+"_"
+    shellScript3 = "../../../"
+    subprocess.call(shellScript1, shell=True)
+    subprocess.call(shellScript2, shell=True)
+    subprocess.call(shellScript3, shell=True)    
     return "Success"
 
 ## Kicks off job to retrain model and label the corresping data
@@ -128,8 +132,12 @@ def trainAndPredict():#name="default", mode="Dev"):
 def predict():#name="default", mode="Dev"):
     name = request.args.get("name") or "default"
     mode = request.args.get("mode") or "Dev"
-    shellScript = "./boostexer/breast/api/runModel.sh "+mode+"_"+name+"_"
-    subprocess.call(shellScript, shell=True)
+    shellScript1 = "cd boostexer/breast/api/"
+    shellScript2 = "./runModel.sh "+mode+"_"+name+"_"
+    shellScript3 = "../../../"
+    subprocess.call(shellScript1, shell=True)
+    subprocess.call(shellScript2, shell=True)
+    subprocess.call(shellScript3, shell=True)
     return "Success"
 
 
