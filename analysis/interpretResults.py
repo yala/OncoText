@@ -11,7 +11,6 @@ catergoryVerbose= True
 overallVerbose= True
 
 def main(stem):
-    redmap = p.load(open('../preprocessDataset/data/redmap.p', 'rb'))
     diagLabelDict = constantValidLabelDict
 
     print "Calling interpret for ", stem

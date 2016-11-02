@@ -139,10 +139,10 @@ def predict():#name="default", mode="Dev"):
 
 ## Assume evaluate has been run. Interpret results from last eval
 @app.route("/results", methods=['GET'])
-def interpretResults():#name='default'):
+def getResults():#name='default'):
     name = request.args.get("name") or "default"
-    stem="../classification_results/Breast/class_results_"
-    results = interpretResults.main("../classification_results/API/Dev_"+name+"_")    
+    results = interpretResults.main("classification_results/API/Dev_"+name+"_")    
+
     return json.dumps(results)
 
 ## Asume predict has been run, this consolidates the predict raw files into a DB 
