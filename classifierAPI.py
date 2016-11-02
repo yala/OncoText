@@ -122,9 +122,9 @@ def trainAndPredict():#name="default", mode="Dev"):
     subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
     return "Success"
 
-## Kicks off job to retrain model and label the corresping data
+## Kicks off job to run model on the corresping data
 ## Use dev to train model without heldout test to get numbers
-## use prod to use all labeled data as train, and then run on all unlabeled
+## use prod to Prod Trained model on all unlabeled data
 @app.route("/predict", methods=['GET'])
 def predict():#name="default", mode="Dev"):
     name = request.args.get("name") or "default"
@@ -145,7 +145,7 @@ def getResults():#name='default'):
 
     return json.dumps(results)
 
-## Asume predict has been run, this consolidates the predict raw files into a DB 
+## Asume predict / trainPredict has been run, this consolidates the predict raw files into a DB 
 ## returns reportDb, episodeDB
 ## reportDb -> reportlevel details (keep repID const) for all extractions on all unlabeled
 ## episodeDb -> reportDb consolidated into windows of diff reports on same month in 6 month

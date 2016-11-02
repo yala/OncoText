@@ -12,8 +12,7 @@ from constants import *
 random.seed(1)
 labelDict = constantValidLabelDict
 
-# Set write to true to generate train and test files for classification. 
-# Set write to false to collace files for export
+# Read boost result files and consolidate into a single database format
 def aggregateResults(allData, stem):
 
     #valid input db isn't corrupted
@@ -62,7 +61,7 @@ def aggregateResults(allData, stem):
 
     return exportableData
 
-
+# HELPER: read the result files and return the tags
 def retagLabels(oldLabels, newLabels):
     print  "db labels, classifier labels", len(oldLabels), len(newLabels)
     assert len(oldLabels)== len(newLabels)
@@ -80,7 +79,7 @@ def retagLabels(oldLabels, newLabels):
         results.append( combinedLabels)
     return results
 
-
+# HELPER
 def buildExport(exportData, data, startIdx):
     for i in range(len(data)):
         record = {}
@@ -255,7 +254,7 @@ def validateRepsDB(reps, flex = False, dirty = False):
                         assert False
 
 
-
+# Aggregate reports into list of dicts for ReportDB format, and a list of flattened report sequences for EpisodeDB format
 def buildEpisodes(data, labelMaxDXBool, debug = False):
 
     mrns = {}
@@ -410,6 +409,7 @@ def main(allData, stem, save=False):
         p.dump( episodeDB, open(episodePath, 'wb'))
     reportDB, episodeDB
 
+# Remove unexpected cols for code safety
 def removeUnexpectedColumns(allData):
     cleanData = copy.deepcopy(allData)
     for r in cleanData:

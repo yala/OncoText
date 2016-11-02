@@ -161,7 +161,6 @@ if __name__ == "__main__":
     labels = ['Positive']
 
     if MODE == "TAGHIAN":
-        redmap = p.load(open('../taghian/redmap.p', 'rb'))
         dB  = p.load(open('../taghian/allExtractionDBs.p', 'rb'))
         diagLabelDict = constantValidLabelDict
 
