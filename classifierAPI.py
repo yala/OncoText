@@ -157,24 +157,25 @@ def getPredictions():#name='default'):
     filtData = createEpisodes.removeUnexpectedColumns(db[name])
     print "Calling export"
     reportsDBAll = createEpisodes.aggregateResults(filtData, stem)
-    reportsDBAll = sorted( reportsDBAll, key=itemgetter('Report_ID') )
     rawData  = sorted( db[name], key=itemgetter('Report_ID') )
 
-    reportDB = []
+    reportDB = {}
     for i in range(len(rawData)):
-        assert i == rawData[i]['Report_ID']
-        assert i == reportsDBAll[i]['Report_ID']
+        raw = rawData[i]
+        rep = reportsDBAll[i]
+        assert rep['Report_Text'] == raw['Report_Text']
         if rawData['Owner'] == name:
             for k in rawData[i]:
                 if not k in cols and not k in reportsDBAll[i]:
                     reportsDBAll[i][k] = rawData[i][k]
             reportDB.append(reportsDBAll[i])
-
+    
     print "Calling labelMaxDXBool"
     createEpisodes.getMaxDX(reportDB)
+
     print "Calling build episode"
     reportDB, episodeDB = createEpisodes.buildEpisodes(reportDB, True)
-
+    
     return json.dumps({'reportDB':reportDB, 'episodeDB': episodeDB})
 
 ################ Helpers ######################
