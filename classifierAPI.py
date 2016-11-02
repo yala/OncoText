@@ -40,7 +40,7 @@ except Exception, e:
     db = {'default': base }
 
 RequiredPreprocessFields = ['Report_Text']
-RequiredTrainDbFields = ['Report_ID', 'Report_Text_Segmented']
+RequiredTrainDbFields = ['ReportID', 'Report_Text_Segmented']
 models = ['Boost', 'MaxEnt', 'CNN'] # MaxEnt and CNN not ready
 
 
@@ -157,18 +157,18 @@ def getPredictions():#name='default'):
     filtData = createEpisodes.removeUnexpectedColumns(db[name])
     print "Calling export"
     reportsDBAll = createEpisodes.aggregateResults(filtData, stem)
-    rawData  = sorted( db[name], key=itemgetter('Report_ID') )
+    rawData  = sorted( db[name], key=itemgetter('ReportID') )
 
     reportDB = {}
     for i in range(len(rawData)):
         raw = rawData[i]
         rep = reportsDBAll[i]
         assert rep['Report_Text'] == raw['Report_Text']
-        if rawData['Owner'] == name:
+        if raw['Owner'] == name:
             for k in rawData[i]:
                 if not k in cols and not k in reportsDBAll[i]:
                     reportsDBAll[i][k] = rawData[i][k]
-            reportDB.append(reportsDBAll[i])
+            reportDB[i] = reportsDBAll[i]
     
     print "Calling labelMaxDXBool"
     createEpisodes.getMaxDX(reportDB)
