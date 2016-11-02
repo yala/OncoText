@@ -43,7 +43,7 @@ def aggregateResults(allData, stem):
 
     print "Parse Result Files"
     
-    classifierLabels = parseResultsFiles( "../"+stem)
+    classifierLabels = parseResultsFiles(stem)
 
     print "Retag Labels"
     restLabels = retagLabels(restLabels, classifierLabels)
@@ -423,7 +423,7 @@ def removeUnexpectedColumns(allData):
 if __name__ == "__main__": 
     allDataPath = redRawDBPath
     allData = p.load(open(allDataPath, 'rb'))  
-    run(allData, "classification_results/Breast/red_class_results_all_", save=True)
+    run(allData, "../classification_results/Breast/red_class_results_all_", save=True)
 
 
 
