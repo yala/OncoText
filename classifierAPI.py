@@ -49,7 +49,7 @@ models = ['Boost', 'MaxEnt', 'CNN'] # MaxEnt and CNN not ready
 ## [ {Report_Text: }]
 ## @return: 0
 @app.route("/addData", methods=['POST'])
-def addData()#data, name='default', raw=False, save=False):
+def addData():#data, name='default', raw=False, save=False):
     data = request.args.get("data") or "default"
     name = request.args.get("name") or "default"
     raw = request.args.get("raw") or False
@@ -129,11 +129,11 @@ def predict():#name="default", mode="Dev"):
 
 ## Assume evaluate has been run. Interpret results from last eval
 @app.route("/results", methods=['GET'])
-def interpretResults()#name='default'):
+def interpretResults():#name='default'):
     name = request.args.get("name") or "default"
     stem="../classification_results/Breast/class_results_"
-    results = interpretResults("../classification_results/API/Dev_"+name+"_")    
-    return results
+    results = interpretResults.main("../classification_results/API/Dev_"+name+"_")    
+    return json.dumps(results)
 
 ## Asume predict has been run, this consolidates the predict raw files into a DB 
 ## returns reportDb, episodeDB
@@ -167,7 +167,7 @@ def getPredictions():#name='default'):
     print "Calling build episode"
     reportDB, episodeDB = buildEpisodes(reportDB, True)
 
-    return json.dumps({'reportDB':reportDB, 'episodeDB':, episodeDB})
+    return json.dumps({'reportDB':reportDB, 'episodeDB': episodeDB})
 
 ################ Helpers ######################
 def validateTrainDb(trainDb):
@@ -193,7 +193,7 @@ def preprocessReports(reports):
     results = preprocessRawDb(reports)
     return results
 
-## Call this to initialize datastrucutres
+## Call this to start appex
 if __name__ == "__main__":
     print "Begin API"
     app.run(host="0.0.0.0")
