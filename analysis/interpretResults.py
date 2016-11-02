@@ -11,7 +11,6 @@ catergoryVerbose= True
 overallVerbose= True
 
 def main(stem):
-    redmap = p.load(open('../preprocessDataset/data/redmap.p', 'rb'))
     diagLabelDict = constantValidLabelDict
 
     print "Calling interpret for ", stem
@@ -162,7 +161,6 @@ if __name__ == "__main__":
     labels = ['Positive']
 
     if MODE == "TAGHIAN":
-        redmap = p.load(open('../taghian/redmap.p', 'rb'))
         dB  = p.load(open('../taghian/allExtractionDBs.p', 'rb'))
         diagLabelDict = constantValidLabelDict
 
