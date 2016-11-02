@@ -9,7 +9,6 @@ The following API let's you add training data, train models, get performance inf
 Method: Post  <br />
 Params: Data, Name, Raw, Save <br />
 Description: The way to add labeled or unlabled data to the tool.  <br />
- <br />
 Data - The list of pathology reports, strucuted as a json list of dicts. Empty by default. <br />
 Name - Specifies user, default is mgh user, which is named "default" <br />
 Raw  - Specifies if the data has been preprocess already. For Validator, show be False, for Global, should be True. <br />
@@ -66,3 +65,7 @@ Description: Given a "Prod" model has called train and predict, this returns a j
 Name - Specifies user, default is mgh user, which is named "default" <br />
  <br />
 Example: curl -X "GET" -H "Cache-Control: no-cache" "http://rosetta2.csail.mit.edu:5000/getPredictions"
+
+
+### But is it online?
+- [ ] Online
