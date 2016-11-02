@@ -50,7 +50,7 @@ models = ['Boost', 'MaxEnt', 'CNN'] # MaxEnt and CNN not ready
 ## @return: 0
 @app.route("/addData", methods=['POST'])
 def addData():#data, name='default', raw=False, save=False):
-    data = request.args.get("data") or "default"
+    data = json.loads(request.args.get("data")) or []
     name = request.args.get("name") or "default"
     raw = request.args.get("raw") or False
     save = request.args.get("save") or False
