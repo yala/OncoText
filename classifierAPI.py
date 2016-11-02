@@ -93,7 +93,7 @@ def addData():#data, name='default', raw=False, save=False):
 def updateTrainSet():#name='default', model='Boost', mode="Dev"):
     name = request.args.get("name") or "default"
     model = request.args.get("model") or "Boost"
-    mode = request.args.get("mode") or "Dev"
+    mode = request.args.get("mode") or "Prod"
     assert model in models
     assert mode in ["Prod", "Dev"]
     if model == "Boost":
@@ -116,7 +116,7 @@ def updateTrainSet():#name='default', model='Boost', mode="Dev"):
 @app.route("/trainAndPredict", methods=['GET'])
 def trainAndPredict():#name="default", mode="Dev"):
     name = request.args.get("name") or "default"
-    mode = request.args.get("mode") or "Dev"
+    mode = request.args.get("mode") or "Prod"
     shellScript1 = "cd boostexer/breast/api/"
     shellScript2 = "./trainModel.sh "+mode+"_"+name+"_"
     subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
