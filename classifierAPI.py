@@ -118,11 +118,8 @@ def trainAndPredict():#name="default", mode="Dev"):
     name = request.args.get("name") or "default"
     mode = request.args.get("mode") or "Dev"
     shellScript1 = "cd boostexer/breast/api/"
-    shellScript2 = ".trainModel.sh "+mode+"_"+name+"_"
-    shellScript3 = "../../../"
-    subprocess.call(shellScript1, shell=True)
-    subprocess.call(shellScript2, shell=True)
-    subprocess.call(shellScript3, shell=True)    
+    shellScript2 = "./trainModel.sh "+mode+"_"+name+"_"
+    subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
     return "Success"
 
 ## Kicks off job to retrain model and label the corresping data
@@ -131,13 +128,10 @@ def trainAndPredict():#name="default", mode="Dev"):
 @app.route("/predict", methods=['GET'])
 def predict():#name="default", mode="Dev"):
     name = request.args.get("name") or "default"
-    mode = request.args.get("mode") or "Dev"
+    mode = request.args.get("mode") or "Dev"    
     shellScript1 = "cd boostexer/breast/api/"
     shellScript2 = "./runModel.sh "+mode+"_"+name+"_"
-    shellScript3 = "../../../"
-    subprocess.call(shellScript1, shell=True)
-    subprocess.call(shellScript2, shell=True)
-    subprocess.call(shellScript3, shell=True)
+    subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
     return "Success"
 
 
