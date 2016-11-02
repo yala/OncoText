@@ -14,7 +14,6 @@ def replaceSpaces(label):
 
 
 def binarizeFilesForClassification(dB, dirPath, alignTest = False):
-    redmap = p.load(open('../preprocessDataset/data/redmap.p', 'rb'))    
     validLabelDict = constantValidLabelDict
 
     modes = diagnoses    
@@ -46,7 +45,6 @@ def binarizeFilesForClassification(dB, dirPath, alignTest = False):
             testReports = [preprocessReports([t[textKey]])[0] for t in filteredDB[-testSetSize:]]
             testLabels  = [replaceSpaces(t[key]) for t in filteredDB[-testSetSize:]]
 
-            testSets[mode] = zip(testReports, testLabels)
         else:
             hkey = "Report_Text_Segmented"
             train = [(preprocessReports([t[hkey]])[0], replaceSpaces(t[key])) for t in filteredDB if not \
@@ -68,8 +66,6 @@ def binarizeFilesForClassification(dB, dirPath, alignTest = False):
             if hkey == "Report_Text_Segmented":
                 for rep in testReports + trainReports:
                     assert not ("right" in rep.lower() and "left" in rep.lower())
-
-            testSets[mode] = zip(testReports, testLabels)
 
         print "Num train samples", len(trainLabels)
         print "-------- Train Label Dist,",key," ----------"

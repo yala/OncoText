@@ -7,7 +7,7 @@ import unittest
 
 class TestStringMethods(unittest.TestCase):
 
-    def test_addTraining(self):
+    def test_addData(self):
         sampleTrainNotPreprocessed = [{
             'ReportID':12,
             'Report_Text':"Bolease",
@@ -16,7 +16,7 @@ class TestStringMethods(unittest.TestCase):
 
         }]
         with self.assertRaises(AssertionError):
-            updateTrainSet(sampleTrainNotPreprocessed)
+            addData(sampleTrainNotPreprocessed, name="test")
 
         sampleTrainValid= [{
             'ReportID':12,
@@ -26,7 +26,36 @@ class TestStringMethods(unittest.TestCase):
             "Red BreastSide": "RIGHT"
         }]
 
-        self.assertEqual(updateTrainSet(sampleTrainValid), 0)
+        self.assertEqual(addData(sampleTrainValid, name="test"), 0)
+
+
+    def test_updateTrainSet(self):
+        name = "test"
+        model= "Boost"
+        mode= ["Dev", "Prod"]
+
+        for m in mode:
+            self.assertEqual(updateTrainSet(name,model,m), 0)
+
+    def test_trainAndPredict(self):
+        name="test"
+        mode="Dev"
+        self.assertEqual(trainAndPredict(name,mode), 0)
+
+
+    def test_interpretResults(self):
+        name="test"
+        results = interpretResults(name)
+        self.assertEquals(0, 0)
+
+    def test_getPredictions(self):
+        name="test"
+        repDb, epDb = getPredictions(name)
+        for r in repDb:
+            assert 'Owner' in r and r['Owner']==name
+        self.assertEquals(0, 0)
+
+
 
 
 

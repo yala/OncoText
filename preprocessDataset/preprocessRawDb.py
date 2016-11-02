@@ -57,8 +57,6 @@ def unicodeToDatetime(db):
 def main(allData):
     newData = []
 
-
-
     reportCount = 0
     rowCount = 0
     repId = 0

@@ -9,6 +9,7 @@ import preprocessRawDb
 import createEpisodes
 import generateClassifierFilesForProd
 import generateClassifierFilesForDev
+from operator import itemgetter
 import interpretResults
 import subprocess
 from flask import Flask
@@ -25,8 +26,8 @@ def isAnnotation(r):
 base = []
 for r in raws:
     r['Owner'] = 'default'
-    if isAnnotation(r)
-    base.append(r)
+    if isAnnotation(r):
+        base.append(r)
 
 try:
     db = p.load(open(dbPath, 'rb'))
@@ -54,7 +55,7 @@ def addData(data, name='default', raw=False, save=False):
         db[name] = base
     ## mark the files to note as annoations
     for r in data:
-        r['Owner'] == name
+        r['Owner'] = name
         for d in diagnoses:
             if d in r:
                 r['TaghianGold'] = 1
@@ -91,19 +92,27 @@ def updateTrainSet(name='default', model='Boost', mode="Dev"):
 ## Kicks off job to retrain model and label the corresping data
 ## Use dev to train model without heldout test to get numbers
 ## use prod to use all labeled data as train, and then run on all unlabeled
-def train(name="default", mode="Dev"):
+def trainAndPredict(name="default", mode="Dev"):
     shellScript = "./boostexer/breast/api/runModel.sh "+mode+"_"+name
     subprocess.call(shellScript, shell=True)
     return 0
+
+## Kicks off job to retrain model and label the corresping data
+## Use dev to train model without heldout test to get numbers
+## use prod to use all labeled data as train, and then run on all unlabeled
+def predict(name="default", mode="Dev"):
+    shellScript = "./boostexer/breast/api/runModel.sh "+mode+"_"+name
+    subprocess.call(shellScript, shell=True)
+    return 0
+
+
 
 
 ## Assume evaluate has been run. Interpret results from last eval
 def interpretResults(name='default'):
     ## 
     stem="../classification_results/Breast/class_results_"
-
-    results = interpretResults("../classification_results/API/Dev_"+name+"_")
-
+    results = interpretResults("../classification_results/API/Dev_"+name+"_")    
     return results
 
 ## Asume predict has been run, this consolidates the predict raw files into a DB 
@@ -111,9 +120,31 @@ def interpretResults(name='default'):
 ## reportDb -> reportlevel details (keep repID const) for all extractions on all unlabeled
 ## episodeDb -> reportDb consolidated into windows of diff reports on same month in 6 month
 ## consecutive period
-def getPredictions(db, name='default'):
-    reportDb, episodeDb = createEpisodes.main(stem="classification_results/API/Prod_"+name)
-    return reportDb, episodeDb
+def getPredictions(name='default'):
+    reportDb, episodeDb = createEpisodes.main(db[name],stem="classification_results/API/Prod_"+name)
+    
+    filtData = createEpisodes.removeUnexpectedColumns(db[name])
+    print "Calling export"
+    reportsDBAll = aggregateResults(filtData, stem)
+    reportsDBAll = sorted( reportsDBAll, key=itemgetter('Report_ID') )
+    rawData  = sorted( db[name], key=itemgetter('Report_ID') )
+
+    reportDB = []
+    for i in range(len(rawData)):
+        assert i == rawData[i]['Report_ID']
+        assert i == reportsDBAll[i]['Report_ID']
+        if rawData['Owner'] == name:
+            for k in rawData[i]:
+                if not k in cols and not k in reportsDBAll[i]:
+                    reportsDBAll[i][k] = rawData[i][k]
+            reportDB.append(reportsDBAll[i])
+
+    print "Calling labelMaxDXBool"
+    getMaxDX(reportDB)
+    print "Calling build episode"
+    reportDB, episodeDB = buildEpisodes(reportDB, True)
+
+    return reportDB, episodeDB
 
 ################ Helpers ######################
 def validateTrainDb(trainDb):

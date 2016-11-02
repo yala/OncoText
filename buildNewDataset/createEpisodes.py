@@ -5,6 +5,7 @@ import datetime
 import pprint
 from operator import itemgetter
 import sys
+import copy
 sys.path.append("..")
 from constants import *
  
@@ -13,9 +14,7 @@ labelDict = constantValidLabelDict
 
 # Set write to true to generate train and test files for classification. 
 # Set write to false to collace files for export
-def aggregateResults(stem):
-    allDataPath = redRawDBPath
-    allData = p.load(open(allDataPath, 'rb'))
+def aggregateResults(allData, stem):
 
     #valid input db isn't corrupted
 
@@ -398,9 +397,10 @@ def buildEpisodes(data, labelMaxDXBool, debug = False):
     return reportsDB, episodeDB
 
 
-def main(save=False, stem):
+def main(allData, stem, save=False):
+    filtData = removeUnexpectedColumns(allData)     
     print "Calling export"
-    reportsDB = aggregateResults(stem)
+    reportsDB = aggregateResults(filtData, stem)
     print "Calling labelMaxDXBool"
     getMaxDX(reportDB)
     print "Calling build episode"
@@ -410,8 +410,18 @@ def main(save=False, stem):
         p.dump( episodeDB, open(episodePath, 'wb'))
     reportDB, episodeDB
 
-if __name__ == "__main__":        
-    main(save=True, "classification_results/Breast/red_class_results_all_")
+def removeUnexpectedColumns(allData):
+    cleanData = copy.deepcopy(allData)
+    for r in cleanData:
+        for k in r:
+            if not k in cols:
+                del r[k]
+    return r[k]
+
+if __name__ == "__main__": 
+    allDataPath = redRawDBPath
+    allData = p.load(open(allDataPath, 'rb'))  
+    main(allData, "classification_results/Breast/red_class_results_all_", save=True)
 
 
 
