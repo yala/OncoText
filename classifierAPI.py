@@ -5,12 +5,12 @@ sys.path.append("buildNewDataset")
 sys.path.append("trainClassifier")
 sys.path.append("preprocessDataset")
 sys.path.append("analysis")
-import preprocessRawDb
 import createEpisodes
 import generateClassifierFilesForProd
 import generateClassifierFilesForDev
-from operator import itemgetter
+import preprocessRawDb
 import interpretResults
+from operator import itemgetter
 import subprocess
 from flask import Flask
 from flask import render_template
@@ -153,7 +153,7 @@ def getResults():#name='default'):
 @app.route("/getPredictions", methods=['GET'])
 def getPredictions():#name='default'):
     name = request.args.get("name") or "default"
-    
+    stem = "classification_results/API/Prod_"+name+"_"
     filtData = createEpisodes.removeUnexpectedColumns(db[name])
     print "Calling export"
     reportsDBAll = createEpisodes.aggregateResults(filtData, stem)

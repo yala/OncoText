@@ -411,11 +411,13 @@ def run(allData, stem, save=False):
 
 # Remove unexpected cols for code safety
 def removeUnexpectedColumns(allData):
-    cleanData = copy.deepcopy(allData)
-    for r in cleanData:
+    cleanData = []
+    for r in allData:
+        c = {}
         for k in r:
-            if not k in cols:
-                del r[k]
+            if k in cols:
+                c[k] = r[k]
+        cleanData.append(c)
     return cleanData
 
 if __name__ == "__main__": 
