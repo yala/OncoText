@@ -141,8 +141,8 @@ def predict():#name="default", mode="Dev"):
 @app.route("/results", methods=['GET'])
 def getResults():#name='default'):
     name = request.args.get("name") or "default"
-    stem="../classification_results/Breast/class_results_"
-    results = interpretResults.main("../classification_results/API/Dev_"+name+"_")    
+    results = interpretResults.main("classification_results/API/Dev_"+name+"_")    
+
     return json.dumps(results)
 
 ## Asume predict / trainPredict has been run, this consolidates the predict raw files into a DB 
