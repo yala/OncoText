@@ -27,22 +27,21 @@ def portToJSON(data, path=None, episodeMode = False, write=False):
             print report
             raw_input()
 
-        if MODE == "TAGHIAN":
-            if episodeMode:
-                redLabels = labelsForEpisodes
-            else:
-                redLabels = diagnoses
+        if episodeMode:
+            redLabels = labelsForEpisodes
+        else:
+            redLabels = diagnoses
 
-            assert "ECE" in redLabels
-            for label in redLabels:
+        assert "ECE" in redLabels
+        for label in redLabels:
 
-                #Replace spaces in label name because otherwise website will breast
-                assert "Red DCIS" in JSONLabelNameDict
-                if label in JSONLabelNameDict:
-                    temp = report[label]
-                    del report[label]
-                    assert not label in report
-                    report[ JSONLabelNameDict[label] ] = temp
+            #Replace spaces in label name because otherwise website will breast
+            assert "Red DCIS" in JSONLabelNameDict
+            if label in JSONLabelNameDict:
+                temp = report[label]
+                del report[label]
+                assert not label in report
+                report[ JSONLabelNameDict[label] ] = temp
 
         mrn =  report["MRNPlusX"]
         del report["MRNPlusX"]
@@ -57,7 +56,7 @@ def portToJSON(data, path=None, episodeMode = False, write=False):
             with open(path.split('.')[0]+'_'+str(i)+".json", 'wb') as f:
                 f.write(jsonData)
     else:
-        return json.dumps(data)
+        return data
 
 if __name__ == "__main__":
 
