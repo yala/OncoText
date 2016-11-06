@@ -4,6 +4,7 @@ from csv import DictWriter
 import sys
 sys.path.append("..")
 from constants import *
+import matplotlib.pyplot as plt
 
 def getIncis(reps):
     results = []
@@ -56,12 +57,12 @@ def getAtypIncis(reps):
                     def priorCancer():
                         canc = []
                         for j in range(len(reps)):
-                            if str(r['MRNPlusX']) in ['4054548', '2315971', '4974054', '1508964', '5585066']:
-                                print reps[j]['Report_Date_TimePlusX'], 'in comparison to', r['Report_Date_TimePlusX']
-                                print 'rep[j] text is', reps[j]['Report_Text']
-                                print 'rep[j] segmented text is', reps[j]['Report_Text_Segmented']
-                                print 'idc classif', reps[j]['Red IDC']
-                                print 'ilc classif', reps[j]['Red ILC']
+                            # if str(r['MRNPlusX']) in ['4054548', '2315971', '4974054', '1508964', '5585066']:
+                            #     print reps[j]['Report_Date_TimePlusX'], 'in comparison to', r['Report_Date_TimePlusX']
+                            #     print 'rep[j] text is', reps[j]['Report_Text']
+                            #     print 'rep[j] segmented text is', reps[j]['Report_Text_Segmented']
+                            #     print 'idc classif', reps[j]['Red IDC']
+                            #     print 'ilc classif', reps[j]['Red ILC']
                                 # raw_input()
                             rj  = reps[j]
                             if hasCancer(rj) and abs((date-rj['Report_Date_TimePlusX']).days) < 30:
@@ -81,18 +82,32 @@ def getAtypIncis(reps):
     return results
 
 def atypsOverTime(reps):
-
-    ranges = [ (0, 1990), (1990, 1995), (1995, 2000), (2000, 2005), (2005,2010), (2010,2015)]
-    for ran in range(1990, 2015, 2):
+    ratios = []
+    increment = 3
+    for ran in range(1992, 2016, increment):
         low = ran
-        high = low + 2
+        high = low + increment
         def yearFilt(r):
-            return r['Report_Date_TimePlusX'].year > low and r['Report_Date_TimePlusX'].year <= high
+            return r['Report_Date_TimePlusX'].year > low and r['Report_Date_TimePlusX'].year <= high and r['BiopsyType']=='Incision'
 
         seed = [r for r in reps if yearFilt(r) and r['Institution']=="MGH"]
-        numPatients = len(set([r['MRNPlusX'] for r in seed]))
-        numPatientsAtyp = len(set([r['MRNPlusX'] for r in seed if hasAtyp(r)]))
+        numPatients = len(set([r['MRNPlusX'] for r in seed if r['BiopsyType']=='Incision']))
+        numPatientsAtyp = len(set([r['MRNPlusX'] for r in seed if hasAtyp(r) and not hasCancer(r)]))
+        percAtyp = numPatientsAtyp *1. / numPatients        
+        ratios.append(percAtyp)
         print "in years", low, high, "percent atyp is ", numPatientsAtyp*1. / numPatients, ",num patients in range is", numPatients
+
+    print "Len(Y)", len(ratios)
+    X =  [k for k in range(1995,2017,increment)]
+    print "Len(X)",len(X)
+
+    plt.plot(X, ratios)
+    plt.title("Atypia per Biopsy since 1995")
+    plt.xlabel("year")
+    plt.ylabel("Percent benign biopsies with atypia")
+    # # plt.ylim((.08,.25))
+    # plt.xlim((1995,2015))
+    # plt.show()
 
 def getAtypTime(reps):
     def inYear(r):
@@ -367,6 +382,12 @@ numAtyps = len([r['MRNPlusX'] for r in filtCandidate ])
 ieMapAtyp = buildIncisExisMap(benginAtyp)
 
 atypNoFollow = noFollow(benginAtyp, ieMapAtyp)
+noFollows = [{'MRNPlusX':r['MRNPlusX'], 
+            'Report_Date_TimePlusX':r['Report_Date_TimePlusX'], 'Institution': r['Institution']}
+                for r in atypNoFollow]
+noFollowsMRNs = set([r['MRNPlusX'] for r in noFollows])
+assert len(set([r['MRNPlusX'] for r in noFollows])) == len(set([r['MRNPlusX'] for r in atypNoFollow]))
+assert len(noFollowsMRNs) == len(set([r['MRNPlusX'] for r in noFollows]))
 noFollowDist(atypNoFollow)
 print 
 print 
@@ -399,14 +420,22 @@ print len(lcisMRNs), "number MRNs for the LCIS upgrades"
 # print "lenExportCandidate", len(exportCandidate)
 
 
+noFollowReps = [ r for r in reps if r['MRNPlusX'] in noFollowsMRNs ]
 
-keys = ['MRNPlusX', 'Report_Date_TimePlusX' ]
 
-with open("lcisUpgradeMRNs.csv", "wb") as outCSV:
+print len(noFollows), "number MRNs for no follows"
+print len(noFollowReps), "number Reps for no follows"
+
+
+# keys = ['MRNPlusX', 'Report_Date_TimePlusX', 'Institution' ]
+keys = noFollowReps[0].keys()
+
+
+with open("atypiasNoFollowups.csv", "wb") as outCSV:
 
     writer = DictWriter(outCSV, keys)#,  delimiter = "$")
     writer.writeheader()
-    writer.writerows(lcisMRNs)
+    writer.writerows(noFollowReps)
 
 
 # with open("benignLeadingToExcision.csv", "wb") as outCSV:
