@@ -177,7 +177,7 @@ def getPredictions():#name='default'):
     print "Calling build episode"
     reportDB, episodeDB = createEpisodes.buildEpisodes(reportDB, True)
 
-    reportDBJ = exportToJSON.portToJSON(reportDB)    
+    reportDBJ = exportToJSON.portToJSON(reportDB)  
     episodeDBJ = exportToJSON.portToJSON(episodeDB,episodeMode=True)    
     
     return json.dumps({'reportDB':reportDBJ, 'episodeDB': episodeDBJ})

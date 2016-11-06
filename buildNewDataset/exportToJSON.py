@@ -13,15 +13,10 @@ from constants import *
 def portToJSON(data, path=None, episodeMode = False, write=False):
     for report in data:
         try:
-            if not isinstance(report['Report_Date_TimePlusX'], str):
-                report['Report_Date_TimePlusX'] = report['Report_Date_TimePlusX'].isoformat()
-
-            if 'EndEpisode_Date_TimePlusX' in report:
-                if not isinstance(report['EndEpisode_Date_TimePlusX'], str):
-                    report['EndEpisode_Date_TimePlusX'] = report['EndEpisode_Date_TimePlusX'].isoformat()
-
-            if not report['DOBPlusX'] == 0  and not( isinstance(report['DOBPlusX'], str)):
-                report['DOBPlusX'] = report['DOBPlusX'].isoformat()
+            for k in report:
+                l = report[k]
+                if isinstance(l, datetime.datetime):
+                    report[k] = l.isoformat()
         except Exception, e:
             print 'wtf'
             print report
