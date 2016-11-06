@@ -36,10 +36,6 @@ def portToJSON(data, path=None, episodeMode = False, write=False):
             assert "ECE" in redLabels
             for label in redLabels:
 
-            
-                if report[label] in JSONLabelDict:
-                    report[label] = JSONLabelDict[report[label]]
-
                 #Replace spaces in label name because otherwise website will breast
                 assert "Red DCIS" in JSONLabelNameDict
                 if label in JSONLabelNameDict:
