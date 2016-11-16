@@ -6,6 +6,11 @@ sys.path.append("..")
 from constants import *
 import matplotlib.pyplot as plt
 
+trumpOrderAtyp = ['Red ADH_DCIS','Red ADH', "Red LCIS",'Red ALH', 'Red FlatEpithelial', 'Red Phylodes']
+# trumpOrderAtyp = ['Red ADH', "Red LCIS", 'Red ALH', 'Red FlatEpithelial', 'Red LobularNeoplasia', 'Red Phylodes']
+
+
+
 def getIncis(reps):
     results = []
     mrnToReps = {} 
@@ -20,8 +25,6 @@ def getIncis(reps):
             continue
         reps = sorted( mrnToReps[mrn],key=itemgetter('Report_Date_TimePlusX') )
 
-
-        
         if True:
             for i,r in enumerate(reps):
                 if r['BiopsyType'] == 'Incision' and r['Institution'] == 'MGH': 
@@ -33,7 +36,6 @@ def getIncis(reps):
 
 
 def getAtypIncis(reps):
-    trumpOrder = ['Red ADH_DCIS','Red ADH', "Red LCIS",'Red ALH', 'Red FlatEpithelial', 'Red LobularNeoplasia', 'Red Phylodes']
     resultDict = {}
     mrnToReps = {} 
     for r in reps:
@@ -43,39 +45,46 @@ def getAtypIncis(reps):
         mrnToReps[mrn].append(r)
 
     for mrn in mrnToReps:
-        if len(mrnToReps[mrn]) < 0:
+        if len(mrnToReps[mrn]) <= 0:
             continue
-        reps = sorted( mrnToReps[mrn],key=itemgetter('Report_Date_TimePlusX') )
 
         
-        for i,r in enumerate(reps):
+        reps = sorted( mrnToReps[mrn],key=itemgetter('Report_Date_TimePlusX') )
 
-            if r['BiopsyType'] == 'Incision' and r['Institution'] == 'MGH': 
-                ## look for prior cancer and get atyp
-                if hasAtyp(r) and not hasCancer(r):
-                    date = r['Report_Date_TimePlusX']
-                    def priorCancer():
-                        canc = []
-                        for j in range(len(reps)):
-                            # if str(r['MRNPlusX']) in ['4054548', '2315971', '4974054', '1508964', '5585066']:
-                            #     print reps[j]['Report_Date_TimePlusX'], 'in comparison to', r['Report_Date_TimePlusX']
-                            #     print 'rep[j] text is', reps[j]['Report_Text']
-                            #     print 'rep[j] segmented text is', reps[j]['Report_Text_Segmented']
-                            #     print 'idc classif', reps[j]['Red IDC']
-                            #     print 'ilc classif', reps[j]['Red ILC']
-                                # raw_input()
-                            rj  = reps[j]
-                            if hasCancer(rj) and abs((date-rj['Report_Date_TimePlusX']).days) < 30:
-                                canc.append(rj)
-                        return canc
-                    if len(priorCancer()) == 0:
-                        if r['MRNPlusX'] in resultDict:
-                            prevAtyp = getAtypTrump(resultDict[r['MRNPlusX']])
-                            currAtyp = getAtypTrump(r)
-                            if trumpOrder.index(prevAtyp) > trumpOrder.index(currAtyp):
-                                resultDict[r['MRNPlusX']] = r
-                        else:
-                            resultDict[r['MRNPlusX']] = r
+        if len(reps) < 2 or not reps[0]['Institution'] == 'MGH':
+            continue
+        
+        for i,r in enumerate(reps):
+            lowText = r['Report_Text_Segmented'].lower()
+            if hasCancer(r) or 'invasive mammary carcinoma' in lowText:# or 'excision' in lowText :
+                continue
+
+
+            side = r['Red BreastSide']
+            date = r['Report_Date_TimePlusX']
+            def hasFollow():
+                for j in range(0, len(reps)):
+                    if j == i:
+                        continue
+                    rj  = reps[j]
+                    if (rj['Report_Date_TimePlusX'] - date).days < 180 and (rj['Report_Date_TimePlusX'] - date).days > 0 and rj['Red BreastSide'] == side:
+                        return True
+                return False
+
+            if not hasFollow():
+                continue
+
+            ## look for prior cancer and get atyp
+            if hasAtyp(r):
+                def priorCancer():
+                    canc = []
+                    for j in range(0, len(reps)):
+                        rj  = reps[j]
+                        if hasCancer(rj) and (date - rj['Report_Date_TimePlusX']).days < 90 and (date - rj['Report_Date_TimePlusX']).days >= 0:
+                            return True
+                    return False
+                if not priorCancer():
+                    resultDict[r['MRNPlusX']] = r
 
     results = [resultDict[k] for k in resultDict]
 
@@ -88,7 +97,7 @@ def atypsOverTime(reps):
         low = ran
         high = low + increment
         def yearFilt(r):
-            return r['Report_Date_TimePlusX'].year > low and r['Report_Date_TimePlusX'].year <= high and r['BiopsyType']=='Incision'
+            return r['Report_Date_TimePlusX'].year > low and r['Report_Date_TimePlusX'].year <= high  and r['BiopsyType']=='Incision'
 
         seed = [r for r in reps if yearFilt(r) and r['Institution']=="MGH"]
         numPatients = len(set([r['MRNPlusX'] for r in seed if r['BiopsyType']=='Incision']))
@@ -115,7 +124,7 @@ def getAtypTime(reps):
         return True
         #return (y > 2007 and y <= 2011)  or (y>= 2013 and y<=2016)
 
-    results = [r for r in reps if inYear(r) and r['Institution']=='MGH']
+    results = [r for r in reps if inYear(r) and r['Institution']=='mv']
     return reps
     # return results
 
@@ -154,14 +163,19 @@ def hasCat(r, cat):
     return False
 
 def hasTrumpedAtypia(r, atyp):
-    trumpOrder = ['Red ADH_DCIS','Red ADH', "Red LCIS",'Red ALH', 'Red FlatEpithelial', 'Red LobularNeoplasia', 'Red Phylodes']
-    for a in trumpOrder:
+    for a in trumpOrderAtyp:
         if a in r and r[a] == "Present":
             return a == atyp
     return False
 
 def getAtypTrump(r):
-    trumpOrder = ['Red ADH_DCIS','Red ADH', "Red LCIS",'Red ALH', 'Red FlatEpithelial', 'Red LobularNeoplasia', 'Red Phylodes']
+    for a in trumpOrderAtyp:
+        if a in r and r[a] == "Present":
+            return a
+    return False
+
+def getCancerTrump(r):
+    trumpOrder = ['Red ILC','Red IDC', 'Red DCIS', 'Red CancerNOS']
     for a in trumpOrder:
         if a in r and r[a] == "Present":
             return a
@@ -185,29 +199,13 @@ def hasAtyp(r):
 def hasCancer(r):
     return hasCat(r, cancers)
 
-def getFollowup(rep):
-    mrn = rep['MRNPlusX']
-    date = rep['Report_Date_TimePlusX']
-    def dateDif(r):
-        return (r['Report_Date_TimePlusX'] - date).days
 
-    # exis = [r for r in reps if r['MRNPlusX'] == mrn and r['BiopsyType'] == 'Excision' 
-    #     and dateDif(r) > 0  and dateDif(r) < 185] 
-
-    exis = [r for r in reps if r['MRNPlusX'] == mrn and r['Red BreastSide'] == rep['Red BreastSide']
-        and dateDif(r) > 0  and dateDif(r) < 365] 
-
-    exis = sorted( exis, key=itemgetter('Report_Date_TimePlusX') )
-
-    return exis
-
-
-def buildIncisExisMap(incis):
+def buildIncisExisMap(incisL):
     ieMap = {}
     ieMapMRN = {}
     outMap = {}
 
-    for i in incis:    
+    for i in incisL:    
         ieMap[i['ReportID']] =  {'incis': i, 'exisList':[]}
         if not i['MRNPlusX'] in ieMapMRN:
             ieMapMRN[i['MRNPlusX']] = []    
@@ -221,15 +219,17 @@ def buildIncisExisMap(incis):
         if not mrn in ieMapMRN:
             continue
 
+        assert len(ieMapMRN[mrn]) < 2
         for inc in ieMapMRN[mrn]:
             date = inc['Report_Date_TimePlusX']
+            side = inc['Red BreastSide']
 
             def dateDif(d):
                 return (d['Report_Date_TimePlusX'] - date).days
 
             def validFollowup(d):
                 useExis = False
-                return ( not useExis or d['BiopsyType'] == 'Excision') and dateDif(d) > 0  and dateDif(d) < 365./2
+                return ( not useExis or d['BiopsyType'] == 'Excision') and dateDif(d) > 0  and dateDif(d) < 180 and d['Red BreastSide'] == side
 
             if validFollowup(r):
                 ieMap[inc['ReportID']]['exisList'].append(r)
@@ -250,7 +250,6 @@ def rowUpgrade(row):
     for exis in row['excis']:
         if hasCancer(exis):
             return True
-
     return False
 
 def rowUpgradeCat(row, cat):
@@ -347,7 +346,7 @@ reps = p.load(open('../reportDB+new.p','rb'))
 
 print "num patients", len(set([r['MRNPlusX'] for r in reps if r['Institution']=='MGH']))
 
-incis = getIncis(reps)
+incis = reps#getIncis(reps)
 
 
 print "num incisions", len(set([r['MRNPlusX'] for r in incis])), round(len(incis)*1./len(reps),2)
@@ -358,7 +357,7 @@ atypias = const_atypias
 
 cancers = const_cancers
 
-atypsOverTime(reps)
+# atypsOverTime(reps)
 
 
 print "ADH vs ALH in incis", len([ r['MRNPlusX'] for r in incis if hasCat(r, ['Red ADH','Red ALH']) and not hasCancer(r)] )
@@ -370,40 +369,62 @@ benginAtyp = getAtypIncis(reps)
 print "num incis with benging", len(bengin)
 print "num incis with atyp and no canc", len(benginAtyp)
 
-candidates = getAtypTime(reps)
-filtCandidate = [r for r in candidates if hasAtyp(r) and not hasCancer(r) ]
-exportCandidate = [ {'MRNPlusX':r['MRNPlusX']} for r in filtCandidate]
+# candidates = getAtypTime(reps)
+# filtCandidate = [r for r in candidates if hasAtyp(r) and not hasCancer(r) ]
+# exportCandidate = [ {'MRNPlusX':r['MRNPlusX']} for r in filtCandidate]
 
 
-numAtyps = len([r['MRNPlusX'] for r in filtCandidate ])
+# numAtyps = len([r['MRNPlusX'] for r in filtCandidate ])
 # print "num atyp", numAtyps, numAtyps*1./incisNum
 
 
 ieMapAtyp = buildIncisExisMap(benginAtyp)
 
-atypNoFollow = noFollow(benginAtyp, ieMapAtyp)
-noFollows = [{'MRNPlusX':r['MRNPlusX'], 
-            'Report_Date_TimePlusX':r['Report_Date_TimePlusX'], 'Institution': r['Institution']}
-                for r in atypNoFollow]
-noFollowsMRNs = set([r['MRNPlusX'] for r in noFollows])
-assert len(set([r['MRNPlusX'] for r in noFollows])) == len(set([r['MRNPlusX'] for r in atypNoFollow]))
-assert len(noFollowsMRNs) == len(set([r['MRNPlusX'] for r in noFollows]))
-noFollowDist(atypNoFollow)
-print 
+# atypNoFollow = noFollow(benginAtyp, ieMapAtyp)
+# noFollows = [{'MRNPlusX':r['MRNPlusX'], 
+#             'Report_Date_TimePlusX':r['Report_Date_TimePlusX'], 'Institution': r['Institution'],
+#             'Report_Text_Segmented':r['Report_Text_Segmented']}
+#                 for r in atypNoFollow]
+# noFollowsMRNs = set([r['MRNPlusX'] for r in noFollows])
+# assert len(set([r['MRNPlusX'] for r in noFollows])) == len(set([r['MRNPlusX'] for r in atypNoFollow]))
+# assert len(noFollowsMRNs) == len(set([r['MRNPlusX'] for r in noFollows]))
+# print len(noFollowsMRNs)
+# noFollowDist(atypNoFollow)
+# print 
 print 
 
 
 patientsFollow = [ieMapAtyp]
 print "num followup from benignAtyp", len(ieMapAtyp), round(len(ieMapAtyp)*1./len(benginAtyp),2)
 
-ieMap = buildIncisExisMap(bengin)
-print "num followup from bengin", len(ieMap), round(len(ieMap)*1./len(bengin),2)
+assert len(set([ ieMapAtyp[r]['incis']['MRNPlusX'] for r in ieMapAtyp])) == len(ieMapAtyp)
 
-upgrades = [ ieMap[i] for i in ieMap if rowUpgrade(ieMap[i])]
-print 'overall upgrade from benign', len(upgrades), round(len(upgrades)*1./len(ieMap),2)
+# ieMap = buildIncisExisMap(bengin)
+# print "num followup from bengin", len(ieMap), round(len(ieMap)*1./len(bengin),2)
 
+# upgrades = [ ieMap[i] for i in ieMap if rowUpgrade(ieMap[i])]
+# print 'overall upgrade from benign', len(upgrades), round(len(upgrades)*1./len(ieMap),2)
+
+print '-------------------'
 upgradesAtyp = [ ieMapAtyp[i] for i in ieMapAtyp if rowUpgrade(ieMapAtyp[i])]
 print 'overall upgrade from benignAtyp', len(upgradesAtyp), round(len(upgradesAtyp)*1./len(ieMapAtyp),2)
+print' --------------------'
+
+for upgrade in upgradesAtyp:
+    incis = upgrade['incis']
+    atyp = getAtypTrump(incis)
+    if atyp in []:#'Red ALH', 'Red LCIS', 'Red FlatEpithelial']:
+        print "atyp is", atyp
+        print "rep also has ADH", incis['Red ADH']
+        print "rep also has SevADH", incis['Red ADH_DCIS']
+
+        print "incis report", incis['Report_Text_Segmented']
+        print 'date', incis['Report_Date_TimePlusX']
+        print '--'
+        print 'excis report', upgrade['excis'][0]['Report_Text_Segmented']
+        print 'date', upgrade['excis'][0]['Report_Date_TimePlusX']
+        print 'canc', getCancerTrump(upgrade['excis'][0])
+        raw_input()
 
 seeds = buildSourceTablePerc(ieMapAtyp)
 buildTablePerc(upgradesAtyp)
@@ -420,22 +441,22 @@ print len(lcisMRNs), "number MRNs for the LCIS upgrades"
 # print "lenExportCandidate", len(exportCandidate)
 
 
-noFollowReps = [ r for r in reps if r['MRNPlusX'] in noFollowsMRNs ]
+# noFollowReps = [ r for r in reps if r['MRNPlusX'] in noFollowsMRNs ]
 
 
-print len(noFollows), "number MRNs for no follows"
-print len(noFollowReps), "number Reps for no follows"
+# print len(noFollows), "number MRNs for no follows"
+# print len(noFollowReps), "number Reps for no follows"
 
 
-# keys = ['MRNPlusX', 'Report_Date_TimePlusX', 'Institution' ]
-keys = noFollowReps[0].keys()
+# # keys = ['MRNPlusX', 'Report_Date_TimePlusX', 'Institution' ]
+# keys = noFollows[0].keys()
 
 
-with open("atypiasNoFollowups.csv", "wb") as outCSV:
+# with open("atypiasNoFollowupsFocus.csv", "wb") as outCSV:
 
-    writer = DictWriter(outCSV, keys)#,  delimiter = "$")
-    writer.writeheader()
-    writer.writerows(noFollowReps)
+#     writer = DictWriter(outCSV, keys)#,  delimiter = "$")
+#     writer.writeheader()
+#     writer.writerows(noFollows)
 
 
 # with open("benignLeadingToExcision.csv", "wb") as outCSV:
