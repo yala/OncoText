@@ -1,5 +1,9 @@
 # MGH Breast Cancer Pathology Report Project
 
+# How to start service? <br />
+export FLASK_APP=classifierAPI.py; 
+flask run
+
 # API Usage  <br />
 The following API let's you add training data, train models, get performance information on a development set, and get results on the whole cohort. Currently, the model only supports a boosting based extractor, but it is built to easily support other approachs like CNNs
 
@@ -68,4 +72,4 @@ Example: curl -X "GET" -H "Cache-Control: no-cache" "http://rosetta2.csail.mit.e
 
 
 ### But is it online?
-- [ ] Online
+- [x] Online
