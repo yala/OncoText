@@ -87,7 +87,6 @@ if MODE == "TAGHIAN":
     'ITC ': ['Yes', 'No'],
     'PR': ['Unknown', 'Negative', 'Positive'],    
     'BiopsyType': ['Incision', 'Excision', 'No_breast_biopsy'],
-    'ECE': ['Yes', 'No'],
     'LVI': ['Yes', 'No', 'Not_reported'],
     'BVI': ['Yes', 'No', 'Not_reported'],
     'TumorGrade': ['Well_differentiated_(grade_I)', 'Moderate_(grade_II)', 'Poor_(grade_III)_Undifferentiated', 'Not_assessed'],
