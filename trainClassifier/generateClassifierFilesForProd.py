@@ -169,7 +169,7 @@ def validateRepsDB(reps, flex = False, dirty = False):
 if __name__ == "__main__": 
     allDataPath = redRawDBPath
     allData = p.load(open(allDataPath, 'rb'))
-    binarizeFilesForClassification(allData, 'red_all_')
+    binarizeFilesForClassification(allData, '../boostexer/breast/unlabeled/red_all_')
 
 
 

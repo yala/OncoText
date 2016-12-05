@@ -28,10 +28,12 @@ dbPath = "reportDB.p"
 raws = p.load(open(rawPath,'rb'))
 def isAnnotation(r):
     return ('TaghianGold' in r and 'TaghianGold' == 1 ) or ('Correct' in r and r['Correct'] == 'Y')
+
+limDefault = True
 base = []
 for r in raws:
     r['Owner'] = 'default'
-    if isAnnotation(r):
+    if isAnnotation(r) and limDefault:
         base.append(r)
 
 try:
