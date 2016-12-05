@@ -7,6 +7,10 @@ flask run
 # API Usage  <br />
 The following API let's you add training data, train models, get performance information on a development set, and get results on the whole cohort. Currently, the model only supports a boosting based extractor, but it is built to easily support other approachs like CNNs
 
+# Docker Setup 
+If you need to run this locally instead of hitting the MIT API, we recommend Docker.
+ [dockerfile](dockerfile) shows a working example.
+
 # Endpoints
 
 ## addData/
