@@ -29,17 +29,18 @@ if MODE == "TAGHIAN":
     'Red LobularNeoplasia', 'cancer', 'atypia', 'BiopsyType', 
     'Red ADH_DCIS', 'Red Phylodes', 
     'Red CancerNOS', 'Red InvasiveSuspicious', 
-    'Red InsituNOS', 'Red CancerInvInsituNOS', 'Red SuspiciousForPhyllodes',# 'Oncotype score', 'TumorGrade',
-    'Red CancerSuspicious', 'Red TubularCancer'
+    'Red InsituNOS', 'Red CancerInvInsituNOS', 'Red SuspiciousForPhyllodes', #'Oncotype score', 'TumorGrade',
+    'Red CancerSuspicious', 'Red TubularCancer', 'Red Papill'
   ]
 
 
   const_cancers = [
   'Red ILC','Red DCIS', 'Red IDC', 
-  'cancer', 'Red CancerNOS', 'Red InsituNOS', 'Red CancerInvInsituNOS', 'Red TubularCancer']
+  'Red CancerNOS', 'Red InsituNOS', 'Red CancerInvInsituNOS', 'Red TubularCancer', 'cancer'
+  ]
 
   const_atypias = [
-  'Red ALH','Red ADH', 'Red FlatEpithelial','Red LobularNeoplasia','Red ADH_DCIS', 'Red LCIS', 'Red Phylodes',
+  'Red ALH','Red ADH', 'Red FlatEpithelial', 'Red LCIS', 'Red Phylodes', 'Red ADH_DCIS', #'Red LobularNeoplasia'
   #'Red SuspiciousForPhyllodes'  
   ]
   
@@ -64,11 +65,9 @@ if MODE == "TAGHIAN":
 
   redRawDBPath = '../reportDB+red+clean.p'
 
-  defaultLabelDict = { 'Are there positive LN?': 'No', 'Type of sampled LN (choice=None)':'Unchecked', 'ITC ':'No', 'PR':'Unknown',
-      'Type of sampled LN (choice=SLNB (Sentinel LN Biopsy))': 'Unchecked', 'Type of Surgery':'not_surgery', 'BiopsyType':'No_breast_biopsy',
-      'Simple Mastectomy':'Unchecked', 'Her2 (Fish)':'Unknown', 'ER': 'Unknown', 'Nipple sparing Mastectomy':'Unchecked',
-      'Type of sampled LN (choice=ALND (Axillary LN Dissection))':'Unchecked', 'ECE':'No', 
-      'LVI': 'Not_reported', 'BVI': 'Not_reported', 'TumorGrade': 'Not_assessed', 'Red DCIS':'Absent', 'Red LCIS':'Absent', 'Red IDC':'Absent', 'Red ILC':'Absent',
+  defaultLabelDict = { 'Are there positive LN?': 'No', 'Type of sampled LN (choice=None)':'Unchecked', 'ITC ':'No', 'PR':'NA',
+      'BiopsyType':'Other', 'Her2 (Fish)':'NA', 'ER': 'NA', 'ECE':'No', 
+      'LVI': 'NA', 'BVI': 'NA', 'TumorGrade': 'NA', 'Red DCIS':'Absent', 'Red LCIS':'Absent', 'Red IDC':'Absent', 'Red ILC':'Absent',
       'Red ALH':'Absent', 'Red ADH':'Absent', 'Red BreastSide':'RIGHT', 'Red FlatEpithelial':'Absent','Red BluntAdenosis':'Absent', 'Red LobularNeoplasia': 'Absent',
       'cancer':'Absent', 'atypia':'Absent',
       'Oncotype score':'Low_risk',
@@ -81,16 +80,15 @@ if MODE == "TAGHIAN":
 
 
   constantValidLabelDict = {'Are there positive LN?': ['Yes', 'No'],
-    'ECE': ['Yes', 'No'],
-    'ER': ['Unknown', 'Negative', 'Positive'],
-    'Her2 (Fish)': ['Unknown', 'Negative', 'Positive'],
+    'ER': ['NA', 'Negative', 'Positive'],
+    'Her2 (Fish)': ['NA', 'Negative', 'Positive'],
     'ITC ': ['Yes', 'No'],
-    'PR': ['Unknown', 'Negative', 'Positive'],    
-    'BiopsyType': ['Incision', 'Excision', 'No_breast_biopsy'],
+    'PR': ['NA', 'Negative', 'Positive'],    
+    'BiopsyType': ['Core', 'Excision', 'Other'],
     'ECE': ['Yes', 'No'],
-    'LVI': ['Yes', 'No', 'Not_reported'],
-    'BVI': ['Yes', 'No', 'Not_reported'],
-    'TumorGrade': ['Well_differentiated_(grade_I)', 'Moderate_(grade_II)', 'Poor_(grade_III)_Undifferentiated', 'Not_assessed'],
+    'LVI': ['Yes', 'No', 'NA'],
+    'BVI': ['Yes', 'No', 'NA'],
+    'TumorGrade': ['Well_differentiated_(grade_I)', 'Moderate_(grade_II)', 'Poor_(grade_III)_Undifferentiated', 'NA'],
     'Red DCIS':  ['Present','Absent'], 
     'Red LCIS': ['Present','Absent'], 
     'Red IDC': ['Present','Absent'], 
@@ -116,10 +114,10 @@ if MODE == "TAGHIAN":
   }
 
   analysisLabelDict = {'Are there positive LN?': ['Yes', 'No'],
-    'ER': ['Unknown', 'Negative', 'Positive'],
-    'Her2 (Fish)': ['Unknown', 'Negative', 'Positive'],
+    'ER': ['NA', 'Negative', 'Positive'],
+    'Her2 (Fish)': ['NA', 'Negative', 'Positive'],
     'ITC ': ['Yes', 'No'],
-    'PR': ['Unknown', 'Negative', 'Positive'],    
+    'PR': ['NA', 'Negative', 'Positive'],    
     'ECE': ['Yes', 'No'],
     'LVI': ['Yes', 'No', 'Not_reported'],
     'BVI': ['Yes', 'No', 'Not_reported'],
@@ -136,7 +134,7 @@ if MODE == "TAGHIAN":
     'Red BreastSide': ['RIGHT', 'LEFT'],
     'cancer': ['cancer','no_cancer'],
     'atypia': ['atypia','no_atypia'],
-    'BiopsyType': ['Incision', 'Excision', 'No_breast_biopsy'],
+    'BiopsyType': ['Core', 'Excision', 'Other'],
     'Oncotype score': ['Low_risk', 'High_risk'],
     'Red ADH_DCIS': ['Present','Absent'],
     'Red Phylodes': ['Present','Absent'],

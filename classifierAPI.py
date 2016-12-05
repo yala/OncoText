@@ -180,6 +180,9 @@ def getPredictions():#name='default'):
     reportDBJ = exportToJSON.portToJSON(reportDB)  
     episodeDBJ = exportToJSON.portToJSON(episodeDB,episodeMode=True)    
     
+    postProcessRules(reportDBJ)
+    postProcessRules(episodeDBJ)
+
     return json.dumps({'reportDB':reportDBJ, 'episodeDB': episodeDBJ})
 
 ################ Helpers ######################
@@ -205,6 +208,27 @@ def preprocessReports(reports):
 
     results = preprocessRawDb(reports)
     return results
+
+
+def hasCat(r, cat):
+    for c in cat:
+        if r[c] == 'Present':
+            return True
+    return False
+
+
+## Runs enforces global constraints like ER/PR NA given no cancer
+def postProcessRules(db):
+    for r in db:
+        if hasCat(r, const_cancers):
+            r['cancer'] = 'Present'
+
+        if hasCat(r, const_atypias):
+            r['atypia'] = 'Present'
+
+        if r['cancer'] == 'Absent':
+            for k in ['ER','PR','Her2 (Fish)', 'ECE', 'LVI','BVI', 'Are there positive LN?', 'ITC ']:
+                r[k] = 'NA'
 
 ## Call this to start appex
 if __name__ == "__main__":

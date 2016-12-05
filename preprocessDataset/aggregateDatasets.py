@@ -325,7 +325,7 @@ def parseOncoScore(score):
     if score < 18:
         return 'Low risk'
     elif score <= 30:
-        return 'High risk'
+        return 'Mid risk'
     elif score > 30: 
         return 'High risk'
     else:
@@ -644,6 +644,129 @@ def  processDisagreements(allPathReps, outDB, outDBRepIds):
 
     return False
 
+def processPapil(allPathReps, outDB, outDBRepIds):
+    print "called process papil"
+    disagreementsPaths = '../externalDataSources/papilAnnotations.xlsx'
+    disaDbPath = "data/papil_MG_Nov.p"
+    scrape = True
+    if scrape:
+        papils = parseXLS(disagreementsPaths, disaDbPath)
+    else:
+        papils = p.load(open(disaDbPath,'rb'))
+
+    print "num papil Annotations", len(papils)
+
+    textToVal = {}
+    for row in papils:
+        textToVal[row['text']] = row['Papill']
+
+    for r in allPathReps:
+        if r['Report_Text_Segmented'] in textToVal:
+            repId = r['ReportID']
+
+            label = textToVal[r['Report_Text_Segmented']]
+            r['Red Papill'] = label
+
+            targetDiag = 'Red Papill'
+
+            if not targetDiag in outDB:
+                outDB[targetDiag] = []
+            if not repId in outDBRepIds:
+                outDBRepIds[repId] = {}
+
+            outDB[targetDiag].append(r)
+            outDBRepIds[repId][targetDiag] = label
+
+def processCorrections(allPathReps, outDB, outDBRepIds):
+    print "called process corrections"
+    disagreementsPaths = '../externalDataSources/noFollowupForAtypias_11_21_all_rknys.xlsx'
+    disaDbPath = "data/mg_rknys_corrections.p"
+    scrape = True
+    if scrape:
+        corrections = parseXLS(disagreementsPaths, disaDbPath)
+    else:
+        corrections = p.load(open(disaDbPath,'rb'))
+
+    print "num papil Annotations", len(corrections)
+
+    textToVal = {}
+    for row in corrections:
+        textToVal[row['Report_Text_Segmented']] = row
+
+    rowMap = {
+        'BreastSide': 'Red BreastSide',
+        'BiopsyType': 'BiopsyType',
+        'cancer': 'cancer',
+        'IDC': 'Red IDC',
+        'ILC': 'Red ILC',
+        'TubularCancer': 'Red TubularCancer',
+        'CancerNOS': 'DCIS', 
+        'InsituNOS':'Red InsituNOS',
+        'ER': 'ER',
+        'PR':'PR',
+        'Her2(Fish)': 'Her2 (Fish)',
+        'CancerSuspicious':'Red CancerSuspicious',
+        'InvasiveSuspicious': 'Red InvasiveSuspicious',
+        'AretherepositiveLN?': 'Are there positive LN?',
+        'ECE(extracapsularextension)':'ECE',
+        'LVI':'LVI',
+        'BVI':'BVI',
+        'LobularNeoplasia': 'Red Lobular Neoplasia',
+        'ALH':'Red ALH',
+        'ADH':'Red ADH',
+        'ADH_DCIS':'Red ADH_DCIS',
+        'FlatEpithelial': 'Red FlatEpithelial',
+        'LCIS':'Red LCIS',
+        'DCIS':'Red DCIS',
+        'Phylodes': 'Red Phyllodes'
+    }
+
+    labelMap = {
+        'Present':'Present',
+        'Absent':'Absent',
+        'NO':'NA',
+        'NO':'No',
+        'No':'No',
+        'Yes':'Yes',
+        'na':'NA',
+        'NA':'NA',
+        'Right':'RIGHT',
+        'RIGHT':'RIGHT',
+        'LEFT':'LEFT',
+        'Excision':'Excision',
+        'Core':'Core',
+        'Excision LYMP NODE':'Excision',
+        'FNA':'Other',
+        'Incision':'Other',
+        'Exsicion':'Excision',
+        'unknown':'Other',
+        'TRUM REDUCTION':'Other',
+        'No_breast_biopsy':'Other',
+        'axillary disection':'Other',
+        'excision':'Excision',
+        'Mastectomy':'Excision',
+        'Lymph node':'Other'
+
+    }
+
+    for r in allPathReps:
+        if r['Report_Text_Segmented'] in textToVal:
+            repId = r['ReportID']
+
+            for k in rowMap:
+                rawLabel = textToVal[ r['Report_Text_Segmented']][k] 
+                label = labelMap[ rawLabel ] if rawLabel in labelMap else defaultLabelDict[rowMap[k]]
+                r[ rowMap[k] ]= label
+
+                targetDiag = rowMap[k]
+
+                if not targetDiag in outDB:
+                    outDB[targetDiag] = []
+                if not repId in outDBRepIds:
+                    outDBRepIds[repId] = {}
+
+                outDB[targetDiag].append(r)
+                outDBRepIds[repId][targetDiag] = label
 
 def buildDB(db, grades, redmap, allPathReps, debug = False):
     outDBReps = []
@@ -666,6 +789,9 @@ def buildDB(db, grades, redmap, allPathReps, debug = False):
     processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen )
     processSusPhyllodes(allPathReps, outDB, outDBRepIds)
     processDisagreements(allPathReps, outDB, outDBRepIds)
+    processPapil(allPathReps, outDB, outDBRepIds)
+    processCorrections(allPathReps, outDB, outDBRepIds)
+
     ## Now we print label distrubtions for generating maps and in constants
     printLabelDist(outDB)
     assert len(outDBReps) == 0

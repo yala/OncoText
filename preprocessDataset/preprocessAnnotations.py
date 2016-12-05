@@ -15,15 +15,15 @@ def main(redReps):
     for r in redReps:
         if 'TaghianGold' in r and r['TaghianGold'] == 1:
 
-            if surgDiag in r:
-                if r[surgDiag] in ['2nd Re-Excision', '1st Re-Excision', 'Excisional biopsy (Lumpectomy)', 'Incisional biopsy']:
-                    r[biopTypeDiag] = "Excision"
-            elif biopDiag in r:
-                if r[biopDiag] in ['Needle biopsy',  'Core biopsy']:
-                    r[biopTypeDiag] = "Incision"
+            # if surgDiag in r:
+            #     if r[surgDiag] in ['2nd Re-Excision', '1st Re-Excision', 'Excisional biopsy (Lumpectomy)', 'Incisional biopsy']:
+            #         r[biopTypeDiag] = "Excision"
+            # elif biopDiag in r:
+            #     if r[biopDiag] in ['Needle biopsy',  'Core biopsy']:
+            #         r[biopTypeDiag] = "Incision"
 
-            if (surgDiag in r or biopDiag in r) and not biopTypeDiag in r:
-                r[biopTypeDiag] = "No_breast_biopsy"
+            # if (surgDiag in r or biopDiag in r) and not biopTypeDiag in r:
+            #     r[biopTypeDiag] = "No_breast_biopsy"
 
 
             for d in ['ER', 'PR', 'Her2 (Fish)']:
