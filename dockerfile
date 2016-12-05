@@ -8,4 +8,4 @@ COPY . /app
 WORKDIR /app
 RUN export FLASK_APP=classifierAPI.py; export FLASK_DEBUG=1
 ENTRYPOINT ["python"]
-CMD ["classifierAPI.py"]`
+CMD ["classifierAPI.py"]
