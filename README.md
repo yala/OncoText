@@ -19,6 +19,7 @@ Raw  - Specifies if the data has been preprocess already. For Validator, show be
 Save - Probably healthy to save db storing all the data to a file from time to time. <br />
  <br />
 Example: curl -X "POST" -H "Cache-Control: no-cache" "http://rosetta2.csail.mit.edu:5000/addData" <br />
+Example: curl -X "POST" "http://rosetta2.csail.mit.edu:5000/addData" -d "raw=True&data=[{\"Report_Text\":\"Example Text\", \"Report_Date_TimePlusX\":\"2016-12-4T\" }]"
  <br />
 ## updateTrainSet/ <br />
 Method: Get <br />
