@@ -55,10 +55,10 @@ models = ['Boost', 'MaxEnt', 'CNN'] # MaxEnt and CNN not ready
 ## @return: 0
 @app.route("/addData", methods=['POST'])
 def addData():#data, name='default', raw=False, save=False):
-    data = request.args.get("data") or []
-    name = request.args.get("name") or "default"
-    raw = request.args.get("raw") or False
-    save = request.args.get("save") or False
+    data = request.form.get("data") or []
+    name = request.form.get("name") or "default"
+    raw = request.form.get("raw") or False
+    save = request.form.get("save") or False
 
     if not data == []:
         data = json.loads(data)
@@ -206,7 +206,7 @@ def preprocessReports(reports):
     for r in reports:
         assert 'Report_Text' in r
 
-    results = preprocessRawDb(reports)
+    results = preprocessRawDb.main(reports)
     return results
 
 
@@ -234,5 +234,3 @@ def postProcessRules(db):
 if __name__ == "__main__":
     print "Begin API"
     app.run(host="0.0.0.0")
-
-

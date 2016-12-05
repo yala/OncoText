@@ -1,7 +1,19 @@
 # MGH Breast Cancer Pathology Report Project
 
+# How to start service? <br />
+You can either setup a docker machine with the right environment to run/use the API, or use the rosetta2 service.   
+## Docker Setup 
+If you need to run this locally instead of hitting the MIT API, we recommend Docker.
+ [dockerfile](dockerfile) shows a working example.
+
+## MIT Server
+If you need to restart it on Rosetta2, do: 
+export FLASK_APP=classifierAPI.py; 
+flask run
+
 # API Usage  <br />
 The following API let's you add training data, train models, get performance information on a development set, and get results on the whole cohort. Currently, the model only supports a boosting based extractor, but it is built to easily support other approachs like CNNs
+
 
 # Endpoints
 
@@ -15,6 +27,7 @@ Raw  - Specifies if the data has been preprocess already. For Validator, show be
 Save - Probably healthy to save db storing all the data to a file from time to time. <br />
  <br />
 Example: curl -X "POST" -H "Cache-Control: no-cache" "http://rosetta2.csail.mit.edu:5000/addData" <br />
+Example: curl -X "POST" "http://rosetta2.csail.mit.edu:5000/addData" -d "raw=True&data=[{\"Report_Text\":\"Example Text\", \"Report_Date_TimePlusX\":\"2016-12-4T\" }]"
  <br />
 ## updateTrainSet/ <br />
 Method: Get <br />
@@ -68,4 +81,4 @@ Example: curl -X "GET" -H "Cache-Control: no-cache" "http://rosetta2.csail.mit.e
 
 
 ### But is it online?
-- [ ] Online
+- [x] Online
