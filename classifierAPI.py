@@ -203,12 +203,10 @@ def preprocessReports(reports):
     for r in reports:
         assert 'Report_Text' in r
 
-    results = preprocessRawDb(reports)
+    results = preprocessRawDb.main(reports)
     return results
 
 ## Call this to start appex
 if __name__ == "__main__":
     print "Begin API"
     app.run(host="0.0.0.0")
-
-
