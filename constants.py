@@ -40,7 +40,7 @@ if MODE == "TAGHIAN":
   ]
 
   const_atypias = [
-  'Red ALH','Red ADH', 'Red FlatEpithelial', 'Red LCIS', 'Red Phylodes', 'Red ADH_DCIS', #'Red LobularNeoplasia'
+  'Red ALH','Red ADH', 'Red FlatEpithelial', 'Red LCIS', 'Red Phylodes', 'Red ADH_DCIS', 'Red LobularNeoplasia','Red Papill'
   #'Red SuspiciousForPhyllodes'  
   ]
   
@@ -72,7 +72,8 @@ if MODE == "TAGHIAN":
       'cancer':'Absent', 'atypia':'Absent',
       'Oncotype score':'Low_risk',
       'Red ADH_DCIS':'Absent', 'Red Phylodes':'Absent', 'Red CancerNOS':'Absent', 'Red InvasiveSuspicious':'Absent', 'Red InsituNOS':'Absent', 'Red CancerInvInsituNOS':'Absent',
-      'Red SuspiciousForPhyllodes':'Absent', 'Red CancerSuspicious':'Absent', 'Red TubularCancer':'Absent'}
+      'Red SuspiciousForPhyllodes':'Absent', 'Red CancerSuspicious':'Absent', 'Red TubularCancer':'Absent',
+      'Red Papill':'Absent'}
 
 
   extractions = [u'Max Tumor Size', 'Non Sentinel LN (# Malignant)', 'Sentinel LN (# Sampled)']
@@ -95,6 +96,7 @@ if MODE == "TAGHIAN":
     'Red ILC': ['Present','Absent'], 
     'Red ALH': ['Present','Absent'], 
     'Red ADH': ['Present','Absent'],
+    'Red Papill': ['Present','Absent'],
     'Red FlatEpithelial':['Present','Absent'],
     'Red BluntAdenosis':['Present','Absent'],
     'Red LobularNeoplasia':['Present','Absent'],
@@ -131,6 +133,7 @@ if MODE == "TAGHIAN":
     'Red FlatEpithelial':['Present','Absent'],
     'Red BluntAdenosis':['Present','Absent'],
     'Red LobularNeoplasia':['Present','Absent'],
+    'Red Papill': ['Present','Absent'],
     'Red BreastSide': ['RIGHT', 'LEFT'],
     'cancer': ['cancer','no_cancer'],
     'atypia': ['atypia','no_atypia'],
@@ -163,6 +166,7 @@ if MODE == "TAGHIAN":
     'Red ILC':  'ILC',
     'Red ALH':  'ALH',
     'Red ADH':  'ADH',
+    'Red Papill': 'Papill',
     'Red FlatEpithelial': 'FlatEpithelial',
     'Red BluntAdenosis': 'BluntAdenosis',
     'Red LobularNeoplasia': 'LobularNeoplasia',
