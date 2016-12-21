@@ -4,7 +4,6 @@ sys.path.append("..")
 from constants import *
 
 
-
 def main(redReps):
     labelDict = constantValidLabelDict
 
@@ -73,6 +72,14 @@ def main(redReps):
             if 'ECE' in r:
                 if r['ECE'] == 'Not Reported':
                     r['ECE'] = 'No'
+
+            if "Red Papill" in r:
+                if r["Red Papill"] == 1:
+                    r["Red Papill"] = "Present"
+                elif r["Red Papill"] == 0:
+                    r["Red Papill"] = "Absent"
+                else:
+                    del r["Red Papill"]
 
     for r in redReps:
         if ('TaghianGold' in r and r['TaghianGold'] == 1 )or ('Correct' in r and r['Correct'] == 'Y'):
