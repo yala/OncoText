@@ -27,6 +27,16 @@ DB_PATH = "reportDBAPI.p"
 rawPath = "reportDB+red+clean.p"
 raws = p.load(open(rawPath,'rb'))
 
+def hasCat(r, cat, loose=False):
+    for c in cat:
+        if not loose:
+            if r[c] == 'Present':
+                return True
+        else:
+            if c in r:
+                return True
+    return False
+
 def isAnnotation(r):
     return hasCat(r, diagnoses, loose=True)
 
@@ -222,15 +232,7 @@ def preprocessReports(reports):
     return results
 
 
-def hasCat(r, cat, loose=False):
-    for c in cat:
-        if not loose:
-            if r[c] == 'Present':
-                return True
-        else:
-            if c in r:
-                return True
-    return False
+
 
 
 ## Runs enforces global constraints like ER/PR NA given no cancer
