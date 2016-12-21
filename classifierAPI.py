@@ -55,7 +55,6 @@ models = ['Boost', 'MaxEnt', 'CNN'] # MaxEnt and CNN not ready
 ## Parse the dict for daignoses, and add annotations if found
 ##  @name specifies user, izzy don't worry about this
 ## @raw specifies if the data has been preprocessed before, 
-## @save specifies if i should resave what you gave me to the db file
 ## Example:
 ## [ {Report_Text: }]
 ## @return: 0
@@ -64,7 +63,6 @@ def addData():#data, name='default', raw=False, save=False):
     data = request.form.get("data") or []
     name = request.form.get("name") or "default"
     raw = request.form.get("raw") or False
-    save = request.form.get("save") or False
 
     if not data == []:
         data = json.loads(data)
@@ -85,9 +83,6 @@ def addData():#data, name='default', raw=False, save=False):
                 r['TaghianGold'] = 1
 
     db[name].extend(data)
-
-    if save:
-        p.dump(db, open(dbPath))
 
     return "Success"
 
@@ -121,7 +116,7 @@ def updateTrainSet():#name='default', model='Boost', mode="Dev"):
 @app.route("/inspect", methods=['GET'])
 def inspect():#name='default', model='Boost', mode="Dev"):
     print db.keys()
-    return db.keys()
+    return json.dumps(db.keys())
 
 ## Kicks off job to retrain model and label the corresping data
 ## Use dev to train model without heldout test to get numbers
