@@ -113,6 +113,12 @@ def updateTrainSet():#name='default', model='Boost', mode="Dev"):
         raise NameError("Model type not supported")
     return "Success"
 
+## Returns keys of db
+@app.route("/inspect", methods=['GET'])
+def inspect():#name='default', model='Boost', mode="Dev"):
+    print db.keys()
+    return db.keys()
+
 ## Kicks off job to retrain model and label the corresping data
 ## Use dev to train model without heldout test to get numbers
 ## use prod to use all labeled data as train, and then run on all unlabeled
