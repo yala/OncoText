@@ -38,7 +38,7 @@ for r in raws:
         base.append(r)
 
 try:
-    db = p.load(DB_PATH)
+    db = p.load(open(DB_PATH,'rb'))
 except Exception, e:
     print "Init db"
     db = {'default':base}
@@ -60,7 +60,7 @@ models = ['Boost', 'MaxEnt', 'CNN'] # MaxEnt and CNN not ready
 ## @return: 0
 @app.route("/addData", methods=['POST'])
 def addData():#data, name='default', raw=False, save=False):
-    db = p.load(DB_PATH)
+    db = p.load(open(DB_PATH,'rb'))
     data = json.loads(request.data) or []
     name = request.args.get("name") or "default"
     raw = request.args.get("raw") or False
@@ -95,7 +95,7 @@ def addData():#data, name='default', raw=False, save=False):
 ## Return 0
 @app.route("/updateTrainSet", methods=['GET'])
 def updateTrainSet():#name='default', model='Boost', mode="Dev"):
-    db = p.load(DB_PATH)
+    db = p.load(open(DB_PATH,'rb'))
     name = request.args.get("name") or "default"
     model = request.args.get("model") or "Boost"
     mode = request.args.get("mode") or "Prod"
@@ -118,7 +118,7 @@ def updateTrainSet():#name='default', model='Boost', mode="Dev"):
 ## Returns keys of db
 @app.route("/inspect", methods=['GET'])
 def inspect():#name='default', model='Boost', mode="Dev"):
-    db = p.load(DB_PATH)
+    db = p.load(open(DB_PATH,'rb'))
     print db.keys()
     return json.dumps(db.keys())
 
@@ -164,7 +164,7 @@ def getResults():#name='default'):
 ## consecutive period
 @app.route("/getPredictions", methods=['GET'])
 def getPredictions():#name='default'):
-    db = p.load(DB_PATH)
+    db = p.load(open(DB_PATH,'rb'))
     name = request.args.get("name") or "default"
     stem = "classification_results/API/Prod_"+name+"_"
     filtData = createEpisodes.removeUnexpectedColumns(db[name])
