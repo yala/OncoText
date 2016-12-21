@@ -60,12 +60,12 @@ models = ['Boost', 'MaxEnt', 'CNN'] # MaxEnt and CNN not ready
 ## @return: 0
 @app.route("/addData", methods=['POST'])
 def addData():#data, name='default', raw=False, save=False):
-    data = request.form.get("data") or []
-    name = request.form.get("name") or "default"
-    raw = request.form.get("raw") or False
-
-    if not data == []:
-        data = json.loads(data)
+    data = json.loads(request.data) or []
+    name = request.args.get("name") or "default"
+    raw = request.args.get("raw") or False
+    
+    print "data is", data
+    print "name is", name
     # Preprocess bilaterals if need be
     if raw:
         data = preprocessReports(data)
@@ -83,7 +83,8 @@ def addData():#data, name='default', raw=False, save=False):
                 r['TaghianGold'] = 1
 
     db[name].extend(data)
-
+    db.sync() 
+    print db.keys()
     return "Success"
 
 ## Does all necessary preprocessing for the model on the dataset
