@@ -17,15 +17,17 @@ from flask import Flask
 from flask import render_template
 from flask import request
 import json
+import shelve
+
 
 app = Flask(__name__)
+app.config.from_object(__name__)
+DB_PATH = "reportDBAPI.p" 
 
 
 rawPath = "reportDB+red+clean.p"
-dbPath = "reportDB.p"
-
-
 raws = p.load(open(rawPath,'rb'))
+
 def isAnnotation(r):
     return ('TaghianGold' in r and 'TaghianGold' == 1 ) or ('Correct' in r and r['Correct'] == 'Y')
 
@@ -37,10 +39,12 @@ for r in raws:
         base.append(r)
 
 try:
-    db = p.load(open(dbPath, 'rb'))
+    db = shelve.open(DB_PATH, writeback=True)
 except Exception, e:
     print "Init db"
-    db = {'default': base }
+    db = shelve.Shelf({'default': base }, writeback=True)
+
+
 
 RequiredPreprocessFields = ['Report_Text']
 RequiredTrainDbFields = ['ReportID', 'Report_Text_Segmented']
@@ -242,3 +246,4 @@ def postProcessRules(db):
 if __name__ == "__main__":
     print "Begin API"
     app.run(host="0.0.0.0")
+    db.close()
