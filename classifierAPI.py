@@ -167,7 +167,7 @@ def getPredictions():#name='default'):
     db = p.load(open(DB_PATH,'rb'))
     name = request.args.get("name") or "default"
     stem = "classification_results/API/Prod_"+name+"_"
-    filtData = createEpisodes.removeUnexpectedColumns(db[name])
+    filtData = [r for r in createEpisodes.removeUnexpectedColumns(db[name]) if 'MRNPlusX' in r]
     print "Calling export"
     reportsDBAll = createEpisodes.aggregateResults(filtData, stem)
     rawData  = sorted( db[name], key=itemgetter('ReportID') )
