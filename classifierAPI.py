@@ -1,4 +1,4 @@
-import pickle as p
+import cPickle as p
 from constants import *
 import sys
 sys.path.append("buildNewDataset")
@@ -17,7 +17,6 @@ from flask import Flask
 from flask import render_template
 from flask import request
 import json
-import shelve
 
 
 app = Flask(__name__)
@@ -39,14 +38,15 @@ for r in raws:
         base.append(r)
 
 try:
-    db = shelve.open(DB_PATH, writeback=True)
+    db = p.load(DB_PATH)
 except Exception, e:
     print "Init db"
-    db = shelve.Shelf({'default': base }, writeback=True)
+    db = {'default':base}
+    p.dump(db, open(DB_PATH,'wb')) 
 
 
 
-RequiredPreprocessFields = ['Report_Text']
+RequiredPreprocessFields = ['Report_Text', "Report_Date_TimePlusX"]
 RequiredTrainDbFields = ['ReportID', 'Report_Text_Segmented']
 models = ['Boost', 'MaxEnt', 'CNN'] # MaxEnt and CNN not ready
 
@@ -60,6 +60,7 @@ models = ['Boost', 'MaxEnt', 'CNN'] # MaxEnt and CNN not ready
 ## @return: 0
 @app.route("/addData", methods=['POST'])
 def addData():#data, name='default', raw=False, save=False):
+    db = p.load(DB_PATH)
     data = json.loads(request.data) or []
     name = request.args.get("name") or "default"
     raw = request.args.get("raw") or False
@@ -83,7 +84,7 @@ def addData():#data, name='default', raw=False, save=False):
                 r['TaghianGold'] = 1
 
     db[name].extend(data)
-    db.sync() 
+    p.dump(db, open(DB_PATH,'wb')) 
     print db.keys()
     return "Success"
 
@@ -94,6 +95,7 @@ def addData():#data, name='default', raw=False, save=False):
 ## Return 0
 @app.route("/updateTrainSet", methods=['GET'])
 def updateTrainSet():#name='default', model='Boost', mode="Dev"):
+    db = p.load(DB_PATH)
     name = request.args.get("name") or "default"
     model = request.args.get("model") or "Boost"
     mode = request.args.get("mode") or "Prod"
@@ -116,6 +118,7 @@ def updateTrainSet():#name='default', model='Boost', mode="Dev"):
 ## Returns keys of db
 @app.route("/inspect", methods=['GET'])
 def inspect():#name='default', model='Boost', mode="Dev"):
+    db = p.load(DB_PATH)
     print db.keys()
     return json.dumps(db.keys())
 
@@ -161,6 +164,7 @@ def getResults():#name='default'):
 ## consecutive period
 @app.route("/getPredictions", methods=['GET'])
 def getPredictions():#name='default'):
+    db = p.load(DB_PATH)
     name = request.args.get("name") or "default"
     stem = "classification_results/API/Prod_"+name+"_"
     filtData = createEpisodes.removeUnexpectedColumns(db[name])
