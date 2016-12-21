@@ -186,7 +186,7 @@ def getPredictions():#name='default'):
 
     print "Calling export"
     reportsDBAll = createEpisodes.aggregateResults(filtData, stem)
-    rawData  = sorted( db[name], key=itemgetter('ReportID') )
+    rawData = db[name]
 
     reportDB = {}
     for i in range(len(rawData)):
