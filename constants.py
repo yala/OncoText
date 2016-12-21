@@ -29,7 +29,7 @@ if MODE == "TAGHIAN":
     'Red LobularNeoplasia', 'cancer', 'atypia', 'BiopsyType', 
     'Red ADH_DCIS', 'Red Phylodes', 
     'Red CancerNOS', 'Red InvasiveSuspicious', 
-    'Red InsituNOS', 'Red CancerInvInsituNOS', #'Red SuspiciousForPhyllodes', #'Oncotype score', 'TumorGrade',
+    'Red InsituNOS', 'Red CancerInvInsituNOS', 'Red SuspiciousForPhyllodes', #'Oncotype score', 'TumorGrade',
     'Red CancerSuspicious', 'Red TubularCancer', 'Red Papill'
   ]
 

@@ -28,7 +28,7 @@ rawPath = "reportDB+red+clean.p"
 raws = p.load(open(rawPath,'rb'))
 
 def isAnnotation(r):
-    return ('TaghianGold' in r and 'TaghianGold' == 1 ) or ('Correct' in r and r['Correct'] == 'Y')
+    return hasCat(r, diagnoses, loose=True)
 
 limDefault = True
 base = []
@@ -222,10 +222,14 @@ def preprocessReports(reports):
     return results
 
 
-def hasCat(r, cat):
+def hasCat(r, cat, loose=False):
     for c in cat:
-        if r[c] == 'Present':
-            return True
+        if not loose:
+            if r[c] == 'Present':
+                return True
+        else:
+            if c in r:
+                return True
     return False
 
 
