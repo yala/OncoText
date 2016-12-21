@@ -17,7 +17,7 @@ from flask import Flask
 from flask import render_template
 from flask import request
 import json
-
+from datetime import datetime
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -177,7 +177,13 @@ def getPredictions():#name='default'):
     db = p.load(open(DB_PATH,'rb'))
     name = request.args.get("name") or "default"
     stem = "classification_results/API/Prod_"+name+"_"
-    filtData = [r for r in createEpisodes.removeUnexpectedColumns(db[name]) if 'MRNPlusX' in r]
+    filtData = createEpisodes.removeUnexpectedColumns(db[name])
+    for r in filtData:
+        if not "MRNPlusX" in r:
+            r["MRNPlusX"]= "0"
+            r["Institution"] ="Kinyas"
+            r["Report_Date_TimePlusX"] = datetime.now().isoformat()
+
     print "Calling export"
     reportsDBAll = createEpisodes.aggregateResults(filtData, stem)
     rawData  = sorted( db[name], key=itemgetter('ReportID') )
