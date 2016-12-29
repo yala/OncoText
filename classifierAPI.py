@@ -204,12 +204,11 @@ def getPredictions():#name='default'):
 
     print "Calling build episode"
     reportDB, episodeDB = createEpisodes.buildEpisodes(reportDB, True)
+    postProcessRules(reportDB)
+    postProcessRules(episodeDB)
 
     reportDBJ = exportToJSON.portToJSON(reportDB)  
     episodeDBJ = exportToJSON.portToJSON(episodeDB,episodeMode=True)    
-    
-    postProcessRules(reportDBJ)
-    postProcessRules(episodeDBJ)
 
     return json.dumps({'reportDB':reportDBJ, 'episodeDB': episodeDBJ})
 

@@ -1,4 +1,3 @@
-import pickle as p
 import openpyxl as xl
 import sys
 sys.path.append("..")
@@ -7,6 +6,10 @@ from constants import *
 import datetime
 from createEpisodes import validateRepsDB
 from operator import itemgetter
+from anonymize import deIdenText
+from docx import Document
+import pickle as p
+
 
 
 dateFields = ['Date of 1st biopsy', 'Date of 2nd biopsy',  'Date of 3rd biopsy', 'Date of 1 st surgery','Date of 2nd surgery', 'Date of 3rd surgery' ]
@@ -20,7 +23,7 @@ gradeColSeq = ['Final Tumor Grade']
 
 
 
-def parseXLS(inp, out):
+def parseXLS(inp, out, legend=None):
     print "loading wb"
     wb = xl.load_workbook(inp)
 
@@ -29,9 +32,9 @@ def parseXLS(inp, out):
 
     data = []
 
-    legendRowBool = True
+    legendRowBool = legend == None
     print "Getting iterator"
-    legend = []
+    legend = [] if legend == None else legend
     for row in sheet.iter_rows():
         rowDict = {}
         for indx, col in enumerate(row):
@@ -59,6 +62,45 @@ def parseXLS(inp, out):
     print 'dumping'
     print "legend", legend
     p.dump(data, open(out, 'wb'))
+    return data
+
+def parseDoc(inp, out, legend=None):
+    print "loading wb"
+    doc = Document(inp)
+
+    table = doc.tables[0]
+    data = []
+
+    legendRowBool = legend == None
+    print "Getting iterator"
+    legend = [] if legend == None else legend
+    for row in table.rows:
+        rowDict = {}
+        for indx, cell in enumerate(row.cells):
+            if legendRowBool:
+                if not cell.text in legend:
+                    newName = cell.text
+                    legend.append(newName)
+                else:
+                    counter = 2
+                    newName = str(counter) + " " + cell.text
+                    while newName in legend:
+                        counter += 1
+                        newName = str(counter) + " " + cell.text
+                    legend.append(newName)
+            else:
+                rowDict[legend[indx]] = cell.text
+
+        if not legendRowBool:
+            data.append(rowDict)
+        else:
+            print 'processing legend row'
+        legendRowBool = False
+        
+    print 'dumping'
+    print "legend", legend
+    p.dump(data, open(out, 'wb'))
+    print "num rows in ",inp, "is",len(data)
     return data
 
 def parseRedCapXLS():
@@ -396,22 +438,85 @@ def processSusPhyllodes(allPathReps, outDB, outDBRepIds):
 
         sus = 'Present' if str(mrnSus[mrn][0]) == '1' else 'Absent'
         phy = 'Present' if str(mrnSus[mrn][1]) == '1' else 'Absent'
-        rep[susKey] = sus
         rep[phyKey] = phy
-        outDB[susKey].append(rep)
+
         outDB[phyKey].append(rep)
         if not rep['ReportID'] in outDBRepIds:
             outDBRepIds[rep['ReportID']] = {}
-        outDBRepIds[rep['ReportID']][susKey] = sus
+
         outDBRepIds[rep['ReportID']][phyKey] = phy
 
 
     ## print stats
-    print "sus phyllodes has", len(outDB['Red SuspiciousForPhyllodes'])
-    vals = [r['Red SuspiciousForPhyllodes'] for r in outDB['Red SuspiciousForPhyllodes'] ]
-    print "SusPhylodes", len([v for v in vals if v == 'Present']), "present, ", len([v for v in vals if v == 'Absent']), "absent"
     vals = [r['Red Phylodes'] for r in outDB['Red Phylodes'] ]
     print "Phylodes",len([v for v in vals if v == 'Present']), "present, ", len([v for v in vals if v == 'Absent']), "absent"
+    return False
+
+def anon(db, keys):
+    print "calling anonAndAlign"
+    print "len db to allign", len(db)
+    textKey = 'text'
+
+    #anon
+    for r in db:
+        cleanText =  deIdenText(r[textKey])
+        r['Report_Text'] = cleanText
+        r['Report_Text_Segmented'] = cleanText
+        del r[textKey] 
+
+    return db
+
+
+def processSusPhyllodesOct(allPathReps, outDB, outDBRepIds):
+    scrape = False
+    legend = ['text', 'Red Phylodes', 'Red SuspiciousForPhyllodes', 'Explanation', 'explanation2']
+    if scrape:
+        phyllodesDb = parseDoc('../externalDataSources/Phyllodes_Annotations_All_Oct30.docx', 'data/susPhyllodesOctRaw.p', 
+            legend=legend)
+    else: 
+        phyllodesDb = p.load(open('data/susPhyllodesOctRaw.p','rb'))
+
+    annonKeys = legend[1:-1]
+    phyllodesDb = anon(phyllodesDb,annonKeys)
+    p.dump(phyllodesDb, open('data/susPhyllodesOct.p','wb'))
+
+    print "Done anone"
+    ## asign them new rep ids, dont split em
+    for r in phyllodesDb:
+        r['ReportID'] = len(allPathReps)+1
+        allPathReps.append(r)
+    
+
+    susKey = 'Red SuspiciousForPhyllodes'
+    if not susKey in outDB:
+        outDB[susKey] = [] 
+    phyKey =  'Red Phylodes'  
+    if not phyKey in outDB:
+        outDB[phyKey] = []    
+    ## do allignmnet on the ones
+    for rep in phyllodesDb:
+        
+        if susKey in rep:
+            rep[susKey] = 'Present' if str(rep[susKey]) == '1' else 'Absent'
+            outDB[susKey].append(rep)
+
+        if phyKey in rep:
+            rep[phyKey] = 'Present' if str(rep[phyKey]) == '1' else 'Absent'
+            outDB[phyKey].append(rep)
+
+        if phyKey in rep or susKey in rep:
+            if not rep['ReportID'] in outDBRepIds:
+                outDBRepIds[rep['ReportID']] = {}
+
+            outDBRepIds[rep['ReportID']][phyKey] = rep[phyKey]
+            outDBRepIds[rep['ReportID']][susKey] = rep[susKey]
+
+
+    ## print stats
+    vals = [r['Red Phylodes'] for r in outDB[phyKey] ]
+    print "Phylodes",len([v for v in vals if v == 'Present']), "present, ", len([v for v in vals if v == 'Absent']), "absent"
+    vals = [r[susKey] for r in outDB[susKey] ]
+    print "Phylodes Sus",len([v for v in vals if v == 'Present']), "present, ", len([v for v in vals if v == 'Absent']), "absent"
     return False
 
 def processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen ):
@@ -628,7 +733,7 @@ def  processDisagreements(allPathReps, outDB, outDBRepIds):
             repId = annotation['ReportID']
             label = "Present" if annotation['Correct'] == 1 else 'Absent'
 
-            rep = [r for r in allPathReps if r['ReportID']==repId][0]
+            rep = [jr for jr in allPathReps if jr['ReportID']==repId][0]
 
             rep[targetDiag] = label
 
@@ -788,6 +893,7 @@ def buildDB(db, grades, redmap, allPathReps, debug = False):
     processGradeData(grades, allPathReps, outDB, outDBRepIds)
     processOncoScores(db, colSeqs, allPathReps, outDB, outDBRepIds, toSee, seen )
     processSusPhyllodes(allPathReps, outDB, outDBRepIds)
+    processSusPhyllodesOct(allPathReps, outDB, outDBRepIds)
     processDisagreements(allPathReps, outDB, outDBRepIds)
     processPapil(allPathReps, outDB, outDBRepIds)
     processCorrections(allPathReps, outDB, outDBRepIds)
