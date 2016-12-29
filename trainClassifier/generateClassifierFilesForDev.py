@@ -69,10 +69,12 @@ def binarizeFilesForClassification(dB, dirPath, alignTest = False):
 
         print "Num train samples", len(trainLabels)
         print "-------- Train Label Dist,",key," ----------"
+        labelsWithAnnotation = []
         for label in validLabels:
             count = sum([t == label for t in trainLabels]) 
+            if count>0:
+                labelsWithAnnotation.append(label)
             print "Label", label, count ,",", count * 1. / len(trainLabels)
-            assert count > 0
         assert len(trainReports) == len(trainLabels)
 
         ## Remove spaces from labels
@@ -94,7 +96,7 @@ def binarizeFilesForClassification(dB, dirPath, alignTest = False):
 
 
         with open(dirPath+stem+".names", 'wb') as f:
-            labels = ", ".join(validLabels) + ".\n"
+            labels = ", ".join(labelsWithAnnotation) + ".\n"
             features = "pathReport: text.\n"
             f.write(labels)
             f.write(features)

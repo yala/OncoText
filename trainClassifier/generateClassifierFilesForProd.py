@@ -19,12 +19,16 @@ def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem):
     testSuf = 'test'
     for indx, diag in enumerate(diagnoses):
         trainStem = stem
+        labelCountDict = {}
         with open(trainStem+replaceSpaces(diag)+"."+trainSuf, "wb") as f: 
             for a in range(len(trainReports)):                
                 if trainLabels[a][indx] in labelDict[diag]:
                     label = trainLabels[a][indx]
                 else:
                     continue
+                if not label in labelCountDict:
+                    labelCountDict[label] = 0
+                labelCountDict[label] +=1
 
                 report = trainReports[a]
 
@@ -32,6 +36,8 @@ def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem):
                 f.write(report + ", " + label + '.\n')
 
         print "Saved", trainStem+replaceSpaces(diag)+"."+trainSuf
+        print "With distribution", labelCountDict
+        print "---"
 
         testStem = stem
         with open(testStem+replaceSpaces(diag)+"."+testSuf, "wb") as f: 
@@ -169,7 +175,7 @@ def validateRepsDB(reps, flex = False, dirty = False):
 if __name__ == "__main__": 
     allDataPath = redRawDBPath
     allData = p.load(open(allDataPath, 'rb'))
-    binarizeFilesForClassification(allData, '../boostexer/breast/unlabeled/red_all_')
+    binarizeFilesForClassification(allData, '../boostexer/breast/unlabled/red_all_')
 
 
 
