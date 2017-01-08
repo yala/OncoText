@@ -1,6 +1,6 @@
 import sys
 sys.path.append("..")
-import pickle as p
+import cPickle as p
 import re
 import random
 from constants import *

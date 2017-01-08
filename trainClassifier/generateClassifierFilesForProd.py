@@ -1,4 +1,4 @@
-import pickle as p
+import cPickle as p
 import re
 import random
 import datetime
