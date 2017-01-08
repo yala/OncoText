@@ -36,7 +36,7 @@ if MODE == "TAGHIAN":
 
   const_cancers = [
   'Red ILC','Red DCIS', 'Red IDC', 
-  'Red CancerNOS', 'Red InsituNOS', 'Red CancerInvInsituNOS', 'Red TubularCancer', 'cancer'
+  'Red CancerNOS', 'Red InsituNOS', 'Red CancerInvInsituNOS', 'Red TubularCancer'#, 'cancer'
   ]
 
   const_atypias = [
@@ -121,8 +121,8 @@ if MODE == "TAGHIAN":
     'ITC ': ['Yes', 'No'],
     'PR': ['NA', 'Negative', 'Positive'],    
     'ECE': ['Yes', 'No'],
-    'LVI': ['Yes', 'No', 'Not_reported'],
-    'BVI': ['Yes', 'No', 'Not_reported'],
+    'LVI': ['Yes', 'No', 'NA'],
+    'BVI': ['Yes', 'No', 'NA'],
     'TumorGrade': ['Well_differentiated_(grade_I)', 'Moderate_(grade_II)', 'Poor_(grade_III)_Undifferentiated'],
     'Red DCIS':  ['Present','Absent'], 
     'Red LCIS': ['Present','Absent'], 

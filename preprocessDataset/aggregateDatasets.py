@@ -7,7 +7,7 @@ import datetime
 from createEpisodes import validateRepsDB
 from operator import itemgetter
 from anonymize import deIdenText
-from docx import Document
+# from docx import Document
 import pickle as p
 
 
@@ -961,8 +961,8 @@ def exportRepDB(redReps, pathReps):
 parseXLSBool = False
 parseMapBool = False
 parseExternal = False
-preprocessDBBool = False
-findMatchingReportsBool = False
+preprocessDBBool = True
+findMatchingReportsBool = True
 buildDBsBool = True
 exportToRepsDBBool= True
 rawDBPath = '../rawBreastPathReport.p'
