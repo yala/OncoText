@@ -21,6 +21,12 @@ def aggregateResults(allData, stem):
         isTaghian = 'TaghianGold' in r and r['TaghianGold'] == 1
         isHughes = 'Correct' in r and r['Correct'] == 'Y'
         return isTaghian or isHughes
+
+    for r in allData:
+        if not "MRNPlusX" in r:
+            r["MRNPlusX"]= "0"
+            r["Institution"] ="Kinyas"
+            r["Report_Date_TimePlusX"] = datetime.now().isoformat()
     
     trainData = [d for d in allData if isGold(d)]
         
