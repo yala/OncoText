@@ -192,12 +192,12 @@ def getPredictions():#name='default'):
     for i in range(len(rawData)):
         raw = rawData[i]
         rep = reportsDBAll[i]
-        assert rep['Report_Text'] == raw['Report_Text']
+                
         if raw['Owner'] == name:
             for k in rawData[i]:
                 if not k in cols and not k in reportsDBAll[i]:
                     reportsDBAll[i][k] = rawData[i][k]
-            reportDB[i] = reportsDBAll[i]
+            reportDB[ len(reportDB) ] = reportsDBAll[i]
     
     print "Calling labelMaxDXBool"
     createEpisodes.getMaxDX(reportDB)
