@@ -40,9 +40,27 @@ if MODE == "TAGHIAN":
   ]
 
   const_atypias = [
-  'Red ALH','Red ADH', 'Red FlatEpithelial', 'Red LCIS', 'Red Phylodes', 'Red ADH_DCIS', 'Red LobularNeoplasia','Red Papill'
-  #'Red SuspiciousForPhyllodes'  
+  'Red ALH','Red ADH', 'Red FlatEpithelial', 'Red LCIS', 'Red ADH_DCIS', 'Red LobularNeoplasia'
   ]
+
+  key_order = ['Report_Text_Segmented' ,'Red BreastSide' ,'Red CancerSuspicious' ,'Red InvasiveSuspicious', 
+  'Red CancerInvInsituNOS','Red InsituNOS','Red IDC','Red ILC','Red TubularCancer',
+  'Red DCIS', 'ER', 'PR', 'Her2 (Fish)',  'Are there positive LN?','ECE','ITC ' ,'BVI', 'LVI'  ,'Red LCIS',
+  'Red LobularNeoplasia','Red ALH', 'Red ADH_DCIS', 'Red ADH' ,'Red FlatEpithelial' ,'Red Phylodes',
+  'Red SuspiciousForPhyllodes', 'Red Papill']
+
+  groupings = {
+    "atypias": [ 'Report_Text_Segmented', 'Red BreastSide', 'Red LCIS',
+        'Red LobularNeoplasia','Red ALH', 'Red ADH_DCIS', 'Red ADH' ,'Red FlatEpithelial'],
+    'cancers': ['Report_Text_Segmented' ,'Red BreastSide' ,'Red CancerSuspicious' ,'Red InvasiveSuspicious', 
+        'Red CancerInvInsituNOS','Red InsituNOS','Red InvasiveNOS','Red IDC','Red ILC','Red TubularCancer',
+        'Red DCIS'  'ER', 'PR', 'Her2 (Fish)',  'Are there Positive LN?','ECE','ITC' ,'BVI', 'LVI'],
+    'phyllodesAndPapil':[ 'Report_Text_Segmented' ,'Red BreastSide', 'Red Phylodes', 'Red SuspiciousForPhyllodes',
+       'Red Papill']
+
+  }
+
+
   
   if baseline:
     diagnoses = [
@@ -66,7 +84,7 @@ if MODE == "TAGHIAN":
   redRawDBPath = '../reportDB+red+clean.p'
 
   defaultLabelDict = { 'Are there positive LN?': 'No', 'Type of sampled LN (choice=None)':'Unchecked', 'ITC ':'No', 'PR':'NA',
-      'BiopsyType':'Other', 'Her2 (Fish)':'NA', 'ER': 'NA', 'ECE':'No', 
+      'BiopsyType':'NA', 'Her2 (Fish)':'NA', 'ER': 'NA', 'ECE':'No', 
       'LVI': 'NA', 'BVI': 'NA', 'TumorGrade': 'NA', 'Red DCIS':'Absent', 'Red LCIS':'Absent', 'Red IDC':'Absent', 'Red ILC':'Absent',
       'Red ALH':'Absent', 'Red ADH':'Absent', 'Red BreastSide':'RIGHT', 'Red FlatEpithelial':'Absent','Red BluntAdenosis':'Absent', 'Red LobularNeoplasia': 'Absent',
       'cancer':'Absent', 'atypia':'Absent',
@@ -85,8 +103,8 @@ if MODE == "TAGHIAN":
     'Her2 (Fish)': ['NA', 'Negative', 'Positive'],
     'ITC ': ['Yes', 'No'],
     'PR': ['NA', 'Negative', 'Positive'],    
-    'BiopsyType': ['Core', 'Excision', 'Other'],
-    'ECE': ['Yes', 'No'],
+    'BiopsyType': ['Core', 'Excision', 'NA', 'Other'],
+    'ECE': ['Yes', 'No', 'NA'],
     'LVI': ['Yes', 'No', 'NA'],
     'BVI': ['Yes', 'No', 'NA'],
     'TumorGrade': ['Well_differentiated_(grade_I)', 'Moderate_(grade_II)', 'Poor_(grade_III)_Undifferentiated', 'NA'],
