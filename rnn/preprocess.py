@@ -7,7 +7,8 @@ from constants import *
 import re
 import numpy as np
 
-allData = p.load(open('../reportDB+red+clean.p','rb'))
+
+
 
 def preprocessText(text):
 	cleanText = re.sub(r"\W", " ", text) 
@@ -30,8 +31,9 @@ allSentences = []
 
 diagDict = {}
 
-load = False
+load = True
 if load:
+	allData = p.load(open('../reportDB+red+clean.p','rb'))
 	j=0
 	for diag in diagnoses:
 		diagDict[diag] = ([],[])
@@ -39,7 +41,6 @@ if load:
 			if diag in r:
 				raw_Text = r["Report_Text_Segmented"].lower()
 				pre_Text = preprocessText(r["Report_Text_Segmented"])
-				allSentences.append(pre_Text)
 				# sentences = raw_Text.split(".")
 				# for s in sentences:
 				# 	allSentences.extend(s.splitlines())
@@ -52,26 +53,64 @@ if load:
 				diagDict[diag][1].append( oneHot(diag, r[diag]) )
 		print 'len report/label for ', diag ,(len(diagDict[diag][0]), len(diagDict[diag][1]))
 
+	for r in allData:
+		pre_Text = preprocessText(r["Report_Text_Segmented"])
+		allSentences.append(pre_Text)
+
+
 	print "done splitting into diff diags"
-	p.dump(diagDict, open('diagDict.p','wb'))
+	p.dump(diagDict, open('diagDictTrainText.p','wb'))
 	# for i,s in enumerate(allSentences):
 	# 	allSentences[i] = preprocessText(s)
-
+	print "num sentences", len(allSentences)
 	p.dump(allSentences, open('sentenceList.p','wb'))
-else:
-	sentences = p.load(open('sentenceList.p','rb'))
-	diagDict = p.load(open('diagDict.p','wb'))
+	
 
-make_vecs = True
+make_vecs = False
 if make_vecs:
+	sentences = p.load(open('sentenceList.p','rb'))
 	print 'starting to embedd'
 	word2vec.word2vec('sentenceList.p', 'embeddings.bin', 100, verbose=True)
 	model = word2vec.load('embeddings.bin')
 	embeddings = model.vectors
 	vocab      = model.vocab
 
-	p.dump(embeddings, open('embeddings.p','rb'))
-	p.dump(vocab, open('vocab.p','rb'))
+	p.dump(model, open('word2vecModel.p','wb'))
+	p.dump(embeddings, open('embeddings.p','wb'))
+	p.dump(vocab, open('vocab.p','wb'))
+
+
+get_vecs = True
+if get_vecs:
+	print "start get vecs"
+	diagDict = p.load(open('diagDictTrainText.p','rb'))
+	w2vM = p.load(open('word2vecModel.p','rb'))
+
+	print "build vocab"
+	vocab = w2vM.vocab
+	vocabIndxDict = {}
+	for i,v in enumerate(vocab):
+		vocabIndxDict[v] = i
+
+	print "done create vocab"
+	p.dump(vocabIndxDict, open('vocabIndxDict.p','wb'))
+
+	print "dumped voab dit"
+
+	for j,diag in enumerate(diagDict):
+		indexSentences = []
+		sents = diagDict[diag][0]
+		print diag, "num sentences", len(sents)
+		for sent in sents:
+			words = sent.split(" ")
+			indices = [ vocabIndxDict[w] for w in words if w in vocabIndxDict][:1500]
+			indexSentences.append( np.array(indices) )
+		
+		diagDict[diag] =  (indexSentences , diagDict[diag][1])
+		print "done with ", j, len(diagDict)
+		
+	p.dump(diagDict, open('diagDictTrain.p','wb'))
+
 
 
 
