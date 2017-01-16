@@ -15,13 +15,18 @@ from constants import *
 def data_type():
   return tf.float32
 
+def diagName(d):
+    diag = "_".join(d.split())
+    diag = re.sub(r'\W','',diag)
+    return diag
+
 class JGRU(object):
     def __init__(self, is_training, config):
 
         inps = {}
         tars = {}
         for d in diagnoses:
-            diag = "_".join(d.split())
+            diag = diagName(d)
             inps[diag] = tf.placeholder( tf.int32, name="input_"+diag)
             tars[diag] = tf.placeholder( tf.int32, name="target_"+diag)
 
@@ -44,7 +49,7 @@ class JGRU(object):
         outputs, states = {}, {}
 
         for d in diagnoses:
-            diag = "_".join(d.split())
+            diag = diagName(d)
             inputs[diag] =  tf.None.embedding_lookup(embedding, inps[diag])
         
             if is_training and config.keep_prob < 1:
@@ -58,7 +63,7 @@ class JGRU(object):
 
 
         for d in diagnoses:
-            diag = "_".join(d.split())      
+            diag = diagName(d)      
             num_classes = len(constantValidLabelDict[diag])
             softmax_w = tf.get_variable("sofmax_w_"+diag, [size, num_classes], dtype=data_type())
             softmax_b = tf.get_variable("softmax_b_"+diag, [num_classes] ,dtype=data_type())

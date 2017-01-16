@@ -64,7 +64,7 @@ def run_epoch(session, model, train_input, verbose = True):
             'embeddings': embeddings
         }
         for d in diagnoses:
-            diag = "_".join(d.split())
+            diag = diagName(d)
             feed_dict["input_"+diag] = train_input[d][0]
             feed_dict["target_"+diag] = train_input[d][1]
 
@@ -102,7 +102,7 @@ def main(_):
             model = JGRU(is_training=True, config=config)
         
         for d in diagnoses:
-            diag = "_".join(d.split())      
+            diag = diagName(d)      
             tf.scalar_summary(diag+" Loss", model.cost[diag])
 
         tf.scalar_summary("Joint Loss", model.joint_loss)
