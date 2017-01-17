@@ -76,7 +76,7 @@ class JGRU(object):
             softmax_w = tf.get_variable("sofmax_w_"+diag, [size, num_classes], dtype=data_type())
             softmax_b = tf.get_variable("softmax_b_"+diag, [num_classes] ,dtype=data_type())
 
-            logits     = tf.matmul( outputs[diag][-1], sofmax_w ) + softmax_b 
+            logits     = tf.matmul( outputs[diag][-1], softmax_w ) + softmax_b 
             probablities = tf.nn.softmax(logits)
 
             predictions = tf.argmax(probablities)
