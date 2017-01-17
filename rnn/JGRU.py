@@ -88,15 +88,15 @@ class JGRU(object):
             logits     = tf.matmul( lastOut , softmax_w ) + softmax_b 
             probablities = tf.nn.softmax(logits)
 
-            predictions = tf.argmax(probablities)
-            correct_ans = tf.argmax(tars[diag])
+            predictions = tf.argmax(probablities, axis=1)
+            correct_ans = tf.argmax(tars[diag], axis=1)
 
             self._costs[diag] = tf.nn.softmax_cross_entropy_with_logits(logits, tars[diag], name="SoftMax"+diag)
             self._precisions[diag] = tf.contrib.metrics.streaming_precision(predictions, correct_ans, name="recall_"+diag)                            
             self._recalls[diag] = tf.contrib.metrics.streaming_recall(predictions, correct_ans, name="precision_"+diag )
 
 
-        self._joint_loss  =  tf.reduce_sum(tf.to_tensor([self._costs["_".join(d.split())] for d in diagnoses]))
+        self._joint_loss  =  tf.reduce_sum( tf.pack([self._costs[diagName(d)] for d in diagnoses]) )
         
 
 
