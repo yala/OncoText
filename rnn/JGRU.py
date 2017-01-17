@@ -25,37 +25,45 @@ class JGRU(object):
 
         inps = {}
         tars = {}
-        for d in diagnoses:
-            diag = diagName(d)
-            inps[diag] = tf.placeholder( tf.int32, name="input_"+diag)
-            tars[diag] = tf.placeholder( tf.int32, name="target_"+diag)
 
         size = config.hidden_size
         vocab_size = config.vocab_size
         batch_size = config.batch_size
 
+
+        for d in diagnoses:
+            diag = diagName(d)
+            inps[diag] = tf.placeholder( tf.int32, shape=(batch_size, None), name="input_"+diag)
+            tars[diag] = tf.placeholder( tf.int32, shape=(batch_size, None), name="target_"+diag)
+
         gru_cell = tf.nn.rnn_cell.GRUCell(size)
         if is_training and config.keep_prob < 1:
           gru_cell = tf.nn.rnn_cell.DropoutWrapper(
               gru_cell, output_keep_prob=config.keep_prob)
+
         cell = tf.nn.rnn_cell.MultiRNNCell([gru_cell] * config.num_layers, state_is_tuple=True)
         self._initial_state = cell.zero_state(batch_size, data_type())    
     
 
         with tf.device("/cpu:0"):
-            embedding = tf.placeholder( data_type(), name="embeddings" )
+            embedding = tf.placeholder( data_type(), shape=(vocab_size, config.embed_size), name="embeddings" )
 
         inputs = {}
         outputs, states = {}, {}
 
-        for d in diagnoses:
+        for i,d in enumerate(diagnoses):
             diag = diagName(d)
-            inputs[diag] =  tf.None.embedding_lookup(embedding, inps[diag])
-        
+            inputs[diag] =  tf.nn.embedding_lookup(embedding, inps[diag])
+
             if is_training and config.keep_prob < 1:
                 inputs[diag] = tf.nn.dropout(inputs, config.keep_prob)
 
-            outputs[diag], state[diag] = tf.nn.dynamic_rnn(cell, inputs[diag], initial_state=self._initial_state )        
+            if i == 0:
+                with tf.variable_scope("DynamicRNN", reuse=None):
+                    outputs[diag], states[diag] = tf.nn.dynamic_rnn(cell, inputs[diag], initial_state=self._initial_state )       
+            else:                    
+                with tf.variable_scope("DynamicRNN", reuse=True):
+                    outputs[diag], states[diag] = tf.nn.dynamic_rnn(cell, inputs[diag], initial_state=self._initial_state )        
 
         self._costs = {}
         self._precisions = {}
@@ -64,7 +72,7 @@ class JGRU(object):
 
         for d in diagnoses:
             diag = diagName(d)      
-            num_classes = len(constantValidLabelDict[diag])
+            num_classes = len(constantValidLabelDict[d])
             softmax_w = tf.get_variable("sofmax_w_"+diag, [size, num_classes], dtype=data_type())
             softmax_b = tf.get_variable("softmax_b_"+diag, [num_classes] ,dtype=data_type())
 
