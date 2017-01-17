@@ -32,7 +32,9 @@ class JGRU(object):
 
         inps = {}
         tars = {}
-        lens = {}
+        self._inps = inps
+        self._tars = tars
+
 
         size = config.hidden_size
         vocab_size = config.vocab_size
@@ -54,8 +56,9 @@ class JGRU(object):
     
 
         with tf.device("/cpu:0"):
-            embedding = tf.placeholder( data_type(), shape=(vocab_size, config.embed_size), name="embeddings" )
-
+            self._embeddings = tf.placeholder( data_type(), shape=(vocab_size, config.embed_size), name="embeddings" )
+            embedding = self._embeddings
+            
         inputs = {}
         outputs, states = {}, {}
 
@@ -108,6 +111,18 @@ class JGRU(object):
     @property
     def initial_state(self):
         return self._initial_state
+
+    @property
+    def tars(self):
+        return self._tars
+
+    @property
+    def inps(self):
+        return self._inps
+
+    @property
+    def embeddings(self):
+        return self._embeddings
 
     @property
     def batch_size(self):
