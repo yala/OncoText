@@ -73,7 +73,7 @@ def run_epoch(session, model, train_input, verbose = True):
 
         cost = vals['joint_loss']
 
-        costs += \\st
+        costs += cost
 
     if i % 100 == 0:
         print("%.3f cost: %.3f speed: %.0f ms" %
