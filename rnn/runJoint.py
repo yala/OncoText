@@ -21,15 +21,16 @@ class PathInput(object):
 
     def __init__(self, path, Config):
         self.data = p.load(open(path,'rb'))
+        self.batch_size = Config.batch_size
 
     def get_batch(self):
         batch = {}
         for diag in self.data.keys():
 
-            batch_data = np.random.choice(len(self.data[diag]), batch_size)
-            inp = [ self.data[diag][i][0] for i in batch_data]
-            tar = [ self.data[diag][i][1] for i in batch_data]
-            batch[data] = inp, tar
+            batch_data = np.random.choice(len(self.data[diag][0]), self.batch_size)
+            inp = np.array([ self.data[diag][0][i] for i in batch_data])
+            tar = np.array([ self.data[diag][1][i] for i in batch_data])
+            batch[diag] = inp, tar
         return batch
 
 class Config(object):
@@ -65,14 +66,14 @@ def run_epoch(session, model, train_input, verbose = True):
         }
         for d in diagnoses:
             diag = diagName(d)
-            feed_dict["input_"+diag] = train_input[d][0]
-            feed_dict["target_"+diag] = train_input[d][1]
+            feed_dict["input_"+diag] = batch[d][0]
+            feed_dict["target_"+diag] = batch[d][1]
 
         vals = session.run(fetch, feed_dict=feed_dict)
 
         cost = vals['joint_loss']
 
-        costs += cost
+        costs += \\st
 
     if i % 100 == 0:
         print("%.3f cost: %.3f speed: %.0f ms" %
@@ -103,7 +104,7 @@ def main(_):
         
         for d in diagnoses:
             diag = diagName(d)      
-            tf.scalar_summary(diag+" Loss", model.cost[diag])
+            tf.scalar_summary(diag+" Loss", model.costs[diag])
 
         tf.scalar_summary("Joint Loss", model.joint_loss)
 
