@@ -20,11 +20,45 @@ def diagName(d):
     diag = re.sub(r'\W','',diag)
     return diag
 
+
+# Given tensor of shape [batch_size, None, Hidden], get out last hiddens, aka tensor of [batch_size, Hidden]
+def getLastOutput(output):#s, inp, lens, batch_size):
+    # #Code adapted from @mrry response in StackOverflow:
+    # #http://stackoverflow.com/questions/36088277/how-to-select-rows-from-a-3-d-tensor-in-tensorflow
+    # rows_per_batch = tf.shape(inp)[1]
+    # indices_per_batch = 1
+
+    # # Offset to add to each row in indices. We use `tf.expand_dims()` to make 
+    # # this broadcast appropriately.
+    # offset = tf.range(0, batch_size) * rows_per_batch
+
+    # # Convert indices and logits into appropriate form for `tf.gather()`. 
+    # flattened_indices = lens - 1 + offset
+    # flattened_sequence_outputs = tf.reshape( outputs, tf.concat(0, [[-1],
+    #                      tf.shape(outputs)[2:]]))
+
+    # selected_rows = tf.gather(flattened_sequence_outputs, flattened_indices)
+    # last_output  = tf.reshape(selected_rows,
+    #                   tf.concat(0, [tf.pack([batch_size, indices_per_batch]),
+    #                   tf.shape(outputs)[2:]]))
+    pdb.set_trace()
+
+    # Let's first fetch the last index of seq length
+    # last_index would have a scalar value
+    last_index = tf.shape(output)[1] - 1
+    # Then let's reshape the output to [sequence_length,batch_size,num_units]
+    # for convenience
+    output_rs = tf.transpose(output,[1,0,2])
+    # Last state of all batches
+    last_state = tf.nn.embedding_lookup(output_rs,last_index)
+    return last_state
+
 class JGRU(object):
     def __init__(self, is_training, config):
 
         inps = {}
         tars = {}
+        lens = {}
 
         size = config.hidden_size
         vocab_size = config.vocab_size
@@ -76,7 +110,8 @@ class JGRU(object):
             softmax_w = tf.get_variable("sofmax_w_"+diag, [size, num_classes], dtype=data_type())
             softmax_b = tf.get_variable("softmax_b_"+diag, [num_classes] ,dtype=data_type())
 
-            logits     = tf.matmul( outputs[diag][-1], softmax_w ) + softmax_b 
+            lastOut = getLastOutput(outputs[diag])
+            logits     = tf.matmul( lastOut , softmax_w ) + softmax_b 
             probablities = tf.nn.softmax(logits)
 
             predictions = tf.argmax(probablities)
