@@ -62,12 +62,12 @@ def run_epoch(session, model, train_input, verbose = True):
         }
 
         feed_dict= {
-            'embeddings': embeddings
+            model.embeddings : embeddings
         }
         for d in diagnoses:
             diag = diagName(d)
-            feed_dict["input_"+diag] = batch[d][0]
-            feed_dict["target_"+diag] = batch[d][1]
+            feed_dict[ model.inps[diag] ] = batch[d][0]
+            feed_dict[ model.tars[diag] ] = batch[d][1]
 
         vals = session.run(fetch, feed_dict=feed_dict)
 
