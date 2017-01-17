@@ -28,8 +28,8 @@ class PathInput(object):
         for diag in self.data.keys():
 
             batch_data = np.random.choice(len(self.data[diag][0]), self.batch_size)
-            inp = np.array([ self.data[diag][0][i] for i in batch_data])
-            tar = np.array([ self.data[diag][1][i] for i in batch_data])
+            inp = np.array([ self.data[diag][0][i] for i in batch_data], dtype=np.int32)
+            tar = np.array([ self.data[diag][1][i] for i in batch_data], dtype=np.int32)
             batch[diag] = inp, tar
         return batch
 
