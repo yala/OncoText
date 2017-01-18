@@ -47,7 +47,7 @@ class Config(object):
     hidden_size = 100
     max_epoch = 100
     keep_prob = 1.0
-    batch_size = 20
+    batch_size = 1
     vocab_size = 17082
     epoch_size = 1000
     diagnoses = diagnoses
@@ -117,11 +117,10 @@ def main(_):
         allow_soft_placement=False,
         log_device_placement=True) 
 
-    sv = tf.train.Supervisor(logdir='logs')
-    with sv.managed_session(config=sessConf) as session:     
-
-      ### run regular adversarial training
-      for i in range(config.max_epoch):
+    saver = tf.train.Saver()
+    session = tf.Session(config = sessConf)
+    ### run regular adversarial training
+    for i in range(config.max_epoch):
 
         print("Epoch: %d " % (i + 1))
         train_cost  = run_epoch(session, model, train_input)
@@ -129,9 +128,9 @@ def main(_):
         # valid_cost  = run_eval_epoch(session, model, valid_input, train_input.epoch_size)
         # print("Epoch: %d Valid Perplexity: %.3f" % (i + 1, valid_perplexity) ) 
 
-      if FLAGS.save_path:
-        print("Saving model to %s." % FLAGS.save_path)
-        sv.saver.save(session, FLAGS.save_path, global_step=sv.global_step)
+        if FLAGS.save_path:
+            print("Saving model to %s." % FLAGS.save_path)
+            saver.save(session, 'jointRnn', global_step=i)
 
 
 
