@@ -72,14 +72,12 @@ class JGRU(object):
             if is_training and config.keep_prob < 1:
                 inputs[diag] = tf.nn.dropout(inputs, config.keep_prob)
 
-            # if i == 0:
-            #     with tf.variable_scope("DynamicRNN", reuse=None):
-            #         outputs[diag], states[diag] = tf.nn.dynamic_rnn(cell, inputs[diag], initial_state=self._initial_state )       
-            # else:                    
-            #     with tf.variable_scope("DynamicRNN", reuse=True):
-            #         outputs[diag], states[diag] = tf.nn.dynamic_rnn(cell, inputs[diag], initial_state=self._initial_state )        
-            with tf.variable_scope("DynamicRNN", reuse=True):
-                outputs[diag], states[diag] = tf.nn.dynamic_rnn(cell, inputs[diag], initial_state=self._initial_state, sequence_length=self._lens[diag] )        
+            if i == 0:
+                with tf.variable_scope("DynamicRNN", reuse=None):
+                    outputs[diag], states[diag] = tf.nn.dynamic_rnn(cell, inputs[diag], initial_state=self._initial_state, sequence_length=self._lens[diag] )       
+            else:                    
+                with tf.variable_scope("DynamicRNN", reuse=True):
+                    outputs[diag], states[diag] = tf.nn.dynamic_rnn(cell, inputs[diag], initial_state=self._initial_state , sequence_length=self._lens[diag])        
 
         self._costs = {}
         self._precisions = {}
