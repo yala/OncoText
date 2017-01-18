@@ -32,8 +32,10 @@ class JGRU(object):
 
         inps = {}
         tars = {}
+        lens = {}
         self._inps = inps
         self._tars = tars
+        self._lens = lens
 
 
         size = config.hidden_size
@@ -45,6 +47,7 @@ class JGRU(object):
             diag = diagName(d)
             inps[diag] = tf.placeholder( tf.int32, shape=(batch_size, None), name="input_"+diag)
             tars[diag] = tf.placeholder( tf.int32, shape=(batch_size, None), name="target_"+diag)
+            lens[diag] = tf.placeholder( tf.int32, shape=(batch_size), name="lens_"+diag)
 
         gru_cell = tf.nn.rnn_cell.GRUCell(size)
         if is_training and config.keep_prob < 1:
@@ -58,7 +61,7 @@ class JGRU(object):
         with tf.device("/cpu:0"):
             self._embeddings = tf.placeholder( data_type(), shape=(vocab_size, config.embed_size), name="embeddings" )
             embedding = self._embeddings
-            
+
         inputs = {}
         outputs, states = {}, {}
 
@@ -69,12 +72,14 @@ class JGRU(object):
             if is_training and config.keep_prob < 1:
                 inputs[diag] = tf.nn.dropout(inputs, config.keep_prob)
 
-            if i == 0:
-                with tf.variable_scope("DynamicRNN", reuse=None):
-                    outputs[diag], states[diag] = tf.nn.dynamic_rnn(cell, inputs[diag], initial_state=self._initial_state )       
-            else:                    
-                with tf.variable_scope("DynamicRNN", reuse=True):
-                    outputs[diag], states[diag] = tf.nn.dynamic_rnn(cell, inputs[diag], initial_state=self._initial_state )        
+            # if i == 0:
+            #     with tf.variable_scope("DynamicRNN", reuse=None):
+            #         outputs[diag], states[diag] = tf.nn.dynamic_rnn(cell, inputs[diag], initial_state=self._initial_state )       
+            # else:                    
+            #     with tf.variable_scope("DynamicRNN", reuse=True):
+            #         outputs[diag], states[diag] = tf.nn.dynamic_rnn(cell, inputs[diag], initial_state=self._initial_state )        
+            with tf.variable_scope("DynamicRNN", reuse=True):
+                outputs[diag], states[diag] = tf.nn.dynamic_rnn(cell, inputs[diag], initial_state=self._initial_state, sequence_length=self._lens[diag] )        
 
         self._costs = {}
         self._precisions = {}
@@ -115,6 +120,10 @@ class JGRU(object):
     @property
     def tars(self):
         return self._tars
+
+    @property
+    def lens(self):
+        return self._lens
 
     @property
     def inps(self):

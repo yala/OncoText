@@ -28,9 +28,14 @@ class PathInput(object):
         for diag in self.data.keys():
 
             batch_data = np.random.choice(len(self.data[diag][0]), self.batch_size)
-            inp = np.array([ self.data[diag][0][i] for i in batch_data], dtype=np.int32)
+            
+            lens =  np.array([ len(self.data[diag][0][i]) for i in batch_data], dtype=np.int32 )
+            maxLength = np.max(lens)
+            inp = np.array([ np.hstack( [ \
+                self.data[diag][0][i], np.zeros(maxLength-len(self.data[diag][0][i]))] \
+                ) for i in batch_data])
             tar = np.array([ self.data[diag][1][i] for i in batch_data], dtype=np.int32)
-            batch[diag] = inp, tar
+            batch[diag] = inp, tar, lens
         return batch
 
 class Config(object):
@@ -68,6 +73,7 @@ def run_epoch(session, model, train_input, verbose = True):
             diag = diagName(d)
             feed_dict[ model.inps[diag] ] = batch[d][0]
             feed_dict[ model.tars[diag] ] = batch[d][1]
+            feed_dict[ model.lens[diag] ] = batch[d][2]
 
         vals = session.run(fetch, feed_dict=feed_dict)
 
