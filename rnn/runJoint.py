@@ -119,6 +119,7 @@ def main(_):
 
     saver = tf.train.Saver()
     session = tf.Session(config = sessConf)
+    session.run(tf.initialize_all_variables())
     ### run regular adversarial training
     for i in range(config.max_epoch):
 
