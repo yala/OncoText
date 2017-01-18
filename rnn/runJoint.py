@@ -33,7 +33,7 @@ class PathInput(object):
             maxLength = np.max(lens)
             inp = np.array([ np.hstack( [ \
                 self.data[diag][0][i], np.zeros(maxLength-len(self.data[diag][0][i]))] \
-                ) for i in batch_data])
+                ) for i in batch_data], dtype=np.int32)
             tar = np.array([ self.data[diag][1][i] for i in batch_data], dtype=np.int32)
             batch[diag] = inp, tar, lens
         return batch
