@@ -101,38 +101,37 @@ def main(_):
 
     config = Config()
     train_input  = PathInput(trainPath, config)
-    
-    with tf.Graph().as_default():
-        initializer = tf.random_uniform_initializer(-1*config.init_scale, config.init_scale)
-    
-        with tf.variable_scope("JGRU", reuse=None, initializer = initializer) :
-            model = JGRU(is_training=True, config=config)
         
-        for d in diagnoses:
-            diag = diagName(d)      
-            tf.scalar_summary(diag+" Loss", model.costs[diag])
+    initializer = tf.random_uniform_initializer(-1*config.init_scale, config.init_scale)
 
-        tf.scalar_summary("Joint Loss", model.joint_loss)
+    with tf.variable_scope("JGRU", reuse=None, initializer = initializer) :
+        model = JGRU(is_training=True, config=config)
+    
+    for d in diagnoses:
+        diag = diagName(d)      
+        tf.scalar_summary(diag+" Loss", model.costs[diag])
 
-        sessConf = tf.ConfigProto(
-            allow_soft_placement=False,
-            log_device_placement=True) 
+    tf.scalar_summary("Joint Loss", model.joint_loss)
 
-        sv = tf.train.Supervisor(logdir='logs')
-        with sv.managed_session(config=sessConf) as session:     
+    sessConf = tf.ConfigProto(
+        allow_soft_placement=False,
+        log_device_placement=True) 
 
-          ### run regular adversarial training
-          for i in range(config.max_epoch):
+    sv = tf.train.Supervisor(logdir='logs')
+    with sv.managed_session(config=sessConf) as session:     
 
-            print("Epoch: %d " % (i + 1))
-            train_cost  = run_epoch(session, model, train_input)
-            print("Epoch: %d Train Error: %.3f" % (i + 1, train_cost))
-            # valid_cost  = run_eval_epoch(session, model, valid_input, train_input.epoch_size)
-            # print("Epoch: %d Valid Perplexity: %.3f" % (i + 1, valid_perplexity) ) 
+      ### run regular adversarial training
+      for i in range(config.max_epoch):
 
-          if FLAGS.save_path:
-            print("Saving model to %s." % FLAGS.save_path)
-            sv.saver.save(session, FLAGS.save_path, global_step=sv.global_step)
+        print("Epoch: %d " % (i + 1))
+        train_cost  = run_epoch(session, model, train_input)
+        print("Epoch: %d Train Error: %.3f" % (i + 1, train_cost))
+        # valid_cost  = run_eval_epoch(session, model, valid_input, train_input.epoch_size)
+        # print("Epoch: %d Valid Perplexity: %.3f" % (i + 1, valid_perplexity) ) 
+
+      if FLAGS.save_path:
+        print("Saving model to %s." % FLAGS.save_path)
+        sv.saver.save(session, FLAGS.save_path, global_step=sv.global_step)
 
 
 
