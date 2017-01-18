@@ -113,12 +113,9 @@ def main(_):
 
     tf.scalar_summary("Joint Loss", model.joint_loss)
 
-    sessConf = tf.ConfigProto(
-        allow_soft_placement=False,
-        log_device_placement=True) 
 
     saver = tf.train.Saver()
-    session = tf.Session(config = sessConf)
+    session = tf.Session()
     session.run(tf.initialize_all_variables())
     ### run regular adversarial training
     for i in range(config.max_epoch):
