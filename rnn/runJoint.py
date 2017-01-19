@@ -5,7 +5,7 @@ import cPickle as p
 import tensorflow as tf
 import time
 import numpy as np
-from JGRU import *
+from JCNN import *
 import sys
 sys.path.append("..")
 from constants import *
@@ -50,6 +50,8 @@ class Config(object):
     batch_size = 1
     vocab_size = 17082
     epoch_size = 1000
+    filter_sizes = [1,3,5,7,9]
+    num_filters = 32
     diagnoses = diagnoses
 
 def run_epoch(session, model, train_input, verbose = True):
@@ -104,8 +106,8 @@ def main(_):
         
     initializer = tf.random_uniform_initializer(-1*config.init_scale, config.init_scale)
 
-    with tf.variable_scope("JGRU", reuse=None, initializer = initializer) :
-        model = JGRU(is_training=True, config=config)
+    with tf.variable_scope("JCNN", reuse=None, initializer = initializer) :
+        model = TextCNN(is_training=True, config=config)
     
     for d in diagnoses:
         diag = diagName(d)      
@@ -114,7 +116,7 @@ def main(_):
     tf.scalar_summary("Joint Loss", model.joint_loss)
 
 
-    saver = tf.train.Saver()
+    saver = tf.train.Saver(tf.all_variables())
     session = tf.Session()
     session.run(tf.initialize_all_variables())
     ### run regular adversarial training
