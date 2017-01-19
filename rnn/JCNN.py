@@ -74,7 +74,7 @@ class TextCNN(object):
             diag = diagName(d)      
             num_classes = len(constantValidLabelDict[d])
             featMap = featureMaps[diag]
-            size = tf.shape(featMap)[1]
+            size = 160 # size of feature map
 
             softmax_w = tf.get_variable("sofmax_w_"+diag, [size, num_classes], dtype=data_type())
             softmax_b = tf.get_variable("softmax_b_"+diag, [num_classes] ,dtype=data_type())
