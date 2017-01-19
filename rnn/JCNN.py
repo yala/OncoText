@@ -126,7 +126,7 @@ class TextCNN(object):
                 # Maxpooling over the outputs
                 pooled = tf.nn.max_pool(
                     h,
-                    ksize=[1, tf.shape(inputText)[1] - size + 1, 1, 1],
+                    size=[1, tf.shape(inputText)[1] - size + 1, 1, 1],
                     strides=[1, 1, 1, 1],
                     padding='VALID',
                     name="pool")
