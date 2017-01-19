@@ -107,7 +107,6 @@ class TextCNN(object):
                 filter_shape = [size, config.embed_size, 1, config.num_filters]
                 W = tf.Variable(tf.truncated_normal(filter_shape, stddev=0.1), name="W")
                 b = tf.Variable(tf.constant(0.1, shape=[config.num_filters]), name="b")
-                pdb.set_trace()
                 conv = tf.nn.conv2d(
                     inputText,
                     W,
