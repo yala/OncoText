@@ -14,6 +14,10 @@ flags = tf.flags
 logging = tf.logging
 embeddings = p.load(open('embeddings.p','rb'))
 
+flags.DEFINE_string("save_path", None, "Model output directory")
+
+FLAGS = flags.FLAGS
+
 def data_type():
   return tf.float32
 
@@ -100,7 +104,7 @@ def run_epoch(session, models, train_input, config, verbose = True):
 
         costs += cost
 
-    if i % 100 == 0:
+    if i % 10 == 0:
         print("%.3f cost: %.3f speed: %.0f ms" %
         ( step * 1.0 , costs / i+1,
           (time.time() - start_time) )
