@@ -19,24 +19,40 @@ def data_type():
 
 class PathInput(object):
 
-    def __init__(self, path, Config):
+    def __init__(self, path, config):
         self.data = p.load(open(path,'rb'))
         self.batch_size = Config.batch_size
+        self.config = config
 
     def get_batch(self):
         batch = {}
+        working_dict = {}
+        maxLength = 0
+        ## Sample sentences and find max length
         for diag in self.data.keys():
-
             batch_data = np.random.choice(len(self.data[diag][0]), self.batch_size)
-            
             lens =  np.array([ len(self.data[diag][0][i]) for i in batch_data], dtype=np.int32 )
-            maxLength = np.max(lens)
+            maxSentLength = np.max(lens)
+            if maxSentLength > maxLength:
+                maxLength = maxSentLength
+            working_dict[diag] = batch_data
+
+        # Find bucket length for this batch
+        bucket = self.config.bucket_lengths[0]  
+        for b in self.config.bucket_lengths:
+            if maxLength < b:
+                bucket = b
+                break
+
+        # pad all sentences to match bucket length
+        for diag in self.data.keys():
+            batch_data = working_dict[diag]
             inp = np.array([ np.hstack( [ \
-                self.data[diag][0][i], np.zeros(maxLength-len(self.data[diag][0][i]))] \
+                self.data[diag][0][i], np.zeros(bucket-len(self.data[diag][0][i]))] \
                 ) for i in batch_data], dtype=np.int32)
             tar = np.array([ self.data[diag][1][i] for i in batch_data], dtype=np.int32)
-            batch[diag] = inp, tar, lens
-        return batch
+            batch[diag] = inp, tar
+        return batch, bucket
 
 class Config(object):
     init_scale = 0.1
@@ -51,31 +67,32 @@ class Config(object):
     vocab_size = 17082
     epoch_size = 1000
     filter_sizes = [1,3,5,7,9]
+    bucket_lengths = [250,350,500,750,2600]
     num_filters = 32
     diagnoses = diagnoses
 
-def run_epoch(session, model, train_input, verbose = True):
+def run_epoch(session, models, train_input, config, verbose = True):
     epoch_size = 1000
     start_time = time.time()
 
     costs = 0.0
 
     for i in range(epoch_size):
-        batch = train_input.get_batch()
+        batch, bucket = train_input.get_batch()
+
 
         fetch = {
-            'joint_loss':model.joint_loss,
-            'trainOp': model.trainOp
+            'joint_loss':models[bucket].joint_loss,
+            'trainOp': models[bucket].trainOp
         }
 
         feed_dict= {
-            model.embeddings : embeddings
+            models[bucket].embeddings : embeddings
         }
         for d in diagnoses:
             diag = diagName(d)
-            feed_dict[ model.inps[diag] ] = batch[d][0]
-            feed_dict[ model.tars[diag] ] = batch[d][1]
-            feed_dict[ model.lens[diag] ] = batch[d][2]
+            feed_dict[ models[bucket].inps[diag] ] = batch[d][0]
+            feed_dict[ models[bucket].tars[diag] ] = batch[d][1]
 
         vals = session.run(fetch, feed_dict=feed_dict)
 
@@ -105,15 +122,20 @@ def main(_):
     train_input  = PathInput(trainPath, config)
         
     initializer = tf.random_uniform_initializer(-1*config.init_scale, config.init_scale)
-
-    with tf.variable_scope("JCNN", reuse=None, initializer = initializer) :
-        model = TextCNN(is_training=True, config=config)
+    models = {}
+    for i, bucket in enumerate(config.bucket_lengths):
+        with tf.variable_scope("JCNN", reuse= (None if i == 0 else True), initializer = initializer) :
+            models[bucket] = TextCNN(max_length=bucket, config=config)
     
+
     for d in diagnoses:
         diag = diagName(d)      
-        tf.scalar_summary(diag+" Loss", model.costs[diag])
+        diagLoss = tf.reduce_sum(tf.pack([models[b].costs[diag] for b in config.bucket_lengths]))
 
-    tf.scalar_summary("Joint Loss", model.joint_loss)
+        tf.scalar_summary(diag+" Loss", diagLoss)
+
+    jointLoss = tf.reduce_sum(tf.pack([models[b].joint_loss[diag] for b in config.bucket_lengths]))
+    tf.scalar_summary("Joint Loss", jointLoss )
 
 
     saver = tf.train.Saver(tf.all_variables())
@@ -123,7 +145,7 @@ def main(_):
     for i in range(config.max_epoch):
 
         print("Epoch: %d " % (i + 1))
-        train_cost  = run_epoch(session, model, train_input)
+        train_cost  = run_epoch(session, models, train_input, config)
         print("Epoch: %d Train Error: %.3f" % (i + 1, train_cost))
         # valid_cost  = run_eval_epoch(session, model, valid_input, train_input.epoch_size)
         # print("Epoch: %d Valid Perplexity: %.3f" % (i + 1, valid_perplexity) ) 

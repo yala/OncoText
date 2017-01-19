@@ -20,24 +20,18 @@ def diagName(d):
     diag = re.sub(r'\W','',diag)
     return diag
 
-
-# Given tensor of shape [batch_size, None, Hidden], get out last hiddens, aka tensor of [batch_size, Hidden]
-def getLastOutput(output):#s, inp, lens, batch_size):
-    output_rs = tf.transpose(output,[1,0,2])
-    return output_rs[-1]
     
 
 class TextCNN(object):
-    def __init__(self, is_training, config):
+    def __init__(self, max_length, config):
 
         inps = {}
         tars = {}
-        lens = {}
         self._inps = inps
         self._tars = tars
-        self._lens = lens
         self._filter_sizes = config.filter_sizes
-        self.b_filters  = config.num_filters
+        self._filters  = config.num_filters
+        self.max_length = max_length
 
 
         size = config.hidden_size
@@ -49,7 +43,6 @@ class TextCNN(object):
             diag = diagName(d)
             inps[diag] = tf.placeholder( tf.int32, shape=(batch_size, None), name="input_"+diag)
             tars[diag] = tf.placeholder( tf.int32, shape=(batch_size, None), name="target_"+diag)
-            lens[diag] = tf.placeholder( tf.int32, shape=(batch_size), name="lens_"+diag)
     
 
         with tf.device("/cpu:0"):
@@ -126,7 +119,7 @@ class TextCNN(object):
                 # Maxpooling over the outputs
                 pooled = tf.nn.max_pool(
                     h,
-                    size=[1, tf.shape(inputText)[1] - size + 1, 1, 1],
+                    ksize=[1, self.max_length - size + 1, 1, 1],
                     strides=[1, 1, 1, 1],
                     padding='VALID',
                     name="pool")
@@ -147,10 +140,6 @@ class TextCNN(object):
     @property
     def tars(self):
         return self._tars
-
-    @property
-    def lens(self):
-        return self._lens
 
     @property
     def inps(self):
