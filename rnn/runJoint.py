@@ -134,7 +134,7 @@ def main(_):
 
         tf.scalar_summary(diag+" Loss", diagLoss)
 
-    jointLoss = tf.reduce_sum(tf.pack([models[b].joint_loss[diag] for b in config.bucket_lengths]))
+    jointLoss = tf.reduce_sum(tf.pack([models[b].joint_loss for b in config.bucket_lengths]))
     tf.scalar_summary("Joint Loss", jointLoss )
 
 
