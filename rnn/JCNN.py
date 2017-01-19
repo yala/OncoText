@@ -127,11 +127,11 @@ class TextCNN(object):
         # Combine all the pooled features
         num_filters_total = config.num_filters * len(config.filter_sizes)
         h_pool = tf.concat(3, pooled_outputs)
-        h_pool_flat = tf.reshape(self.h_pool, [-1, num_filters_total])
+        h_pool_flat = tf.reshape(h_pool, [-1, num_filters_total])
 
         # Add dropout
         with tf.name_scope("dropout"):
-            h_drop = tf.nn.dropout(self.h_pool_flat, self.dropout_keep_prob)
+            h_drop = tf.nn.dropout(h_pool_flat, config.keep_prob)
 
         return h_drop
 
