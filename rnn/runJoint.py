@@ -87,7 +87,9 @@ def run_epoch(session, models, train_input, config, verbose = True):
 
         fetch = {
             'joint_loss':models[bucket].joint_loss,
-            'trainOp': models[bucket].trainOp
+            'trainOp': models[bucket].trainOp,
+            'precision': models[bucket].precision, 
+            'recall': models[bucket].recall
         }
 
         feed_dict= {
@@ -104,11 +106,17 @@ def run_epoch(session, models, train_input, config, verbose = True):
 
         costs += cost
 
-    if i % 10 == 0:
-        print("%.3f cost: %.3f speed: %.0f ms" %
-        ( step * 1.0 , costs / i+1,
-          (time.time() - start_time) )
-        )
+        if i % 100 == 0:
+            print("%.3f cost: %.3f speed: %.0f ms" %
+            ( i  / epoch_size , costs / i+1,
+              (time.time() - start_time) )
+            )
+        if i == 0:
+            for d in diagnoses:
+                diag = diagName(d)
+                print(d + " %.3f precision: %.3f recall:" %
+                ( vals['precision'][diag], vals['recall'][diag]  )
+            )
 
     return costs/epoch_size
 
