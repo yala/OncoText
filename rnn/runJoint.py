@@ -14,7 +14,7 @@ flags = tf.flags
 logging = tf.logging
 embeddings = p.load(open('embeddings.p','rb'))
 
-flags.DEFINE_string("save_path", None, "Model output directory")
+flags.DEFINE_string("save_path", "logs", "Model output directory")
 
 FLAGS = flags.FLAGS
 
@@ -124,39 +124,42 @@ def main(_):
 
     config = Config()
     train_input  = PathInput(trainPath, config)
+    with tf.Graph().as_default():
+        initializer = tf.random_uniform_initializer(-1*config.init_scale, config.init_scale)
+        models = {}
+        for i, bucket in enumerate(config.bucket_lengths):
+            with tf.variable_scope("JCNN", reuse= (None if i == 0 else True), initializer = initializer) :
+                models[bucket] = TextCNN(max_length=bucket, config=config)
         
-    initializer = tf.random_uniform_initializer(-1*config.init_scale, config.init_scale)
-    models = {}
-    for i, bucket in enumerate(config.bucket_lengths):
-        with tf.variable_scope("JCNN", reuse= (None if i == 0 else True), initializer = initializer) :
-            models[bucket] = TextCNN(max_length=bucket, config=config)
-    
 
-    for d in diagnoses:
-        diag = diagName(d)      
-        diagLoss = tf.reduce_sum(tf.pack([models[b].costs[diag] for b in config.bucket_lengths]))
+        for d in diagnoses:
+            diag = diagName(d)      
+            diagLoss = tf.reduce_sum(tf.pack([models[b].costs[diag] for b in config.bucket_lengths]))
 
-        tf.scalar_summary(diag+" Loss", diagLoss)
+            tf.scalar_summary(diag+" Loss", diagLoss)
 
-    jointLoss = tf.reduce_sum(tf.pack([models[b].joint_loss for b in config.bucket_lengths]))
-    tf.scalar_summary("Joint Loss", jointLoss )
+        jointLoss = tf.reduce_sum(tf.pack([models[b].joint_loss for b in config.bucket_lengths]))
+        tf.scalar_summary("Joint Loss", jointLoss )
 
+        sessConf = tf.ConfigProto(
+            allow_soft_placement=False,
+            log_device_placement=True) 
 
-    saver = tf.train.Saver(tf.all_variables())
-    session = tf.Session()
-    session.run(tf.initialize_all_variables())
-    ### run regular adversarial training
-    for i in range(config.max_epoch):
+        
+        sv = tf.train.Supervisor(logdir=FLAGS.save_path)
+        with sv.managed_session(config=sessConf) as session:
+            ### run regular adversarial training
+            for i in range(config.max_epoch):
 
-        print("Epoch: %d " % (i + 1))
-        train_cost  = run_epoch(session, models, train_input, config)
-        print("Epoch: %d Train Error: %.3f" % (i + 1, train_cost))
-        # valid_cost  = run_eval_epoch(session, model, valid_input, train_input.epoch_size)
-        # print("Epoch: %d Valid Perplexity: %.3f" % (i + 1, valid_perplexity) ) 
+                print("Epoch: %d " % (i + 1))
+                train_cost  = run_epoch(session, models, train_input, config)
+                print("Epoch: %d Train Error: %.3f" % (i + 1, train_cost))
+                # valid_cost  = run_eval_epoch(session, model, valid_input, train_input.epoch_size)
+                # print("Epoch: %d Valid Perplexity: %.3f" % (i + 1, valid_perplexity) ) 
 
-        if FLAGS.save_path:
-            print("Saving model to %s." % FLAGS.save_path)
-            saver.save(session, 'jointRnn', global_step=i)
+                if FLAGS.save_path:
+                    print("Saving model to %s." % FLAGS.save_path)
+                    sv.saver.save(session, 'jointRnn', global_step=i)
 
 
 
