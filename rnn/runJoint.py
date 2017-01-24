@@ -21,14 +21,12 @@ FLAGS = flags.FLAGS
 def data_type():
   return tf.float32
 
-class TestInput(object):
+class PathInput(object):
 
     def __init__(self, path, config):
         self.data = p.load(open(path,'rb'))
         self.batch_size = Config.batch_size
         self.config = config
-        self.length = len(self.data)
-        self.index = 0
 
     def get_batch(self):
         batch = {}
@@ -36,8 +34,7 @@ class TestInput(object):
         maxLength = 0
         ## Sample sentences and find max length
         for diag in self.data.keys():
-            startIndex = min( self.index, self.length - self.config.batch_size)
-            batch_data = range(startIndex, startIndex + config.batch_size )
+            batch_data = np.random.choice(len(self.data[diag][0]), self.batch_size)
             lens =  np.array([ len(self.data[diag][0][i]) for i in batch_data], dtype=np.int32 )
             maxSentLength = np.max(lens)
             if maxSentLength > maxLength:
@@ -60,23 +57,24 @@ class TestInput(object):
             tar = np.array([ self.data[diag][1][i] for i in batch_data], dtype=np.int32)
             batch[diag] = inp, tar
 
-        self.index += self.config.batch_size 
-        self.index %= self.length
         return batch, bucket
 
-class PathInput(object):
+class TestInput(object):
 
     def __init__(self, path, config):
         self.data = p.load(open(path,'rb'))
         self.batch_size = Config.batch_size
         self.config = config
+        self.length = len(self.data)
+        self.index = 0
 
     def get_batch(self):
         batch = {}
         maxLength = 0
         ## Sample sentences and find max length
-        
-        batch_data = np.random.choice(len(self.data[diag][0]), self.batch_size)
+        startIndex = min( self.index, self.length - self.config.batch_size)
+        batch_data = range(startIndex, startIndex + config.batch_size )
+
         lens =  np.array([ len(self.data[diag][0][i]) for i in batch_data], dtype=np.int32 )
         maxSentLength = np.max(lens)
         if maxSentLength > maxLength:
@@ -98,6 +96,9 @@ class PathInput(object):
                 ) for i in batch_data], dtype=np.int32)
             tar = np.array([ self.data[i][diag] for i in batch_data], dtype=np.int32)
             batch[diag] = inp, tar
+
+        self.index += self.config.batch_size 
+        self.index %= self.length
         return batch, bucket
 
 class Config(object):
@@ -206,6 +207,7 @@ def main(_):
     trainPath = 'diagDictTrain.p'
     devPath = 'devReps.p'
 
+    print("save_path", FLAGS.save_path)
 
     config = Config()
     train_input  = PathInput(trainPath, config)
@@ -238,9 +240,12 @@ def main(_):
             for i in range(config.max_epoch):
 
                 print("Epoch: %d " % (i + 1))
+                print("EVAL")
+                run_eval_epoch(session, models, dev_input, config)
+                print("TRAIN")
                 train_cost  = run_epoch(session, models, train_input, config)
                 print("Epoch: %d Train Error: %.3f" % (i + 1, train_cost))
-                run_eval_epoch(session, models, dev_input, config)
+                
 
                 if FLAGS.save_path:
                     print("Saving model to %s." % FLAGS.save_path)
@@ -249,6 +254,5 @@ def main(_):
 
 
 if __name__ == "__main__":
-
     tf.app.run()
     
