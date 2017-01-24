@@ -21,18 +21,24 @@ if MODE == "TAGHIAN":
   maxedOutList = ['Oncotype score', 'Oncotype date']
   externalList = ['TumorGrade', 'Red SuspiciousForPhyllodes', 'Red Phylodes']  
 
+
   diagnoses = [
-    'Are there positive LN?', u'ITC ', u'PR',  
+    'Are there positive LN?',
+     u'ITC ', 
+     u'PR',  
     'Her2 (Fish)', u'ER', 'ECE', 'LVI', 'BVI',
     'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 
-    'Red ADH', 'Red BreastSide', 'Red FlatEpithelial','Red BluntAdenosis', 
+    'Red ADH', 'Red BreastSide', 'Red FlatEpithelial', 'Red BluntAdenosis', 
     'Red LobularNeoplasia', 'cancer', 'atypia', 'BiopsyType', 
     'Red ADH_DCIS', 'Red Phylodes', 
-    'Red CancerNOS', 'Red InvasiveSuspicious', 
-    'Red InsituNOS', 'Red CancerInvInsituNOS', 'Red SuspiciousForPhyllodes', #'Oncotype score', 'TumorGrade',
+    'Red CancerNOS', 
+    'Red InvasiveSuspicious', 
+    'Red InsituNOS', 'Red CancerInvInsituNOS', 'Red SuspiciousForPhyllodes', 
     'Red CancerSuspicious', 'Red TubularCancer', 'Red Papill'
+    #'Oncotype score', 'TumorGrade',
   ]
 
+  ignoreList = ['ITC ', 'Red CancerNOS', 'cancer', 'atypia', 'BiopsyType', 'Red BluntAdenosis']
 
   const_cancers = [
   'Red ILC','Red DCIS', 'Red IDC', 
@@ -60,6 +66,38 @@ if MODE == "TAGHIAN":
 
   }
 
+  diagToConventionDict = {
+    "Red DCIS": 'DCIS',
+    'Are there positive LN?': 'Are there positive LN?' ,
+    'ITC ':'ITC',  
+    'Her2 (Fish)':'Her2',
+    'Red ILC':'ILC', 
+    'Red ALH':'ALH',
+    'Red DCIS':'DCIS',
+    'Red LCIS':'LCIS', 
+    'Red IDC':'IDC', 
+    'Red ADH' :'ADH',
+    'Red BreastSide':'BreastSide',
+    'Red FlatEpithelial':'FlatEpithelial',
+    'Red BluntAdenosis':'BluntAdenosis', 
+    'Red LobularNeoplasia':'LobularNeoplasia', 
+    'Red ADH_DCIS': 'ADH_DCIS', 
+    'Red Phylodes':'Phylodes', 
+    'Red CancerNOS':'CancerNOS', 
+    'Red InvasiveSuspicious': 'Red InvasiveSuspicious', 
+    'Red InsituNOS':'InsituNOS',
+    'Red SuspiciousForPhyllodes':'SuspiciousForPhyllodes',
+    'Red CancerSuspicious':'CancerSuspicious',
+    'Red TubularCancer':'TubularCancer',
+    'Red Papill':'Papill'
+  }
+  for diag in diagnoses:
+    if not diag in diagToConventionDict:
+      diagToConventionDict[diag] = diag
+
+  conventionToDiagDict = {}
+  for diag in diagToConventionDict:
+    conventionToDiagDict[ diagToConventionDict[diag] ] = diag
 
   
   if baseline:
