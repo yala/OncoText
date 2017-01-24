@@ -41,9 +41,17 @@ if load:
         newR = {}
         for key in r:
             if key in conventionToDiagDict:
-                newR[conventionToDiagDict[key]] = r[key]
+                targetKey = conventionToDiagDict[key]
+                
             else:
-                newR[key] = r[key]
+                targetKey = key
+            newR[targetKey] = r[key] if (targetKey not in diagnoses or r[key] in constantValidLabelDict[targetKey]) else defaultLabelDict[targetKey]
+        for d in diagnoses:
+            if not d in newR:
+                print "D", d
+                newR[d] = defaultLabelDict[d]                            
+                print newR[d]
+                
         newReps.append(newR)
 
     allReps = newReps

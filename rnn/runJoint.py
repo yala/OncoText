@@ -75,7 +75,7 @@ class TestInput(object):
         startIndex = min( self.index, self.length - self.config.batch_size)
         batch_data = range(startIndex, startIndex + self.config.batch_size )
 
-        lens =  np.array([ len(self.data[0][i]) for i in batch_data], dtype=np.int32 )
+        lens =  np.array([ len(self.data[i]['NN_Text']) for i in batch_data], dtype=np.int32 )
         maxSentLength = np.max(lens)
         if maxSentLength > maxLength:
             maxLength = maxSentLength
@@ -89,12 +89,21 @@ class TestInput(object):
                 break
 
         # pad all sentences to match bucket length
-        for diag in self.data.keys():
+        for diag in diagnoses:
             batch_data = working_arr
             inp = np.array([ np.hstack( [ \
-                self.data[i]['NN_Text'], np.zeros(bucket-len(self.data[diag][0][i]))] \
+                self.data[i]['NN_Text'], np.zeros(bucket-len(self.data[i]['NN_Text']))] \
                 ) for i in batch_data], dtype=np.int32)
-            tar = np.array([ self.data[i][diag] for i in batch_data], dtype=np.int32)
+            try:
+                tar = np.array([ self.data[i][diag] for i in batch_data], dtype=np.int32)
+            except Exception, e:
+                print(batch_data)
+
+                print(diag)
+                print( [ self.data[i][diag] for i in batch_data])
+                print( [ self.data[i][diag] for i in batch_data])
+                raw_input()
+
             batch[diag] = inp, tar
 
         self.index += self.config.batch_size 
