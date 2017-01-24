@@ -75,7 +75,7 @@ class TestInput(object):
         startIndex = min( self.index, self.length - self.config.batch_size)
         batch_data = range(startIndex, startIndex + self.config.batch_size )
 
-        lens =  np.array([ len(self.data[diag][0][i]) for i in batch_data], dtype=np.int32 )
+        lens =  np.array([ len(self.data[0][i]) for i in batch_data], dtype=np.int32 )
         maxSentLength = np.max(lens)
         if maxSentLength > maxLength:
             maxLength = maxSentLength
