@@ -24,21 +24,26 @@ if MODE == "TAGHIAN":
 
   diagnoses = [
     'Are there positive LN?',
-     u'ITC ', 
-     u'PR',  
-    'Her2 (Fish)', u'ER', 'ECE', 'LVI', 'BVI',
+     'ITC ', 
+     'PR',  
+    'Her2 (Fish)', 'ER', 'ECE', 'LVI', 'BVI',
     'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 
     'Red ADH', 'Red BreastSide', 'Red FlatEpithelial', 'Red BluntAdenosis', 
     'Red LobularNeoplasia', 'cancer', 'atypia', 'BiopsyType', 
     'Red ADH_DCIS', 'Red Phylodes', 
     'Red CancerNOS', 
     'Red InvasiveSuspicious', 
-    'Red InsituNOS', 'Red CancerInvInsituNOS', 'Red SuspiciousForPhyllodes', 
+    'Red InsituNOS', 
+    'Red CancerInvInsituNOS', 
+    'Red SuspiciousForPhyllodes', 
     'Red CancerSuspicious', 'Red TubularCancer', 'Red Papill'
     #'Oncotype score', 'TumorGrade',
   ]
 
-  ignoreList = ['ITC ', 'Red CancerNOS', 'cancer', 'atypia', 'BiopsyType', 'Red BluntAdenosis']
+  ignoreList = ['ITC ', 'Red CancerNOS', 'cancer', 'atypia', 'BiopsyType', 'Red BluntAdenosis',
+  'Red CancerInvInsituNOS']
+
+  nn_diagnoses = [d for d in diagnoses if not d in ignoreList]
 
   const_cancers = [
   'Red ILC','Red DCIS', 'Red IDC', 
@@ -84,8 +89,9 @@ if MODE == "TAGHIAN":
     'Red ADH_DCIS': 'ADH_DCIS', 
     'Red Phylodes':'Phylodes', 
     'Red CancerNOS':'CancerNOS', 
-    'Red InvasiveSuspicious': 'Red InvasiveSuspicious', 
+    'Red InvasiveSuspicious': 'InvasiveSuspicious', 
     'Red InsituNOS':'InsituNOS',
+    'Red CancerInvInsituNOS': 'CancerInvInsituNOS',
     'Red SuspiciousForPhyllodes':'SuspiciousForPhyllodes',
     'Red CancerSuspicious':'CancerSuspicious',
     'Red TubularCancer':'TubularCancer',
@@ -96,8 +102,11 @@ if MODE == "TAGHIAN":
       diagToConventionDict[diag] = diag
 
   conventionToDiagDict = {}
-  for diag in diagToConventionDict:
-    conventionToDiagDict[ diagToConventionDict[diag] ] = diag
+  for diag in diagnoses:
+    if diag in diagToConventionDict:
+      conventionToDiagDict[ diagToConventionDict[diag] ] = diag
+    else:
+      conventionToDiagDict[ diag ] = diag
 
   
   if baseline:
