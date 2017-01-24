@@ -73,7 +73,7 @@ class TestInput(object):
         maxLength = 0
         ## Sample sentences and find max length
         startIndex = min( self.index, self.length - self.config.batch_size)
-        batch_data = range(startIndex, startIndex + config.batch_size )
+        batch_data = range(startIndex, startIndex + self.config.batch_size )
 
         lens =  np.array([ len(self.data[diag][0][i]) for i in batch_data], dtype=np.int32 )
         maxSentLength = np.max(lens)
