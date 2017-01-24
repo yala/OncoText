@@ -175,7 +175,7 @@ def run_eval_epoch(session, models, dev_input, config, verbose = True):
 
         fetch = {
             'joint_loss':models[bucket].joint_loss,
-            'predAndGold'models[bucket].predAndGold
+            'predAndGold':models[bucket].predAndGold
         }
 
         feed_dict= {
