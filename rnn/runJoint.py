@@ -21,12 +21,14 @@ FLAGS = flags.FLAGS
 def data_type():
   return tf.float32
 
-class PathInput(object):
+class TestInput(object):
 
     def __init__(self, path, config):
         self.data = p.load(open(path,'rb'))
         self.batch_size = Config.batch_size
-        self.config = config
+        self.config = configs
+        self.length = len(self.data)
+        self.index = 0
 
     def get_batch(self):
         batch = {}
@@ -34,7 +36,8 @@ class PathInput(object):
         maxLength = 0
         ## Sample sentences and find max length
         for diag in self.data.keys():
-            batch_data = np.random.choice(len(self.data[diag][0]), self.batch_size)
+            startIndex = min( self.index, self.length - self.config.batch_size)
+            batch_data = range(startIndex, startIndex + config.batch_size )
             lens =  np.array([ len(self.data[diag][0][i]) for i in batch_data], dtype=np.int32 )
             maxSentLength = np.max(lens)
             if maxSentLength > maxLength:
@@ -56,15 +59,17 @@ class PathInput(object):
                 ) for i in batch_data], dtype=np.int32)
             tar = np.array([ self.data[diag][1][i] for i in batch_data], dtype=np.int32)
             batch[diag] = inp, tar
+
+        self.index += self.config.batch_size 
+        self.index %= self.length
         return batch, bucket
 
-class TestInput(object):
+class PathInput(object):
 
     def __init__(self, path, config):
         self.data = p.load(open(path,'rb'))
         self.batch_size = Config.batch_size
         self.config = config
-        self.length = len(data)
 
     def get_batch(self):
         batch = {}
@@ -165,14 +170,12 @@ def run_eval_epoch(session, models, dev_input, config, verbose = True):
     costs = 0.0
 
     for i in range(epoch_size):
-        batch, bucket = train_input.get_batch()
+        batch, bucket = dev_input.get_batch()
 
 
         fetch = {
             'joint_loss':models[bucket].joint_loss,
-            'trainOp': models[bucket].trainOp,
-            'precision': models[bucket].precision, 
-            'recall': models[bucket].recall
+            'predAndGold'models[bucket].predAndGold
         }
 
         feed_dict= {
@@ -189,16 +192,8 @@ def run_eval_epoch(session, models, dev_input, config, verbose = True):
 
         costs += cost
 
-        if i % 100 == 0:
-            print("%.3f cost: %.3f speed: %.0f ms" %
-            ( i  / epoch_size , costs / (i+1),
-              (time.time() - start_time) )
-            )
-        if i == 0:
-            for d in diagnoses:
-                diag = diagName(d)
-                print(d + " %.3f precision: %.3f recall:" %
-                ( vals['precision'][diag], vals['recall'][diag]  )
+    costs /= epoch_size
+    print "Dev cost", costs
     return 0
 
 
