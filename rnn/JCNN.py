@@ -86,9 +86,7 @@ class TextCNN(object):
             self.predictions = tf.argmax(probablities, axis=1)
             self.correct_ans = tf.argmax(tars[diag], axis=1)
 
-            self._costs[diag] = tf.nn.softmax_cross_entropy_with_logits(logits, tars[diag], name="SoftMax"+diag)
-            self._precisions[diag] = tf.contrib.metrics.streaming_precision(predictions, correct_ans, name="recall_"+diag)                            
-            self._recalls[diag] = tf.contrib.metrics.streaming_recall(predictions, correct_ans, name="precision_"+diag )
+            self._costs[diag] = tf.reduce_sum(tf.nn.softmax_cross_entropy_with_logits(logits, tars[diag], name="SoftMax"+diag))
 
 
         self._joint_loss  =  tf.reduce_sum( tf.pack([self._costs[diagName(d)] for d in diagnoses]) )
@@ -163,15 +161,6 @@ class TextCNN(object):
     @property
     def joint_loss(self):
         return self._joint_loss
-
-
-    @property
-    def precision(self):
-        return self._precisions
-
-    @property
-    def recall(self):
-        return self._recalls
 
     @property
     def trainOp(self):

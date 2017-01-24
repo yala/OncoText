@@ -64,6 +64,7 @@ class TestInput(object):
         self.data = p.load(open(path,'rb'))
         self.batch_size = Config.batch_size
         self.config = config
+        self.length = len(data)
 
     def get_batch(self):
         batch = {}
@@ -157,17 +158,58 @@ def run_epoch(session, models, train_input, config, verbose = True):
     return costs/epoch_size
 
 
-def run_eval_epoch():
+def run_eval_epoch(session, models, dev_input, config, verbose = True):
+    epoch_size = dev_input.length // config.batch_size
+    start_time = time.time()
+
+    costs = 0.0
+
+    for i in range(epoch_size):
+        batch, bucket = train_input.get_batch()
+
+
+        fetch = {
+            'joint_loss':models[bucket].joint_loss,
+            'trainOp': models[bucket].trainOp,
+            'precision': models[bucket].precision, 
+            'recall': models[bucket].recall
+        }
+
+        feed_dict= {
+            models[bucket].embeddings : embeddings
+        }
+        for d in diagnoses:
+            diag = diagName(d)
+            feed_dict[ models[bucket].inps[diag] ] = batch[d][0]
+            feed_dict[ models[bucket].tars[diag] ] = batch[d][1]
+
+        vals = session.run(fetch, feed_dict=feed_dict)
+
+        cost = vals['joint_loss']
+
+        costs += cost
+
+        if i % 100 == 0:
+            print("%.3f cost: %.3f speed: %.0f ms" %
+            ( i  / epoch_size , costs / (i+1),
+              (time.time() - start_time) )
+            )
+        if i == 0:
+            for d in diagnoses:
+                diag = diagName(d)
+                print(d + " %.3f precision: %.3f recall:" %
+                ( vals['precision'][diag], vals['recall'][diag]  )
     return 0
 
 
 def main(_):
     trainPath = 'diagDictTrain.p'
-    # validPath = '../ReportDB+test.p'
+    devPath = 'devReps.p'
 
 
     config = Config()
     train_input  = PathInput(trainPath, config)
+    dev_input = TestInput(devPath, config)
     with tf.Graph().as_default():
         initializer = tf.random_uniform_initializer(-1*config.init_scale, config.init_scale)
         models = {}
@@ -198,8 +240,7 @@ def main(_):
                 print("Epoch: %d " % (i + 1))
                 train_cost  = run_epoch(session, models, train_input, config)
                 print("Epoch: %d Train Error: %.3f" % (i + 1, train_cost))
-                # valid_cost  = run_eval_epoch(session, model, valid_input, train_input.epoch_size)
-                # print("Epoch: %d Valid Perplexity: %.3f" % (i + 1, valid_perplexity) ) 
+                run_eval_epoch(session, models, dev_input, config)
 
                 if FLAGS.save_path:
                     print("Saving model to %s." % FLAGS.save_path)
