@@ -173,12 +173,30 @@ def run_epoch(session, models, train_input, config, verbose = True):
     return costs/epoch_size
 
 
+def evaluate(preds, golds):
+    accuracy = {}
+    for d in nn_diagnoses:
+        accuracy[d] = sum([preds[i][d] == golds[i][d] for i in range(len(preds))]) / len(preds)
+
+    rowLevelError = 0
+    for i in range(len(preds)):
+        for d in nn_diagnoses:
+            if not preds[i][d] == golds[i][d]:
+                rowLevelError +=1.
+                break
+    rowLevelError /= len(preds)
+    print("Row level Error", rowLevelError)
+    print("category wide accuracies", accuracy)
+
+            
+
 def run_eval_epoch(session, models, dev_input, config, verbose = True):
     epoch_size = dev_input.length // config.batch_size
     start_time = time.time()
 
     costs = 0.0
-
+    preds = []
+    golds = []
     for i in range(epoch_size):
         batch, bucket = dev_input.get_batch()
 
@@ -198,10 +216,8 @@ def run_eval_epoch(session, models, dev_input, config, verbose = True):
 
         vals = session.run(fetch, feed_dict=feed_dict)
         pred, gold = vals['predAndGold']
-        print("pred")
-        print(pred)
-        print("gold")
-        print(gold)
+        preds.append(pred)
+        golds.append(gold)
 
         cost = vals['joint_loss']
 
@@ -209,7 +225,10 @@ def run_eval_epoch(session, models, dev_input, config, verbose = True):
 
     costs /= epoch_size
     print("Dev cost", costs)
+    evaluate(preds, golds)
     return 0
+
+
 
 
 def main(_):
