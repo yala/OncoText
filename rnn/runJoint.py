@@ -26,7 +26,7 @@ class TestInput(object):
     def __init__(self, path, config):
         self.data = p.load(open(path,'rb'))
         self.batch_size = Config.batch_size
-        self.config = configs
+        self.config = config
         self.length = len(self.data)
         self.index = 0
 
