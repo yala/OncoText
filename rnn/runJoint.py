@@ -187,13 +187,18 @@ def run_eval_epoch(session, models, dev_input, config, verbose = True):
             feed_dict[ models[bucket].tars[diag] ] = batch[d][1]
 
         vals = session.run(fetch, feed_dict=feed_dict)
+        pred, gold = vals['predAndGold']
+        print("pred")
+        print(pred)
+        print("gold")
+        print(gold)
 
         cost = vals['joint_loss']
 
         costs += cost
 
     costs /= epoch_size
-    print "Dev cost", costs
+    print("Dev cost", costs)
     return 0
 
 

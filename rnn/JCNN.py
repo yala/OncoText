@@ -66,8 +66,8 @@ class TextCNN(object):
                     featureMaps[diag] = self.buildCNN(inputs[diag], config)
 
         self._costs = {}
-        self._precisions = {}
-        self._recalls = {}
+        self._predictions = {}
+        self._correct_ans = {}
 
 
         for d in diagnoses:
@@ -83,8 +83,8 @@ class TextCNN(object):
             logits     = tf.matmul( featMap , softmax_w ) + softmax_b 
             probablities = tf.nn.softmax(logits)
 
-            self.predictions = tf.argmax(probablities, axis=1)
-            self.correct_ans = tf.argmax(tars[diag], axis=1)
+            self._predictions[diag] = tf.argmax(probablities, axis=1)
+            self._correct_ans[diag] = tf.argmax(tars[diag], axis=1)
 
             self._costs[diag] = tf.reduce_sum(tf.nn.softmax_cross_entropy_with_logits(logits, tars[diag], name="SoftMax"+diag))
 
@@ -156,7 +156,7 @@ class TextCNN(object):
 
     @property
     def predAndGold(self):
-        return  self.predictions, self.correct_ans
+        return  self._predictions, self._correct_ans
 
     @property
     def joint_loss(self):
