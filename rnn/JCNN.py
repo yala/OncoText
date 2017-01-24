@@ -83,8 +83,8 @@ class TextCNN(object):
             logits     = tf.matmul( featMap , softmax_w ) + softmax_b 
             probablities = tf.nn.softmax(logits)
 
-            predictions = tf.argmax(probablities, axis=1)
-            correct_ans = tf.argmax(tars[diag], axis=1)
+            self.predictions = tf.argmax(probablities, axis=1)
+            self.correct_ans = tf.argmax(tars[diag], axis=1)
 
             self._costs[diag] = tf.nn.softmax_cross_entropy_with_logits(logits, tars[diag], name="SoftMax"+diag)
             self._precisions[diag] = tf.contrib.metrics.streaming_precision(predictions, correct_ans, name="recall_"+diag)                            
@@ -155,6 +155,10 @@ class TextCNN(object):
     @property
     def costs(self):
         return self._costs
+
+    @property
+    def predAndGold(self):
+        return  self.predictions, self.correct_ans
 
     @property
     def joint_loss(self):

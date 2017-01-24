@@ -58,6 +58,42 @@ class PathInput(object):
             batch[diag] = inp, tar
         return batch, bucket
 
+class TestInput(object):
+
+    def __init__(self, path, config):
+        self.data = p.load(open(path,'rb'))
+        self.batch_size = Config.batch_size
+        self.config = config
+
+    def get_batch(self):
+        batch = {}
+        maxLength = 0
+        ## Sample sentences and find max length
+        
+        batch_data = np.random.choice(len(self.data[diag][0]), self.batch_size)
+        lens =  np.array([ len(self.data[diag][0][i]) for i in batch_data], dtype=np.int32 )
+        maxSentLength = np.max(lens)
+        if maxSentLength > maxLength:
+            maxLength = maxSentLength
+        working_arr = batch_data
+
+        # Find bucket length for this batch
+        bucket = self.config.bucket_lengths[0]  
+        for b in self.config.bucket_lengths:
+            if maxLength < b:
+                bucket = b
+                break
+
+        # pad all sentences to match bucket length
+        for diag in self.data.keys():
+            batch_data = working_arr
+            inp = np.array([ np.hstack( [ \
+                self.data[i]['NN_Text'], np.zeros(bucket-len(self.data[diag][0][i]))] \
+                ) for i in batch_data], dtype=np.int32)
+            tar = np.array([ self.data[i][diag] for i in batch_data], dtype=np.int32)
+            batch[diag] = inp, tar
+        return batch, bucket
+
 class Config(object):
     init_scale = 0.1
     learning_rate = 1.0
@@ -108,7 +144,7 @@ def run_epoch(session, models, train_input, config, verbose = True):
 
         if i % 100 == 0:
             print("%.3f cost: %.3f speed: %.0f ms" %
-            ( i  / epoch_size , costs / i+1,
+            ( i  / epoch_size , costs / (i+1),
               (time.time() - start_time) )
             )
         if i == 0:
