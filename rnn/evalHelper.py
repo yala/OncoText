@@ -6,6 +6,7 @@ import re
 import sys
 sys.path.append("..")
 from constants import *
+import pprint
 
 def diagName(d):
     diag = "_".join(d.split())
@@ -13,7 +14,22 @@ def diagName(d):
     return diag
 
 def evaluate(preds, golds):
-    print("Call evaluate")
+
+    predHist = {}
+    for key in preds[0]:
+        predHist[key] = {}
+        for p in preds:
+            sample = p[key]
+            if sample not in predHist[key]:
+                predHist[key][sample] = 0
+            predHist[key][sample] +=1
+    print("------------------------")
+    print("Predicition Histogram")
+    pprint.pprint(predHist)
+
+
+
+
     accuracy = {}
     for d in nn_diagnoses:
         diag = diagName(d)
@@ -23,9 +39,8 @@ def evaluate(preds, golds):
 
     rowAccuracy = {}
     for i in range(len(preds)):
-
-        for group in groupings:
-            for member in group:
+        for groupKey in groupings:
+            for member in groupings[groupKey]:
                 if member in nn_diagnoses:
                     if not member in rowAccuracy[member]:
                         rowAccuracy[member] = 0
@@ -39,7 +54,7 @@ def evaluate(preds, golds):
 
     averageAccuracy = sum([ accuracy[ diagName(d) ] for d in nn_diagnoses ]) / len(nn_diagnoses)
 
-    print("Group level Accuracies", rowAccuracy)
-    print("category wide accuracies", accuracy)
-    print("Average accuracy",averageAccuracy)
+    pprint.pprint("Group level Accuracies", rowAccuracy)
+    pprint.pprint("category wide accuracies", accuracy)
+    pprint.pprint("Average accuracy",averageAccuracy)
 
