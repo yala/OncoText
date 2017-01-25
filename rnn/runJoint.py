@@ -129,7 +129,7 @@ class Config(object):
     diagnoses = diagnoses
 
 def run_epoch(session, models, train_input, config, verbose = True):
-    epoch_size = 1000
+    epoch_size = 500
     start_time = time.time()
 
     costs = 0.0
