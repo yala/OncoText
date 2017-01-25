@@ -37,7 +37,7 @@ def evaluate(preds, golds):
     for key in rowAccuracy:
         rowAccuracy[key] = 1 -  rowAccuracy[key]/len(preds)
 
-    averageAccuracy = sum([ accuracy[diag] for diag in nn_diagnoses ]) / len(nn_diagnoses)
+    averageAccuracy = sum([ accuracy[ diag(d) ] for d in nn_diagnoses ]) / len(nn_diagnoses)
 
     print("Group level Accuracies", rowAccuracy)
     print("category wide accuracies", accuracy)
