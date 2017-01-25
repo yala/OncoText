@@ -238,7 +238,7 @@ def main(_):
             log_device_placement=True) 
 
         
-        sv = tf.train.Supervisor(logdir=FLAGS.save_path)
+        sv = tf.train.Supervisor(logdir=FLAGS.save_path,summary_op=None)
         with sv.managed_session(config=sessConf) as session:
             ### run regular adversarial training
             for i in range(config.max_epoch):
