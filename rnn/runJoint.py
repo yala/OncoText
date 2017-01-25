@@ -123,7 +123,7 @@ class Config(object):
     vocab_size = 17082
     epoch_size = 1000
     filter_sizes = [1,3,5,7,9]
-    bucket_lengths = [250,350,500,750,2600]
+    bucket_lengths = [2600]
     num_filters = 32
     diagnoses = diagnoses
 
@@ -140,8 +140,6 @@ def run_epoch(session, models, train_input, config, verbose = True):
         fetch = {
             'joint_loss':models[bucket].joint_loss,
             'trainOp': models[bucket].trainOp,
-            'precision': models[bucket].precision, 
-            'recall': models[bucket].recall
         }
 
         feed_dict= {
@@ -163,25 +161,22 @@ def run_epoch(session, models, train_input, config, verbose = True):
             ( i  / epoch_size , costs / (i+1),
               (time.time() - start_time) )
             )
-        if i == 0:
-            for d in diagnoses:
-                diag = diagName(d)
-                print(d + " %.3f precision: %.3f recall:" %
-                ( vals['precision'][diag], vals['recall'][diag]  )
-            )
 
     return costs/epoch_size
 
 
 def evaluate(preds, golds):
+    print("Call evaluate")
     accuracy = {}
     for d in nn_diagnoses:
-        accuracy[d] = sum([preds[i][d] == golds[i][d] for i in range(len(preds))]) / len(preds)
+        diag = diagName(d)
+        accuracy[diag] = sum([preds[i][diag] == golds[i][diag] for i in range(len(preds))]) / len(preds)
 
     rowLevelError = 0
     for i in range(len(preds)):
         for d in nn_diagnoses:
-            if not preds[i][d] == golds[i][d]:
+            diag = diagName(d)
+            if not preds[i][diag] == golds[i][diag]:
                 rowLevelError +=1.
                 break
     rowLevelError /= len(preds)
@@ -268,12 +263,13 @@ def main(_):
             for i in range(config.max_epoch):
 
                 print("Epoch: %d " % (i + 1))
+
                 print("EVAL")
                 run_eval_epoch(session, models, dev_input, config)
+                
                 print("TRAIN")
                 train_cost  = run_epoch(session, models, train_input, config)
                 print("Epoch: %d Train Error: %.3f" % (i + 1, train_cost))
-                
 
                 if FLAGS.save_path:
                     print("Saving model to %s." % FLAGS.save_path)
