@@ -65,10 +65,13 @@ if MODE == "TAGHIAN":
         'Red LobularNeoplasia','Red ALH', 'Red ADH_DCIS', 'Red ADH' ,'Red FlatEpithelial'],
     'cancers': ['Report_Text_Segmented' ,'Red BreastSide' ,'Red CancerSuspicious' ,'Red InvasiveSuspicious', 
         'Red CancerInvInsituNOS','Red InsituNOS','Red InvasiveNOS','Red IDC','Red ILC','Red TubularCancer',
-        'Red DCIS'  'ER', 'PR', 'Her2 (Fish)',  'Are there Positive LN?','ECE','ITC' ,'BVI', 'LVI'],
+        'Red DCIS', 'ER', 'PR', 'Her2 (Fish)',  'Are there Positive LN?','ECE','ITC' ,'BVI', 'LVI'],
+    'cancersSansMarkers': ['Report_Text_Segmented' ,'Red BreastSide' ,'Red CancerSuspicious' ,'Red InvasiveSuspicious', 
+        'Red CancerInvInsituNOS','Red InsituNOS','Red InvasiveNOS','Red IDC','Red ILC','Red TubularCancer',
+        'Red DCIS'],
     'phyllodesAndPapil':[ 'Report_Text_Segmented' ,'Red BreastSide', 'Red Phylodes', 'Red SuspiciousForPhyllodes',
-       'Red Papill']
-
+       'Red Papill'],
+     'allNN': key_order
   }
 
   diagToConventionDict = {

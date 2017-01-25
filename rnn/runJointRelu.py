@@ -5,10 +5,11 @@ import cPickle as p
 import tensorflow as tf
 import time
 import numpy as np
-from JCNNMutableEmbeddings import *
+from JCNNRelu import *
 import sys
 sys.path.append("..")
 from constants import *
+from evalHelper import *
 
 flags = tf.flags
 logging = tf.logging
@@ -163,27 +164,6 @@ def run_epoch(session, models, train_input, config, verbose = True):
             )
 
     return costs/epoch_size
-
-
-def evaluate(preds, golds):
-    print("Call evaluate")
-    accuracy = {}
-    for d in nn_diagnoses:
-        diag = diagName(d)
-        accuracy[diag] = sum([preds[i][diag] == golds[i][diag] for i in range(len(preds))]) / len(preds)
-
-    rowLevelError = 0
-    for i in range(len(preds)):
-        for d in nn_diagnoses:
-            diag = diagName(d)
-            if not preds[i][diag] == golds[i][diag]:
-                rowLevelError +=1.
-                break
-    rowLevelError /= len(preds)
-    print("Row level Error", rowLevelError)
-    print("category wide accuracies", accuracy)
-
-            
 
 def run_eval_epoch(session, models, dev_input, config, verbose = True):
     epoch_size = dev_input.length // config.batch_size
