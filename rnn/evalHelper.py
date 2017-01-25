@@ -37,3 +37,8 @@ def evaluate(preds, golds):
     print("Group level Accuracies", rowAccuracy)
     print("category wide accuracies", accuracy)
     print("Average accuracy",averageAccuracy)
+
+def diagName(d):
+    diag = "_".join(d.split())
+    diag = re.sub(r'\W','',diag)
+    return diag
