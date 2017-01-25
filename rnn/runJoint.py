@@ -133,7 +133,7 @@ def run_epoch(session, models, train_input, config, verbose = True):
     start_time = time.time()
 
     costs = 0.0
-
+    preds, golds = [], []
     for i in range(epoch_size):
         batch, bucket = train_input.get_batch()
 
@@ -141,10 +141,11 @@ def run_epoch(session, models, train_input, config, verbose = True):
         fetch = {
             'joint_loss':models[bucket].joint_loss,
             'trainOp': models[bucket].trainOp,
+            'predAndGold':models[bucket].predAndGold
         }
 
         feed_dict= {
-            models[bucket].keep_prob: .75
+            models[bucket].keep_prob: .50
         }
         for d in diagnoses:
             diag = diagName(d)
@@ -152,7 +153,9 @@ def run_epoch(session, models, train_input, config, verbose = True):
             feed_dict[ models[bucket].tars[diag] ] = batch[d][1]
 
         vals = session.run(fetch, feed_dict=feed_dict)
-
+        pred, gold = vals['predAndGold']
+        preds.append(pred)
+        golds.append(gold)
         cost = vals['joint_loss']
 
         costs += cost
@@ -165,6 +168,10 @@ def run_epoch(session, models, train_input, config, verbose = True):
             allVars = session.run(tf.trainable_variables())
             norm = np.linalg.norm(np.array([np.linalg.norm(v) for v in allVars]))
             print("Param norm", norm)
+            print("TRAIN MINIBATCH STATS")
+            evaluate(preds, golds)
+            preds = []
+            golds = []
 
     return costs/epoch_size
             

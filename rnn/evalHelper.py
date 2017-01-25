@@ -43,10 +43,10 @@ def evaluate(preds, golds):
             for member in groupings[groupKey]:
                 if member in nn_diagnoses:
                     diag = diagName(member)
-                    if not diag in rowAccuracy:
-                        rowAccuracy[diag] = 0
+                    if not groupKey in rowAccuracy:
+                        rowAccuracy[groupKey] = 0
                     if not preds[i][diag] == golds[i][diag]:
-                        rowAccuracy[diag] +=1
+                        rowAccuracy[groupKey] +=1
                         break
     
     for key in rowAccuracy:
@@ -58,7 +58,7 @@ def evaluate(preds, golds):
     pprint.pprint(rowAccuracy)
     pprint.pprint("category wide accuracies")
     pprint.pprint(accuracy)
-    pprint.pprint("Average accuracy"y)
+    pprint.pprint("Average accuracy")
     pprint.pprint(averageAccuracy)
     print("-----------------------------")
 
