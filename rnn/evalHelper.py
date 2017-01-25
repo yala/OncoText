@@ -42,11 +42,11 @@ def evaluate(preds, golds):
         for groupKey in groupings:
             for member in groupings[groupKey]:
                 if member in nn_diagnoses:
-                    if not member in rowAccuracy[member]:
-                        rowAccuracy[member] = 0
                     diag = diagName(member)
+                    if not diag in rowAccuracy:
+                        rowAccuracy[diag] = 0
                     if not preds[i][diag] == golds[i][diag]:
-                        rowAccuracy[member] +=1
+                        rowAccuracy[diag] +=1
                         break
     
     for key in rowAccuracy:
