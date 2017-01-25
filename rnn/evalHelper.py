@@ -2,10 +2,15 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 import numpy as np
-
+import re
 import sys
 sys.path.append("..")
 from constants import *
+
+def diagName(d):
+    diag = "_".join(d.split())
+    diag = re.sub(r'\W','',diag)
+    return diag
 
 def evaluate(preds, golds):
     print("Call evaluate")
@@ -38,7 +43,3 @@ def evaluate(preds, golds):
     print("category wide accuracies", accuracy)
     print("Average accuracy",averageAccuracy)
 
-def diagName(d):
-    diag = "_".join(d.split())
-    diag = re.sub(r'\W','',diag)
-    return diag
