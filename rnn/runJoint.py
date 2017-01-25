@@ -160,11 +160,12 @@ def run_epoch(session, models, train_input, config, verbose = True):
 
         costs += cost
 
-        if i % 100 == 0:
+        if i % 100 == 0 and i > 0:
             print("%.3f cost: %.3f speed: %.0f ms" %
             ( i  / epoch_size , costs / (i+1),
               (time.time() - start_time) )
             )
+        if i % 500 == 0 and i > 0:
             allVars = session.run(tf.trainable_variables())
             norm = np.linalg.norm(np.array([np.linalg.norm(v) for v in allVars]))
             print("Param norm", norm)
