@@ -38,6 +38,7 @@ class TextCNN(object):
         vocab_size = config.vocab_size
         batch_size = config.batch_size
 
+        self._keep_prob = tf.placeholder( tf.float32, name="keep_prob")
 
         for d in diagnoses:
             diag = diagName(d)
@@ -46,7 +47,7 @@ class TextCNN(object):
     
 
         with tf.device("/cpu:0"):
-            self._embeddings = tf.get_variable(name="embeddings", shape=(vocab_size, config.embed_size), tf.constant_initializer(embeddingMatrix), trainable=True)
+            self._embeddings = tf.get_variable(name="embeddings", shape=(vocab_size, config.embed_size), initializer=tf.constant_initializer(embeddingMatrix), trainable=True)
             embedding = self._embeddings
 
         inputs = {}
@@ -128,7 +129,7 @@ class TextCNN(object):
 
         # Add dropout
         with tf.name_scope("dropout"):
-            h_drop = tf.nn.dropout(h_pool_flat, config.keep_prob)
+            h_drop = tf.nn.dropout(h_pool_flat, self._keep_prob)
 
         return h_drop
 
@@ -145,6 +146,10 @@ class TextCNN(object):
     @property
     def embeddings(self):
         return self._embeddings
+
+    @property
+    def keep_prob(self):
+        return self._keep_prob
 
     @property
     def batch_size(self):

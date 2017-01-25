@@ -5,7 +5,7 @@ import cPickle as p
 import tensorflow as tf
 import time
 import numpy as np
-from JCNNSmall import *
+from JCNNMutableEmbeddings import *
 import sys
 sys.path.append("..")
 from constants import *
@@ -143,6 +143,7 @@ def run_epoch(session, models, train_input, config, verbose = True):
         }
 
         feed_dict= {
+            models[bucket].keep_prob: .75
         }
         for d in diagnoses:
             diag = diagName(d)
@@ -201,6 +202,7 @@ def run_eval_epoch(session, models, dev_input, config, verbose = True):
         }
 
         feed_dict= {
+            models[bucket].keep_prob:  1.0
         }
         for d in diagnoses:
             diag = diagName(d)
