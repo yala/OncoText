@@ -109,6 +109,7 @@ class TestInput(object):
 
         self.index += self.config.batch_size 
         self.index %= self.length
+        print("TestInput Index", self.index)
         return batch, bucket
 
 class Config(object):
