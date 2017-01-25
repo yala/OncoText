@@ -19,7 +19,7 @@ def evaluate(preds, golds):
     for key in preds[0]:
         predHist[key] = {}
         for p in preds:
-            sample = p[key]
+            sample = p[key][0]
             if sample not in predHist[key]:
                 predHist[key][sample] = 0
             predHist[key][sample] +=1
