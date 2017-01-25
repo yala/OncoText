@@ -165,14 +165,13 @@ def run_epoch(session, models, train_input, config, verbose = True):
             ( i  / epoch_size , costs / (i+1),
               (time.time() - start_time) )
             )
-        if i % 999 == 0:
-            allVars = session.run(tf.trainable_variables())
-            norm = np.linalg.norm(np.array([np.linalg.norm(v) for v in allVars]))
-            print("Param norm", norm)
-            print("TRAIN MINIBATCH STATS")
-            evaluate(preds, golds)
-            preds = []
-            golds = []
+
+    allVars = session.run(tf.trainable_variables())
+    norm = np.linalg.norm(np.array([np.linalg.norm(v) for v in allVars]))
+    print("Param norm", norm)
+    print("TRAIN MINIBATCH STATS")
+    evaluate(preds, golds)
+
 
     return costs/epoch_size
             
