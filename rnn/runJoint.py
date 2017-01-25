@@ -162,8 +162,9 @@ def run_epoch(session, models, train_input, config, verbose = True):
             ( i  / epoch_size , costs / (i+1),
               (time.time() - start_time) )
             )
-            allVars = sess.run(tf.trainable_variables())
-            print("Param norm", allVars )
+            allVars = session.run(tf.trainable_variables())
+            norm = np.linalg.norm(np.array([np.linalg.norm(v) for v in allVars]))
+            print("Param norm", norm)
 
     return costs/epoch_size
             
@@ -175,7 +176,9 @@ def run_eval_epoch(session, models, dev_input, config, verbose = True):
     costs = 0.0
     preds = []
     golds = []
-    print("Param norm", sess.run(tf.trainable_variables()) )
+    allVars = session.run(tf.trainable_variables())
+    norm = np.linalg.norm(np.array([np.linalg.norm(v) for v in allVars]))
+    print("Param norm", norm)
     for i in range(epoch_size):
         batch, bucket = dev_input.get_batch()
 
