@@ -54,7 +54,11 @@ def evaluate(preds, golds):
 
     averageAccuracy = sum([ accuracy[ diagName(d) ] for d in nn_diagnoses ]) / len(nn_diagnoses)
 
-    pprint.pprint("Group level Accuracies", rowAccuracy)
-    pprint.pprint("category wide accuracies", accuracy)
-    pprint.pprint("Average accuracy",averageAccuracy)
+    pprint.pprint("Group level Accuracies")
+    pprint.pprint(rowAccuracy)
+    pprint.pprint("category wide accuracies")
+    pprint.pprint(accuracy)
+    pprint.pprint("Average accuracy"y)
+    pprint.pprint(averageAccuracy)
+    print("-----------------------------")
 
