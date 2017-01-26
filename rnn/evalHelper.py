@@ -23,9 +23,9 @@ def evaluate(preds, golds):
             if sample not in predHist[key]:
                 predHist[key][sample] = 0
             predHist[key][sample] +=1
-    print("------------------------")
-    print("Predicition Histogram")
-    pprint.pprint(predHist)
+    # print("------------------------")
+    # print("Predicition Histogram")
+    # pprint.pprint(predHist)
 
 
 
@@ -39,15 +39,19 @@ def evaluate(preds, golds):
 
     rowAccuracy = {}
     for i in range(len(preds)):
+
         for groupKey in groupings:
+            groupWrong = False
             for member in groupings[groupKey]:
-                if member in nn_diagnoses:
-                    diag = diagName(member)
-                    if not groupKey in rowAccuracy:
-                        rowAccuracy[groupKey] = 0
-                    if not preds[i][diag] == golds[i][diag]:
-                        rowAccuracy[groupKey] +=1
-                        break
+                if not groupWrong:
+                    if member in nn_diagnoses:
+                        diag = diagName(member)
+                        if not groupKey in rowAccuracy:
+                            rowAccuracy[groupKey] = 0
+                        if not preds[i][diag] == golds[i][diag]:
+                            groupWrong = True
+                            rowAccuracy[groupKey] +=1
+                            break
     
     for key in rowAccuracy:
         rowAccuracy[key] = 1 -  rowAccuracy[key]/len(preds)
