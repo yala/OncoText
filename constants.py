@@ -23,10 +23,10 @@ if MODE == "TAGHIAN":
 
 
   diagnoses = [
-    'Are there positive LN?',
-     'ITC ', 
-     'PR',  
-    'Her2 (Fish)', 'ER', 'ECE', 'LVI', 'BVI',
+    # 'Are there positive LN?',
+    # 'ITC ', 
+     # 'PR',  
+    # 'Her2 (Fish)', 'ER', 'ECE', 'LVI', 'BVI',
     'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 
     'Red ADH', 'Red BreastSide', 'Red FlatEpithelial', 'Red BluntAdenosis', 
     'Red LobularNeoplasia', 'cancer', 'atypia', 'BiopsyType', 
@@ -64,17 +64,17 @@ if MODE == "TAGHIAN":
   groupings = {
     "atypias": [ 'Report_Text_Segmented', 'Red BreastSide', 'Red LCIS',
         'Red LobularNeoplasia','Red ALH', 'Red ADH_DCIS', 'Red ADH' ,'Red FlatEpithelial'],
-    'cancers': ['Report_Text_Segmented' ,'Red BreastSide' ,'Red CancerSuspicious' ,'Red InvasiveSuspicious', 
-        'Red CancerInvInsituNOS','Red InsituNOS','Red InvasiveNOS','Red IDC','Red ILC','Red TubularCancer',
-        'Red DCIS', 'ER', 'PR', 'Her2 (Fish)',  'Are there Positive LN?','ECE','ITC' ,'BVI', 'LVI'],
-    'markers': markers,
+    # 'cancers': ['Report_Text_Segmented' ,'Red BreastSide' ,'Red CancerSuspicious' ,'Red InvasiveSuspicious', 
+    #     'Red CancerInvInsituNOS','Red InsituNOS','Red InvasiveNOS','Red IDC','Red ILC','Red TubularCancer',
+    #     'Red DCIS', 'ER', 'PR', 'Her2 (Fish)',  'Are there Positive LN?','ECE','ITC' ,'BVI', 'LVI'],
+    #'markers': markers,
     'cancersSansMarkers': ['Report_Text_Segmented' ,'Red BreastSide' ,'Red CancerSuspicious' ,'Red InvasiveSuspicious', 
         'Red CancerInvInsituNOS','Red InsituNOS','Red InvasiveNOS','Red IDC','Red ILC','Red TubularCancer',
         'Red DCIS'],
     'phyllodesAndPapil':[ 'Report_Text_Segmented' ,'Red BreastSide', 'Red Phylodes', 'Red SuspiciousForPhyllodes',
        'Red Papill'],
-     'allNN': key_order,
-     'allNNSansMarkers': [k for k in key_order if not k in markers],
+     'allNN': [k for k in key_order if k in diagnoses and not k in ignoreList],
+     'allNNSansMarkers': [k for k in key_order if not k in markers and k in diagnoses and not k in ignoreList],
   }
 
   diagToConventionDict = {
