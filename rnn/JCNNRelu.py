@@ -91,6 +91,7 @@ class TextCNN(object):
                 logits     = tf.matmul( featMap , softmax_w ) + softmax_b 
             probablities = tf.nn.softmax(logits)
 
+
             self._predictions[diag] = tf.argmax(probablities, axis=1)
             self._correct_ans[diag] = tf.argmax(tars[diag], axis=1)
 

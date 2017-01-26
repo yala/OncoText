@@ -129,11 +129,11 @@ class Config(object):
     diagnoses = diagnoses
 
 def run_epoch(session, models, train_input, config, verbose = True):
-    epoch_size = 1000
+    epoch_size = 500
     start_time = time.time()
 
     costs = 0.0
-
+    preds, golds = [], []
     for i in range(epoch_size):
         batch, bucket = train_input.get_batch()
 
@@ -141,10 +141,11 @@ def run_epoch(session, models, train_input, config, verbose = True):
         fetch = {
             'joint_loss':models[bucket].joint_loss,
             'trainOp': models[bucket].trainOp,
+            'predAndGold':models[bucket].predAndGold
         }
 
         feed_dict= {
-            models[bucket].keep_prob: .75
+            models[bucket].keep_prob: .50
         }
         for d in diagnoses:
             diag = diagName(d)
@@ -152,16 +153,25 @@ def run_epoch(session, models, train_input, config, verbose = True):
             feed_dict[ models[bucket].tars[diag] ] = batch[d][1]
 
         vals = session.run(fetch, feed_dict=feed_dict)
-
+        pred, gold = vals['predAndGold']
+        preds.append(pred)
+        golds.append(gold)
         cost = vals['joint_loss']
 
         costs += cost
 
-        if i % 100 == 0:
+        if i % 100 == 0 and i > 0:
             print("%.3f cost: %.3f speed: %.0f ms" %
             ( i  / epoch_size , costs / (i+1),
               (time.time() - start_time) )
             )
+
+    allVars = session.run(tf.trainable_variables())
+    norm = np.linalg.norm(np.array([np.linalg.norm(v) for v in allVars]))
+    print("Param norm", norm)
+    print("TRAIN MINIBATCH STATS")
+    evaluate(preds, golds)
+
 
     return costs/epoch_size
             
@@ -173,6 +183,9 @@ def run_eval_epoch(session, models, dev_input, config, verbose = True):
     costs = 0.0
     preds = []
     golds = []
+    allVars = session.run(tf.trainable_variables())
+    norm = np.linalg.norm(np.array([np.linalg.norm(v) for v in allVars]))
+    print("Param norm", norm)
     for i in range(epoch_size):
         batch, bucket = dev_input.get_batch()
 
@@ -238,7 +251,7 @@ def main(_):
             log_device_placement=True) 
 
         
-        sv = tf.train.Supervisor(logdir=FLAGS.save_path,summary_op=None)
+        sv = tf.train.Supervisor(logdir=FLAGS.save_path, summary_op=None)
         with sv.managed_session(config=sessConf) as session:
             ### run regular adversarial training
             for i in range(config.max_epoch):

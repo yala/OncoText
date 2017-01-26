@@ -70,19 +70,27 @@ class TextCNN(object):
         self._predictions = {}
         self._correct_ans = {}
 
-
+        useRelu = False
         for d in diagnoses:
             diag = diagName(d)      
             num_classes = len(constantValidLabelDict[d])
             featMap = featureMaps[diag]
             size = 160 # size of feature map
 
-            softmax_w = tf.get_variable("sofmax_w_"+diag, [size, num_classes], dtype=data_type())
-            softmax_b = tf.get_variable("softmax_b_"+diag, [num_classes] ,dtype=data_type())
-
-            
-            logits     = tf.matmul( featMap , softmax_w ) + softmax_b 
+            if useRelu:
+                softmax_w = tf.get_variable("sofmax_w_"+diag, [size/2, num_classes], dtype=data_type())
+                softmax_b = tf.get_variable("softmax_b_"+diag, [num_classes] ,dtype=data_type())
+                relu_w = tf.get_variable("relu_w_"+diag, [size, size/2], dtype=data_type())
+                relu_b = tf.get_variable("relu_b_"+diag, [size/2] ,dtype=data_type())
+                reluActiv = tf.matmul(featMap, relu_w) + relu_b
+                relu = tf.nn.relu(reluActiv)
+                logits = tf.matmul(reluActiv, softmax_w) + softmax_b
+            else:
+                softmax_w = tf.get_variable("sofmax_w_"+diag, [size, num_classes], dtype=data_type())
+                softmax_b = tf.get_variable("softmax_b_"+diag, [num_classes] ,dtype=data_type())
+                logits     = tf.matmul( featMap , softmax_w ) + softmax_b 
             probablities = tf.nn.softmax(logits)
+
 
             self._predictions[diag] = tf.argmax(probablities, axis=1)
             self._correct_ans[diag] = tf.argmax(tars[diag], axis=1)
