@@ -66,12 +66,14 @@ if MODE == "TAGHIAN":
     'cancers': ['Report_Text_Segmented' ,'Red BreastSide' ,'Red CancerSuspicious' ,'Red InvasiveSuspicious', 
         'Red CancerInvInsituNOS','Red InsituNOS','Red InvasiveNOS','Red IDC','Red ILC','Red TubularCancer',
         'Red DCIS', 'ER', 'PR', 'Her2 (Fish)',  'Are there Positive LN?','ECE','ITC' ,'BVI', 'LVI'],
+    'markers': [ 'ER', 'PR', 'Her2 (Fish)',  'Are there Positive LN?','ECE','ITC' ,'BVI', 'LVI'],
     'cancersSansMarkers': ['Report_Text_Segmented' ,'Red BreastSide' ,'Red CancerSuspicious' ,'Red InvasiveSuspicious', 
         'Red CancerInvInsituNOS','Red InsituNOS','Red InvasiveNOS','Red IDC','Red ILC','Red TubularCancer',
         'Red DCIS'],
     'phyllodesAndPapil':[ 'Report_Text_Segmented' ,'Red BreastSide', 'Red Phylodes', 'Red SuspiciousForPhyllodes',
        'Red Papill'],
-     'allNN': key_order
+     'allNN': key_order,
+     'allNNSansMarkers': [k for k in key_order if not k in markers],
   }
 
   diagToConventionDict = {
@@ -149,8 +151,8 @@ if MODE == "TAGHIAN":
 
 
   constantValidLabelDict = {'Are there positive LN?': ['Yes', 'No'],
-    'ER': ['NA', 'Negative', 'Positive'],
-    'Her2 (Fish)': ['NA', 'Negative', 'Positive'],
+    'ER': ['Positive','Negative','NA'],
+    'Her2 (Fish)': ['Positive', 'Negative','NA'],
     'ITC ': ['Yes', 'No'],
     'PR': ['NA', 'Negative', 'Positive'],    
     'BiopsyType': ['Core', 'Excision', 'NA', 'Other'],
