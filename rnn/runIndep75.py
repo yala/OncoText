@@ -222,7 +222,7 @@ def run_eval_epoch(session, models, dev_input, config, verbose = True):
 
 def main(_):
     trainPath = 'diagDictTrain.p'
-    devPath = 'devReps.p'
+    devPath = 'testReps.p'
 
     print("save_path", FLAGS.save_path)
 
@@ -260,14 +260,15 @@ def main(_):
 
                 print("EVAL")
                 run_eval_epoch(session, models, dev_input, config)
-                
-                print("TRAIN")
-                train_cost  = run_epoch(session, models, train_input, config)
-                print("Epoch: %d Train Error: %.3f" % (i + 1, train_cost))
+                train_bool = False
+                if train_bool:
+                    print("TRAIN")
+                    train_cost  = run_epoch(session, models, train_input, config)
+                    print("Epoch: %d Train Error: %.3f" % (i + 1, train_cost))
 
-                if FLAGS.save_path:
-                    print("Saving model to %s." % FLAGS.save_path)
-                    sv.saver.save(session, 'jointRnn', global_step=i)
+                    if FLAGS.save_path:
+                        print("Saving model to %s." % FLAGS.save_path)
+                        sv.saver.save(session, 'jointRnn', global_step=i)
 
 
 
