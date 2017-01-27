@@ -8,12 +8,15 @@ sys.path.append("..")
 from constants import *
 import pprint
 
+vocab = p.load(open('vocab.p','rb'))
+vocabIndxDict = p.load(open('vocabIndxDict.p','rb'))
+
 def diagName(d):
     diag = "_".join(d.split())
     diag = re.sub(r'\W','',diag)
     return diag
 
-def evaluate(preds, golds):
+def evaluate(preds, golds, inputs = None):
 
     predHist = {}
     for key in preds[0]:
@@ -37,6 +40,7 @@ def evaluate(preds, golds):
 
 
 
+    numExamples = 0
     rowAccuracy = {}
     for i in range(len(preds)):
 
@@ -51,6 +55,8 @@ def evaluate(preds, golds):
                         if not preds[i][diag] == golds[i][diag]:
                             groupWrong = True
                             rowAccuracy[groupKey] +=1
+                            if numExamples < 10 and not inputs == None:
+                                print(" ".join([vocab[vocabIndxDict[k] for k in inputs[i]] ]))    
                             break
     
     for key in rowAccuracy:

@@ -183,6 +183,7 @@ def run_eval_epoch(session, models, dev_input, config, verbose = True):
     costs = 0.0
     preds = []
     golds = []
+    inputStrs = []
     allVars = session.run(tf.trainable_variables())
     norm = np.linalg.norm(np.array([np.linalg.norm(v) for v in allVars]))
     print("Param norm", norm)
@@ -207,6 +208,7 @@ def run_eval_epoch(session, models, dev_input, config, verbose = True):
         pred, gold = vals['predAndGold']
         preds.append(pred)
         golds.append(gold)
+        inputStrs.append(batch[diagnoses[0]][0])
 
         cost = vals['joint_loss']
 
@@ -214,7 +216,7 @@ def run_eval_epoch(session, models, dev_input, config, verbose = True):
 
     costs /= epoch_size
     print("Dev cost", costs)
-    evaluate(preds, golds)
+    evaluate(preds, golds, inputStrs)
     return 0
 
 
