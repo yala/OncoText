@@ -56,6 +56,7 @@ def evaluate(preds, golds, inputs = None):
                             groupWrong = True
                             rowAccuracy[groupKey] +=1
                             if numExamples < 10 and not inputs == None:
+                                print(diag, "Guessed", preds[i][diag], "Gold,",golds[i][diag])
                                 print(" ".join([vocab[vocabIndxDict[k] for k in inputs[i]] ]))    
                             break
     
