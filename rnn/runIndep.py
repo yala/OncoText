@@ -167,6 +167,9 @@ def run_epoch(session, models, train_input, config, verbose = True):
             )
 
     allVars = session.run(tf.trainable_variables())
+    varDump =  session.run([{var.name: var} for var in tf.trainable_variables()])
+    p.dump(varDump, open('variableDict.p','wb'))
+
     norm = np.linalg.norm(np.array([np.linalg.norm(v) for v in allVars]))
     print("Param norm", norm)
     print("TRAIN MINIBATCH STATS")
