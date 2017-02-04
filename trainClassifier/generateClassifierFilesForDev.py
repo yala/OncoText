@@ -16,7 +16,7 @@ def replaceSpaces(label):
 def binarizeFilesForClassification(dB, dirPath, alignTest = False):
     validLabelDict = constantValidLabelDict
 
-    modes = diagnoses    
+    modes = [d for d in boostexer_diagnoses if not d in feb_new_diagnoses]    
 
     if alignTest:
         hughesTest = p.load(open('../analysis/genBoostexaTestReportDump.p', 'rb'))

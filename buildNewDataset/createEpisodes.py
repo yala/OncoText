@@ -26,7 +26,7 @@ def aggregateResults(allData, stem):
         if not "MRNPlusX" in r:
             r["MRNPlusX"]= "0"
             r["Institution"] ="Kinyas"
-            r["Report_Date_TimePlusX"] = datetime.now().isoformat()
+            r["Report_Date_TimePlusX"] = datetime.datetime.now().isoformat()
     
     trainData = [d for d in allData if isGold(d)]
         
@@ -405,7 +405,7 @@ def buildEpisodes(data, labelMaxDXBool, debug = False):
 def run(allData, stem, save=False):
     filtData = removeUnexpectedColumns(allData)     
     print "Calling export"
-    reportsDB = aggregateResults(filtData, stem)
+    reportDB = aggregateResults(filtData, stem)
     print "Calling labelMaxDXBool"
     getMaxDX(reportDB)
     print "Calling build episode"
