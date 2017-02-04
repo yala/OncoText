@@ -10,7 +10,7 @@ import sys
 sys.path.append("..")
 from constants import *
 from evalHelper import *
-from inputsClasses import *
+from inputClasses import *
 flags = tf.flags
 logging = tf.logging
 embeddings = p.load(open('embeddings.p','rb'))
@@ -177,9 +177,10 @@ def label_dataset(session, models, unlabled_input, config, verbose=True):
 def main(_):
     trainPath = 'diagDictTrain.p'
     devPath = 'devReps.p'
+    config = Config()
     unlabled_mode= True
     if unlabled_mode:
-        devPath = 'unlabledRepszZ"/+6~ygs4n'OJ!$m6!?L=bqx[r.p'
+        devPath = 'unlabledReps.p'
         dev_input = UnlabledInput(devPath, config)
     else:
         devPath = 'devReps.p'
@@ -187,7 +188,6 @@ def main(_):
 
     print("save_path", FLAGS.save_path)
 
-    config = Config()
     train_input  = PathInput(trainPath, config)
     with tf.Graph().as_default():
         initializer = tf.random_uniform_initializer(-1*config.init_scale, config.init_scale)
