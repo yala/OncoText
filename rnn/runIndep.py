@@ -10,7 +10,7 @@ import sys
 sys.path.append("..")
 from constants import *
 from evalHelper import *
-
+from inputsClasses import *
 flags = tf.flags
 logging = tf.logging
 embeddings = p.load(open('embeddings.p','rb'))
@@ -22,94 +22,6 @@ FLAGS = flags.FLAGS
 def data_type():
   return tf.float32
 
-class PathInput(object):
-
-    def __init__(self, path, config):
-        self.data = p.load(open(path,'rb'))
-        self.batch_size = Config.batch_size
-        self.config = config
-
-    def get_batch(self):
-        batch = {}
-        working_dict = {}
-        maxLength = 0
-        ## Sample sentences and find max length
-        for diag in self.data.keys():
-            batch_data = np.random.choice(len(self.data[diag][0]), self.batch_size)
-            lens =  np.array([ len(self.data[diag][0][i]) for i in batch_data], dtype=np.int32 )
-            maxSentLength = np.max(lens)
-            if maxSentLength > maxLength:
-                maxLength = maxSentLength
-            working_dict[diag] = batch_data
-
-        # Find bucket length for this batch
-        bucket = self.config.bucket_lengths[0]  
-        for b in self.config.bucket_lengths:
-            if maxLength < b:
-                bucket = b
-                break
-
-        # pad all sentences to match bucket length
-        for diag in self.data.keys():
-            batch_data = working_dict[diag]
-            inp = np.array([ np.hstack( [ \
-                self.data[diag][0][i], np.zeros(bucket-len(self.data[diag][0][i]))] \
-                ) for i in batch_data], dtype=np.int32)
-            tar = np.array([ self.data[diag][1][i] for i in batch_data], dtype=np.int32)
-            batch[diag] = inp, tar
-
-        return batch, bucket
-
-class TestInput(object):
-
-    def __init__(self, path, config):
-        self.data = p.load(open(path,'rb'))
-        self.batch_size = Config.batch_size
-        self.config = config
-        self.length = len(self.data)
-        self.index = 0
-
-    def get_batch(self):
-        batch = {}
-        maxLength = 0
-        ## Sample sentences and find max length
-        startIndex = min( self.index, self.length - self.config.batch_size)
-        batch_data = range(startIndex, startIndex + self.config.batch_size )
-
-        lens =  np.array([ len(self.data[i]['NN_Text']) for i in batch_data], dtype=np.int32 )
-        maxSentLength = np.max(lens)
-        if maxSentLength > maxLength:
-            maxLength = maxSentLength
-        working_arr = batch_data
-
-        # Find bucket length for this batch
-        bucket = self.config.bucket_lengths[0]  
-        for b in self.config.bucket_lengths:
-            if maxLength < b:
-                bucket = b
-                break
-
-        # pad all sentences to match bucket length
-        for diag in diagnoses:
-            batch_data = working_arr
-            inp = np.array([ np.hstack( [ \
-                self.data[i]['NN_Text'], np.zeros(bucket-len(self.data[i]['NN_Text']))] \
-                ) for i in batch_data], dtype=np.int32)
-            try:
-                tar = np.array([ self.data[i][diag] for i in batch_data], dtype=np.int32)
-            except Exception, e:
-                print(batch_data)
-
-                print(diag)
-                print( [ self.data[i][diag] for i in batch_data])
-                print( [ self.data[i][diag] for i in batch_data])
-                raw_input()
-
-            batch[diag] = inp, tar
-
-        self.index += self.config.batch_size 
-        self.index %= self.length
-        return batch, bucket
 
 class Config(object):
     init_scale = 0.1
@@ -220,18 +132,64 @@ def run_eval_epoch(session, models, dev_input, config, verbose = True):
     evaluate(preds, golds, inputStrs)
     return 0
 
+def label_dataset(session, models, unlabled_input, config, verbose=True):
 
+    costs = 0.0
+    
+    print("Param norm", norm)
+    lenData = len(dev_input.data)
+    allReps = []
+    for i in range(lenData):
+        batch, reports, bucket = dev_input.get_batch()
+
+        fetch = {
+            'predAndGold':models[bucket].predAndGold
+        }
+
+        feed_dict= {
+            models[bucket].keep_prob:  1.0
+        }
+
+        reports = {}
+        for d in diagnoses:
+            diag = diagName(d)
+            feed_dict[ models[bucket].inps[diag] ] = batch[d][0]
+            feed_dict[ models[bucket].tars[diag] ] = batch[d][1]
+            reports[ diag] = batch[d][2]
+
+
+
+        vals = session.run(fetch, feed_dict=feed_dict)
+        pred, gold = vals['predAndGold']
+
+        for k,r in enumerate(reports):
+            for d in pred:
+                r[d] = constantValidLabelDict[ preds[d][i][0]]
+
+        allReps.extend(reports)
+
+        if i %(lenData/10) == 0:
+            print(i*1./ lenData)
+    p.dump(allReps, open('labeledReps.p','wb'))
+    return allReps
 
 
 def main(_):
     trainPath = 'diagDictTrain.p'
     devPath = 'devReps.p'
+    unlabled_mode= True
+    if unlabled_mode:
+        devPath = 'unlabled.p'
+        dev_input = UnlabledInput(devPath, config)
+    else:
+        devPath = 'devReps.p'
+        dev_input = TestInput(devPath, config)
 
     print("save_path", FLAGS.save_path)
 
     config = Config()
     train_input  = PathInput(trainPath, config)
-    dev_input = TestInput(devPath, config)
+dev_input = TestInput(devPath, config)
     with tf.Graph().as_default():
         initializer = tf.random_uniform_initializer(-1*config.init_scale, config.init_scale)
         models = {}
@@ -257,22 +215,25 @@ def main(_):
         sv = tf.train.Supervisor(logdir=FLAGS.save_path, summary_op=None)
         with sv.managed_session(config=sessConf) as session:
             ### run regular adversarial training
-            for i in range(config.max_epoch):
-                varDump =  session.run([{var.name: var} for var in tf.trainable_variables()])
-                p.dump(varDump, open('variableDict.p','wb'))
-                print( "Dumped vars")
-                print("Epoch: %d " % (i + 1))
+            if unlabled_mode:
+                label_dataset(session, models, dev_input, config, verbose=True):
+            else:
+                for i in range(config.max_epoch):
+                    varDump =  session.run([{var.name: var} for var in tf.trainable_variables()])
+                    p.dump(varDump, open('variableDict.p','wb'))
+                    print( "Dumped vars")
+                    print("Epoch: %d " % (i + 1))
 
-                print("EVAL")
-                run_eval_epoch(session, models, dev_input, config)
-                
-                print("TRAIN")
-                train_cost  = run_epoch(session, models, train_input, config)
-                print("Epoch: %d Train Error: %.3f" % (i + 1, train_cost))
+                    print("EVAL")
+                    run_eval_epoch(session, models, dev_input, config)
+                    
+                    print("TRAIN")
+                    train_cost  = run_epoch(session, models, train_input, config)
+                    print("Epoch: %d Train Error: %.3f" % (i + 1, train_cost))
 
-                if FLAGS.save_path:
-                    print("Saving model to %s." % FLAGS.save_path)
-                    sv.saver.save(session, 'jointRnn', global_step=i)
+                    if FLAGS.save_path:
+                        print("Saving model to %s." % FLAGS.save_path)
+                        sv.saver.save(session, 'jointRnn', global_step=i)
 
 
 
