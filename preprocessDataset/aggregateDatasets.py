@@ -8,8 +8,8 @@ from createEpisodes import validateRepsDB
 from operator import itemgetter
 from anonymize import deIdenText
 # from docx import Document
-import pickle as p
-
+import cPickle as p
+import xmltodict
 
 
 dateFields = ['Date of 1st biopsy', 'Date of 2nd biopsy',  'Date of 3rd biopsy', 'Date of 1 st surgery','Date of 2nd surgery', 'Date of 3rd surgery' ]
@@ -24,16 +24,13 @@ gradeColSeq = ['Final Tumor Grade']
 
 
 def parseXLS(inp, out, legend=None):
-    print "loading wb"
     wb = xl.load_workbook(inp)
 
-    print "getting sheet"
     sheet = wb.get_active_sheet()
 
     data = []
 
     legendRowBool = legend == None
-    print "Getting iterator"
     legend = [] if legend == None else legend
     for row in sheet.iter_rows():
         rowDict = {}
@@ -54,13 +51,10 @@ def parseXLS(inp, out, legend=None):
 
         if not legendRowBool:
             data.append(rowDict)
-        else:
-            print 'processing legend row'
+    
 
         legendRowBool = False
         
-    print 'dumping'
-    print "legend", legend
     p.dump(data, open(out, 'wb'))
     return data
 
@@ -452,10 +446,9 @@ def processSusPhyllodes(allPathReps, outDB, outDBRepIds):
     print "Phylodes",len([v for v in vals if v == 'Present']), "present, ", len([v for v in vals if v == 'Absent']), "absent"
     return False
 
-def anon(db, keys):
+def anon(db, textKey='text', keys=None):
     print "calling anonAndAlign"
     print "len db to allign", len(db)
-    textKey = 'text'
 
     #anon
     for r in db:
@@ -477,7 +470,7 @@ def processSusPhyllodesOct(allPathReps, outDB, outDBRepIds):
         phyllodesDb = p.load(open('data/susPhyllodesOctRaw.p','rb'))
 
     annonKeys = legend[1:-1]
-    phyllodesDb = anon(phyllodesDb,annonKeys)
+    phyllodesDb = anon(phyllodesDb,keys=annonKeys)
     p.dump(phyllodesDb, open('data/susPhyllodesOct.p','wb'))
 
     print "Done anone"
@@ -873,6 +866,44 @@ def processCorrections(allPathReps, outDB, outDBRepIds):
                 outDB[targetDiag].append(r)
                 outDBRepIds[repId][targetDiag] = label
 
+def processExtraXMLs(allPathReps, outDB, outDBRepIds):
+    files= ['TraingSetLymphoma_NonBreastCancerInBreast.xml'
+        ,'TraingSetSarcoma_NonBreastCancerInBreast.xml'
+        ,'TrainingForMetaplasticMedullaryMucinous_NonBreastCancerInBreast.xml'
+        ,'TrainingForMicropapillary_NonBreastCancerInBreast.xml'
+        ,'TrainingSetNonBreast.xml']
+
+    paths = ["../externalDataSources/"+ f for f in files]
+    rs = [ xmltodict.parse( open(path,'rb'))['dataroot'] for path in paths ]
+    keys = [ [k for k in r.keys() if not "@" in k][0] for r in rs]
+    trs = [rs[i][keys[i]] for i in range(len(rs))]
+
+    allAnn = []
+    for t in trs:
+        allAnn.extend([r for r in t if not r == None])
+
+    labelDict = {'absent':'Absent'}
+    keyDict = {
+            'Node_x0020_tissue':'NodeTissue',
+            'CancerNotOfBreastOrigin':'CancerNotOfBreastOrigin',
+            'Report_Text':'Report_Text_Segmented',
+            'CancerInvNOS':'Red CancerInvNOS',
+            'Cancer_x0020_Invasive': 'Red CancerInvasive',
+            'Pathology_x0020_type': 'PathologyType'
+            }
+    for r in allAnn:
+        for k in keyDict:
+            if k in r:
+                r[ keyDict[k] ] = r[k]
+
+    allAnn = anon(allAnn, textKey = 'Report_Text_Segmented')
+
+    p.dump(allAnn,open('../xmlTrainingData.p','wb'))
+    return 0
+
+
+
+
 def buildDB(db, grades, redmap, allPathReps, debug = False):
     outDBReps = []
     outDBRepIds = {}
@@ -888,6 +919,7 @@ def buildDB(db, grades, redmap, allPathReps, debug = False):
 
     #Investigative Counts
     yetToPrintBool = True
+    processExtraXMLs(allPathReps, outDB, outDBRepIds)
 
     processRedcapData(db, colSeqs, types, outDB, outDBRepIds, toSee, seen)
     processGradeData(grades, allPathReps, outDB, outDBRepIds)

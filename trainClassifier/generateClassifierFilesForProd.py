@@ -80,9 +80,13 @@ def binarizeFilesForClassification(allData, stem, write = True):
         isHughes = 'Correct' in r and r['Correct'] == 'Y'
         return isTaghian or isHughes
     
-    trainData = [d for d in allData if isGold(d)] + p.load( open('../xmlTrainingData.p','rb') )
-    trainData = [r for r in trainData if 'Report_Text_Segmented' in r]
-        
+    trainData = [d for d in allData if isGold(d)] 
+    additTrainData =  p.load( open('../xmlTrainingData.p','rb') )
+    
+    for adit in additTrainData:
+        adit['Report_Text_Segmented'] = adit['Report_Text']
+
+    trainData.extend(additTrainData)
 
     # For taghian, because TaghianGold has a different number of things annotated per diagnosis in gold
     # Using gold labels by themselves would be a pain, so we will re-annotate the whole thing.
