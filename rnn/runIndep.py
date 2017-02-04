@@ -179,7 +179,7 @@ def main(_):
     devPath = 'devReps.p'
     unlabled_mode= True
     if unlabled_mode:
-        devPath = 'unlabledReps.p'
+        devPath = 'unlabledRepszZ"/+6~ygs4n'OJ!$m6!?L=bqx[r.p'
         dev_input = UnlabledInput(devPath, config)
     else:
         devPath = 'devReps.p'
@@ -189,7 +189,6 @@ def main(_):
 
     config = Config()
     train_input  = PathInput(trainPath, config)
-dev_input = TestInput(devPath, config)
     with tf.Graph().as_default():
         initializer = tf.random_uniform_initializer(-1*config.init_scale, config.init_scale)
         models = {}
@@ -216,7 +215,7 @@ dev_input = TestInput(devPath, config)
         with sv.managed_session(config=sessConf) as session:
             ### run regular adversarial training
             if unlabled_mode:
-                label_dataset(session, models, dev_input, config, verbose=True):
+                label_dataset(session, models, dev_input, config, verbose=True)
             else:
                 for i in range(config.max_epoch):
                     varDump =  session.run([{var.name: var} for var in tf.trainable_variables()])
