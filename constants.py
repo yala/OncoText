@@ -23,31 +23,34 @@ if MODE == "TAGHIAN":
 
 
   diagnoses = [
-    # 'Are there positive LN?',
-    # 'ITC ', 
-     # 'PR',  
-    # 'Her2 (Fish)', 'ER', 'ECE', 'LVI', 'BVI',
+    'Are there positive LN?','ITC ', 'PR',  'Her2 (Fish)', 'ER', 'ECE', 'LVI', 'BVI',
     'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC', 
     'Red ADH', 'Red BreastSide', 'Red FlatEpithelial', 'Red BluntAdenosis', 
-    'Red LobularNeoplasia', 'cancer', 'atypia', 'BiopsyType', 
+    'Red LobularNeoplasia','BiopsyType', 
     'Red ADH_DCIS', 'Red Phylodes', 
     'Red CancerNOS', 
     'Red InvasiveSuspicious', 
     'Red InsituNOS', 
     'Red CancerInvInsituNOS', 
     'Red SuspiciousForPhyllodes', 
-    'Red CancerSuspicious', 'Red TubularCancer', 'Red Papill'
-    #'Oncotype score', 'TumorGrade',
+    'Red CancerSuspicious', 'Red TubularCancer', 'Red Papill',
+    'Red CancerInvasive', 'Red CancerInvNOS', 'NodeTissue', 'CancerNotOfBreastOrigin', 'PathologyType'
   ]
 
-  ignoreList = ['ITC ', 'Red CancerNOS', 'cancer', 'atypia', 'BiopsyType', 'Red BluntAdenosis',
-  'Red CancerInvInsituNOS']
+  boostexer_diagnoses = ['ITC ', 'Red CancerNOS', 'cancer', 'atypia', 'BiopsyType', 'Red BluntAdenosis',
+  'Red CancerInvInsituNOS', 'Are there positive LN?', 'PR', 'Her2 (Fish)', 'ER', 'ECE', 'LVI', 'BVI', 
+  'Red CancerInvasive', 'Red CancerInvNOS', 'NodeTissue', 'CancerNotOfBreastOrigin', 'PathologyType'
+  ]
 
-  nn_diagnoses = [d for d in diagnoses if not d in ignoreList]
+  feb_new_diagnoses = ['Red CancerInvasive', 'Red CancerInvNOS', 'NodeTissue', 'CancerNotOfBreastOrigin', 'PathologyType'
+  ]
+
+  nn_diagnoses = [d for d in diagnoses if not d in boostexer_diagnoses]
 
   const_cancers = [
   'Red ILC','Red DCIS', 'Red IDC', 
-  'Red CancerNOS', 'Red InsituNOS', 'Red CancerInvInsituNOS', 'Red TubularCancer'#, 'cancer'
+  'Red CancerNOS', 'Red InsituNOS', 'Red CancerInvInsituNOS', 'Red TubularCancer',
+  'Red CancerInvasive', 'Red CancerInvNOS', 'CancerNotOfBreastOrigin'
   ]
 
   const_atypias = [
@@ -55,7 +58,7 @@ if MODE == "TAGHIAN":
   ]
 
   key_order = ['Report_Text_Segmented' ,'Red BreastSide' ,'Red CancerSuspicious' ,'Red InvasiveSuspicious', 
-  'Red CancerInvInsituNOS','Red InsituNOS','Red IDC','Red ILC','Red TubularCancer',
+  'Red CancerInvInsituNOS','Red InsituNOS','Red IDC','Red ILC','Red TubularCancer', 'Red CancerInvasive', 'Red CancerInvNOS', 'CancerNotOfBreastOrigin'
   'Red DCIS', 'ER', 'PR', 'Her2 (Fish)',  'Are there positive LN?','ECE','ITC ' ,'BVI', 'LVI'  ,'Red LCIS',
   'Red LobularNeoplasia','Red ALH', 'Red ADH_DCIS', 'Red ADH' ,'Red FlatEpithelial' ,'Red Phylodes',
   'Red SuspiciousForPhyllodes', 'Red Papill']
@@ -73,8 +76,8 @@ if MODE == "TAGHIAN":
         'Red DCIS'],
     'phyllodesAndPapil':[ 'Report_Text_Segmented' ,'Red BreastSide', 'Red Phylodes', 'Red SuspiciousForPhyllodes',
        'Red Papill'],
-     'allNN': [k for k in key_order if k in diagnoses and not k in ignoreList],
-     'allNNSansMarkers': [k for k in key_order if not k in markers and k in diagnoses and not k in ignoreList],
+     'allNN': [k for k in key_order if k in diagnoses and not k in boostexer_diagnoses],
+     'allNNSansMarkers': [k for k in key_order if not k in markers and k in diagnoses and not k in boostexer_diagnoses],
   }
 
   diagToConventionDict = {
@@ -101,7 +104,10 @@ if MODE == "TAGHIAN":
     'Red SuspiciousForPhyllodes':'SuspiciousForPhyllodes',
     'Red CancerSuspicious':'CancerSuspicious',
     'Red TubularCancer':'TubularCancer',
-    'Red Papill':'Papill'
+    'Red Papill':'Papill',
+    'Red CancerInvasive':'CancerInvasive',
+    'Red CancerInvNOS':'CancerInvNOS',
+    'CancerNotOfBreastOrigin':'CancerNotOfBreastOrigin'
   }
   for diag in diagnoses:
     if not diag in diagToConventionDict:
@@ -144,7 +150,13 @@ if MODE == "TAGHIAN":
       'Oncotype score':'Low_risk',
       'Red ADH_DCIS':'Absent', 'Red Phylodes':'Absent', 'Red CancerNOS':'Absent', 'Red InvasiveSuspicious':'Absent', 'Red InsituNOS':'Absent', 'Red CancerInvInsituNOS':'Absent',
       'Red SuspiciousForPhyllodes':'Absent', 'Red CancerSuspicious':'Absent', 'Red TubularCancer':'Absent',
-      'Red Papill':'Absent'}
+      'Red Papill':'Absent',
+      'Red CancerInvasive':'Absent',
+      'Red CancerInvNOS':'Absent',
+      'NodeTissue':'Absent', #'Node_x0020_tissue'
+      'CancerNotOfBreastOrigin':'Absent', #CancerNotOfBreastOrigin
+      'PathologyType':'Anatomic'
+      }
 
 
   extractions = [u'Max Tumor Size', 'Non Sentinel LN (# Malignant)', 'Sentinel LN (# Sampled)']
@@ -183,7 +195,13 @@ if MODE == "TAGHIAN":
     'Red CancerInvInsituNOS': ['Present','Absent'],
     'Red SuspiciousForPhyllodes': ['Present','Absent'],
     'Red CancerSuspicious':['Present','Absent'], 
-    'Red TubularCancer':['Present','Absent']
+    'Red TubularCancer':['Present','Absent'],
+    
+    'Red CancerInvasive':['Present','Absent'],
+    'Red CancerInvNOS':['Present','Absent'],
+    'NodeTissue':['Present','Absent'], #'Node_x0020_tissue'
+    'CancerNotOfBreastOrigin':['Present','Absent'], #CancerNotOfBreastOrigin
+    'PathologyType':['Anatomic','Cytology'],  #'Pathology_x0020_type'
   }
 
   analysisLabelDict = {'Are there positive LN?': ['Yes', 'No'],
@@ -221,39 +239,10 @@ if MODE == "TAGHIAN":
     'Red TubularCancer':['Present','Absent']
     }
 
-  JSONLabelNameDict = {
-    'Her2 (Fish)': 'Her2',
-    'Type of Surgery':'Type_of_Surgery',
-    'BiopsyType': 'BiopsyType',
-    'Type of sampled LN (choice=ALND (Axillary LN Dissection))': 'Axillary_LN_Dissection',
-    'Type of sampled LN (choice=None)': 'No_Sampled_LN',
-    'Type of sampled LN (choice=SLNB (Sentinel LN Biopsy))': 'Sentinel_LN_Biopsy',
-    'ITC ': 'ITC',
-    'ECE': 'EIC',
-    'Are there positive LN?':'PositiveLN',
-    'Red DCIS':   'DCIS',
-    'Red LCIS':  'LCIS',
-    'Red IDC':  'IDC',
-    'Red ILC':  'ILC',
-    'Red ALH':  'ALH',
-    'Red ADH':  'ADH',
-    'Red Papill': 'Papill',
-    'Red FlatEpithelial': 'FlatEpithelial',
-    'Red BluntAdenosis': 'BluntAdenosis',
-    'Red LobularNeoplasia': 'LobularNeoplasia',
-    'Red BreastSide':'BreastSide',
-    'Red ADH_DCIS': 'AdhDcis',
-    'Red Phylodes': 'Phyllodes',
-    'Red CancerNOS': 'CancerNOS',
-    'Red InvasiveSuspicious': 'InvasiveSuspicious',
-    'Red InsituNOS': 'InsituNOS',
-    'Red CancerInvInsituNOS': 'CancerInvInsituNOS',
-    'Red SuspiciousForPhyllodes': 'SuspiciousForPhyllodes',
-    'Oncotype score': 'EstimatedOncotypeScore',
-    'TumorGrade': 'TumorGrade',
-    'Red CancerSuspicious': 'CancerSuspicious', 
-    'Red TubularCancer': 'TubularCancer'
-    }
+  JSONLabelNameDict = diagToConventionDict
+
+    
+
 
   labelsForEpisodes = diagnoses 
 
