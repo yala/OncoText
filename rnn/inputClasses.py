@@ -76,7 +76,7 @@ class TestInput(object):
                 break
 
         # pad all sentences to match bucket length
-        for diag in diagnoses:
+        for diag in nn_diagnoses:
             batch_data = working_arr
             inp = np.array([ np.hstack( [ \
                 self.data[i]['NN_Text'], np.zeros(bucket-len(self.data[i]['NN_Text']))] \
@@ -127,7 +127,7 @@ class UnlabledInput(object):
                 break
 
         # pad all sentences to match bucket length
-        for diag in diagnoses:
+        for diag in nn_diagnoses:
             batch_data = working_arr
             inp = np.array([ np.hstack( [ \
                 self.data[i]['NN_Text'], np.zeros(bucket-len(self.data[i]['NN_Text']))] \

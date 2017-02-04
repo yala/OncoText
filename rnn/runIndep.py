@@ -38,7 +38,7 @@ class Config(object):
     filter_sizes = [1,3,5,7,9]
     bucket_lengths = [2600]
     num_filters = 32
-    diagnoses = diagnoses
+    nn_diagnoses = nn_diagnoses
 
 def run_epoch(session, models, train_input, config, verbose = True):
     epoch_size = 500
@@ -59,7 +59,7 @@ def run_epoch(session, models, train_input, config, verbose = True):
         feed_dict= {
             models[bucket].keep_prob: .50
         }
-        for d in diagnoses:
+        for d in nn_diagnoses:
             diag = diagName(d)
             feed_dict[ models[bucket].inps[diag] ] = batch[d][0]
             feed_dict[ models[bucket].tars[diag] ] = batch[d][1]
@@ -112,7 +112,7 @@ def run_eval_epoch(session, models, dev_input, config, verbose = True):
         feed_dict= {
             models[bucket].keep_prob:  1.0
         }
-        for d in diagnoses:
+        for d in nn_diagnoses:
             diag = diagName(d)
             feed_dict[ models[bucket].inps[diag] ] = batch[d][0]
             feed_dict[ models[bucket].tars[diag] ] = batch[d][1]
@@ -121,7 +121,7 @@ def run_eval_epoch(session, models, dev_input, config, verbose = True):
         pred, gold = vals['predAndGold']
         preds.append(pred)
         golds.append(gold)
-        inputStrs.append(batch[diagnoses[0]][0])
+        inputStrs.append(batch[nn_diagnoses[0]][0])
 
         cost = vals['joint_loss']
 
@@ -151,7 +151,7 @@ def label_dataset(session, models, unlabled_input, config, verbose=True):
         }
 
         reports = {}
-        for d in diagnoses:
+        for d in nn_diagnoses:
             diag = diagName(d)
             feed_dict[ models[bucket].inps[diag] ] = batch[d][0]
             feed_dict[ models[bucket].tars[diag] ] = batch[d][1]
@@ -197,7 +197,7 @@ def main(_):
                 models[bucket] = TextCNN(max_length=bucket, config=config, embeddingMatrix=embeddings)
         
 
-        for d in diagnoses:
+        for d in nn_diagnoses:
             diag = diagName(d)      
             diagLoss = tf.reduce_sum(tf.pack([models[b].costs[diag] for b in config.bucket_lengths]))
 
