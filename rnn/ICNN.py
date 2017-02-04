@@ -40,7 +40,7 @@ class TextCNN(object):
 
         self._keep_prob = tf.placeholder( tf.float32, name="keep_prob")
 
-        for d in diagnoses:
+        for d in nn_diagnoses:
             diag = diagName(d)
             inps[diag] = tf.placeholder( tf.int32, shape=(batch_size, None), name="input_"+diag)
             tars[diag] = tf.placeholder( tf.int32, shape=(batch_size, None), name="target_"+diag)
@@ -53,7 +53,7 @@ class TextCNN(object):
         inputs = {}
         featureMaps = {}
 
-        for i,d in enumerate(diagnoses):
+        for i,d in enumerate(nn_diagnoses):
             diag = diagName(d)
             inputs_reg =  tf.nn.embedding_lookup(embedding, inps[diag])
             inputs[diag] = tf.expand_dims(inputs_reg, -1)
@@ -71,7 +71,7 @@ class TextCNN(object):
         self._correct_ans = {}
 
         useRelu = False
-        for d in diagnoses:
+        for d in nn_diagnoses:
             diag = diagName(d)      
             num_classes = len(constantValidLabelDict[d])
             featMap = featureMaps[diag]
@@ -98,7 +98,7 @@ class TextCNN(object):
             self._costs[diag] = tf.reduce_sum(tf.nn.softmax_cross_entropy_with_logits(logits, tars[diag], name="SoftMax"+diag))
 
 
-        self._joint_loss  =  tf.reduce_sum( tf.pack([self._costs[diagName(d)] for d in diagnoses]) )
+        self._joint_loss  =  tf.reduce_sum( tf.pack([self._costs[diagName(d)] for d in nn_diagnoses]) )
         
 
 
