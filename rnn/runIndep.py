@@ -135,8 +135,6 @@ def run_eval_epoch(session, models, dev_input, config, verbose = True):
 def label_dataset(session, models, unlabled_input, config, verbose=True):
 
     costs = 0.0
-    
-    print("Param norm", norm)
     lenData = len(dev_input.data)
     allReps = []
     for i in range(lenData):
@@ -178,7 +176,7 @@ def main(_):
     trainPath = 'diagDictTrain.p'
     devPath = 'devReps.p'
     config = Config()
-    unlabled_mode= True
+    unlabled_mode= False
     if unlabled_mode:
         devPath = 'unlabledReps.p'
         dev_input = UnlabledInput(devPath, config)
