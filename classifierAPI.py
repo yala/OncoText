@@ -179,7 +179,7 @@ def getPredictions():#name='default'):
     stem = "classification_results/API/Prod_"+name+"_"
     filtData = createEpisodes.removeUnexpectedColumns(db[name])
     for r in filtData:
-        if not "MRNPlusX" in r:
+        if not "MRNPlusX" in r or not "Report_Date_TimePlusX" in r:
             r["MRNPlusX"]= "0"
             r["Institution"] ="Kinyas"
             r["Report_Date_TimePlusX"] = datetime.now().isoformat()
@@ -205,12 +205,12 @@ def getPredictions():#name='default'):
     print "Calling build episode"
     reportDB, episodeDB = createEpisodes.buildEpisodes(reportDB, True)
     postProcessRules(reportDB)
-    postProcessRules(episodeDB)
+    # postProcessRules(episodeDB)
 
     reportDBJ = exportToJSON.portToJSON(reportDB)  
-    episodeDBJ = exportToJSON.portToJSON(episodeDB,episodeMode=True)    
+    # episodeDBJ = exportToJSON.portToJSON(episodeDB,episodeMode=True)    
 
-    return json.dumps({'reportDB':reportDBJ, 'episodeDB': episodeDBJ})
+    return json.dumps({'reportDB':reportDBJ})#, 'episodeDB': episodeDBJ})
 
 ################ Helpers ######################
 def validateTrainDb(trainDb):
