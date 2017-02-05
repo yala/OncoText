@@ -7,6 +7,8 @@ from operator import itemgetter
 import sys
 sys.path.append("..")
 from constants import *
+import os
+here = os.path.dirname(os.path.realpath(__file__))
 
 random.seed(1)
 labelDict = constantValidLabelDict
@@ -81,7 +83,7 @@ def binarizeFilesForClassification(allData, stem, write = True):
         return isTaghian or isHughes
     
     trainData = [d for d in allData if isGold(d)] 
-    additTrainData =  p.load( open('../xmlTrainingData.p','rb') )
+    additTrainData =  p.load( open(here+'/../xmlTrainingData.p','rb') )
     
     for adit in additTrainData:
         adit['Report_Text_Segmented'] = adit['Report_Text']
