@@ -57,7 +57,7 @@ def main(path, dev):
         allReps = newReps
 
         j=0
-        for diag in diagnoses:
+        for diag in nn_diagnoses:
             for i, r in enumerate(allReps):
                 if diag in r:
                     pre_Text = preprocessText(r["Report_Text_Segmented"])
