@@ -245,9 +245,12 @@ def postProcessRules(db):
     for r in db:
         if hasCat(r, const_cancers):
             r['cancer'] = 'Present'
-
+	else:
+	    r['cancer'] = "Absent"
         if hasCat(r, const_atypias):
             r['atypia'] = 'Present'
+	else:
+	    r['atypia'] = "Absent"
 
         if r['cancer'] == 'Absent':
             for k in ['ER','PR','Her2 (Fish)', 'ECE', 'LVI','BVI', 'Are there positive LN?', 'ITC ']:

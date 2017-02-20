@@ -5,7 +5,7 @@ from  datetime import datetime as date
 
 domain = "http://localhost:5000/"
 #reps = p.load(open('tempReports.p','rb'))
-name = "mghUsrTempTemp"
+name = "mghFeb"
 
 #addDataResp = requests.post(domain+"addData", data=json.dumps(reps) , params={'name':name, 'raw':True})
 

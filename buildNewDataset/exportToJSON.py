@@ -41,7 +41,7 @@ def portToJSON(data, path=None, episodeMode = False, write=False):
         mrn =  report["MRNPlusX"]
         del report["MRNPlusX"]
         report["FakeMRN"] = mrn
-        assert "EIC" in report
+        #assert "EIC" in report
 
     if write:
         chunkLen = len(data)/10
