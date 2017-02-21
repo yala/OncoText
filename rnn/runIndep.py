@@ -132,7 +132,7 @@ def run_eval_epoch(session, models, dev_input, config, verbose = True):
     evaluate(preds, golds, inputStrs)
     return 0
 
-def label_dataset(session, models, dev_input, config, verbose=True):
+def label_dataset(session, models, unlabled_input, config, outPath='labeledReps.p', verbose=True):
 
     costs = 0.0
     lenData = len(dev_input.data)
@@ -168,17 +168,22 @@ def label_dataset(session, models, dev_input, config, verbose=True):
 
         if i %(lenData/100) == 0:
             print(i*1./ lenData)
-    p.dump(allReps, open('labeledReps.p','wb'))
+    p.dump(allReps, open(outPath,'wb'))
     return allReps
 
 
 def main(_):
-    trainPath = 'diagDictTrain.p'
+    
+    flags = p.load(open('flags.p','rb'))
     devPath = 'devReps.p'
     config = Config()
-    unlabled_mode= True
+    unlabled_mode =  flags['unlabled_mode']
+    trainPath =  flags['trainPath'] 
+    outPath =  flags['outPath'] if unlabled_mode else None
+
     if unlabled_mode:
-        devPath = 'unlabledReps.p'
+        devPath = flags['unlabeledPath']
+
         dev_input = UnlabledInput(devPath, config)
     else:
         devPath = 'devReps.p'
@@ -213,7 +218,7 @@ def main(_):
         with sv.managed_session(config=sessConf) as session:
             ### run regular adversarial training
             if unlabled_mode:
-                label_dataset(session, models, dev_input, config, verbose=True)
+                label_dataset(session, models, dev_input, config, outPath = outPath, verbose=True)
             else:
                 for i in range(config.max_epoch):
                     varDump =  session.run([{var.name: var} for var in tf.trainable_variables()])
@@ -235,5 +240,7 @@ def main(_):
 
 
 if __name__ == "__main__":
+    neuralFlags = { 'unlabled_mode':False, 'trainPath':'diagDictTrain.p'}
+    p.dump( neuralFlags, open('flags.p','wb'))
     tf.app.run()
     

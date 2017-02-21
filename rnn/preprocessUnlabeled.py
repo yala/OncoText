@@ -30,12 +30,11 @@ def oneHot(diag, label):
     return arr
 
 
-def main(path, dev):
+def main(allReps, dev, outname='unlabledReps'):
     diagDict = {}
 
     load = True
     if load:
-        allReps =  p.load( open(path, 'rb'))
         newReps = []
         for r in allReps:
             newR = {}
@@ -84,9 +83,9 @@ def main(path, dev):
         
         vocabIndxDict = p.load(open('vocabIndxDict.p','rb'))
         if dev:
-            targetTyps = [('devReps',devReps), ('testReps',testReps)]
+            targetTyps = [('devReps.[',devReps), ('testReps.[',testReps)]
         else:
-            targetTyps = [('unlabledReps',allReps)]
+            targetTyps = [(outname ,allReps)]
         for name, reps in targetTyps:
             for j,r in enumerate(reps):
                 sent = r['Report_Text_Segmented']    
@@ -94,11 +93,12 @@ def main(path, dev):
                 indices = [ vocabIndxDict[w] for w in words if w in vocabIndxDict]
                 r['NN_Text'] = np.array(indices)
                 
-            p.dump(reps, open(name+'.p','wb'))
+            p.dump(reps, open(name,'wb'))
 
 
 if __name__ == "__main__":
-    main('../reportDB+new.p', dev=False)
+    allReps =  p.load( open(path, 'rb'))
+    main(allReps, dev=False)
 
 
 
