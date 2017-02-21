@@ -1,12 +1,19 @@
 import requests
 import cPickle as p
 import json
-from  datetime import datetime as date
+import  datetime 
 
 
-domain = "http://172.17.140.132:5000/"
+domain = "http://localhost:5000/"
 tr_reps = p.load(open('unlabled_reps.test.p','rb'))[:10] 
 un_reps = p.load(open('train_reps.test.p','rb'))[:10] 
+
+for reps in [tr_reps, un_reps]:
+	for report in reps:
+		for k in report:
+                	l = report[k]
+                	if isinstance(l, datetime.datetime):
+                    		report[k] = l.isoformat()
 
 name = "test"
 
@@ -19,7 +26,7 @@ addUnlabeledResp = requests.post(domain+"addUnlabeled", data=json.dumps(un_reps)
 assert addUnlabeledResp.status_code == 200
 
 # update train
-updateTrainResp = requests.post(domain+"updateTrainSet",  , params={'name':name})
+updateTrainResp = requests.post(domain+"updateTrainSet",   params={'name':name})
 assert updateTrainResp.status_code == 200
 
 # update unlabeled

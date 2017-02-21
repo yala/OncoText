@@ -126,8 +126,6 @@ def addUnlabeledData():
     if raw:
         data = preprocessReports(data)
 
-    validateTrainDb(data)
-
     if not name in db_unlabeled:
         print "Adding", name, "to db_unlabeled"
         db_unlabeled[name] = []
