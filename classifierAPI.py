@@ -161,7 +161,7 @@ def updateTrainSet():
     preprocessTrain.main(trainDb)
 
     diagDictNew = preprocessTrain.main(trainDb) + p.load(open('rnn/diagDictTrain.p','rb'))
-    p.dump(diagDictNew, open('rnn/diagDictTrain_'+name+".p','wb'))
+    p.dump(diagDictNew, open('rnn/diagDictTrain_'+name+".p",'wb'))
     return "Success"
 
 
@@ -193,7 +193,7 @@ def train():
     subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
     neuralFlags = { 'unlabled_mode':False, 'trainPath':'diagDictTrain_'+name+".p"}
     p.dump( neuralFlags, open('rnn/flags.p','wb'))
-    shellScript1 = "cd rnn; rm -rf logsIndep_"+name + ";" mkdir logsIndep_"+name
+    shellScript1 = "cd rnn; rm -rf logsIndep_"+name + "; mkdir logsIndep_"+name
     shellScript2 = "./run.sh runIndep.py logsIndep_"+name
     subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
     return "Success"
@@ -225,7 +225,7 @@ def predict():
 
     neuralFlags = { 'unlabled_mode':True, 'unlabeledPath':'unlalbeldReps_'+name+".p", 'outPath':'lableledReps_'+name+'.p'}
     p.dump( neuralFlags, open('rnn/flags.p','wb'))
-    shellScript1 = "cd rnn; rm -rf logsIndep_"+name + ";" mkdir logsIndep_"+name
+    shellScript1 = "cd rnn; rm -rf logsIndep_"+name + "; mkdir logsIndep_"+name
     shellScript2 = "./run.sh runIndep.py logsIndep_"+name
     subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
     reportDBCNN = p.load( open('lableledReps_'+name+'.p','rb'))
