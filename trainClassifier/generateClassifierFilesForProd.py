@@ -14,7 +14,7 @@ random.seed(1)
 labelDict = constantValidLabelDict
 
 
-def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem):
+def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem, writeTrain=True, writeTest=True):
     writeNameFiles(stem)
 
     trainSuf = 'data'
@@ -22,39 +22,41 @@ def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem):
     for indx, diag in enumerate(diagnoses):
         trainStem = stem
         labelCountDict = {}
-        with open(trainStem+replaceSpaces(diag)+"."+trainSuf, "wb") as f: 
-            for a in range(len(trainReports)):                
-                if trainLabels[a][indx] in labelDict[diag]:
-                    label = trainLabels[a][indx]
-                else:
-                    continue
-                if not label in labelCountDict:
-                    labelCountDict[label] = 0
-                labelCountDict[label] +=1
+        if writeTrain:
+            with open(trainStem+replaceSpaces(diag)+"."+trainSuf, "wb") as f: 
+                for a in range(len(trainReports)):                
+                    if trainLabels[a][indx] in labelDict[diag]:
+                        label = trainLabels[a][indx]
+                    else:
+                        continue
+                    if not label in labelCountDict:
+                        labelCountDict[label] = 0
+                    labelCountDict[label] +=1
 
-                report = trainReports[a]
+                    report = trainReports[a]
 
-                assert not "\n" in report
-                f.write(report + ", " + label + '.\n')
+                    assert not "\n" in report
+                    f.write(report + ", " + label + '.\n')
 
-        print "Saved", trainStem+replaceSpaces(diag)+"."+trainSuf
-        print "With distribution", labelCountDict
-        print "---"
+            print "Saved", trainStem+replaceSpaces(diag)+"."+trainSuf
+            print "With distribution", labelCountDict
+            print "---"
 
         testStem = stem
-        with open(testStem+replaceSpaces(diag)+"."+testSuf, "wb") as f: 
-            for b in range(len(testReports)):   
-                if testLabels[b][indx] in labelDict[diag]:
-                    label = testLabels[b][indx]
-                else:
-                    label = defaultLabelDict[diag]
+        if writeTest:
+            with open(testStem+replaceSpaces(diag)+"."+testSuf, "wb") as f: 
+                for b in range(len(testReports)):   
+                    if testLabels[b][indx] in labelDict[diag]:
+                        label = testLabels[b][indx]
+                    else:
+                        label = defaultLabelDict[diag]
 
-                report = testReports[b]
+                    report = testReports[b]
 
-                assert not "\n" in report
-                f.write(report + ", " + label + '.\n')
+                    assert not "\n" in report
+                    f.write(report + ", " + label + '.\n')
 
-        print "Saved", testStem+replaceSpaces(diag)+"."+testSuf
+            print "Saved", testStem+replaceSpaces(diag)+"."+testSuf
 
 def writeNameFiles(stem):
     for diag in diagnoses:
@@ -72,7 +74,7 @@ def writeNameFiles(stem):
 
 # Set write to true to generate train and test files for classification. 
 # Set write to false to collace files for export
-def binarizeFilesForClassification(allData, stem, write = True):
+def binarizeFilesForClassification(allData, stem, write = True, writeTrain=True, writeTest=True):
     
 
     #valid input db isn't corrupted
@@ -103,7 +105,7 @@ def binarizeFilesForClassification(allData, stem, write = True):
     restReports,  restLabels =  getLabelsAndReports(remainData)
     assert len(restReports) == len(remainData)
 
-    genTrainTestFiles(trainReports, trainLabels, restReports, restLabels, stem)
+    genTrainTestFiles(trainReports, trainLabels, restReports, restLabels, stem, writeTrain=writeTrain, writeTest=writeTest)
 
 
 
@@ -182,7 +184,7 @@ def validateRepsDB(reps, flex = False, dirty = False):
 if __name__ == "__main__": 
     allDataPath = redRawDBPath
     allData = p.load(open(allDataPath, 'rb'))
-    binarizeFilesForClassification(allData, '../boostexer/breast/unlabled/red_all_')
+    binarizeFilesForClassification(allData, '../boostexer/breast/unlabled/red_all_', writeTrain=True, writeTest = True)
 
 
 
