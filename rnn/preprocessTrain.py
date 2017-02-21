@@ -36,7 +36,7 @@ def main(allData):
     if load:
         
         j=0
-        for diag in diagnoses:
+        for diag in nn_diagnoses:
             diagDict[diag] = ([],[])
             for i, r in enumerate(allData):
                 if diag in r:
@@ -57,21 +57,21 @@ def main(allData):
 
     make_vecs = False
     if make_vecs:
-        sentences = p.load(open('sentenceList.p','rb'))
+        sentences = p.load(open('rnn/sentenceList.p','rb'))
         print 'starting to embedd'
-        word2vec.word2vec('sentenceList.p', 'embeddings.bin', 100, verbose=True)
-        model = word2vec.load('embeddings.bin')
+        word2vec.word2vec('rnn/sentenceList.p', 'rnn/embeddings.bin', 100, verbose=True)
+        model = word2vec.load('rnn/embeddings.bin')
         embeddings = model.vectors
         vocab      = model.vocab
 
-        p.dump(model, open('word2vecModel.p','wb'))
-        p.dump(embeddings, open('embeddings.p','wb'))
-        p.dump(vocab, open('vocab.p','wb'))
+        p.dump(model, open('rnn/word2vecModel.p','wb'))
+        p.dump(embeddings, open('rrn/embeddings.p','wb'))
+        p.dump(vocab, open('rnn/vocab.p','wb'))
 
 
 
     print "start get vecs"
-    w2vM = p.load(open('word2vecModel.p','rb'))
+    w2vM = p.load(open('rnn/word2vecModel.p','rb'))
 
     print "build vocab"
     vocab = w2vM.vocab
@@ -103,9 +103,9 @@ def main(allData):
     return diagDict
 
 if __name__ == "__main__":
-    allData = p.load(open('../reportDB+red+clean.p','rb'))
+    allData = p.load(open('reportDB+red+clean.p','rb'))
     diagDict = main(allData)
-    p.dump(diagDict, open('diagDictTrain.p','wb'))
+    p.dump(diagDict, open('rnn/diagDictTrain.p','wb'))
 
 
 

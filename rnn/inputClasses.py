@@ -130,7 +130,8 @@ class UnlabledInput(object):
         for diag in nn_diagnoses:
             batch_data = working_arr
             inp = np.array([ np.hstack( [ \
-                self.data[i]['NN_Text'], np.zeros(bucket-len(self.data[i]['NN_Text']))] \
+                self.data[i]['NN_Text'][:bucket], \
+		np.zeros(max(0,bucket-len(self.data[i]['NN_Text'])))] \
                 ) for i in batch_data], dtype=np.int32)
             try:
                 tar = np.array([ self.data[i][diag] for i in batch_data], dtype=np.int32)
@@ -144,7 +145,7 @@ class UnlabledInput(object):
 
             batch[diag] = inp, tar
 
-        reports = [ self.data[i]['NN_Text'] for i in batch_data]
+        reports = [ self.data[i] for i in batch_data]
 
         self.index += self.config.batch_size 
         self.index %= self.length

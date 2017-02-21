@@ -75,15 +75,15 @@ def main(allReps, dev, outname='unlabledReps'):
         # for i,s in enumerate(allSentences):
         #   allSentences[i] = preprocessText(s)
         
-        model = word2vec.load('embeddings.bin')
+        model = word2vec.load('rnn/embeddings.bin')
         embeddings = model.vectors
         vocab      = model.vocab
 
         
         
-        vocabIndxDict = p.load(open('vocabIndxDict.p','rb'))
+        vocabIndxDict = p.load(open('rnn/vocabIndxDict.p','rb'))
         if dev:
-            targetTyps = [('devReps.[',devReps), ('testReps.[',testReps)]
+            targetTyps = [('devReps.',devReps), ('testReps.',testReps)]
         else:
             targetTyps = [(outname ,allReps)]
         for name, reps in targetTyps:
