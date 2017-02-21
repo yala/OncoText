@@ -58,7 +58,7 @@ except Exception, e:
     db_train = {'default':base}
     db_unlabeled = {'default': base[:10]}
     p.dump(db_train, open(DB_TRAIN_PATH,'wb')) 
-
+    p.dump(db_unlabeled, open(DB_UNLABLED_PATH, 'wb'))
 
 
 RequiredPreprocessFields = ['Report_Text', "Report_Date_TimePlusX"]
@@ -303,4 +303,3 @@ def postProcessRules(db_train):
 if __name__ == "__main__":
     print "Begin API"
     app.run(host="0.0.0.0")
-    db_train.close()
