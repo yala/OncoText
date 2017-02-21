@@ -30,7 +30,7 @@ class Config(object):
     max_grad_norm = 5
     embed_size = 100
     hidden_size = 100
-    max_epoch = 100
+    max_epoch = 14
     keep_prob = 1.0
     batch_size = 1
     vocab_size = 17082
@@ -132,7 +132,7 @@ def run_eval_epoch(session, models, dev_input, config, verbose = True):
     evaluate(preds, golds, inputStrs)
     return 0
 
-def label_dataset(session, models, unlabled_input, config, verbose=True):
+def label_dataset(session, models, dev_input, config, verbose=True):
 
     costs = 0.0
     lenData = len(dev_input.data)
@@ -148,12 +148,10 @@ def label_dataset(session, models, unlabled_input, config, verbose=True):
             models[bucket].keep_prob:  1.0
         }
 
-        reports = {}
         for d in nn_diagnoses:
             diag = diagName(d)
             feed_dict[ models[bucket].inps[diag] ] = batch[d][0]
             feed_dict[ models[bucket].tars[diag] ] = batch[d][1]
-            reports[ diag] = batch[d][2]
 
 
 
@@ -161,12 +159,14 @@ def label_dataset(session, models, unlabled_input, config, verbose=True):
         pred, gold = vals['predAndGold']
 
         for k,r in enumerate(reports):
-            for d in pred:
-                r[d] = constantValidLabelDict[ preds[d][i][0]]
+            for d in nn_diagnoses:
+		diag = diagName(d)
+		labelInd = pred[diag][k]
+                r[d] = constantValidLabelDict[d][labelInd]
 
         allReps.extend(reports)
 
-        if i %(lenData/10) == 0:
+        if i %(lenData/100) == 0:
             print(i*1./ lenData)
     p.dump(allReps, open('labeledReps.p','wb'))
     return allReps
@@ -176,7 +176,7 @@ def main(_):
     trainPath = 'diagDictTrain.p'
     devPath = 'devReps.p'
     config = Config()
-    unlabled_mode= False
+    unlabled_mode= True
     if unlabled_mode:
         devPath = 'unlabledReps.p'
         dev_input = UnlabledInput(devPath, config)
