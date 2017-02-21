@@ -18,28 +18,28 @@ for reps in [tr_reps, un_reps]:
 name = "test"
 
 # add train
-addTrainResp = requests.post(domain+"addTrain", data=json.dumps(tr_reps) , params={'name':name})
-assert addTrainResp.status_code == 200
+#addTrainResp = requests.post(domain+"addTrain", data=json.dumps(tr_reps) , params={'name':name})
+#assert addTrainResp.status_code == 200
 
 # add unlabeled
-addUnlabeledResp = requests.post(domain+"addUnlabeled", data=json.dumps(un_reps) , params={'name':name, 'raw':True})
-assert addUnlabeledResp.status_code == 200
+#addUnlabeledResp = requests.post(domain+"addUnlabeled", data=json.dumps(un_reps) , params={'name':name, 'raw':True})
+#assert addUnlabeledResp.status_code == 200
 
 # update train
-updateTrainResp = requests.post(domain+"updateTrainSet",   params={'name':name})
+updateTrainResp = requests.get(domain+"updateTrainSet",   params={'name':name})
 assert updateTrainResp.status_code == 200
 
 # update unlabeled
-updateUnlResp = requests.post(domain+"updateUnlabeledSet" , params={'name':name})
+updateUnlResp = requests.get(domain+"updateUnlabeledSet" , params={'name':name})
 assert updateUnlResp.status_code == 200
 
 # train
-trainResp = requests.post(domain+"train" , params={'name':name})
+trainResp = requests.get(domain+"train" , params={'name':name})
 assert trainResp.status_code == 200
 
 # predict
 
-predResp = requests.post(domain+"predict" , params={'name':name})
+predResp = requests.get(domain+"predict" , params={'name':name})
 assert predResp.status_code == 200
 newDb = json.loads(predResp.text)
 print(len(newDb))
