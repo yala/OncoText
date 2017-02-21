@@ -5,32 +5,35 @@ from  datetime import datetime as date
 
 
 domain = "http://172.17.140.132:5000/"
-reps = [ p.load(open('tempReports.p','rb'))[0] ]
-name = "mghFeb"
+tr_reps = p.load(open('unlabled_reps.test.p','rb'))[:10] 
+un_reps = p.load(open('train_reps.test.p','rb'))[:10] 
 
-addDataResp = requests.post(domain+"addData", data=json.dumps(reps) , params={'name':name, 'raw':True})
+name = "test"
 
+# add train
+addTrainResp = requests.post(domain+"addTrain", data=json.dumps(tr_reps) , params={'name':name})
+assert addTrainResp.status_code == 200
 
-assert addDataResp.status_code == 200
+# add unlabeled
+addUnlabeledResp = requests.post(domain+"addUnlabeled", data=json.dumps(un_reps) , params={'name':name, 'raw':True})
+assert addUnlabeledResp.status_code == 200
 
-#inspectResp = requests.get(domain+"inspect")
-#print inspectResp.text
+# update train
+updateTrainResp = requests.post(domain+"updateTrainSet",  , params={'name':name})
+assert updateTrainResp.status_code == 200
 
+# update unlabeled
+updateUnlResp = requests.post(domain+"updateUnlabeledSet" , params={'name':name})
+assert updateUnlResp.status_code == 200
 
-#print "hit add data"
-#raw_input()
+# train
+trainResp = requests.post(domain+"train" , params={'name':name})
+assert trainResp.status_code == 200
 
-#params = {"name": name, "mode":"Prod"}
-#updateTrainResp = requests.get(domain+"updateTrainSet", params=params)
-#assert updateTrainResp.status_code == 200
-#print "hit updateTrain"
+# predict
 
-#raw_input("wait for update to fin")
+predResp = requests.post(domain+"predict" , params={'name':name})
+assert predResp.status_code == 200
+newDb = json.loads(predResp.text)
+print(len(newDb))
 
-#tAndPRes = requests.get(domain+"trainAndPredict", params=params)
-#assert tAndPRes.status_code == 200
-#raw_input("wait for train and pred to finish")
-
-# newDbRes = requests.get(domain+"getPredictions",params={"name":name})
-# assert newDbRes.status_code == 200
-# newDb = json.loads(newDbRes.text)
