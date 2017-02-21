@@ -1,4 +1,4 @@
-import pickle as p
+import cPickle as p
 import sys
 sys.path.append("..")
 from constants import *
@@ -10,7 +10,8 @@ random.seed(1)
 ruleBasedData = p.load(open(dataPath, 'rb'))
 mlData = p.load(open('../reportDB+new.p', 'rb'))
 
-targets = [h for h in HueAnotationSource if not h == 'BreastSide']
+# targets = [h for h in HueAnotationSource if not h == 'BreastSide']
+targets = [h for h in HueAnotationSource if not h == 'BreastSide' and "Red "+h in const_atypias]
 
 def buildDict(data, debug = False):
     resultDict = {}
@@ -83,6 +84,7 @@ for diag in targets:
                 print text
                 raw_input()
                 numPrinted +=1
+            mlDict[repID]['Disagreed on'] = diag
             disagreement[diag].append({ 'ReportID':ruleBasedDict[repID]['ReportID'], 'text':text, 'ruleLabel':ruleLabel,\
              'mlLable':mlLabel})
             if str(ruleLabel) == '1':
@@ -116,7 +118,7 @@ for diag in disagreement:
 disagreementReps = [r for r in mlData if r['ReportID'] in allDisagreements]
 random.shuffle(disagreementReps)
 
-path = "disagreementsForMolly/disagreement_on_all.csv"
+path = "disagreementsForMolly/disagreement_on_atyp_jan9.csv"
 
 for diag in diagnoses:
     annotationName = "MG "+diag

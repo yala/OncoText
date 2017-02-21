@@ -21,7 +21,9 @@ from datetime import datetime
 
 app = Flask(__name__)
 app.config.from_object(__name__)
-DB_PATH = "reportDBAPI.p" 
+DB_TRAIN_PATH = "reportDBAPI_train.p" 
+DB_UNLABLED_PATH = "reportDBAPI_test.p" 
+
 
 
 rawPath = "reportDB+red+clean.p"
@@ -48,11 +50,14 @@ for r in raws:
         base.append(r)
 
 try:
-    db = p.load(open(DB_PATH,'rb'))
+    db_train = p.load(open(DB_TRAIN_PATH,'rb'))
+    db_unlabeled = p.load(open(DB_UNLABLED_PATH,'rb'))
+
 except Exception, e:
-    print "Init db"
-    db = {'default':base}
-    p.dump(db, open(DB_PATH,'wb')) 
+    print "Init db_train"
+    db_train = {'default':base}
+    db_unlabeled = {'default': base[:10]}
+    p.dump(db_train, open(DB_TRAIN_PATH,'wb')) 
 
 
 
@@ -69,8 +74,8 @@ models = ['Boost', 'MaxEnt', 'CNN'] # MaxEnt and CNN not ready
 ## [ {Report_Text: }]
 ## @return: 0
 @app.route("/addData", methods=['POST'])
-def addData():#data, name='default', raw=False, save=False):
-    db = p.load(open(DB_PATH,'rb'))
+def addTrainData():
+    db_train = p.load(open(DB_TRAIN_PATH,'rb'))
     data = json.loads(request.data) or []
     name = request.args.get("name") or "default"
     raw = request.args.get("raw") or False
@@ -83,9 +88,9 @@ def addData():#data, name='default', raw=False, save=False):
 
     validateTrainDb(data)
 
-    if not name in db:
-        print "Adding", name, "to db"
-        db[name] = base
+    if not name in db_train:
+        print "Adding", name, "to db_train"
+        db_train[name] = base + data
     ## mark the files to note as annoations
     for r in data:
         r['Owner'] = name
@@ -93,10 +98,48 @@ def addData():#data, name='default', raw=False, save=False):
             if d in r:
                 r['TaghianGold'] = 1
 
-    db[name].extend(data)
-    p.dump(db, open(DB_PATH,'wb')) 
-    print db.keys()
+    db_train[name].extend(data)
+    p.dump(db_train, open(DB_TRAIN_PATH,'wb')) 
+    print db_train.keys()
     return "Success"
+
+## Given a JSON list of dicts, where  each dict represent a report:
+## Parse the dict for daignoses, and add annotations if found
+##  @name specifies user, izzy don't worry about this
+## @raw specifies if the data has been preprocessed before, 
+## Example:
+## [ {Report_Text: }]
+## @return: 0
+@app.route("/addData", methods=['POST'])
+def addUnlabeledData():
+    db_train = p.load(open(DB_TRAIN_PATH,'rb'))
+    data = json.loads(request.data) or []
+    name = request.args.get("name") or "default"
+    raw = request.args.get("raw") or False
+    
+    print "data is", data
+    print "name is", name
+    # Preprocess bilaterals if need be
+    if raw:
+        data = preprocessReports(data)
+
+    validateTrainDb(data)
+
+    if not name in db_train:
+        print "Adding", name, "to db_train"
+        db_train[name] = base
+    ## mark the files to note as annoations
+    for r in data:
+        r['Owner'] = name
+        for d in diagnoses:
+            if d in r:
+                r['TaghianGold'] = 1
+
+    db_train[name].extend(data)
+    p.dump(db_train, open(DB_TRAIN_PATH,'wb')) 
+    print db_train.keys()
+    return "Success"
+
 
 ## Does all necessary preprocessing for the model on the dataset
 ## model specifies the underlying model used, Boost is what Adam used
@@ -105,7 +148,7 @@ def addData():#data, name='default', raw=False, save=False):
 ## Return 0
 @app.route("/updateTrainSet", methods=['GET'])
 def updateTrainSet():#name='default', model='Boost', mode="Dev"):
-    db = p.load(open(DB_PATH,'rb'))
+    db_train = p.load(open(DB_TRAIN_PATH,'rb'))
     name = request.args.get("name") or "default"
     model = request.args.get("model") or "Boost"
     mode = request.args.get("mode") or "Prod"
@@ -115,9 +158,9 @@ def updateTrainSet():#name='default', model='Boost', mode="Dev"):
         ## Generate relevant files in some directory with a name path
         stem = "boostexer/breast/api/"+mode+"_"+name+"_"
         if mode == "Prod":
-            generateClassifierFilesForProd.binarizeFilesForClassification(db[name], stem)
+            generateClassifierFilesForProd.binarizeFilesForClassification(db_train[name], stem)
         else:
-            generateClassifierFilesForDev.binarizeFilesForClassification(db[name], stem)
+            generateClassifierFilesForDev.binarizeFilesForClassification(db_train[name], stem)
         
 
     elif model == "MaxEnt" or model == "CNN":
@@ -125,12 +168,12 @@ def updateTrainSet():#name='default', model='Boost', mode="Dev"):
         raise NameError("Model type not supported")
     return "Success"
 
-## Returns keys of db
+## Returns keys of db_train
 @app.route("/inspect", methods=['GET'])
 def inspect():#name='default', model='Boost', mode="Dev"):
-    db = p.load(open(DB_PATH,'rb'))
-    print db.keys()
-    return json.dumps(db.keys())
+    db_train = p.load(open(DB_TRAIN_PATH,'rb'))
+    print db_train.keys()
+    return json.dumps(db_train.keys())
 
 ## Kicks off job to retrain model and label the corresping data
 ## Use dev to train model without heldout test to get numbers
@@ -174,10 +217,10 @@ def getResults():#name='default'):
 ## consecutive period
 @app.route("/getPredictions", methods=['GET'])
 def getPredictions():#name='default'):
-    db = p.load(open(DB_PATH,'rb'))
+    db_train = p.load(open(DB_TRAIN_PATH,'rb'))
     name = request.args.get("name") or "default"
     stem = "classification_results/API/Prod_"+name+"_"
-    filtData = createEpisodes.removeUnexpectedColumns(db[name])
+    filtData = createEpisodes.removeUnexpectedColumns(db_train[name])
     for r in filtData:
         if not "MRNPlusX" in r or not "Report_Date_TimePlusX" in r:
             r["MRNPlusX"]= "0"
@@ -186,7 +229,7 @@ def getPredictions():#name='default'):
 
     print "Calling export"
     reportsDBAll = createEpisodes.aggregateResults(filtData, stem)
-    rawData = db[name]
+    rawData = db_train[name]
 
     reportDB = {}
     for i in range(len(rawData)):
@@ -241,8 +284,8 @@ def preprocessReports(reports):
 
 
 ## Runs enforces global constraints like ER/PR NA given no cancer
-def postProcessRules(db):
-    for r in db:
+def postProcessRules(db_train):
+    for r in db_train:
         if hasCat(r, const_cancers):
             r['cancer'] = 'Present'
 	else:
@@ -260,4 +303,4 @@ def postProcessRules(db):
 if __name__ == "__main__":
     print "Begin API"
     app.run(host="0.0.0.0")
-    db.close()
+    db_train.close()

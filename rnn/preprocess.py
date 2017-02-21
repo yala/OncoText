@@ -41,7 +41,7 @@ if load:
             if diag in r:
                 raw_Text = r["Report_Text_Segmented"].lower()
                 pre_Text = preprocessText(r["Report_Text_Segmented"])
-                diagDict[diag][0].append( pre_Text  )
+                diagDict[diag][0].append( pre_Text )
                 diagDict[diag][1].append( oneHot(diag, r[diag]) )
         print 'len report/label for ', diag ,(len(diagDict[diag][0]), len(diagDict[diag][1]))
 

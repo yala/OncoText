@@ -49,10 +49,15 @@ def main(redReps):
             if 'LVI' in r:
                 if r['LVI'] == 'Suspicious':
                     r['LVI'] = 'No'
+                if r['LVI'] == 'Not reported':
+                    r['LVI'] = 'NA'
 
             if 'BVI' in r:
                 if r['BVI'] == 'Suspicious':
                     r['BVI'] = 'No'
+
+                if r['BVI'] == "Not reported":
+                    r['BVI'] = "NA"
 
             if 'ITC ' in r:
                 if r['ITC '] == 'Not Reported':

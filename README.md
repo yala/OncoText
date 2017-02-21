@@ -14,6 +14,13 @@ flask run
 # API Usage  <br />
 The following API let's you add training data, train models, get performance information on a development set, and get results on the whole cohort. Currently, the model only supports a boosting based extractor, but it is built to easily support other approachs like CNNs
 
+# TODO
+Optimize speed. Currently pickling between ops in lieu of a real persistent db. DB too big for shelve <br />
+Support sharing training data between users post creation. Currently only sharing from base.
+Support CNN
+Switch KHughes Box to Linux, and just setup a DNS
+
+
 
 # Endpoints
 

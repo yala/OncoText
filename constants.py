@@ -120,6 +120,7 @@ if MODE == "TAGHIAN":
     else:
       conventionToDiagDict[ diag ] = diag
 
+  key_order_convention = [ diagToConventionDict[k] if k in diagToConventionDict else k for k in key_order]
   
   if baseline:
     diagnoses = [
