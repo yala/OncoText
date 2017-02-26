@@ -158,7 +158,7 @@ def updateTrainSet():
     generateClassifierFilesForProd.binarizeFilesForClassification(trainDb, stem, writeTrain=True, writeTest=False)
     preprocessTrain.main(trainDb)
 
-    diagDictNew = preprocessTrain.main(trainDb) + p.load(open('rnn/diagDictTrain.p','rb'))
+    diagDictNew = preprocessTrain.main(trainDb) 
     p.dump(diagDictNew, open('rnn/diagDictTrain_'+name+".p",'wb'))
     return "Success"
 
