@@ -17,13 +17,13 @@ for reps in [tr_reps, un_reps]:
 
 name = "test"
 
-# add train
-#addTrainResp = requests.post(domain+"addTrain", data=json.dumps(tr_reps) , params={'name':name})
-#assert addTrainResp.status_code == 200
+add train
+addTrainResp = requests.post(domain+"addTrain", data=json.dumps(tr_reps) , params={'name':name})
+assert addTrainResp.status_code == 200
 
-# add unlabeled
-#addUnlabeledResp = requests.post(domain+"addUnlabeled", data=json.dumps(un_reps) , params={'name':name, 'raw':True})
-#assert addUnlabeledResp.status_code == 200
+add unlabeled
+addUnlabeledResp = requests.post(domain+"addUnlabeled", data=json.dumps(un_reps) , params={'name':name, 'raw':True})
+assert addUnlabeledResp.status_code == 200
 
 # update train
 updateTrainResp = requests.get(domain+"updateTrainSet",   params={'name':name})
