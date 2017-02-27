@@ -37,7 +37,7 @@ if MODE == "TAGHIAN":
     'Red CancerInvasive', 'Red CancerInvNOS', 'NodeTissue', 'CancerNotOfBreastOrigin', 'PathologyType'
   ]
 
-  boostexer_diagnoses = ['ITC ', 'Red CancerNOS', 'cancer', 'atypia', 'BiopsyType', 'Red BluntAdenosis',
+  boostexer_diagnoses = ['ITC ', 'Red CancerNOS', 'BiopsyType', 'Red BluntAdenosis',
   'Red CancerInvInsituNOS', 'Are there positive LN?', 'PR', 'Her2 (Fish)', 'ER', 'ECE', 'LVI', 'BVI', 
   'Red CancerInvasive', 'Red CancerInvNOS', 'NodeTissue', 'CancerNotOfBreastOrigin', 'PathologyType'
   ]

@@ -65,7 +65,7 @@ except Exception, e:
     neuralTrain = preprocessTrain.main(base)
     p.dump(neuralTrain, open('rnn/diagDictTrain.p','wb'))
     p.dump(db_train, open(DB_TRAIN_PATH,'wb')) 
-    p.dump(db_unlabeled, open(DB_UNLABLED_PATH, 'wb'))
+
 
 
 RequiredPreprocessFields = ['Report_Text', "Report_Date_TimePlusX"]
@@ -125,6 +125,8 @@ def addUnlabeledData():
     # Preprocess bilaterals if need be
     if raw:
         data = preprocessReports(data)
+
+    validateTrainDb(data)
 
     if not name in db_unlabeled:
         print "Adding", name, "to db_unlabeled"
@@ -191,7 +193,7 @@ def train():
     subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
     neuralFlags = { 'unlabled_mode':False, 'trainPath':'diagDictTrain_'+name+".p"}
     p.dump( neuralFlags, open('rnn/flags.p','wb'))
-    shellScript1 = "cd rnn; rm -rf logsIndep_"+name + "; mkdir logsIndep_"+name
+    shellScript1 = "cd rnn; rm -rf logsIndep_"+name + ";" mkdir logsIndep_"+name
     shellScript2 = "./run.sh runIndep.py logsIndep_"+name
     subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
     return "Success"
@@ -202,7 +204,7 @@ def train():
 def predict():
     ## run boost predict
     name = request.args.get("name") or "default"
-    mode = "Prod"    
+    mode = "R"    
     shellScript1 = "cd boostexer/breast/api/"
     shellScript2 = "./runModel.sh "+mode+"_"+name+"_"
     subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
@@ -222,6 +224,7 @@ def predict():
     reportDBBoost, episodeDB = createEpisodes.buildEpisodes(reportDB, True)
 
     neuralFlags = { 'unlabled_mode':True, 'unlabeledPath':'unlalbeldReps_'+name+".p", 'outPath':'lableledReps_'+name+'.p'}
+
     p.dump( neuralFlags, open('rnn/flags.p','w'))
     assert p.load(open('rnn/flags.p','rb')) == neuralFlags
     shellScript1 = "cd rnn "
@@ -317,3 +320,4 @@ def postProcessRules(db_train):
 if __name__ == "__main__":
     print "Begin API"
     app.run(host="0.0.0.0")
+    db_train.close()
