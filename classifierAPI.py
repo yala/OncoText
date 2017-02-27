@@ -169,15 +169,15 @@ def updateTrainSet():
 ## Return 0
 @app.route("/updateUnlabeledSet", methods=['GET'])
 def updateUnlabeledSet():
-    db_test = p.load(open(DB_UNLABLED_PATH,'rb'))
+    db_test_all = p.load(open(DB_UNLABLED_PATH,'rb'))
     name = request.args.get("name") or "default"
     batch_id = request.args.get("batch_id") or "none"
-
+    db_test = db_test_all[name]
     test_filt = db_test if batch_id == "none" else [d for d in db_test if "batch_id" in d and d["batch_id"] in batch_id]
     ## Generate relevant files in some directory with a name path
     stem = "boostexer/breast/api/"+"Prod"+"_"+name+"_"
     generateClassifierFilesForProd.binarizeFilesForClassification(test_filt, stem, writeTrain=False, writeTest=True)
-    preprocessUnlabeled.main(test_filt,outname='unlalbeldReps_'+name+".p" )
+    preprocessUnlabeled.main(test_filt,outname='rnn/unlalbeldReps_'+name+".p" )
     return "Success"
 
 
@@ -209,25 +209,32 @@ def predict():
 
     ## aggregate boost predict
     stem = "classification_results/API/Prod_"+name+"_"
-    db_unlabeled = p.load(open(DB_UNLABLED_PATH,'rb'))
+    db_unlabeled = p.load(open(DB_UNLABLED_PATH,'rb'))[name]
     for r in db_unlabeled:
         if not "MRNPlusX" in r or not "Report_Date_TimePlusX" in r:
             r["MRNPlusX"]= "0"
             r["Institution"] ="UNK"
             r["Report_Date_TimePlusX"] = datetime.now().isoformat()
-    reportsDBAll = createEpisodes.aggregateResults(db_unlabeled, stem)
+    reportDB = createEpisodes.aggregateResults(db_unlabeled, stem)
     print "Calling labelMaxDXBool"
     createEpisodes.getMaxDX(reportDB)
     print "Calling build episode"
     reportDBBoost, episodeDB = createEpisodes.buildEpisodes(reportDB, True)
 
     neuralFlags = { 'unlabled_mode':True, 'unlabeledPath':'unlalbeldReps_'+name+".p", 'outPath':'lableledReps_'+name+'.p'}
-    p.dump( neuralFlags, open('rnn/flags.p','wb'))
-    shellScript1 = "cd rnn; rm -rf logsIndep_"+name + "; mkdir logsIndep_"+name
+    p.dump( neuralFlags, open('rnn/flags.p','w'))
+    assert p.load(open('rnn/flags.p','rb')) == neuralFlags
+    shellScript1 = "cd rnn "
     shellScript2 = "./run.sh runIndep.py logsIndep_"+name
     subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
-    reportDBCNN = p.load( open('lableledReps_'+name+'.p','rb'))
+    reportDBCNN = p.load( open('rnn/lableledReps_'+name+'.p','rb'))
+    for r in reportDBCNN:
+	if 'NN_Text' in r:
+            del r['NN_Text']
+   
     reportDB = mergeDBs(reportDBBoost, reportDBCNN)
+    corrections = p.load(open(DB_TRAIN_PATH,'rb'))[name]
+    applyCorrections(reportDB, corrections)
     postProcessRules(reportDB)
 
     reportDBJ = exportToJSON.portToJSON(reportDB)  
@@ -246,8 +253,31 @@ def validateTrainDb(trainDb):
                 assert r[d] in constantValidLabelDict[d]
 
 def mergeDBs(boost, cnn):
-    return cnn
+    mergeDB = []
+    assert len(boost) == len(cnn)
+    for i in range(len(boost)):
+	newR = {}
+	for d in [k for k in boostexer_diagnoses if k in boost[i]]:
+	    newR[d] = boost[i][d]
+        for d in nn_diagnoses:
+            newR[d] = cnn[i][d]
+        for k in [key for key in cnn[i] if not key in boostexer_diagnoses + nn_diagnoses ] :
+            newR[k] = cnn[i][k]
+        mergeDB.append(newR)
+    return mergeDB
 
+def applyCorrections(test, gold):
+    corrections = 0
+    textToLabel = {}
+    for g in gold:
+        textToLabel[ g['Report_Text_Segmented'] ] = g
+    for t in test:
+	text = t['Report_Text_Segmented']
+        if text in textToLabel:
+	    for d in textToLabel[text]:
+                t[d] = textToLabel[text][d]
+		corrections+=1
+    print("num corrected", corrections)
 ## Given a list of dicts, where  each dict represent a report:
 ## If the report text covers a single breast, we assign it an id and nothing happens
 ## If the report contains 2 breasts, automatically parse it into two reports, assign them
