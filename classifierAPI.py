@@ -181,7 +181,7 @@ def updateUnlabeledSet():
     ## Generate relevant files in some directory with a name path
     stem = "boostexer/breast/api/"+"Prod"+"_"+name+"_"
     generateClassifierFilesForProd.binarizeFilesForClassification(test_filt, stem, writeTrain=False, writeTest=True)
-    preprocessUnlabeled.main(test_filt,outname='rnn/unlalbeldReps_'+name+".p" )
+    preprocessUnlabeled.main(test_filt,False,outname='rnn/unlalbeldReps_'+name+".p" )
     return "Success"
 
 
@@ -206,7 +206,7 @@ def train():
 def predict():
     ## run boost predict
     name = request.args.get("name") or "default"
-    mode = "R"    
+    mode = "Prod"    
     shellScript1 = "cd boostexer/breast/api/"
     shellScript2 = "./runModel.sh "+mode+"_"+name+"_"
     subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
@@ -240,7 +240,7 @@ def predict():
     reportDB = mergeDBs(reportDBBoost, reportDBCNN)
     corrections = p.load(open(DB_TRAIN_PATH,'rb'))[name]
     applyCorrections(reportDB, corrections)
-    postProcessRules(reportDB)
+    reportDB = postProcessRules(reportDB)
 
     reportDBJ = exportToJSON.portToJSON(reportDB)  
     return json.dumps({'reportDB':reportDBJ})
@@ -317,7 +317,8 @@ def postProcessRules(db_train):
         if r['cancer'] == 'Absent':
             for k in ['ER','PR','Her2 (Fish)', 'ECE', 'LVI','BVI', 'Are there positive LN?', 'ITC ']:
                 r[k] = 'NA'
-
+    
+    return [d for d in db_train if d['Organ'] == 'breast']
 ## Call this to start appex
 if __name__ == "__main__":
     print "Begin API"

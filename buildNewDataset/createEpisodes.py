@@ -135,6 +135,11 @@ def getLabelsAndReports(data):
             if (meta == "Correct"  or meta == "DOBPlusX") and not meta in sample:
                 diags.append(0)
             else:
+                if not "Institution" in sample:
+                    sample["Institution"] = "Unkown"
+                if not meta in sample:
+                    print "Meta",meta, "missing from sample:", sample,"!"
+
                 assert meta in sample
                 diags.append(sample[meta])
 
