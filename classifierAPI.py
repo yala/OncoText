@@ -194,7 +194,7 @@ def train():
     subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
     neuralFlags = { 'unlabled_mode':False, 'trainPath':'diagDictTrain_'+name+".p"}
     p.dump( neuralFlags, open('rnn/flags.p','wb'))
-    shellScript1 = "cd rnn; rm -rf logsIndep_"+name + ";" mkdir logsIndep_"+name
+    shellScript1 = "cd rnn; rm -rf logsIndep_"+name + "; mkdir logsIndep_"+name
     shellScript2 = "./run.sh runIndep.py logsIndep_"+name
     subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
     return "Success"
