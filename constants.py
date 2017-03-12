@@ -34,15 +34,17 @@ if MODE == "TAGHIAN":
     'Red CancerInvInsituNOS', 
     'Red SuspiciousForPhyllodes', 
     'Red CancerSuspicious', 'Red TubularCancer', 'Red Papill',
-    'Red CancerInvasive', 'Red CancerInvNOS', 'NodeTissue', 'CancerNotOfBreastOrigin', 'PathologyType'
+    'Red CancerInvasive', 'Red CancerInvNOS', 'NodeTissue', 'CancerNotOfBreastOrigin', 'PathologyType',
+    "Organ", "CancerNotInBreast"
   ]
 
   boostexer_diagnoses = ['ITC ', 'Red CancerNOS', 'BiopsyType', 'Red BluntAdenosis',
   'Red CancerInvInsituNOS', 'Are there positive LN?', 'PR', 'Her2 (Fish)', 'ER', 'ECE', 'LVI', 'BVI', 
-  'Red CancerInvasive', 'Red CancerInvNOS', 'NodeTissue', 'CancerNotOfBreastOrigin', 'PathologyType'
+  'Red CancerInvasive', 'Red CancerInvNOS', 'NodeTissue', 'CancerNotOfBreastOrigin', 'PathologyType',
+  "Organ", 
   ]
 
-  feb_new_diagnoses = ['Red CancerInvasive', 'Red CancerInvNOS', 'NodeTissue', 'CancerNotOfBreastOrigin', 'PathologyType'
+  feb_new_diagnoses = ['Red CancerInvasive', 'Red CancerInvNOS', 'NodeTissue', 'CancerNotOfBreastOrigin', 'PathologyType', "Organ"
   ]
 
   nn_diagnoses = [d for d in diagnoses if not d in boostexer_diagnoses]
@@ -57,7 +59,7 @@ if MODE == "TAGHIAN":
   'Red ALH','Red ADH', 'Red FlatEpithelial', 'Red LCIS', 'Red ADH_DCIS', 'Red LobularNeoplasia'
   ]
 
-  key_order = ['Report_Text_Segmented' ,'Red BreastSide' ,'Red CancerSuspicious' ,'Red InvasiveSuspicious', 
+  key_order = ['Report_Text_Segmented' , "Organ", "PathologyType",'Red BreastSide' ,'Red CancerSuspicious' ,'Red InvasiveSuspicious', 
   'Red CancerInvInsituNOS','Red InsituNOS','Red IDC','Red ILC','Red TubularCancer', 'Red CancerInvasive', 'Red CancerInvNOS', 'CancerNotOfBreastOrigin'
   'Red DCIS', 'ER', 'PR', 'Her2 (Fish)',  'Are there positive LN?','ECE','ITC ' ,'BVI', 'LVI'  ,'Red LCIS',
   'Red LobularNeoplasia','Red ALH', 'Red ADH_DCIS', 'Red ADH' ,'Red FlatEpithelial' ,'Red Phylodes',
@@ -107,7 +109,9 @@ if MODE == "TAGHIAN":
     'Red Papill':'Papill',
     'Red CancerInvasive':'CancerInvasive',
     'Red CancerInvNOS':'CancerInvNOS',
-    'CancerNotOfBreastOrigin':'CancerNotOfBreastOrigin'
+    'CancerNotOfBreastOrigin':'CancerNotOfBreastOrigin',
+    "Organ":"Organ",
+    "Cytology":"Cytology"
   }
   for diag in diagnoses:
     if not diag in diagToConventionDict:
@@ -156,7 +160,8 @@ if MODE == "TAGHIAN":
       'Red CancerInvNOS':'Absent',
       'NodeTissue':'Absent', #'Node_x0020_tissue'
       'CancerNotOfBreastOrigin':'Absent', #CancerNotOfBreastOrigin
-      'PathologyType':'Anatomic'
+      'PathologyType':'Anatomic',
+      "Organ":"non-breast"
       }
 
 
@@ -203,6 +208,7 @@ if MODE == "TAGHIAN":
     'NodeTissue':['Present','Absent'], #'Node_x0020_tissue'
     'CancerNotOfBreastOrigin':['Present','Absent'], #CancerNotOfBreastOrigin
     'PathologyType':['Anatomic','Cytology'],  #'Pathology_x0020_type'
+    "Organ":["non-breast","breast"]
   }
 
   analysisLabelDict = {'Are there positive LN?': ['Yes', 'No'],
@@ -237,7 +243,8 @@ if MODE == "TAGHIAN":
     'Red CancerInvInsituNOS': ['Present','Absent'],
     'Red SuspiciousForPhyllodes': ['Present', 'Absent'],
     'Red CancerSuspicious':['Present','Absent'], 
-    'Red TubularCancer':['Present','Absent']
+    'Red TubularCancer':['Present','Absent'],
+    "Organ":["non-breast","breast"]
     }
 
   JSONLabelNameDict = diagToConventionDict
