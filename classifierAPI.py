@@ -32,7 +32,8 @@ DB_UNLABLED_PATH = "reportDBAPI_test.p"
 ## Handle relevant initialization of files
 
 rawPath = "reportDB+red+clean.p"
-raws = p.load(open(rawPath,'rb'))
+additPath = "additionalTrainRepsMar10.p"
+raws = p.load(open(rawPath,'rb')) + p.load( open(additPath,'rb'))
 
 def hasCat(r, cat, loose=False):
     for c in cat:
