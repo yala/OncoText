@@ -36,7 +36,7 @@ class Config(object):
     vocab_size = 17082
     epoch_size = 1000
     filter_sizes = [1,3,5,7,9]
-    bucket_lengths = [2600]
+    bucket_lengths = [2700]
     num_filters = 32
     nn_diagnoses = nn_diagnoses
 
@@ -62,6 +62,7 @@ def run_epoch(session, models, train_input, config, verbose = True):
         for d in nn_diagnoses:
             diag = diagName(d)
             feed_dict[ models[bucket].inps[diag] ] = batch[d][0]
+            assert batch[d][0].shape[-1] == bucket
             feed_dict[ models[bucket].tars[diag] ] = batch[d][1]
 
         vals = session.run(fetch, feed_dict=feed_dict)

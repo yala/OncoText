@@ -76,7 +76,6 @@ class TextCNN(object):
             num_classes = len(constantValidLabelDict[d])
             featMap = featureMaps[diag]
             size = 160 # size of feature map
-
             if useRelu:
                 softmax_w = tf.get_variable("sofmax_w_"+diag, [size/2, num_classes], dtype=data_type())
                 softmax_b = tf.get_variable("softmax_b_"+diag, [num_classes] ,dtype=data_type())
@@ -133,7 +132,7 @@ class TextCNN(object):
         # Combine all the pooled features
         num_filters_total = config.num_filters * len(config.filter_sizes)
         h_pool = tf.concat(3, pooled_outputs)
-        h_pool_flat = tf.reshape(h_pool, [-1, num_filters_total])
+        h_pool_flat = tf.reshape(h_pool, [config.batch_size, num_filters_total])
 
         # Add dropout
         with tf.name_scope("dropout"):

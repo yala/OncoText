@@ -39,9 +39,10 @@ class PathInput(object):
         for diag in self.data.keys():
             batch_data = working_dict[diag]
             inp = np.array([ np.hstack( [ \
-                self.data[diag][0][i], np.zeros(bucket-len(self.data[diag][0][i]))] \
+                    self.data[diag][0][i][0][:bucket], np.zeros(bucket-len(self.data[diag][0][i][0]))] \
                 ) for i in batch_data], dtype=np.int32)
             tar = np.array([ self.data[diag][1][i] for i in batch_data], dtype=np.int32)
+            assert inp.shape[-1] == bucket
             batch[diag] = inp, tar
 
         return batch, bucket

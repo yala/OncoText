@@ -32,7 +32,8 @@ DB_UNLABLED_PATH = "reportDBAPI_test.p"
 ## Handle relevant initialization of files
 
 rawPath = "reportDB+red+clean.p"
-raws = p.load(open(rawPath,'rb'))
+additPath = "additionalTrainRepsMar10.p"
+raws = p.load(open(rawPath,'rb')) + p.load( open(additPath,'rb'))
 
 def hasCat(r, cat, loose=False):
     for c in cat:
@@ -65,7 +66,8 @@ except Exception, e:
     neuralTrain = preprocessTrain.main(base)
     p.dump(neuralTrain, open('rnn/diagDictTrain.p','wb'))
     p.dump(db_train, open(DB_TRAIN_PATH,'wb')) 
-    p.dump(db_unlabeled, open(DB_UNLABLED_PATH, 'wb'))
+    p.dump(db_unlabeled, open(DB_UNLABLED_PATH,'wb'))
+
 
 
 RequiredPreprocessFields = ['Report_Text', "Report_Date_TimePlusX"]
@@ -126,6 +128,8 @@ def addUnlabeledData():
     if raw:
         data = preprocessReports(data)
 
+    validateTrainDb(data)
+
     if not name in db_unlabeled:
         print "Adding", name, "to db_unlabeled"
         db_unlabeled[name] = []
@@ -177,7 +181,7 @@ def updateUnlabeledSet():
     ## Generate relevant files in some directory with a name path
     stem = "boostexer/breast/api/"+"Prod"+"_"+name+"_"
     generateClassifierFilesForProd.binarizeFilesForClassification(test_filt, stem, writeTrain=False, writeTest=True)
-    preprocessUnlabeled.main(test_filt,outname='rnn/unlalbeldReps_'+name+".p" )
+    preprocessUnlabeled.main(test_filt,False,outname='rnn/unlalbeldReps_'+name+".p" )
     return "Success"
 
 
@@ -222,6 +226,7 @@ def predict():
     reportDBBoost, episodeDB = createEpisodes.buildEpisodes(reportDB, True)
 
     neuralFlags = { 'unlabled_mode':True, 'unlabeledPath':'unlalbeldReps_'+name+".p", 'outPath':'lableledReps_'+name+'.p'}
+
     p.dump( neuralFlags, open('rnn/flags.p','w'))
     assert p.load(open('rnn/flags.p','rb')) == neuralFlags
     shellScript1 = "cd rnn "
@@ -235,7 +240,7 @@ def predict():
     reportDB = mergeDBs(reportDBBoost, reportDBCNN)
     corrections = p.load(open(DB_TRAIN_PATH,'rb'))[name]
     applyCorrections(reportDB, corrections)
-    postProcessRules(reportDB)
+    reportDB = postProcessRules(reportDB)
 
     reportDBJ = exportToJSON.portToJSON(reportDB)  
     return json.dumps({'reportDB':reportDBJ})
@@ -312,8 +317,10 @@ def postProcessRules(db_train):
         if r['cancer'] == 'Absent':
             for k in ['ER','PR','Her2 (Fish)', 'ECE', 'LVI','BVI', 'Are there positive LN?', 'ITC ']:
                 r[k] = 'NA'
-
+    
+    return [d for d in db_train if d['Organ'] == 'breast']
 ## Call this to start appex
 if __name__ == "__main__":
     print "Begin API"
     app.run(host="0.0.0.0")
+    db_train.close()

@@ -42,14 +42,17 @@ def unicodeToDatetime(db):
             date = datetime.datetime.strptime(yyyymmdd, '%Y-%m-%d')
             return date
         except Exception, e:
-            print yyyymmdd
-            record[col] = yyyymmdd
-            raw_input()
-            return 0
+            print "error cant convert to date", yyyymmdd
+            try:
+                year, mo, day = int(yyyymmdd[:4]), int(yyyymmdd[4:6]), int(yyyymmdd[6:8])
+                date = datetime.date(year,mo,day)
+                return date
+            except Exception, e:
+                return datetime.date(1900,1,1)
 
     newDb = db
     for b in newDb:
-        b['Report_Date_TimePlusX'] = utcToDate(b['Report_Date_TimePlusX'])
+        b['Report_Date_TimePlusX'] = utcToDate(b['Report_Date_TimePlusX']) if "Report_Date_TimePlusX" in b else 0
 
     return newDb
 
