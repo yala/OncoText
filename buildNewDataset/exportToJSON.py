@@ -15,7 +15,7 @@ def portToJSON(data, path=None, episodeMode = False, write=False):
         try:
             for k in report:
                 l = report[k]
-                if isinstance(l, datetime.datetime):
+                if isinstance(l, datetime.datetime) or isinstance(l, datetime.date):
                     report[k] = l.isoformat()
         except Exception, e:
             print 'wtf'
@@ -37,10 +37,11 @@ def portToJSON(data, path=None, episodeMode = False, write=False):
                 del report[label]
                 assert not label in report
                 report[ JSONLabelNameDict[label] ] = temp
-
-        mrn =  report["MRNPlusX"]
-        del report["MRNPlusX"]
-        report["FakeMRN"] = mrn
+        
+        if "MRNPlusX" in report:
+            mrn =  report["MRNPlusX"]
+            del report["MRNPlusX"]
+            report["FakeMRN"] = mrn
         #assert "EIC" in report
 
     if write:

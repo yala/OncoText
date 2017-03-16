@@ -240,8 +240,9 @@ def predict():
     reportDB = mergeDBs(reportDBBoost, reportDBCNN)
     corrections = p.load(open(DB_TRAIN_PATH,'rb'))[name]
     applyCorrections(reportDB, corrections)
+    print "num reps pre rules", len(reportDB)
     reportDB = postProcessRules(reportDB)
-
+    print "num reps post rules", len(reportDB)
     reportDBJ = exportToJSON.portToJSON(reportDB)  
     return json.dumps({'reportDB':reportDBJ})
     return "Success"

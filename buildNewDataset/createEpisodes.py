@@ -93,10 +93,9 @@ def buildExport(exportData, data, startIdx):
         for j, col in enumerate(cols):
             if col in  ['Report_Date_TimePlusX', 'DOBPlusX']:
                 date = colVals[j]
-                if date == 0 or isinstance(date, datetime.datetime):
+                if date == 0 or isinstance(date, datetime.datetime) or isinstance(date, datetime.date):
                     record[col] = date
                     continue
-
                 yyyymmdd = date.split('T')[0]
                 try:
                     date = datetime.datetime.strptime(yyyymmdd, '%Y-%m-%d')
@@ -104,7 +103,8 @@ def buildExport(exportData, data, startIdx):
                 except Exception, e:
                     print yyyymmdd
                     record[col] = yyyymmdd
-                    raw_input()
+                    raw_input("unlabled to parse", yyyymmdd,"into datetime datetime object")
+                    assert False
             else:
                 record[col] = colVals[j]
         exportData[startIdx+i] = record

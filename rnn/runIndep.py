@@ -133,7 +133,7 @@ def run_eval_epoch(session, models, dev_input, config, verbose = True):
     evaluate(preds, golds, inputStrs)
     return 0
 
-def label_dataset(session, models, unlabled_input, config, outPath='labeledReps.p', verbose=True):
+def label_dataset(session, models, dev_input, config, outPath='labeledReps.p', verbose=True):
 
     costs = 0.0
     lenData = len(dev_input.data)
@@ -175,24 +175,25 @@ def label_dataset(session, models, unlabled_input, config, outPath='labeledReps.
 
 def main(_):
     
-    flags = p.load(open('flags.p','rb'))
+    n_flags = p.load(open('flags.p','rb'))
     devPath = 'devReps.p'
     config = Config()
-    unlabled_mode =  flags['unlabled_mode']
-    trainPath =  flags['trainPath'] 
-    outPath =  flags['outPath'] if unlabled_mode else None
-
+    unlabled_mode =  n_flags['unlabled_mode']
+    outPath =  n_flags['outPath'] if unlabled_mode else None
+    print("flags:", n_flags)
     if unlabled_mode:
-        devPath = flags['unlabeledPath']
+        devPath = n_flags['unlabeledPath']
 
         dev_input = UnlabledInput(devPath, config)
     else:
         devPath = 'devReps.p'
         dev_input = TestInput(devPath, config)
-
+   	trainPath =  n_flags['trainPath']  
+        train_input  = PathInput(trainPath, config)
+    
     print("save_path", FLAGS.save_path)
 
-    train_input  = PathInput(trainPath, config)
+
     with tf.Graph().as_default():
         initializer = tf.random_uniform_initializer(-1*config.init_scale, config.init_scale)
         models = {}
@@ -220,6 +221,7 @@ def main(_):
             ### run regular adversarial training
             if unlabled_mode:
                 label_dataset(session, models, dev_input, config, outPath = outPath, verbose=True)
+		print("Done labeling")
             else:
                 for i in range(config.max_epoch):
                     varDump =  session.run([{var.name: var} for var in tf.trainable_variables()])
@@ -241,7 +243,9 @@ def main(_):
 
 
 if __name__ == "__main__":
-    neuralFlags = { 'unlabled_mode':False, 'trainPath':'diagDictTrain.p'}
-    p.dump( neuralFlags, open('flags.p','wb'))
+    runSolo = False
+    if runSolo:
+        neuralFlags = { 'unlabled_mode':False, 'trainPath':'diagDictTrain.p'}
+        p.dump( neuralFlags, open('flags.p','wb'))
     tf.app.run()
     

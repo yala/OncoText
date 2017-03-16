@@ -30,7 +30,7 @@ def oneHot(diag, label):
     return arr
 
 
-def main(allReps, dev, outname='unlabledReps'):
+def main(allReps, dev=False, outname='unlabledReps.p'):
     diagDict = {}
 
     load = True
@@ -92,9 +92,8 @@ def main(allReps, dev, outname='unlabledReps'):
                 words = sent.split(" ")
                 indices = [ vocabIndxDict[w] for w in words if w in vocabIndxDict]
                 r['NN_Text'] = np.array(indices)
-                
+            print("dumped",name) 
             p.dump(reps, open(name,'wb'))
-
 
 if __name__ == "__main__":
     allReps =  p.load( open(path, 'rb'))
