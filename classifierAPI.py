@@ -243,6 +243,7 @@ def predict():
     applyCorrections(reportDB, corrections)
     print "num reps pre rules", len(reportDB)
     reportDB = postProcessRules(reportDB)
+    reportDB = aggregateEpisodes(reportDB)
     print "num reps post rules", len(reportDB)
     reportDBJ = exportToJSON.portToJSON(reportDB)  
     return json.dumps({'reportDB':reportDBJ})
