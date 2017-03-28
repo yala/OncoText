@@ -47,9 +47,9 @@ def main(allReps, dev=False, outname='unlabledReps.p'):
                 newR[targetKey] = r[key] if (targetKey not in diagnoses or r[key] in constantValidLabelDict[targetKey]) else defaultLabelDict[targetKey]
             for d in diagnoses:
                 if not d in newR:
-                    print "D", d
+                    #print "D", d
                     newR[d] = defaultLabelDict[d]                            
-                    print newR[d]
+                    #print newR[d]
                     
             newReps.append(newR)
 
@@ -62,7 +62,7 @@ def main(allReps, dev=False, outname='unlabledReps.p'):
                     pre_Text = preprocessText(r["Report_Text_Segmented"])
                     r['Report_Text_Segmented'] = pre_Text
                     if j < 5:
-                        print r['Report_Text_Segmented']
+                        #print r['Report_Text_Segmented']
                         j+=1 
                     r[diag] = oneHot(diag, r[diag])
 

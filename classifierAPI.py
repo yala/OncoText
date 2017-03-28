@@ -21,6 +21,7 @@ from flask import render_template
 from flask import request
 import json
 from datetime import datetime
+import re
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -224,7 +225,7 @@ def predict():
     createEpisodes.getMaxDX(reportDB)
     print "Calling build episode"
     reportDBBoost, episodeDB = createEpisodes.buildEpisodes(reportDB, True)
-
+    p.dump(reportDBBoost, open('boostDB_'+name+'.p','w'))
     neuralFlags = { 'unlabled_mode':True, 'unlabeledPath':'unlalbeldReps_'+name+".p", 'outPath':'lableledReps_'+name+'.p'}
 
     p.dump( neuralFlags, open('rnn/flags.p','w'))
@@ -236,7 +237,7 @@ def predict():
     for r in reportDBCNN:
 	if 'NN_Text' in r:
             del r['NN_Text']
-   
+    p.dump(reportDBCNN, open('cnnDB_'+name+'.p','wb'))
     reportDB = mergeDBs(reportDBBoost, reportDBCNN)
     corrections = p.load(open(DB_TRAIN_PATH,'rb'))[name]
     applyCorrections(reportDB, corrections)
@@ -258,17 +259,35 @@ def validateTrainDb(trainDb):
             if d in r:
                 assert r[d] in constantValidLabelDict[d]
 
+def preprocessText(text):
+    cleanText = re.sub(r"\W", " ", text) 
+    cleanText = ' '.join(cleanText.split('\n'))
+    cleanText = re.sub(r"(----)+", "", cleanText)
+    cleanText = re.sub(r"(====)+", "", cleanText)
+    cleanText = cleanText.lower()
+    return cleanText
+
 def mergeDBs(boost, cnn):
     mergeDB = []
     assert len(boost) == len(cnn)
-    for i in range(len(boost)):
+    textToCNNDict = {}
+    textToBoosDict = {}
+    for c in cnn:
+	textToCNNDict[c['Report_Text_Segmented']] = c
+    for b in boost:
+	b['Report_Text_Segmented'] = preprocessText( b['Report_Text_Segmented'])
+	textToBoosDict[ b['Report_Text_Segmented']] = b
+    assert len(textToCNNDict) == len(textToBoosDict) 
+    for k in textToBoosDict:
+	cnnR = textToCNNDict[k]
+	boostR = textToBoosDict[k]
 	newR = {}
-	for d in [k for k in boostexer_diagnoses if k in boost[i]]:
-	    newR[d] = boost[i][d]
+	for d in [k for k in boostexer_diagnoses if k in boostR]:
+	    newR[d] = boostR[d]
         for d in nn_diagnoses:
-            newR[d] = cnn[i][d]
-        for k in [key for key in cnn[i] if not key in boostexer_diagnoses + nn_diagnoses ] :
-            newR[k] = cnn[i][k]
+            newR[d] = cnnR[d]
+        for k in [key for key in cnnR if not key in boostexer_diagnoses + nn_diagnoses ] :
+            newR[k] = cnnR[k]
         mergeDB.append(newR)
     return mergeDB
 

@@ -220,6 +220,9 @@ def main(_):
         with sv.managed_session(config=sessConf) as session:
             ### run regular adversarial training
             if unlabled_mode:
+		
+       		eval_input = TestInput('devReps.p', config)
+		run_eval_epoch(session, models, eval_input, config)
                 label_dataset(session, models, dev_input, config, outPath = outPath, verbose=True)
 		print("Done labeling")
             else:
