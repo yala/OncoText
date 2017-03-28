@@ -320,6 +320,67 @@ def postProcessRules(db_train):
                 r[k] = 'NA'
     
     return [d for d in db_train if d['Organ'] == 'breast']
+
+def aggregateEpisodes(data):
+    # label episode ids for data
+    mrns = {}
+    for i in range(len(data)):
+        if not data[i]['MRN'] in mrns:
+            mrns[data[i]['MRN']] = {}
+        if not data[i]['BreastSide'] in mrns[data[i]['MRN']]:
+            mrns[data[i]['MRN']][data[i]['BreastSide']] = [data[i]]
+        else:
+            mrns[data[i]['MRN']][data[i]['BreastSide']].append(data[i])
+
+    #Structure : List of Reports with Episode IDs
+    reportsDB = []
+    episodeDateDict = {} ## Use this to store Date -> episode Id for each MRN. use this to reorder episodes by date
+    episodeRelabelDict = {} ## Use this to store episoideID to new Episode ID
+    for mrn in mrns:
+        patient = mrns[mrn]
+        episodeId = -1    
+        episodeDateDict[mrn] = []
+        for side in patient:
+            patient[side] = sorted( patient[side], key=itemgetter('Report_Date_TimePlusX') )
+            for idx, rep in enumerate(patient[side]):
+
+                if idx == 0:
+                    episodeId += 1
+                    rep['EpisodeID'] = 't'+str(episodeId)
+                    episodeDateDict[mrn].append( {'EpStartTime':rep['Report_Date_TimePlusX'], 'epID':'t'+str(episodeId) })
+                else:
+                    prevVisit = patient[side][idx - 1]
+                    if rep['Report_Date_TimePlusX'] - prevVisit['Report_Date_TimePlusX'] < SIX_MONTHS:
+                        rep['EpisodeID'] = prevVisit['EpisodeID']
+                    else:
+                        episodeId += 1
+                        rep['EpisodeID'] = 't'+str(episodeId)
+                        episodeDateDict[mrn].append( {'EpStartTime':rep['Report_Date_TimePlusX'], 'epID':'t'+str(episodeId) })
+
+                reportsDB.append(rep)
+
+
+    ## Relabel MRNs with chronological episode numbers (first was chronological per breast)
+    for mrn in mrns:
+        patient = mrns[mrn]
+        episodeRelabelDict[mrn] = {}
+        epDates = sorted( episodeDateDict[mrn], key=itemgetter('EpStartTime') )
+        for indx, dateDict in enumerate(epDates):
+            epID = dateDict['epID']
+            episodeRelabelDict[mrn][epID] = indx
+
+        assert len(episodeDateDict[mrn]) == len(epDates)
+    assert len(episodeRelabelDict) == len(mrns)
+
+
+    for rep in reportsDB:
+        oldID = rep['EpisodeID']
+        newID = episodeRelabelDict[rep['MRN']][oldID]
+        rep['EpisodeID'] = newID
+        assert isinstance(rep['EpisodeID'] , int)
+
+    return reportsDB
+
 ## Call this to start appex
 if __name__ == "__main__":
     print "Begin API"
