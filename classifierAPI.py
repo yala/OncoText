@@ -22,11 +22,12 @@ from flask import request
 import json
 from datetime import datetime
 import re
+import MySQLdb
 
 app = Flask(__name__)
 app.config.from_object(__name__)
-DB_TRAIN_PATH = "reportDBAPI_train.p" 
-DB_UNLABLED_PATH = "reportDBAPI_test.p" 
+DB_TRAIN_PATH = "reportDBAPI_train.p"
+DB_UNLABLED_PATH = "reportDBAPI_test.p"
 
 
 
@@ -66,7 +67,7 @@ except Exception, e:
     db_unlabeled = {'default': base[:10]}
     neuralTrain = preprocessTrain.main(base)
     p.dump(neuralTrain, open('rnn/diagDictTrain.p','wb'))
-    p.dump(db_train, open(DB_TRAIN_PATH,'wb')) 
+    p.dump(db_train, open(DB_TRAIN_PATH,'wb'))
     p.dump(db_unlabeled, open(DB_UNLABLED_PATH,'wb'))
 
 
@@ -78,7 +79,7 @@ RequiredTrainDbFields = ['ReportID', 'Report_Text_Segmented']
 ## Given a JSON list of dicts, where  each dict represent a report:
 ## Parse the dict for daignoses, and add annotations if found
 ##  @name specifies user, izzy don't worry about this
-## @raw specifies if the data has been preprocessed before, 
+## @raw specifies if the data has been preprocessed before,
 ## Example:
 ## [ {Report_Text: }]
 ## @return: 0
@@ -87,7 +88,7 @@ def addTrainData():
     db_train = p.load(open(DB_TRAIN_PATH,'rb'))
     data = json.loads(request.data) or []
     name = request.args.get("name") or "default"
-    
+
     print "len data is", len(data)
     print "name is", name
 
@@ -105,14 +106,14 @@ def addTrainData():
                 r['TaghianGold'] = 1
 
     db_train[name].extend(data)
-    p.dump(db_train, open(DB_TRAIN_PATH,'wb')) 
+    p.dump(db_train, open(DB_TRAIN_PATH,'wb'))
     print db_train.keys()
     return "Success"
 
 ## Given a JSON list of dicts, where  each dict represent a report:
 ## Parse the dict for daignoses, and add annotations if found
 ##  @name specifies user, izzy don't worry about this
-## @raw specifies if the data has been preprocessed before, 
+## @raw specifies if the data has been preprocessed before,
 ## Example:
 ## [ {Report_Text: }]
 ## @return: 0
@@ -122,7 +123,7 @@ def addUnlabeledData():
     data = json.loads(request.data) or []
     name = request.args.get("name") or "default"
     raw = request.args.get("raw") or False
-    
+
     print "data is", data
     print "name is", name
     # Preprocess bilaterals if need be
@@ -142,7 +143,7 @@ def addUnlabeledData():
                 r['TaghianGold'] = 1
 
     db_unlabeled[name].extend(data)
-    p.dump(db_unlabeled, open(DB_UNLABLED_PATH,'wb')) 
+    p.dump(db_unlabeled, open(DB_UNLABLED_PATH,'wb'))
     print db_unlabeled.keys()
     return "Success"
 
@@ -157,19 +158,19 @@ def updateTrainSet():
     name = request.args.get("name") or "default"
 
     ## Generate relevant files in some directory with a name path
-    trainDb = db_train[name] 
+    trainDb = db_train[name]
     stem = "boostexer/breast/api/"+"Prod"+"_"+name+"_"
-    trainDb = db_train[name] + db_train['default']    
+    trainDb = db_train[name] + db_train['default']
     generateClassifierFilesForProd.binarizeFilesForClassification(trainDb, stem, writeTrain=True, writeTest=False)
     preprocessTrain.main(trainDb)
 
-    diagDictNew = preprocessTrain.main(trainDb) 
+    diagDictNew = preprocessTrain.main(trainDb)
     p.dump(diagDictNew, open('rnn/diagDictTrain_'+name+".p",'wb'))
     return "Success"
 
 
 ## Does all necessary preprocessing for test data given a batch_id in the unlabled data
-## Script will prepare neural model and boosting model to evaluate on all reps where r['batch_id'] is in 
+## Script will prepare neural model and boosting model to evaluate on all reps where r['batch_id'] is in
 ## the list of id's specified. If batch_id's is ommited, this will run across all unlabled data which may be very expensive.
 ## Return 0
 @app.route("/updateUnlabeledSet", methods=['GET'])
@@ -205,9 +206,21 @@ def train():
 ## Will return all unlabeled data
 @app.route("/predict", methods=['GET'])
 def predict():
-    ## run boost predict
     name = request.args.get("name") or "default"
-    mode = "Prod"    
+    reportDB = predictHelper(name)
+    updateAccesDB(reportDB)
+
+    reportDB = aggregateEpisodes(reportDB)
+    print "num reps post rules", len(reportDB)
+    reportDBJ = exportToJSON.portToJSON(reportDB)
+    p.dump(reportDBJ, open('returnedDB_'+name+'.p','w'))
+    return json.dumps({'reportDB':reportDBJ})
+    return "Success"
+
+################ Helpers ######################
+def predictHelper(name):
+    ## run boost predict
+    mode = "Prod"
     shellScript1 = "cd boostexer/breast/api/"
     shellScript2 = "./runModel.sh "+mode+"_"+name+"_"
     subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
@@ -215,11 +228,6 @@ def predict():
     ## aggregate boost predict
     stem = "classification_results/API/Prod_"+name+"_"
     db_unlabeled = p.load(open(DB_UNLABLED_PATH,'rb'))[name]
-    for r in db_unlabeled:
-        if not "MRNPlusX" in r or not "Report_Date_TimePlusX" in r:
-            r["MRNPlusX"]= "0"
-            r["Institution"] ="UNK"
-            r["Report_Date_TimePlusX"] = datetime.now().isoformat()
     reportDB = createEpisodes.aggregateResults(db_unlabeled, stem)
     print "Calling labelMaxDXBool"
     createEpisodes.getMaxDX(reportDB)
@@ -235,23 +243,57 @@ def predict():
     subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
     reportDBCNN = p.load( open('rnn/lableledReps_'+name+'.p','rb'))
     for r in reportDBCNN:
-	if 'NN_Text' in r:
+    if 'NN_Text' in r:
             del r['NN_Text']
     p.dump(reportDBCNN, open('cnnDB_'+name+'.p','wb'))
     reportDB = mergeDBs(reportDBBoost, reportDBCNN)
     corrections = p.load(open(DB_TRAIN_PATH,'rb'))[name]
     applyCorrections(reportDB, corrections)
     print "num reps pre rules", len(reportDB)
+    return reportDB
+
+#sends all breast reports to the AccessDB
+def updateAccesDB(reportDB):
     reportDB = postProcessRules(reportDB)
     reportDB = aggregateEpisodes(reportDB)
-    print "num reps post rules", len(reportDB)
-    reportDBJ = exportToJSON.portToJSON(reportDB)  
-    return json.dumps({'reportDB':reportDBJ})
+    reportDBJ = exportToJSON.portToJSON(reportDB)
+
+    db = MySQLdb.connect(host="localhost",user="root",passwd="nlpdb",db="reports")
+    cur = db.cursor()
+    placeholders = ["%s" for i in accessDbKeys]
+    sql = ("insert into "+reportsTableName+" ("+", ".join(accessDbKeys)+") VALUES ("+", ".join(placeholders)+")")
+
+    cur.execute("CREATE TABLE "+backupTableName+" LIKE "+reportsTableName)
+    cur.execute("INSERT INTO "+backupTableName+" SELECT * FROM "+reportsTableName)
+    db.commit();
+    cur.execute("TRUNCATE TABLE "+reportsTableName)
+    db.commit();
+
+    for report in reportDBJ[0:2]:
+        print(report.keys())
+        for k in report.keys():
+            print(k)
+            values = [report[AccessDbToGregDict[k]] for k in accessDbKeys]
+            try:
+               cur.execute(sql,tuple(values))
+            except MySQLdb.Error, e:
+                try:
+                    print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+                    return None
+                except IndexError:
+                    print "MySQL Error: %s" % str(e)
+                    return None
+            except TypeError, e:
+                print(e)
+                return None
+            except ValueError, e:
+                print(e)
+                return None
+    db.commit()
+    cur.close()
+    db.close()
     return "Success"
 
-
-
-################ Helpers ######################
 def validateTrainDb(trainDb):
     for r in trainDb:
         assert 'Report_Text_Segmented' in r and 'ReportID' in r
@@ -261,7 +303,7 @@ def validateTrainDb(trainDb):
                 assert r[d] in constantValidLabelDict[d]
 
 def preprocessText(text):
-    cleanText = re.sub(r"\W", " ", text) 
+    cleanText = re.sub(r"\W", " ", text)
     cleanText = ' '.join(cleanText.split('\n'))
     cleanText = re.sub(r"(----)+", "", cleanText)
     cleanText = re.sub(r"(====)+", "", cleanText)
@@ -274,17 +316,17 @@ def mergeDBs(boost, cnn):
     textToCNNDict = {}
     textToBoosDict = {}
     for c in cnn:
-	textToCNNDict[c['Report_Text_Segmented']] = c
+    textToCNNDict[c['Report_Text_Segmented']] = c
     for b in boost:
-	b['Report_Text_Segmented'] = preprocessText( b['Report_Text_Segmented'])
-	textToBoosDict[ b['Report_Text_Segmented']] = b
-    assert len(textToCNNDict) == len(textToBoosDict) 
+    b['Report_Text_Segmented'] = preprocessText( b['Report_Text_Segmented'])
+    textToBoosDict[ b['Report_Text_Segmented']] = b
+    assert len(textToCNNDict) == len(textToBoosDict)
     for k in textToBoosDict:
-	cnnR = textToCNNDict[k]
-	boostR = textToBoosDict[k]
-	newR = {}
-	for d in [k for k in boostexer_diagnoses if k in boostR]:
-	    newR[d] = boostR[d]
+    cnnR = textToCNNDict[k]
+    boostR = textToBoosDict[k]
+    newR = {}
+    for d in [k for k in boostexer_diagnoses if k in boostR]:
+        newR[d] = boostR[d]
         for d in nn_diagnoses:
             newR[d] = cnnR[d]
         for k in [key for key in cnnR if not key in boostexer_diagnoses + nn_diagnoses ] :
@@ -298,16 +340,17 @@ def applyCorrections(test, gold):
     for g in gold:
         textToLabel[ g['Report_Text_Segmented'] ] = g
     for t in test:
-	text = t['Report_Text_Segmented']
+    text = t['Report_Text_Segmented']
+        t['validated'] = text in textToLabel
         if text in textToLabel:
-	    for d in textToLabel[text]:
+        for d in textToLabel[text]:
                 t[d] = textToLabel[text][d]
-		corrections+=1
+        corrections+=1
     print("num corrected", corrections)
 ## Given a list of dicts, where  each dict represent a report:
 ## If the report text covers a single breast, we assign it an id and nothing happens
 ## If the report contains 2 breasts, automatically parse it into two reports, assign them
-## both ids. 
+## both ids.
 ## @return: the preprocessed reports
 def preprocessReports(reports):
     ## Can assume reports all ready preprocessed into left/right
@@ -328,17 +371,32 @@ def postProcessRules(db_train):
     for r in db_train:
         if hasCat(r, const_cancers):
             r['cancer'] = 'Present'
-	else:
-	    r['cancer'] = "Absent"
-        if hasCat(r, const_atypias):
-            r['atypia'] = 'Present'
-	else:
-	    r['atypia'] = "Absent"
+        else:
+            r['cancer'] = "Absent"
+            if hasCat(r, const_atypias):
+                r['atypia'] = 'Present'
+            else:
+                r['atypia'] = "Absent"
 
         if r['cancer'] == 'Absent':
             for k in ['ER','PR','Her2 (Fish)', 'ECE', 'LVI','BVI', 'Are there positive LN?', 'ITC ']:
                 r[k] = 'NA'
-    
+
+        for k in r.keys():
+            if type(r[k]) is unicode:
+                r[k] = str(r[k])
+            if r[k] == "Present":
+                r[k] = "1"
+            if r[k] == "Absent":
+                r[k] = "0"
+            if r[k] == "Yes":
+                r[k] = "1"
+            if r[k] == "No":
+                r[k] = "0"
+            if r[k] == "NA":
+                r[k] = "9"
+            #TODO change these to ints and reconfigure the db
+
     return [d for d in db_train if d['Organ'] == 'breast']
 
 def aggregateEpisodes(data):
@@ -347,10 +405,10 @@ def aggregateEpisodes(data):
     for i in range(len(data)):
         if not data[i]['MRN'] in mrns:
             mrns[data[i]['MRN']] = {}
-        if not data[i]['BreastSide'] in mrns[data[i]['MRN']]:
-            mrns[data[i]['MRN']][data[i]['BreastSide']] = [data[i]]
+        if not data[i]['Red BreastSide'] in mrns[data[i]['MRN']]:
+            mrns[data[i]['MRN']][data[i]['Red BreastSide']] = [data[i]]
         else:
-            mrns[data[i]['MRN']][data[i]['BreastSide']].append(data[i])
+            mrns[data[i]['MRN']][data[i]['Red BreastSide']].append(data[i])
 
     #Structure : List of Reports with Episode IDs
     reportsDB = []
@@ -358,7 +416,7 @@ def aggregateEpisodes(data):
     episodeRelabelDict = {} ## Use this to store episoideID to new Episode ID
     for mrn in mrns:
         patient = mrns[mrn]
-        episodeId = -1    
+        episodeId = -1
         episodeDateDict[mrn] = []
         for side in patient:
             patient[side] = sorted( patient[side], key=itemgetter('Report_Date_TimePlusX') )
