@@ -223,31 +223,31 @@ def predictHelper(name):
     mode = "Prod"
     shellScript1 = "cd boostexer/breast/api/"
     shellScript2 = "./runModel.sh "+mode+"_"+name+"_"
-    #subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
+    subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
 
     ## aggregate boost predict
     stem = "classification_results/API/Prod_"+name+"_"
-    #db_unlabeled = p.load(open(DB_UNLABLED_PATH,'rb'))[name]
-    #reportDB = createEpisodes.aggregateResults(db_unlabeled, stem)
+    db_unlabeled = p.load(open(DB_UNLABLED_PATH,'rb'))[name]
+    reportDB = createEpisodes.aggregateResults(db_unlabeled, stem)
     print "Calling labelMaxDXBool"
-    #createEpisodes.getMaxDX(reportDB)
+    createEpisodes.getMaxDX(reportDB)
     print "Calling build episode"
-    #reportDBBoost, episodeDB = createEpisodes.buildEpisodes(reportDB, True)
-    #p.dump(reportDBBoost, open('boostDB_'+name+'.p','w'))
-    reportDBBoost = p.load(open('boostDB_'+name+'.p','r'))
+    reportDBBoost, episodeDB = createEpisodes.buildEpisodes(reportDB, True)
+    p.dump(reportDBBoost, open('boostDB_'+name+'.p','w'))
+    #reportDBBoost = p.load(open('boostDB_'+name+'.p','r'))
     neuralFlags = { 'unlabled_mode':True, 'unlabeledPath':'unlalbeldReps_'+name+".p", 'outPath':'lableledReps_'+name+'.p'}
 
     p.dump( neuralFlags, open('rnn/flags.p','w'))
     assert p.load(open('rnn/flags.p','rb')) == neuralFlags
     shellScript1 = "cd rnn "
     shellScript2 = "./run.sh runIndep.py logsIndep_"+name
-    #subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
-    #reportDBCNN = p.load( open('rnn/lableledReps_'+name+'.p','rb'))
-    #for r in reportDBCNN:
-    #    if 'NN_Text' in r:
-    #        del r['NN_Text']
-    #p.dump(reportDBCNN, open('cnnDB_'+name+'.p','wb'))
-    reportDBCNN = p.load(open('cnnDB_'+name+'.p','r'))
+    subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
+    reportDBCNN = p.load( open('rnn/lableledReps_'+name+'.p','rb'))
+    for r in reportDBCNN:
+        if 'NN_Text' in r:
+            del r['NN_Text']
+    p.dump(reportDBCNN, open('cnnDB_'+name+'.p','wb'))
+    #reportDBCNN = p.load(open('cnnDB_'+name+'.p','r'))
     reportDB = mergeDBs(reportDBBoost, reportDBCNN)
     corrections = p.load(open(DB_TRAIN_PATH,'rb'))[name]
     applyCorrections(reportDB, corrections)
