@@ -12,7 +12,10 @@ from constants import *
 from evalHelper import *
 from inputClasses import *
 import warnings
+from tqdm import tqdm
+
 warnings.filterwarnings("ignore")
+
 
 flags = tf.flags
 logging = tf.logging
@@ -141,7 +144,7 @@ def label_dataset(session, models, dev_input, config, outPath='labeledReps.p', v
     costs = 0.0
     lenData = len(dev_input.data)
     allReps = []
-    for i in range(lenData):
+    for i in tqdm(range(lenData)):
         batch, reports, bucket = dev_input.get_batch()
 
         fetch = {

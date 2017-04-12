@@ -32,6 +32,6 @@ name = "mghMar"
 # predict
 predResp = requests.get(domain+"predict" , params={'name':name})
 assert predResp.status_code == 200
-newDb = json.loads(predResp.text)['reportDB']
-print(len(newDb))
-p.dump(newDb, open('labeledReps_Convention.p','wb'))
+#newDb = json.loads(predResp.text)['reportDB']
+#print(len(newDb))
+#p.dump(newDb, open('labeledReps_Convention.p','wb'))

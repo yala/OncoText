@@ -23,6 +23,7 @@ import json
 from datetime import datetime
 import re
 import MySQLdb
+import copy
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -208,10 +209,9 @@ def train():
 def predict():
     name = request.args.get("name") or "default"
     reportDB = predictHelper(name)
-    updateAccesDB(reportDB)
+    updateAccesDB(copy.deepcopy(reportDB))
 
     reportDB = aggregateEpisodes(reportDB)
-    print "num reps post rules", len(reportDB)
     reportDBJ = exportToJSON.portToJSON(reportDB)
     p.dump(reportDBJ, open('returnedDB_'+name+'.p','w'))
     return json.dumps({'reportDB':reportDBJ})
@@ -223,32 +223,35 @@ def predictHelper(name):
     mode = "Prod"
     shellScript1 = "cd boostexer/breast/api/"
     shellScript2 = "./runModel.sh "+mode+"_"+name+"_"
-    subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
+    #subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
 
     ## aggregate boost predict
     stem = "classification_results/API/Prod_"+name+"_"
-    db_unlabeled = p.load(open(DB_UNLABLED_PATH,'rb'))[name]
-    reportDB = createEpisodes.aggregateResults(db_unlabeled, stem)
+    #db_unlabeled = p.load(open(DB_UNLABLED_PATH,'rb'))[name]
+    #reportDB = createEpisodes.aggregateResults(db_unlabeled, stem)
     print "Calling labelMaxDXBool"
-    createEpisodes.getMaxDX(reportDB)
+    #createEpisodes.getMaxDX(reportDB)
     print "Calling build episode"
-    reportDBBoost, episodeDB = createEpisodes.buildEpisodes(reportDB, True)
-    p.dump(reportDBBoost, open('boostDB_'+name+'.p','w'))
+    #reportDBBoost, episodeDB = createEpisodes.buildEpisodes(reportDB, True)
+    #p.dump(reportDBBoost, open('boostDB_'+name+'.p','w'))
+    reportDBBoost = p.load(open('boostDB_'+name+'.p','r'))
     neuralFlags = { 'unlabled_mode':True, 'unlabeledPath':'unlalbeldReps_'+name+".p", 'outPath':'lableledReps_'+name+'.p'}
 
     p.dump( neuralFlags, open('rnn/flags.p','w'))
     assert p.load(open('rnn/flags.p','rb')) == neuralFlags
     shellScript1 = "cd rnn "
     shellScript2 = "./run.sh runIndep.py logsIndep_"+name
-    subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
-    reportDBCNN = p.load( open('rnn/lableledReps_'+name+'.p','rb'))
-    for r in reportDBCNN:
-        if 'NN_Text' in r:
-            del r['NN_Text']
-    p.dump(reportDBCNN, open('cnnDB_'+name+'.p','wb'))
+    #subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
+    #reportDBCNN = p.load( open('rnn/lableledReps_'+name+'.p','rb'))
+    #for r in reportDBCNN:
+    #    if 'NN_Text' in r:
+    #        del r['NN_Text']
+    #p.dump(reportDBCNN, open('cnnDB_'+name+'.p','wb'))
+    reportDBCNN = p.load(open('cnnDB_'+name+'.p','r'))
     reportDB = mergeDBs(reportDBBoost, reportDBCNN)
     corrections = p.load(open(DB_TRAIN_PATH,'rb'))[name]
     applyCorrections(reportDB, corrections)
+    p.dump(reportDB, open("validateDB_"+name+".p","w"))
     print "num reps pre rules", len(reportDB)
     return reportDB
 
@@ -260,35 +263,39 @@ def updateAccesDB(reportDB):
 
     db = MySQLdb.connect(host="localhost",user="root",passwd="nlpdb",db="reports")
     cur = db.cursor()
-    placeholders = ["%s" for i in accessDbKeys]
-    sql = ("insert into "+reportsTableName+" ("+", ".join(accessDbKeys)+") VALUES ("+", ".join(placeholders)+")")
-
+    dbKeys, placeholders = [k for k in accessDbKeys if k in reportDBJ[0]], ["%s" for i in accessDbKeys if i in reportDBJ[0] ]
+    sql = ("insert into "+reportsTableName+" ("+", ".join(dbKeys)+") VALUES ("+", ".join(placeholders)+")")
+    try:
+        cur.execute("DROP TABLE "+backupTableName )
+    except Exception, e:
+        pass
     cur.execute("CREATE TABLE "+backupTableName+" LIKE "+reportsTableName)
     cur.execute("INSERT INTO "+backupTableName+" SELECT * FROM "+reportsTableName)
     db.commit();
     cur.execute("TRUNCATE TABLE "+reportsTableName)
     db.commit();
 
-    for report in reportDBJ[0:2]:
-        print(report.keys())
-        for k in report.keys():
-            print(k)
-            values = [report[AccessDbToGregDict[k]] for k in accessDbKeys]
-            try:
-               cur.execute(sql,tuple(values))
-            except MySQLdb.Error, e:
-                try:
-                    print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
-                    return None
-                except IndexError:
-                    print "MySQL Error: %s" % str(e)
-                    return None
-            except TypeError, e:
-                print(e)
-                return None
-            except ValueError, e:
-                print(e)
-                return None
+    for report in reportDBJ:
+        values = [report[AccessDbToGregDict[k]] for k in dbKeys]
+        try:
+            cur.execute(sql,tuple(values))
+        except MySQLdb.Error, e:
+             try:
+                 print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+                 print report
+                 return None
+             except IndexError:
+                 print "MySQL Error: %s" % str(e)
+                 print report
+                 return None
+        except TypeError, e:
+            print("MySQL TypeError",e)
+            print report
+            return None
+        except ValueError, e:
+            print("MySQL ValueError",e)
+            print report
+            return None
     db.commit()
     cur.close()
     db.close()
@@ -338,9 +345,9 @@ def applyCorrections(test, gold):
     corrections = 0
     textToLabel = {}
     for g in gold:
-        textToLabel[ g['Report_Text_Segmented'] ] = g
+        textToLabel[ preprocessText(g['Report_Text_Segmented']) ] = g
     for t in test:
-    	text = t['Report_Text_Segmented']
+    	text = preprocessText(t['Report_Text_Segmented'])
         t['validated'] = text in textToLabel
         if text in textToLabel:
             for d in textToLabel[text]:
@@ -402,13 +409,18 @@ def postProcessRules(db_train):
 def aggregateEpisodes(data):
     # label episode ids for data
     mrns = {}
+    sideKey = "Red BreastSide" if "Red BreastSide" in data[0] else "BreastSide"
+    assert sideKey in data[0]
     for i in range(len(data)):
+        if not sideKey in data[i]:
+            print data[i]
+	    raw_input('sidekey is '+sideKey)
         if not data[i]['MRN'] in mrns:
             mrns[data[i]['MRN']] = {}
-        if not data[i]['Red BreastSide'] in mrns[data[i]['MRN']]:
-            mrns[data[i]['MRN']][data[i]['Red BreastSide']] = [data[i]]
+        if not data[i][sideKey] in mrns[data[i]['MRN']]:
+            mrns[data[i]['MRN']][data[i][sideKey]] = [data[i]]
         else:
-            mrns[data[i]['MRN']][data[i]['Red BreastSide']].append(data[i])
+            mrns[data[i]['MRN']][data[i][sideKey]].append(data[i])
 
     #Structure : List of Reports with Episode IDs
     reportsDB = []
