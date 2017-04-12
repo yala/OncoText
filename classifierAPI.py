@@ -243,7 +243,7 @@ def predictHelper(name):
     subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
     reportDBCNN = p.load( open('rnn/lableledReps_'+name+'.p','rb'))
     for r in reportDBCNN:
-    if 'NN_Text' in r:
+        if 'NN_Text' in r:
             del r['NN_Text']
     p.dump(reportDBCNN, open('cnnDB_'+name+'.p','wb'))
     reportDB = mergeDBs(reportDBBoost, reportDBCNN)
@@ -316,17 +316,17 @@ def mergeDBs(boost, cnn):
     textToCNNDict = {}
     textToBoosDict = {}
     for c in cnn:
-    textToCNNDict[c['Report_Text_Segmented']] = c
+        textToCNNDict[c['Report_Text_Segmented']] = c
     for b in boost:
-    b['Report_Text_Segmented'] = preprocessText( b['Report_Text_Segmented'])
-    textToBoosDict[ b['Report_Text_Segmented']] = b
+        b['Report_Text_Segmented'] = preprocessText( b['Report_Text_Segmented'])
+        textToBoosDict[ b['Report_Text_Segmented']] = b
     assert len(textToCNNDict) == len(textToBoosDict)
     for k in textToBoosDict:
-    cnnR = textToCNNDict[k]
-    boostR = textToBoosDict[k]
-    newR = {}
-    for d in [k for k in boostexer_diagnoses if k in boostR]:
-        newR[d] = boostR[d]
+        cnnR = textToCNNDict[k]
+        boostR = textToBoosDict[k]
+        newR = {}
+        for d in [k for k in boostexer_diagnoses if k in boostR]:
+            newR[d] = boostR[d]
         for d in nn_diagnoses:
             newR[d] = cnnR[d]
         for k in [key for key in cnnR if not key in boostexer_diagnoses + nn_diagnoses ] :
