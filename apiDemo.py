@@ -5,25 +5,17 @@ import  datetime
 
 
 domain = "http://localhost:5000/"
-tr_reps = p.load(open('unlabled_reps.test.p','rb'))[:10] 
-un_reps = p.load(open('train_reps.test.p','rb'))[:10] 
+#un_reps = p.load(open('tempReports.p','rb')) 
 
-for reps in [tr_reps, un_reps]:
-	for report in reps:
-		for k in report:
-                	l = report[k]
-                	if isinstance(l, datetime.datetime):
-                    		report[k] = l.isoformat()
+name = "mghMar"
 
-name = "test"
+# add train
+#addTrainResp = requests.post(domain+"addTrain",data=json.dumps([]),params={"name":name,"raw":False})
+#assert addTrainResp.status_code==200
 
-add train
-addTrainResp = requests.post(domain+"addTrain", data=json.dumps(tr_reps) , params={'name':name})
-assert addTrainResp.status_code == 200
-
-add unlabeled
-addUnlabeledResp = requests.post(domain+"addUnlabeled", data=json.dumps(un_reps) , params={'name':name, 'raw':True})
-assert addUnlabeledResp.status_code == 200
+# add unlabeled
+#addUnlabeledResp = requests.post(domain+"addUnlabeled", data=json.dumps(un_reps) , params={'name':name, 'raw':True})
+#assert addUnlabeledResp.status_code == 200
 
 # update train
 #updateTrainResp = requests.get(domain+"updateTrainSet",   params={'name':name})
@@ -40,6 +32,6 @@ assert addUnlabeledResp.status_code == 200
 # predict
 predResp = requests.get(domain+"predict" , params={'name':name})
 assert predResp.status_code == 200
-newDb = json.loads(predResp.text)
+newDb = json.loads(predResp.text)['reportDB']
 print(len(newDb))
-
+p.dump(newDb, open('labeledReps_Convention.p','wb'))

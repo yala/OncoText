@@ -11,6 +11,9 @@ sys.path.append("..")
 from constants import *
 from evalHelper import *
 from inputClasses import *
+import warnings
+warnings.filterwarnings("ignore")
+
 flags = tf.flags
 logging = tf.logging
 embeddings = p.load(open('embeddings.p','rb'))
@@ -211,9 +214,8 @@ def main(_):
         jointLoss = tf.reduce_sum(tf.pack([models[b].joint_loss for b in config.bucket_lengths]))
         tf.scalar_summary("Joint Loss", jointLoss )
 
-        sessConf = tf.ConfigProto(
-            allow_soft_placement=False,
-            log_device_placement=True) 
+        sessConf = tf.ConfigProto(allow_soft_placement=True)
+	sessConf.gpu_options.allow_growth=True
 
         
         sv = tf.train.Supervisor(logdir=FLAGS.save_path, summary_op=None)

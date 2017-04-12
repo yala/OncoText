@@ -37,7 +37,7 @@ def splitRep(txt):
 
 def unicodeToDatetime(db):
     def utcToDate(date):
-        yyyymmdd = date.split('T')[0]
+        yyyymmdd = date[:8]
         try:
             date = datetime.datetime.strptime(yyyymmdd, '%Y-%m-%d')
             return date
