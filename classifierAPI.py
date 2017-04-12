@@ -340,12 +340,12 @@ def applyCorrections(test, gold):
     for g in gold:
         textToLabel[ g['Report_Text_Segmented'] ] = g
     for t in test:
-    text = t['Report_Text_Segmented']
+    	text = t['Report_Text_Segmented']
         t['validated'] = text in textToLabel
         if text in textToLabel:
-        for d in textToLabel[text]:
+            for d in textToLabel[text]:
                 t[d] = textToLabel[text][d]
-        corrections+=1
+                corrections+=1
     print("num corrected", corrections)
 ## Given a list of dicts, where  each dict represent a report:
 ## If the report text covers a single breast, we assign it an id and nothing happens
