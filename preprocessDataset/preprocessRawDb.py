@@ -37,22 +37,26 @@ def splitRep(txt):
 
 def unicodeToDatetime(db):
     def utcToDate(date):
+        if isinstance(date, datetime.date) or isinstance(date, datetime.datetime):
+            return date
         yyyymmdd = date[:8]
         try:
             date = datetime.datetime.strptime(yyyymmdd, '%Y-%m-%d')
             return date
         except Exception, e:
-            print "error cant convert to date", yyyymmdd
             try:
                 year, mo, day = int(yyyymmdd[:4]), int(yyyymmdd[4:6]), int(yyyymmdd[6:8])
                 date = datetime.date(year,mo,day)
                 return date
             except Exception, e:
+                print "error cant convert to date", yyyymmdd
                 return datetime.date(1900,1,1)
 
     newDb = db
     for b in newDb:
-        b['Report_Date_TimePlusX'] = utcToDate(b['Report_Date_TimePlusX']) if "Report_Date_TimePlusX" in b else 0
+        b['Report_Date_TimePlusX'] = utcToDate(b['Report_Date_TimePlusX']) if "Report_Date_TimePlusX" in b and not isinstance(b['Report_Date_TimePlusX'],int) else (utcToDate(b['Report_Date_Time']) if 'Report_Date_Time' in b else 0)
+        if b == 0:
+            print "WARNING, DATE SET TO 0!"
 
     return newDb
 
@@ -77,9 +81,9 @@ def main(allData):
             newTexts = splitRep(rep['Report_Text'])
 
             ## Do not make 2 reps for golds for simplicty
-            if 'BreastSide' in rep and 'Correct' in rep and rep['Correct'] == 'Y':
-
-                relevantSideText = newTexts[rep['BreastSide']]
+            if ('BreastSide' in rep and 'Correct' in rep and rep['Correct'] == 'Y') or 'Red BreastSide' in rep:
+                b_key = 'BreastSide' if 'BreastSide' in rep else 'Red BreastSide'
+                relevantSideText = newTexts[rep[b_key]]
                 rep['Report_Text_Segmented'] = relevantSideText
                 rep['ReportID'] = repId
                 repId +=1

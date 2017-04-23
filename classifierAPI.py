@@ -24,6 +24,7 @@ from datetime import datetime
 import re
 import MySQLdb
 import copy
+import time
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -89,15 +90,18 @@ def addTrainData():
     db_train = p.load(open(DB_TRAIN_PATH,'rb'))
     data = json.loads(request.data) or []
     name = request.args.get("name") or "default"
-
+    
+    if len(data) > 0:
+        print "data has keys", data[0].keys()
     print "len data is", len(data)
     print "name is", name
 
-    validateTrainDb(data)
+    if not validateTrainDb(data):
+        data = preprocessReports(data)
 
     if not name in db_train:
         print "Adding", name, "to db_train"
-        db_train[name] = []
+        db_train[name] = [base]
 
     ## mark the files to note as annoations
     for r in data:
@@ -125,7 +129,6 @@ def addUnlabeledData():
     name = request.args.get("name") or "default"
     raw = request.args.get("raw") or False
 
-    print "data is", data
     print "name is", name
     # Preprocess bilaterals if need be
     if raw:
@@ -209,13 +212,14 @@ def train():
 def predict():
     name = request.args.get("name") or "default"
     reportDB = predictHelper(name)
-    updateAccesDB(copy.deepcopy(reportDB))
+    #reportDB = p.load(open('validateDB_'+name+'.p','rb'))
+
 
     reportDB = aggregateEpisodes(reportDB)
     reportDBJ = exportToJSON.portToJSON(reportDB)
     p.dump(reportDBJ, open('returnedDB_'+name+'.p','w'))
+    updateAccesDB(copy.deepcopy(reportDBJ))
     return json.dumps({'reportDB':reportDBJ})
-    return "Success"
 
 ################ Helpers ######################
 def predictHelper(name):
@@ -256,15 +260,14 @@ def predictHelper(name):
     return reportDB
 
 #sends all breast reports to the AccessDB
-def updateAccesDB(reportDB):
-    reportDB = postProcessRules(reportDB)
-    reportDB = aggregateEpisodes(reportDB)
-    reportDBJ = exportToJSON.portToJSON(reportDB)
+def updateAccesDB(reportDBJ):
+    reportDBJ = postProcessRules(reportDBJ)
 
     db = MySQLdb.connect(host="localhost",user="root",passwd="nlpdb",db="reports")
     cur = db.cursor()
     dbKeys, placeholders = [k for k in accessDbKeys if k in reportDBJ[0]], ["%s" for i in accessDbKeys if i in reportDBJ[0] ]
     sql = ("insert into "+reportsTableName+" ("+", ".join(dbKeys)+") VALUES ("+", ".join(placeholders)+")")
+
     try:
         cur.execute("DROP TABLE "+backupTableName )
     except Exception, e:
@@ -303,11 +306,15 @@ def updateAccesDB(reportDB):
 
 def validateTrainDb(trainDb):
     for r in trainDb:
-        assert 'Report_Text_Segmented' in r and 'ReportID' in r
+        if not "Report_Text_Segmented" in r:
+            return False
+        #assert 'Report_Text_Segmented' in r #and 'ReportID' in r
 
         for d in diagnoses:
-            if d in r:
-                assert r[d] in constantValidLabelDict[d]
+            if d in r and not r[d] in constantValidLabelDict[d]:
+         #       assert r[d] in constantValidLabelDict[d]
+	        return False
+    return True
 
 def preprocessText(text):
     cleanText = re.sub(r"\W", " ", text)
@@ -375,12 +382,14 @@ def preprocessReports(reports):
 
 ## Runs enforces global constraints like ER/PR NA given no cancer
 def postProcessRules(db_train):
+    print(db_train[0].keys())
+
     for r in db_train:
-        if hasCat(r, const_cancers):
+        if hasCat(r, const_cancers_mod):
             r['cancer'] = 'Present'
         else:
             r['cancer'] = "Absent"
-            if hasCat(r, const_atypias):
+            if hasCat(r, const_atypias_mod):
                 r['atypia'] = 'Present'
             else:
                 r['atypia'] = "Absent"
@@ -404,9 +413,10 @@ def postProcessRules(db_train):
                 r[k] = "9"
             #TODO change these to ints and reconfigure the db
 
-    return [d for d in db_train if d['Organ'] == 'breast']
+    return db_train#[d for d in db_train if d['Organ'] == 'breast']
 
 def aggregateEpisodes(data):
+    data  = preprocessRawDb.unicodeToDatetime(data)
     # label episode ids for data
     mrns = {}
     sideKey = "Red BreastSide" if "Red BreastSide" in data[0] else "BreastSide"

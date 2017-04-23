@@ -54,8 +54,18 @@ if MODE == "TAGHIAN":
   'Red CancerInvasive', 'Red CancerInvNOS', 'CancerNotOfBreastOrigin'
   ]
 
+  const_cancers_mod = [
+    'ILC','DCIS', 'IDC',
+    'CancerNOS', 'InsituNOS', 'CancerInvInsituNOS', 'TubularCancer',
+    'CancerInvasive', 'CancerInvNOS', 'CancerNotOfBreastOrigin'
+    ]
+
   const_atypias = [
   'Red ALH','Red ADH', 'Red FlatEpithelial', 'Red LCIS', 'Red ADH_DCIS', 'Red LobularNeoplasia'
+  ]
+
+  const_atypias_mod = [
+  'ALH','ADH', 'FlatEpithelial', 'LCIS', 'ADH_DCIS', 'LobularNeoplasia'
   ]
 
   key_order = ['Report_Text_Segmented' , "Organ", "PathologyType",'Red BreastSide' ,'Red CancerSuspicious' ,'Red InvasiveSuspicious',
@@ -250,7 +260,7 @@ if MODE == "TAGHIAN":
 
 
   gregToAccessDbDict = {
-    'Report_Date_TimePlusX':'Report_Date_TimePlusX',
+    'Report_Date_Time':'Report_Date_Time',
     'Are there positive LN?':'PositiveLN',
     'ITC':'ITC',
     'Her2':'Her2Fish',
@@ -295,7 +305,8 @@ if MODE == "TAGHIAN":
     'cancer':'cancer',
     'PathologyType':'PathologyType',
     'Report_Text_Segmented':'Report_Text_Segmented',
-    'LVI':'LVI'
+    'LVI':'LVI',
+    'EMPI':'EMPI'
     }
 
   AccessDbToGregDict = {v: k for k, v in gregToAccessDbDict.items()}
