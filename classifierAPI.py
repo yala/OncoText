@@ -259,7 +259,12 @@ def predictHelper(name):
 def updateAccesDB(reportDB):
     reportDB = postProcessRules(reportDB)
     reportDB = aggregateEpisodes(reportDB)
-    reportDBJ = exportToJSON.portToJSON(reportDB)
+    reportDB = exportToJSON.portToJSON(reportDB)
+
+    reportDBJ = [r for r in reportDB if r['organ']=='breast']
+    reportDBO = [r for r in reportDB if not r['organ'] == 'breast']
+    print "Exporting", len(reportDBJ), "breast records"
+    print "Exporting", len(reportDBO), "other records"
 
     db = MySQLdb.connect(host="localhost",user="root",passwd="nlpdb",db="reports")
     cur = db.cursor()
@@ -299,6 +304,38 @@ def updateAccesDB(reportDB):
     db.commit()
     cur.close()
     db.close()
+
+    db = MySQLdb.connect(host="localhost",user="root",passwd="nlpdb",db="reports")
+    cur = db.cursor()
+    dbKeys, placeholders = [k for k in accessDbKeys if k in reportDBO[0]], ["%s" for i in accessDbKeys if i in reportDBO[0] ]
+    sql = ("insert into "+ reportsNoBreastTableName +" ("+", ".join(dbKeys)+") VALUES ("+", ".join(placeholders)+")")
+
+    for report in reportDBO:
+        values = [report[AccessDbToGregDict[k]] for k in dbKeys]
+        try:
+            cur.execute(sql,tuple(values))
+        except MySQLdb.Error, e:
+             try:
+                 print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
+                 print report
+                 return None
+             except IndexError:
+                 print "MySQL Error: %s" % str(e)
+                 print report
+                 return None
+        except TypeError, e:
+            print("MySQL TypeError",e)
+            print report
+            return None
+        except ValueError, e:
+            print("MySQL ValueError",e)
+            print report
+            return None
+    db.commit()
+    cur.close()
+    db.close()
+
+
     return "Success"
 
 def validateTrainDb(trainDb):
