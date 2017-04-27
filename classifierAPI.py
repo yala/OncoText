@@ -58,6 +58,7 @@ for r in raws:
     r['Owner'] = 'default'
     if isAnnotation(r) and limDefault:
         base.append(r)
+print "Len base", len(base)
 
 try:
     db_train = p.load(open(DB_TRAIN_PATH,'rb'))
@@ -90,7 +91,7 @@ def addTrainData():
     db_train = p.load(open(DB_TRAIN_PATH,'rb'))
     data = json.loads(request.data) or []
     name = request.args.get("name") or "default"
-    
+    #return "S"
     if len(data) > 0:
         print "data has keys", data[0].keys()
     print "len data is", len(data)
@@ -101,7 +102,7 @@ def addTrainData():
 
     if not name in db_train:
         print "Adding", name, "to db_train"
-        db_train[name] = [base]
+        db_train[name] = base
 
     ## mark the files to note as annoations
     for r in data:
@@ -129,7 +130,7 @@ def addUnlabeledData():
     data = json.loads(request.data) or []
     name = request.args.get("name") or "default"
     raw = request.args.get("raw") or False
-
+    #return "S"
     print "name is", name
     # Preprocess bilaterals if need be
     if raw:
@@ -159,6 +160,7 @@ def addUnlabeledData():
 ## Return 0
 @app.route("/updateTrainSet", methods=['GET'])
 def updateTrainSet():
+    #return "S"
     db_train = p.load(open(DB_TRAIN_PATH,'rb'))
     name = request.args.get("name") or "default"
 
@@ -180,6 +182,7 @@ def updateTrainSet():
 ## Return 0
 @app.route("/updateUnlabeledSet", methods=['GET'])
 def updateUnlabeledSet():
+    #return "S"
     db_test_all = p.load(open(DB_UNLABLED_PATH,'rb'))
     name = request.args.get("name") or "default"
     batch_id = request.args.get("batch_id") or "none"
@@ -195,6 +198,7 @@ def updateUnlabeledSet():
 ## Kicks off job to retrain model and label the corresping data
 @app.route("/train", methods=['GET'])
 def train():
+    #return "S"
     name = request.args.get("name") or "default"
     mode = request.args.get("mode") or "Prod"
     shellScript1 = "cd boostexer/breast/api/"
@@ -211,6 +215,7 @@ def train():
 ## Will return all unlabeled data
 @app.route("/predict", methods=['GET'])
 def predict():
+    #return p.load(open('returnedDB_'+name+'.p','w'))
     name = request.args.get("name") or "default"
     reportDB = predictHelper(name)
     #reportDB = p.load(open('validateDB_'+name+'.p','rb'))
@@ -264,10 +269,10 @@ def predictHelper(name):
 def updateAccesDB(reportDB):
     reportDB = postProcessRules(reportDB)
     reportDB = aggregateEpisodes(reportDB)
-    reportDB = exportToJSON.portToJSON(reportDB)
+    #reportDB = exportToJSON.portToJSON(reportDB)
 
-    reportDBJ = [r for r in reportDB if r['organ']=='breast']
-    reportDBO = [r for r in reportDB if not r['organ'] == 'breast']
+    reportDBJ = [r for r in reportDB if r['Organ']=='breast']
+    reportDBO = [r for r in reportDB if not r['Organ'] == 'breast']
     print "Exporting", len(reportDBJ), "breast records"
     print "Exporting", len(reportDBO), "other records"
 
@@ -313,6 +318,9 @@ def updateAccesDB(reportDB):
 
     db = MySQLdb.connect(host="localhost",user="root",passwd="nlpdb",db="reports")
     cur = db.cursor()
+    cur.execute("TRUNCATE TABLE "+reportsNoBreastTableName)
+    db.commit();
+
     dbKeys, placeholders = [k for k in accessDbKeys if k in reportDBO[0]], ["%s" for i in accessDbKeys if i in reportDBO[0] ]
     sql = ("insert into "+ reportsNoBreastTableName +" ("+", ".join(dbKeys)+") VALUES ("+", ".join(placeholders)+")")
 
@@ -347,11 +355,14 @@ def updateAccesDB(reportDB):
 def validateTrainDb(trainDb):
     for r in trainDb:
         if not "Report_Text_Segmented" in r:
+            print "Report_Text_Segmented not found in db!"
             return False
         #assert 'Report_Text_Segmented' in r #and 'ReportID' in r
 
         for d in diagnoses:
             if d in r and not r[d] in constantValidLabelDict[d]:
+                print "Found ", r[d], "as value or diag", d, "but validLabels are only", constantValidLabelDict[d]
+
          #       assert r[d] in constantValidLabelDict[d]
 	        return False
     return True

@@ -312,6 +312,7 @@ if MODE == "TAGHIAN":
   AccessDbToGregDict = {v: k for k, v in gregToAccessDbDict.items()}
   accessDbKeys = AccessDbToGregDict.keys()
   reportsTableName = "reports"
+  reportsNoBreastTableName = "nonbreastReports"
   backupTableName = "backup"
 
 
