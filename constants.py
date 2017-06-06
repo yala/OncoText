@@ -50,13 +50,13 @@ if MODE == "TAGHIAN":
 
   const_cancers = [
   'Red ILC','Red DCIS', 'Red IDC',
-  'Red CancerNOS', 'Red InsituNOS', 'Red CancerInvInsituNOS', 'Red TubularCancer',
+  'Red TubularCancer',
   'Red CancerInvasive', 'Red CancerInvNOS', 'CancerNotOfBreastOrigin'
   ]
 
   const_cancers_mod = [
     'ILC','DCIS', 'IDC',
-    'CancerNOS', 'InsituNOS', 'CancerInvInsituNOS', 'TubularCancer',
+    'TubularCancer',
     'CancerInvasive', 'CancerInvNOS', 'CancerNotOfBreastOrigin'
     ]
 
@@ -68,9 +68,9 @@ if MODE == "TAGHIAN":
   'ALH','ADH', 'FlatEpithelial', 'LCIS', 'ADH_DCIS', 'LobularNeoplasia'
   ]
 
-  key_order = ['Report_Text_Segmented' , "Organ", "PathologyType",'Red BreastSide' ,'Red CancerSuspicious' ,'Red InvasiveSuspicious',
-  'Red CancerInvInsituNOS','Red InsituNOS','Red IDC','Red ILC','Red TubularCancer', 'Red CancerInvasive', 'Red CancerInvNOS', 'CancerNotOfBreastOrigin'
-  'Red DCIS', 'ER', 'PR', 'Her2 (Fish)', 'Are there positive LN?','ECE','ITC ' ,'BVI', 'LVI'  ,'Red LCIS',
+  key_order = ['Report_Text_Segmented' , 'Report_Text', "Organ", "PathologyType",'Red BreastSide' ,'Red CancerSuspicious' ,'Red InvasiveSuspicious',
+  'Red CancerInvInsituNOS','Red InsituNOS','Red IDC','Red ILC','Red TubularCancer', 'Red CancerInvasive', 'Red CancerInvNOS', 'CancerNotOfBreastOrigin', 
+  'Red DCIS', 'cancer', 'ER', 'PR', 'Her2 (Fish)', 'Are there positive LN?','ECE','ITC ' ,'BVI', 'LVI'  ,'Red LCIS',
   'Red LobularNeoplasia','Red ALH', 'Red ADH_DCIS', 'Red ADH' ,'Red FlatEpithelial' ,'Red Phylodes',
   'Red SuspiciousForPhyllodes', 'Red Papill']
 
@@ -92,7 +92,6 @@ if MODE == "TAGHIAN":
   }
 
   diagToConventionDict = {
-    "Red DCIS": 'DCIS',
     'Are there positive LN?': 'Are there positive LN?' ,
     'ITC ':'ITC',
     'Her2 (Fish)':'Her2',
@@ -325,7 +324,7 @@ if MODE == "TAGHIAN":
     'CancerInvasive':'CancerInvasive',
     'CancerInvNOS':'CancerInvNOS',
     'CancerNotOfBreastOrigin':'CancerNotOfBreastOrigin',
-    'filename':'filename',
+    #'filename':'filename',
     'PR':'PR',
     'ECE':'ECE',
     'validated':'validated',
@@ -352,7 +351,7 @@ if MODE == "TAGHIAN":
   reportsTableName = "reports"
   reportsNoBreastTableName = "nonbreastReports"
   backupTableName = "backup"
-
+  backupNoBreastTableName = "nonbreastBackup"
 
 
 

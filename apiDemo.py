@@ -1,11 +1,12 @@
 import requests
 import cPickle as p
 import json
-import  datetime 
+import  datetime
 
 
 domain = "http://localhost:5000/"
-#un_reps = p.load(open('tempReports.p','rb')) 
+#un_reps = p.load(open('oldReports.p','rb'))
+
 
 name = "mghMar"
 
@@ -32,6 +33,7 @@ name = "mghMar"
 # predict
 predResp = requests.get(domain+"predict" , params={'name':name})
 assert predResp.status_code == 200
+
 #newDb = json.loads(predResp.text)['reportDB']
 #print(len(newDb))
 #p.dump(newDb, open('labeledReps_Convention.p','wb'))

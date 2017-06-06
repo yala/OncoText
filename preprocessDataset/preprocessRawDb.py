@@ -35,23 +35,32 @@ def splitRep(txt):
 
     return {"LEFT":leftTxt, "RIGHT": rightTxt}
 
-def unicodeToDatetime(db):
-    def utcToDate(date):
-        if isinstance(date, datetime.date) or isinstance(date, datetime.datetime):
+def utcToDate(date):
+        if isinstance(date, datetime.date):
+            return datetime.datetime( date.year, date.month, date.day)
+        if isinstance(date, datetime.datetime):
             return date
         yyyymmdd = date[:8]
         try:
-            date = datetime.datetime.strptime(yyyymmdd, '%Y-%m-%d')
-            return date
+            return datetime.datetime.strptime(yyyymmdd, '%Y%m%d')
         except Exception, e:
             try:
                 year, mo, day = int(yyyymmdd[:4]), int(yyyymmdd[4:6]), int(yyyymmdd[6:8])
-                date = datetime.date(year,mo,day)
-                return date
+                return datetime.date(year,mo,day)
             except Exception, e:
-                print "error cant convert to date", yyyymmdd
-                return datetime.date(1900,1,1)
+                try:
+                    yyyymmdd = date[:10]
+		    return datetime.datetime.strptime(yyyymmdd, '%Y-%m-%d')
+                except Exception, e:
+                    try: 
+                        mmddyyyy = date.split()[0]
+                        return datetime.datetime.strptime(mmddyyyy, '%m/%d/%Y')
+                    except Exception, e:
+                        print "error cant convert to date", yyyymmdd
+                        return datetime.date(1900,1,1)
 
+def unicodeToDatetime(db):
+    
     newDb = db
     for b in newDb:
         b['Report_Date_TimePlusX'] = utcToDate(b['Report_Date_TimePlusX']) if "Report_Date_TimePlusX" in b and not isinstance(b['Report_Date_TimePlusX'],int) else (utcToDate(b['Report_Date_Time']) if 'Report_Date_Time' in b else 0)

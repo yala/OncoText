@@ -219,8 +219,9 @@ def predict():
     name = request.args.get("name") or "default"
     reportDB = predictHelper(name)
     #reportDB = p.load(open('validateDB_'+name+'.p','rb'))
-
-
+    for r in reportDB:
+        if 'MRN_Type' in r:
+            r['Institution'] = r['MRN_Type']
     reportDB = aggregateEpisodes(reportDB)
     reportDBJ = exportToJSON.portToJSON(reportDB)
     p.dump(reportDBJ, open('returnedDB_'+name+'.p','w'))
@@ -271,28 +272,44 @@ def updateAccesDB(reportDB):
     reportDB = aggregateEpisodes(reportDB)
     #reportDB = exportToJSON.portToJSON(reportDB)
 
-    reportDBJ = [r for r in reportDB if r['Organ']=='breast']
-    reportDBO = [r for r in reportDB if not r['Organ'] == 'breast']
+    reportDBJ = [r for r in reportDB if r['Organ']=='1']
+    reportDBO = [r for r in reportDB if r['Organ'] == '0']
     print "Exporting", len(reportDBJ), "breast records"
     print "Exporting", len(reportDBO), "other records"
 
     db = MySQLdb.connect(host="localhost",user="root",passwd="nlpdb",db="reports")
     cur = db.cursor()
     dbKeys, placeholders = [k for k in accessDbKeys if k in reportDBJ[0]], ["%s" for i in accessDbKeys if i in reportDBJ[0] ]
-    sql = ("insert into "+reportsTableName+" ("+", ".join(dbKeys)+") VALUES ("+", ".join(placeholders)+")")
 
     try:
         cur.execute("DROP TABLE "+backupTableName )
     except Exception, e:
         pass
+
+    try:
+        cur.execute("DROP TABLE "+ backupNoBreastTableName )
+    except Exception, e:
+        pass
+
+    print "Moving breast reports to backup table..."
     cur.execute("CREATE TABLE "+backupTableName+" LIKE "+reportsTableName)
     cur.execute("INSERT INTO "+backupTableName+" SELECT * FROM "+reportsTableName)
     db.commit();
     cur.execute("TRUNCATE TABLE "+reportsTableName)
     db.commit();
+    print "done."
 
+    print "Exporting breast records..."
+    sql = ("insert into "+reportsTableName+" ("+", ".join(dbKeys)+") VALUES ("+", ".join(placeholders)+")")
+    print reportDBJ[0]
     for report in reportDBJ:
-        values = [report[AccessDbToGregDict[k]] for k in dbKeys]
+        try:
+            values = [report[AccessDbToGregDict[k]] for k in dbKeys]
+        except Exception , e:
+            print e
+            print report.keys(), "but looking for keys", [AccessDbToGregDict[k] for k in dbKeys]
+            continue
+
         try:
             cur.execute(sql,tuple(values))
         except MySQLdb.Error, e:
@@ -313,19 +330,27 @@ def updateAccesDB(reportDB):
             print report
             return None
     db.commit()
-    cur.close()
-    db.close()
+    print "done."
 
-    db = MySQLdb.connect(host="localhost",user="root",passwd="nlpdb",db="reports")
-    cur = db.cursor()
-    cur.execute("TRUNCATE TABLE "+reportsNoBreastTableName)
+    print "Moving non breast reports to backup table..."
+    cur.execute("CREATE TABLE "+backupNoBreastTableName+" LIKE "+reportsNoBreastTableName)
+    cur.execute("INSERT INTO "+backupNoBreastTableName+" SELECT * FROM "+reportsNoBreastTableName)
     db.commit();
+    cur.execute("TRUNCATE TABLE "+backupNoBreastTableName)
+    db.commit();
+    print "done."
 
-    dbKeys, placeholders = [k for k in accessDbKeys if k in reportDBO[0]], ["%s" for i in accessDbKeys if i in reportDBO[0] ]
+    print "Exporting non breast records..."
     sql = ("insert into "+ reportsNoBreastTableName +" ("+", ".join(dbKeys)+") VALUES ("+", ".join(placeholders)+")")
-
+    #print reportDBO[0]
     for report in reportDBO:
-        values = [report[AccessDbToGregDict[k]] for k in dbKeys]
+        try:
+            values = [report[AccessDbToGregDict[k]] for k in dbKeys]
+        except Exception , e:
+            print e
+            print report.keys(), "but looking for keys", [AccessDbToGregDict[k] for k in dbKeys]
+            continue
+
         try:
             cur.execute(sql,tuple(values))
         except MySQLdb.Error, e:
@@ -346,9 +371,9 @@ def updateAccesDB(reportDB):
             print report
             return None
     db.commit()
+    print "done."
     cur.close()
     db.close()
-
 
     return "Success"
 
@@ -401,6 +426,7 @@ def mergeDBs(boost, cnn):
 
 def applyCorrections(test, gold):
     corrections = 0
+    num_match  = 0
     textToLabel = {}
     for g in gold:
         textToLabel[ preprocessText(g['Report_Text_Segmented']) ] = g
@@ -409,9 +435,11 @@ def applyCorrections(test, gold):
         t['validated'] = text in textToLabel
         if text in textToLabel:
             for d in textToLabel[text]:
+                if d in t  and d in diagnoses and not t[d] == textToLabel[text][d]:
+                    corrections += 1
                 t[d] = textToLabel[text][d]
-                corrections+=1
-    print("num corrected", corrections)
+                num_match+=1
+    print("num corrected", corrections, num_match)
 ## Given a list of dicts, where  each dict represent a report:
 ## If the report text covers a single breast, we assign it an id and nothing happens
 ## If the report contains 2 breasts, automatically parse it into two reports, assign them
@@ -452,16 +480,16 @@ def postProcessRules(db_train):
         for k in r.keys():
             if type(r[k]) is unicode:
                 r[k] = str(r[k])
-            if r[k] == "Present":
+            if r[k] in ["Present", "Yes", "Positive", "Anatomic", "breast"]:
                 r[k] = "1"
-            if r[k] == "Absent":
-                r[k] = "0"
-            if r[k] == "Yes":
-                r[k] = "1"
-            if r[k] == "No":
+            if r[k] in ["Absent", "No", "Negative", "Cytology", "non-breast"]:
                 r[k] = "0"
             if r[k] == "NA":
                 r[k] = "9"
+            if r[k] == "RIGHT":
+                r[k] = 'r'
+            if r[k] == "LEFT":
+                r[k] = "l"
             #TODO change these to ints and reconfigure the db
 
     return db_train#[d for d in db_train if d['Organ'] == 'breast']
