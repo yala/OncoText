@@ -225,8 +225,25 @@ def predict():
         if 'MRN_Type' in r:
             r['Institution'] = r['MRN_Type']
     reportDB = aggregateEpisodes(reportDB)
-    reportDBJ = exportToJSON.portToJSON(reportDB)
+    reportDB_Conv = exportToJSON.portToJSON(reportDB)
+    reportDBJ = []
+    reportDB_Eval = []
+    reportDB_Pakis = []
+    for r in reportDBJ:
+        if 'test_set' in r and r['test_set']:
+            reportDB_Eval.append(r)
+        elif 'pakistani' in r and r['pakistani']:
+            reportDB_Pakis.append(r)
+        else:
+            reportDBJ.append(r)
+    print "len reportDB", len(reportDBJ)
+    print "len test set", len(reportDB_Eval)
+    print "len pakistani set", len(reportDB_Pakis)
+
     p.dump(reportDBJ, open('returnedDB_'+name+'.p','w'))
+    p.dump(reportDB_Eval, open('evalDB_'+name+'.p','w'))
+    p.dump(reportDBJ_Pakis, open('pakistaniDB_'+name+'.p','w'))
+
     updateAccesDB(copy.deepcopy(reportDBJ))
     getAtypias.main()
     return json.dumps({'reportDB':reportDBJ})
