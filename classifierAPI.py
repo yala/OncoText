@@ -16,6 +16,7 @@ import generateClassifierFilesForDev
 import preprocessRawDb
 import interpretResults
 import getAtypias
+import evalModelRun
 from operator import itemgetter
 import subprocess
 from flask import Flask
@@ -246,6 +247,7 @@ def predict():
 
     updateAccesDB(copy.deepcopy(reportDBJ))
     getAtypias.main()
+    evalModelRun.main()
     return json.dumps({'reportDB':reportDBJ})
 
 ################ Helpers ######################
