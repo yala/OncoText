@@ -36,7 +36,7 @@ class Config(object):
     max_grad_norm = 5
     embed_size = 100
     hidden_size = 100
-    max_epoch = 14
+    max_epoch = 25
     keep_prob = 1.0
     batch_size = 1
     vocab_size = 17082
@@ -136,8 +136,8 @@ def run_eval_epoch(session, models, dev_input, config, verbose = True):
 
     costs /= epoch_size
     print("Dev cost", costs)
-    evaluate(preds, golds, inputStrs)
-    return 0
+    avg_accur = evaluate(preds, golds, inputStrs)
+    return avg_accur
 
 def label_dataset(session, models, dev_input, config, outPath='labeledReps.p', verbose=True):
 
@@ -218,7 +218,7 @@ def main(_):
         tf.scalar_summary("Joint Loss", jointLoss )
 
         sessConf = tf.ConfigProto(allow_soft_placement=True)
-	sessConf.gpu_options.allow_growth=True
+	    sessConf.gpu_options.allow_growth=True
 
         
         sv = tf.train.Supervisor(logdir=FLAGS.save_path, summary_op=None)
@@ -231,6 +231,8 @@ def main(_):
                 label_dataset(session, models, dev_input, config, outPath = outPath, verbose=True)
 		print("Done labeling")
             else:
+                max_accur = 0
+                num_less = 0
                 for i in range(config.max_epoch):
                     varDump =  session.run([{var.name: var} for var in tf.trainable_variables()])
                     p.dump(varDump, open('variableDict.p','wb'))
@@ -238,15 +240,23 @@ def main(_):
                     print("Epoch: %d " % (i + 1))
 
                     print("EVAL")
-                    run_eval_epoch(session, models, dev_input, config)
+                    epoch_acur = run_eval_epoch(session, models, dev_input, config)
                     
                     print("TRAIN")
                     train_cost  = run_epoch(session, models, train_input, config)
                     print("Epoch: %d Train Error: %.3f" % (i + 1, train_cost))
 
-                    if FLAGS.save_path:
+                    if epoch_acur > max_accur and FLAGS.save_path:
                         print("Saving model to %s." % FLAGS.save_path)
                         sv.saver.save(session, 'jointRnn', global_step=i)
+                        max_accur = epoch_acur
+                        num_less = 0
+
+                    if epoch_acur < max_accur:
+                        num_less += 1
+
+                    if num_less >= 3:
+                        break
 
 
 
