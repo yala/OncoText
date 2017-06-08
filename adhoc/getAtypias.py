@@ -9,7 +9,7 @@ import csv
 from csv import DictWriter
 from constants import *
 import pdb
-
+import MySQLdb
 
 def hasCat(r, cat, loose=False):
     for c in cat:
@@ -98,14 +98,14 @@ def updateAccesDB(reportDB, tableName):
 
     print "Exporting", len(reportDB), "breast records to name", tableName
 
-    db = MySQLdb.connect(host="localhost",user="root",passwd="nlpdb",db=tableName)
+    db = MySQLdb.connect(host="localhost",user="root",passwd="nlpdb",db="reports")
     cur = db.cursor()
     dbKeys, placeholders = [k for k in accessDbKeys if k in reportDB[0]], ["%s" for i in accessDbKeys if i in reportDB[0] ]
     
 
     print "Exporting breast records... to", tableName
     sql = ("insert into "+tableName+" ("+", ".join(dbKeys)+") VALUES ("+", ".join(placeholders)+")")
-    print reportDBJ[0]
+    #print reportDB[0]
     for report in reportDB:
         try:
             values = [report[AccessDbToGregDict[k]] for k in dbKeys]
@@ -144,13 +144,13 @@ def updateAccesDB(reportDB, tableName):
 
 
 def main():
-    dataPath = "../returnedDB_mghMar.p"
+    dataPath = "/home/nlp/pathology/returnedDB_mghMar.p"
 
     db = p.load( open (dataPath, 'rb'))
     db = [d for d in db if d['Organ'] == 'breast']
     print "len seed DB", len(db)
 
-    exportPaths = ["allFEAsTable", "allADHsTable", "allADHsTable", 
+    exportPaths = ["allFEAsTable", "allADHsTable", "allAtypiaTable", 
     "allAtypia2010Table", "allCancersTable"]
 
 
