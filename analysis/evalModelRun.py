@@ -6,41 +6,48 @@ from constants import *
 
 
 name = "mghMar"
-def main() :
-	db = p.load(open('/home/nlp/pathology/evalDB_'+name+'.p','rb'))
-	testSet = p.load(open('/home/nlp/pathology/rnn/devReps.p','rb')) + p.load(open('/home/nlp/pathology/rnn/testReps.p','rb'))
+def main(mode='eval') :
 
-	text_to_gold = {}
-	for d in testSet:
-		for k in diagToConventionDict:
-			if not k in d:
-                            continue 
-			##Convert label from diag format to clean conv
-			d[diagToConventionDict[k]] = d[k]
-			## convert frome onehot to str label
-			label_ind = np.argmax(d[k])
-			d[diagToConventionDict[k]] = constantValidLabelDict[k][label_ind]
+    if mode == 'eval':
+        db = p.load(open('/home/nlp/pathology/evalDB_'+name+'.p','rb'))
+        testSet = p.load(open('/home/nlp/pathology/rnn/devReps.p','rb')) + p.load(open('/home/nlp/pathology/rnn/testReps.p','rb'))
+    elif mode == 'pakistani':
+        db = p.load(open('/home/nlp/pathology/pakistaniDB_'+name+'.p','rb'))
+        testSet = p.load(open('/home/nlp/pathology/externalDataSources/pakistani_data.p','rb'))
 
-		text_to_gold[ d['Report_Text_Segmented']] = d
 
-	text_to_pred = {}
-	for d in db:
-		if d["Report_Text_Segmented"] in text_to_gold:
-			text_to_pred[d['Report_Text_Segmented']] = d
+    text_to_gold = {}
+    for d in testSet:
+        if mode == 'eval':
+            for k in diagToConventionDict:
+                if not k in d:
+                    continue 
+                ##Convert label from diag format to clean conv
+                d[diagToConventionDict[k]] = d[k]
+                ## convert frome onehot to str label
+                label_ind = np.argmax(d[k])
+                d[diagToConventionDict[k]] = constantValidLabelDict[k][label_ind]
 
-	results = []
-	for d in conventionToDiagDict:
-		res = {'name':d}
-		texts = [t for t in text_to_pred]		
-		pred, gold = [text_to_pred[t][d] for t in texts],  [text_to_gold[t][d] for t in texts]
-		if len(pred) == 0:
-                    continue
-		res['accuracy'] = sum([ pred[i] == gold[i] for i in range(pred)] )*100./ len(pred)
-		results.append(res)
-	print results
-	return results
+        text_to_gold[ d['Report_Text_Segmented']] = d
+
+    text_to_pred = {}
+    for d in db:
+        if d["Report_Text_Segmented"] in text_to_gold:
+            text_to_pred[d['Report_Text_Segmented']] = d
+
+    results = []
+    for d in conventionToDiagDict:
+        res = {'name':d}
+        texts = [t for t in text_to_pred]       
+        pred, gold = [text_to_pred[t][d] for t in texts if d in text_to_pred[t]],  [text_to_gold[t][d] for t in texts if d in text_to_pred[t]]
+        if len(pred) == 0:
+            continue
+        res['accuracy'] = sum([ pred[i] == gold[i] for i in range(pred)] )*100./ len(pred)
+        results.append(res)
+    print results
+    return results
 
 
 
 if __name__ == "__main__":
-	main()
+    main()
