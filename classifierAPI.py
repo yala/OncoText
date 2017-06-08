@@ -219,15 +219,15 @@ def train():
 def predict():
     #return p.load(open('returnedDB_'+name+'.p','w'))
     name = request.args.get("name") or "default"
-    #reportDB = predictHelper(name)
-    reportDB = p.load(open('validateDB_'+name+'.p','rb'))
+    reportDB = predictHelper(name)
+    #reportDB = p.load(open('validateDB_'+name+'.p','rb'))
     for r in reportDB:
         if 'MRN_Type' in r:
             r['Institution'] = r['MRN_Type']
     reportDB = aggregateEpisodes(reportDB)
     reportDBJ = exportToJSON.portToJSON(reportDB)
     p.dump(reportDBJ, open('returnedDB_'+name+'.p','w'))
-    #updateAccesDB(copy.deepcopy(reportDBJ))
+    updateAccesDB(copy.deepcopy(reportDBJ))
     getAtypias.main()
     return json.dumps({'reportDB':reportDBJ})
 
