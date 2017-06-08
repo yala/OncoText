@@ -6,6 +6,7 @@ sys.path.append("trainClassifier")
 sys.path.append("preprocessDataset")
 sys.path.append("analysis")
 sys.path.append("rnn")
+sys.path.append("adhoc")
 import createEpisodes
 import preprocessTrain
 import preprocessUnlabeled
@@ -14,6 +15,7 @@ import generateClassifierFilesForProd
 import generateClassifierFilesForDev
 import preprocessRawDb
 import interpretResults
+import getAtypias
 from operator import itemgetter
 import subprocess
 from flask import Flask
@@ -226,6 +228,7 @@ def predict():
     reportDBJ = exportToJSON.portToJSON(reportDB)
     p.dump(reportDBJ, open('returnedDB_'+name+'.p','w'))
     updateAccesDB(copy.deepcopy(reportDBJ))
+    getAtypias.main()
     return json.dumps({'reportDB':reportDBJ})
 
 ################ Helpers ######################
