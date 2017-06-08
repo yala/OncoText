@@ -5,8 +5,9 @@ import numpy as np
 from constants import *
 
 
+name = "mghMar"
 def main() :
-	db = p.load(open('/home/nlp/pathology/returnedDB_mghMar.p','rb'))
+	db = p.load(open('/home/nlp/pathology/evalDB_'+name+'.p','rb'))
 	testSet = p.load(open('/home/nlp/pathology/rnn/devReps.p','rb')) + p.load(open('/home/nlp/pathology/rnn/testReps.p','rb'))
 
 	text_to_gold = {}
