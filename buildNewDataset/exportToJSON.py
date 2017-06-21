@@ -7,6 +7,8 @@ from operator import itemgetter
 import json
 import sys
 sys.path.append("..")
+sys.path.append('../preprocessDataset')
+import preprocessRawDb
 from constants import *
 
 
@@ -16,7 +18,7 @@ def portToJSON(data, path=None, episodeMode = False, write=False):
             for k in report:
                 l = report[k]
                 if isinstance(l, datetime.datetime) or isinstance(l, datetime.date):
-                    report[k] = l.isoformat()
+                    report[k] = preprocessRawDb.utcToDate(l).isoformat()
         except Exception, e:
             print 'wtf'
             print report

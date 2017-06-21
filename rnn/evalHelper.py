@@ -72,7 +72,5 @@ def evaluate(preds, golds, inputs = None):
     pprint.pprint("Average accuracy")
     pprint.pprint(averageAccuracy)
 
-
-    p.dump({'rowLevel': rowAccuracy, 'category':accuracy}, open("/home/nlp/pathology/lastestAccuracies.p") )
     print("-----------------------------")
 

@@ -5,6 +5,8 @@ import  datetime
 import sys
 sys.path.append("..")
 sys.path.append("../analysis")
+sys.path.append('../preprocessDataset')
+import preprocessRawDb
 from constants import *
 import evalModelRun
 import openpyxl as xl
@@ -59,46 +61,43 @@ target_diagnoses = {
 domain = "http://localhost:5000/"
 #un_reps = p.load(open('oldReports.p','rb'))
 un_reps = parseXLS('../externalDataSources/Pakistani_data.xlsx')
+print un_reps[0]
 for u in un_reps:
 	u['pakistani'] = True
 	u['Report_Text'] = u['Final_Histopathological_Diagnosis']
 	u['MRN'] = u['S.No']
 	u['Institution'] = 'Pakistan'
-	u['Report_Date'] = u['Surgery_Date']
+	u['Report_Date_Time'] = preprocessRawDb.utcToDate(u['Surgery_Date']).isoformat()
+        del u['Surgery_Date']
+        del u['Date']
+        del u['2 Date']
+        del u['3 Date']
 
 	for t in target_diagnoses:
 		d = target_diagnoses[t]
 		u[d] = 'Present' if u[t] == 1 else 'Absent'
 
-p.dump(un_reps, open("../externalDataSources/pakistani_data.p","w"))
+#un_reps = [u for u in un_reps if not u['Report_Text'] == None ]
+#raw_input("len un_reps "+str(len(un_reps)))
+#p.dump(un_reps, open("../externalDataSources/pakistani_data.p","w"))
 
 name = "mghMar"
 
-# add train
-#addTrainResp = requests.post(domain+"addTrain",data=json.dumps([]),params={"name":name,"raw":False})
-#assert addTrainResp.status_code==200
 
 # add unlabeled
-addUnlabeledResp = requests.post(domain+"addUnlabeled", data=json.dumps(un_reps) , params={'name':name, 'raw':True})
-assert addUnlabeledResp.status_code == 200
+#addUnlabeledResp = requests.post(domain+"addUnlabeled", data=json.dumps(un_reps) , params={'name':name, 'raw':True})
+#assert addUnlabeledResp.status_code == 200
 
-# update train
-#updateTrainResp = requests.get(domain+"updateTrainSet",   params={'name':name})
-#assert updateTrainResp.status_code == 200
 
 # update unlabeled
-updateUnlResp = requests.get(domain+"updateUnlabeledSet" , params={'name':name})
-assert updateUnlResp.status_code == 200
-
-# train
-#trainResp = requests.get(domain+"train" , params={'name':name})
-#assert trainResp.status_code == 200
+#updateUnlResp = requests.get(domain+"updateUnlabeledSet" , params={'name':name})
+#assert updateUnlResp.status_code == 200
 
 # predict
-predResp = requests.get(domain+"predict" , params={'name':name})
-assert predResp.status_code == 200
+#predResp = requests.get(domain+"predict" , params={'name':name})
+#assert predResp.status_code == 200
 
-evalModelRun.main('pakistani')
+evalModelRun.main('pakistani', '/home/nlp/Dropbox (Partners HealthCare)/NLP_Results/pakistani_',False)
 
 #newDb = json.loads(predResp.text)['reportDB']
 #print(len(newDb))

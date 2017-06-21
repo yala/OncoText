@@ -40,11 +40,12 @@ def utcToDate(date):
             return datetime.datetime( date.year, date.month, date.day)
         if isinstance(date, datetime.datetime):
             return date
-        yyyymmdd = date[:8]
         try:
+            yyyymmdd = date[:8]
             return datetime.datetime.strptime(yyyymmdd, '%Y%m%d')
         except Exception, e:
-            try:
+            try:             
+                yyyymmdd = date[:8]
                 year, mo, day = int(yyyymmdd[:4]), int(yyyymmdd[4:6]), int(yyyymmdd[6:8])
                 return datetime.date(year,mo,day)
             except Exception, e:
@@ -56,7 +57,7 @@ def utcToDate(date):
                         mmddyyyy = date.split()[0]
                         return datetime.datetime.strptime(mmddyyyy, '%m/%d/%Y')
                     except Exception, e:
-                        print "error cant convert to date", yyyymmdd
+                        print "error cant convert to date", date
                         return datetime.date(1900,1,1)
 
 def unicodeToDatetime(db):
