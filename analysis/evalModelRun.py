@@ -1,12 +1,31 @@
 import cPickle as p
+from datetime import datetime as date
 import sys
 sys.path.append("..")
 import numpy as np
 from constants import *
+from csv import DictWriter
+from twilio.rest import Client
+import pdb
+ACCOUNT_SID = 'AC7d8e9d65e6c370c90c464417090c1e75'
+AUTH_TOKEN = '10e49b7b726debdfcd044f6b9ed2dbc5'
 
 
 name = "mghMar"
-def main(mode='eval') :
+
+def send_text_msg(results,path):
+    num_categories = len(results)
+    average_accur = sum([r['accuracy'] for r in results]) / num_categories
+    msg = "Pathology Parser update: Retraining completed today! Average accuracy was "+ str(average_accur)+ " and full results are stored at "+path+"."
+    print "Sending msg", msg  
+    
+    client = Client(ACCOUNT_SID, AUTH_TOKEN)
+    for number in [ '+12244657241', '+16176427014']:
+        client.messages.create(
+           to= number, from_='+12248083411', body=msg)   
+    return "Success"
+
+def main(mode='eval', outPath='/home/nlp/Dropbox (Partners HealthCare)/NLP_Results/eval_',sendText=True) :
 
     if mode == 'eval':
         db = p.load(open('/home/nlp/pathology/evalDB_'+name+'.p','rb'))
@@ -18,7 +37,7 @@ def main(mode='eval') :
 
     text_to_gold = {}
     for d in testSet:
-        if mode == 'eval':
+        if mode == 'eval' or True:
             for k in diagToConventionDict:
                 if not k in d:
                     continue 
@@ -29,17 +48,19 @@ def main(mode='eval') :
                 d[diagToConventionDict[k]] = constantValidLabelDict[k][label_ind]
 
         text_to_gold[ d['Report_Text_Segmented']] = d
-
+    print "Len gold", len(text_to_gold)
     text_to_pred = {}
     for d in db:
         if d["Report_Text_Segmented"] in text_to_gold:
             text_to_pred[d['Report_Text_Segmented']] = d
-
+    print "len db", len(db)
+    print "len text_to_pred", len(text_to_pred)
+    pdb.set_trace()
     results = []
     for d in conventionToDiagDict:
         res = {'name':d}
         texts = [t for t in text_to_pred]       
-        pred, gold = [text_to_pred[t][d] for t in texts if d in text_to_pred[t]],  [text_to_gold[t][d] for t in texts if d in text_to_pred[t]]
+        pred, gold = [text_to_pred[t][d] for t in texts if d in text_to_pred[t] and d in text_to_gold[t]],  [text_to_gold[t][d] for t in texts if d in text_to_pred[t] and d in text_to_gold[t]]
         if len(pred) == 0:
             continue
         res['accuracy'] = sum([ pred[i] == gold[i] for i in range(len(pred))] )*100./ len(pred)
@@ -58,7 +79,6 @@ def main(mode='eval') :
         res['recall'] = recall
         res['f1'] = f1
 
-
         results.append(res)
     
     overallRes = {'name':'average'}
@@ -70,6 +90,19 @@ def main(mode='eval') :
     results.append(overallRes)
 
     print results
+   
+    today = date.now().isocalendar()
+    dateStr = "-".join([str(s) for s in today])
+    path = outPath+dateStr+'.csv'
+    keys = ['name', 'accuracy']
+    print "Saving results to", path
+    with open(path,'w') as outCSV:
+        writer = DictWriter(outCSV, keys)
+        writer.writeheader()
+        writer.writerows(results)
+    if sendText:
+        print "Sending text message update"
+        send_text_msg(results, path)
     return results
 
 

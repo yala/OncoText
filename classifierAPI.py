@@ -230,7 +230,7 @@ def predict():
     reportDBJ = []
     reportDB_Eval = []
     reportDB_Pakis = []
-    for r in reportDBJ:
+    for r in reportDB_Conv:
         if 'test_set' in r and r['test_set']:
             reportDB_Eval.append(r)
         elif 'pakistani' in r and r['pakistani']:
@@ -243,11 +243,10 @@ def predict():
 
     p.dump(reportDBJ, open('returnedDB_'+name+'.p','w'))
     p.dump(reportDB_Eval, open('evalDB_'+name+'.p','w'))
-    p.dump(reportDBJ_Pakis, open('pakistaniDB_'+name+'.p','w'))
-
+    p.dump(reportDB_Pakis, open('pakistaniDB_'+name+'.p','w'))
+    evalModelRun.main()
     updateAccesDB(copy.deepcopy(reportDBJ))
     getAtypias.main()
-    evalModelRun.main()
     return json.dumps({'reportDB':reportDBJ})
 
 ################ Helpers ######################
@@ -424,7 +423,7 @@ def preprocessText(text):
 
 def mergeDBs(boost, cnn):
     mergeDB = []
-    assert len(boost) == len(cnn)
+    #assert len(boost) == len(cnn)
     textToCNNDict = {}
     textToBoosDict = {}
     for c in cnn:
@@ -432,8 +431,10 @@ def mergeDBs(boost, cnn):
     for b in boost:
         b['Report_Text_Segmented'] = preprocessText( b['Report_Text_Segmented'])
         textToBoosDict[ b['Report_Text_Segmented']] = b
-    assert len(textToCNNDict) == len(textToBoosDict)
+    #assert len(textToCNNDict) == len(textToBoosDict)
     for k in textToBoosDict:
+        if not k in textToCNNDict:
+            continue
         cnnR = textToCNNDict[k]
         boostR = textToBoosDict[k]
         newR = {}
@@ -443,6 +444,8 @@ def mergeDBs(boost, cnn):
             newR[d] = cnnR[d]
         for k in [key for key in cnnR if not key in boostexer_diagnoses + nn_diagnoses ] :
             newR[k] = cnnR[k]
+        for k in [key for key in boostR if not key in newR]:
+            newR[k] = boostR[k]
         mergeDB.append(newR)
     return mergeDB
 
@@ -526,13 +529,16 @@ def aggregateEpisodes(data):
         if not sideKey in data[i]:
             print data[i]
 	    raw_input('sidekey is '+sideKey)
-        if not data[i]['MRN'] in mrns:
-            mrns[data[i]['MRN']] = {}
-        if not data[i][sideKey] in mrns[data[i]['MRN']]:
-            mrns[data[i]['MRN']][data[i][sideKey]] = [data[i]]
-        else:
-            mrns[data[i]['MRN']][data[i][sideKey]].append(data[i])
-
+        try:
+            if not data[i]['MRN'] in mrns:
+                mrns[data[i]['MRN']] = {}
+            if not data[i][sideKey] in mrns[data[i]['MRN']]:
+                mrns[data[i]['MRN']][data[i][sideKey]] = [data[i]]
+            else:
+                mrns[data[i]['MRN']][data[i][sideKey]].append(data[i])
+        except Exception, e:
+            print "exception e", e, "with keys", data[i].keys()
+            print "data[i]", data[i]
     #Structure : List of Reports with Episode IDs
     reportsDB = []
     episodeDateDict = {} ## Use this to store Date -> episode Id for each MRN. use this to reorder episodes by date

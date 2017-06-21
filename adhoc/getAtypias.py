@@ -24,7 +24,6 @@ def hasCat(r, cat, loose=False):
 
 ## Runs enforces global constraints like ER/PR NA given no cancer
 def postProcessRules(db_train):
-    print(db_train[0].keys())
 
     for r in db_train:
         if hasCat(r, const_cancers_mod):
