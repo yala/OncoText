@@ -42,8 +42,33 @@ def main(mode='eval') :
         pred, gold = [text_to_pred[t][d] for t in texts if d in text_to_pred[t]],  [text_to_gold[t][d] for t in texts if d in text_to_pred[t]]
         if len(pred) == 0:
             continue
-        res['accuracy'] = sum([ pred[i] == gold[i] for i in range(pred)] )*100./ len(pred)
+        res['accuracy'] = sum([ pred[i] == gold[i] for i in range(len(pred))] )*100./ len(pred)
+        
+        truePos =  sum([gold[i] in ['Present', 'Yes'] and pred[i] == ['Present', 'Yes'] for i in range(len(pred))])
+        falsePos = sum([gold[i] == ['Absent', 'No'] and pred[i] == ['Present', 'Yes'] for i in range(len(pred))])
+        trueNeg  = sum([gold[i] == ['Absent', 'No'] and pred[i] == ['Absent', 'No'] for i in range(len(pred))])
+        falseNeg = sum([gold[i] == ['Present', 'Yes'] and pred[i] == ['Absent', 'No'] for i in range(len(pred))])
+
+
+        percision = 1. * truePos / (truePos + falsePos) if (truePos + falsePos) > 0 else 0
+        recall    =  1. * truePos / (truePos + falseNeg) if (truePos + falseNeg) > 0 else 0
+        f1        =  2. * (percision * recall)  / (percision + recall) if (percision + recall) >0 else 0
+
+        res['precision'] = precision
+        res['recall'] = recall
+        res['f1'] = f1
+
+
         results.append(res)
+    
+    overallRes = {'name':'average'}
+    overallRes['accuracy'] = sum([r['accuracy'] for r in results]) / len(results)
+    overallRes['precision'] = sum([r['precision'] for r in results]) / len(results)
+    overallRes['recall'] = sum([r['recall'] for r in results]) / len(results)
+    overallRes['f1'] = sum([r['f1'] for r in results]) / len(results)
+
+    results.append(overallRes)
+
     print results
     return results
 

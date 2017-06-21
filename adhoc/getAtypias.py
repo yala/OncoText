@@ -14,7 +14,7 @@ import MySQLdb
 def hasCat(r, cat, loose=False):
     for c in cat:
         if not loose:
-            if r[c] == 'Present':
+            if r[c] == 'Present' or str(r[c]) == '1':
                 return True
         else:
             if c in r:
