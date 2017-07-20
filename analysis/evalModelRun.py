@@ -55,7 +55,6 @@ def main(mode='eval', outPath='/home/nlp/Dropbox (Partners HealthCare)/NLP_Resul
             text_to_pred[d['Report_Text_Segmented']] = d
     print "len db", len(db)
     print "len text_to_pred", len(text_to_pred)
-    pdb.set_trace()
     results = []
     for d in conventionToDiagDict:
         res = {'name':d}
@@ -64,16 +63,17 @@ def main(mode='eval', outPath='/home/nlp/Dropbox (Partners HealthCare)/NLP_Resul
         if len(pred) == 0:
             continue
         res['accuracy'] = sum([ pred[i] == gold[i] for i in range(len(pred))] )*100./ len(pred)
+        res['percentPos'] = sum ([ g in ['Present','Yes'] for g in gold]) * 100./ len(gold)
         
-        truePos =  sum([gold[i] in ['Present', 'Yes'] and pred[i] == ['Present', 'Yes'] for i in range(len(pred))])
-        falsePos = sum([gold[i] == ['Absent', 'No'] and pred[i] == ['Present', 'Yes'] for i in range(len(pred))])
-        trueNeg  = sum([gold[i] == ['Absent', 'No'] and pred[i] == ['Absent', 'No'] for i in range(len(pred))])
-        falseNeg = sum([gold[i] == ['Present', 'Yes'] and pred[i] == ['Absent', 'No'] for i in range(len(pred))])
+        truePos =  sum([gold[i] in ['Present', 'Yes'] and pred[i] in ['Present', 'Yes'] for i in range(len(pred))])
+        falsePos = sum([gold[i] in ['Absent', 'No'] and pred[i] in ['Present', 'Yes'] for i in range(len(pred))])
+        trueNeg  = sum([gold[i] in ['Absent', 'No'] and pred[i] in ['Absent', 'No'] for i in range(len(pred))])
+        falseNeg = sum([gold[i] in ['Present', 'Yes'] and pred[i] in ['Absent', 'No'] for i in range(len(pred))])
 
 
-        percision = 1. * truePos / (truePos + falsePos) if (truePos + falsePos) > 0 else 0
+        precision = 1. * truePos / (truePos + falsePos) if (truePos + falsePos) > 0 else 0
         recall    =  1. * truePos / (truePos + falseNeg) if (truePos + falseNeg) > 0 else 0
-        f1        =  2. * (percision * recall)  / (percision + recall) if (percision + recall) >0 else 0
+        f1        =  2. * (precision * recall)  / (precision + recall) if (precision + recall) >0 else 0
 
         res['precision'] = precision
         res['recall'] = recall
@@ -86,6 +86,7 @@ def main(mode='eval', outPath='/home/nlp/Dropbox (Partners HealthCare)/NLP_Resul
     overallRes['precision'] = sum([r['precision'] for r in results]) / len(results)
     overallRes['recall'] = sum([r['recall'] for r in results]) / len(results)
     overallRes['f1'] = sum([r['f1'] for r in results]) / len(results)
+    overallRes['percentPos'] = 'NA'
 
     results.append(overallRes)
 
@@ -94,7 +95,7 @@ def main(mode='eval', outPath='/home/nlp/Dropbox (Partners HealthCare)/NLP_Resul
     today = date.now().isocalendar()
     dateStr = "-".join([str(s) for s in today])
     path = outPath+dateStr+'.csv'
-    keys = ['name', 'accuracy']
+    keys = ['name', 'percentPos', 'accuracy', 'precision', 'recall', 'f1']
     print "Saving results to", path
     with open(path,'w') as outCSV:
         writer = DictWriter(outCSV, keys)

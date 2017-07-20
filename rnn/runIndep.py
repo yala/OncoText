@@ -13,6 +13,7 @@ from evalHelper import *
 from inputClasses import *
 import warnings
 from tqdm import tqdm
+import pdb
 
 warnings.filterwarnings("ignore")
 
@@ -199,8 +200,10 @@ def main(_):
     
     print("save_path", FLAGS.save_path)
 
+    sessConf = tf.ConfigProto(allow_soft_placement=True)
+    sessConf.gpu_options.allow_growth=True
 
-    with tf.Graph().as_default():
+    with tf.Session(config=sessConf) as session:
         initializer = tf.random_uniform_initializer(-1*config.init_scale, config.init_scale)
         models = {}
         for i, bucket in enumerate(config.bucket_lengths):
@@ -212,25 +215,20 @@ def main(_):
             diag = diagName(d)      
             diagLoss = tf.reduce_sum(tf.pack([models[b].costs[diag] for b in config.bucket_lengths]))
 
-            tf.scalar_summary(diag+" Loss", diagLoss)
 
         jointLoss = tf.reduce_sum(tf.pack([models[b].joint_loss for b in config.bucket_lengths]))
-        tf.scalar_summary("Joint Loss", jointLoss )
 
-        sessConf = tf.ConfigProto(allow_soft_placement=True)
-	    sessConf.gpu_options.allow_growth=True
-
-        
-        sv = tf.train.Supervisor(logdir=FLAGS.save_path, summary_op=None)
-        with sv.managed_session(config=sessConf) as session:
+        saver = tf.train.Saver( tf.get_collection( tf.GraphKeys.TRAINABLE_VARIABLES  ) )
+        if True: #temp debug statement    
             ### run regular adversarial training
             if unlabled_mode:
-		
+	        saver.restore( session,   tf.train.latest_checkpoint( FLAGS.save_path  ))	
        		eval_input = TestInput('devReps.p', config)
 		run_eval_epoch(session, models, eval_input, config)
                 label_dataset(session, models, dev_input, config, outPath = outPath, verbose=True)
 		print("Done labeling")
             else:
+                session.run( tf.global_variables_initializer() )
                 max_accur = 0
                 num_less = 0
                 for i in range(config.max_epoch):
@@ -246,24 +244,26 @@ def main(_):
                     train_cost  = run_epoch(session, models, train_input, config)
                     print("Epoch: %d Train Error: %.3f" % (i + 1, train_cost))
 
-                    if epoch_acur > max_accur and FLAGS.save_path:
-                        print("Saving model to %s." % FLAGS.save_path)
-                        sv.saver.save(session, 'jointRnn', global_step=i)
-                        max_accur = epoch_acur
+                    if epoch_acur >= max_accur:
+                        print("Saving model to %s." % (FLAGS.save_path+'/jmodel') )
+			saver.save(session, './'+FLAGS.save_path+'/jmodel' , global_step=i)
+			max_accur = epoch_acur
+
                         num_less = 0
 
                     if epoch_acur < max_accur:
                         num_less += 1
-
+                        print("num epochs without improve on dev", num_less)
+                   
                     if num_less >= 3:
-                        break
+                         break
 
 
 
 if __name__ == "__main__":
     runSolo = False
     if runSolo:
-        neuralFlags = { 'unlabled_mode':False, 'trainPath':'diagDictTrain.p'}
+        neuralFlags = { 'unlabled_mode':False, 'trainPath':'diagDictTrain_mghMar.p'}
         p.dump( neuralFlags, open('flags.p','wb'))
     tf.app.run()
     

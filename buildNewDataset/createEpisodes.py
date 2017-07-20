@@ -7,6 +7,8 @@ from operator import itemgetter
 import sys
 import copy
 sys.path.append("..")
+sys.path.append('preprocessDataset')
+import preprocessRawDb
 from constants import *
  
 random.seed(1)
@@ -74,6 +76,8 @@ def retagLabels(oldLabels, newLabels):
     assert len(oldLabels[0]) == len(cols) or not 'DOBPlusX' in oldLabels[0]
     results = []
     for i in range(len(oldLabels)):
+        if not len(newLabels[i]) == len(diagnoses):
+            print newLabels[i], "has len", len(newLabels[i]), "!=", len(diagnoses)
         assert len(newLabels[i]) == len(diagnoses)
         combinedLabels = newLabels[i] + oldLabels[i][len(diagnoses):]
         if 'PLACEHOLDER' in combinedLabels:
@@ -98,13 +102,13 @@ def buildExport(exportData, data, startIdx):
                     continue
                 yyyymmdd = date.split('T')[0]
                 try:
-                    date = datetime.datetime.strptime(yyyymmdd, '%Y-%m-%d')
+                    date = preprocessRawDb.utcToDate(date)#datetime.datetime.strptime(yyyymmdd, '%Y-%m-%d')
                     record[col] = date
                 except Exception, e:
-                    print yyyymmdd
-                    record[col] = yyyymmdd
-                    raw_input("unlabled to parse", yyyymmdd,"into datetime datetime object")
-                    assert False
+                    print date
+                    record[col] = date
+                    print "unlabled to parse", date,"into datetime datetime object"
+                    #assert False
             else:
                 record[col] = colVals[j]
         exportData[startIdx+i] = record
@@ -267,7 +271,11 @@ def validateRepsDB(reps, flex = False, dirty = False):
 
 # Aggregate reports into list of dicts for ReportDB format, and a list of flattened report sequences for EpisodeDB format
 def buildEpisodes(data, labelMaxDXBool, debug = False):
-
+    for i in data:
+        d = data[i]
+        d['MRNPlusX'] = d['MRN'] if 'MRN' in d else d['MRNPlusX']
+        d['Report_Date_TimePlusX'] = preprocessRawDb.utcToDate(d['Report_Date_Time'] if 'Report_Date_Time' in d else d['Report_Date_TimePlusX'])
+        data[i] = d
     mrns = {}
     for i in range(len(data)):
 

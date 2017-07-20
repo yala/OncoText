@@ -74,5 +74,5 @@ def evaluate(preds, golds, inputs = None):
 
     print("-----------------------------")
     
-    return averageAccuracy
+    return averageAccuracy[0]
 

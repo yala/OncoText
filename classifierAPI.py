@@ -227,6 +227,7 @@ def predict():
             r['Institution'] = r['MRN_Type']
     reportDB = aggregateEpisodes(reportDB)
     reportDB_Conv = exportToJSON.portToJSON(reportDB)
+    p.dump(reportDB_Conv, open('exportableDB_'+name+'.p','w'))
     reportDBJ = []
     reportDB_Eval = []
     reportDB_Pakis = []
@@ -244,9 +245,10 @@ def predict():
     p.dump(reportDBJ, open('returnedDB_'+name+'.p','w'))
     p.dump(reportDB_Eval, open('evalDB_'+name+'.p','w'))
     p.dump(reportDB_Pakis, open('pakistaniDB_'+name+'.p','w'))
-    evalModelRun.main()
+
     updateAccesDB(copy.deepcopy(reportDBJ))
     getAtypias.main()
+    evalModelRun.main()
     return json.dumps({'reportDB':reportDBJ})
 
 ################ Helpers ######################
@@ -266,7 +268,7 @@ def predictHelper(name):
     print "Calling build episode"
     reportDBBoost, episodeDB = createEpisodes.buildEpisodes(reportDB, True)
     p.dump(reportDBBoost, open('boostDB_'+name+'.p','w'))
-    #reportDBBoost = p.load(open('boostDB_'+name+'.p','r'))
+    reportDBBoost = p.load(open('boostDB_'+name+'.p','r'))
     neuralFlags = { 'unlabled_mode':True, 'unlabeledPath':'unlalbeldReps_'+name+".p", 'outPath':'lableledReps_'+name+'.p'}
 
     p.dump( neuralFlags, open('rnn/flags.p','w'))
@@ -357,7 +359,7 @@ def updateAccesDB(reportDB):
     cur.execute("CREATE TABLE "+backupNoBreastTableName+" LIKE "+reportsNoBreastTableName)
     cur.execute("INSERT INTO "+backupNoBreastTableName+" SELECT * FROM "+reportsNoBreastTableName)
     db.commit();
-    cur.execute("TRUNCATE TABLE "+backupNoBreastTableName)
+    cur.execute("TRUNCATE TABLE "+reportsNoBreastTableName)
     db.commit();
     print "done."
 
@@ -529,6 +531,8 @@ def aggregateEpisodes(data):
         if not sideKey in data[i]:
             print data[i]
 	    raw_input('sidekey is '+sideKey)
+        if not 'MRN' in data[i] and 'MRNPlusX' in data[i]:
+            data[i]['MRN'] = data[i]['MRNPlusX']
         try:
             if not data[i]['MRN'] in mrns:
                 mrns[data[i]['MRN']] = {}
@@ -537,8 +541,9 @@ def aggregateEpisodes(data):
             else:
                 mrns[data[i]['MRN']][data[i][sideKey]].append(data[i])
         except Exception, e:
-            print "exception e", e, "with keys", data[i].keys()
-            print "data[i]", data[i]
+           continue
+           # print "exception e", e, "with keys", data[i].keys()
+           # print "data[i]", data[i]
     #Structure : List of Reports with Episode IDs
     reportsDB = []
     episodeDateDict = {} ## Use this to store Date -> episode Id for each MRN. use this to reorder episodes by date

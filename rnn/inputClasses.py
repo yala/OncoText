@@ -38,9 +38,13 @@ class PathInput(object):
         # pad all sentences to match bucket length
         for diag in self.data.keys():
             batch_data = working_dict[diag]
-            inp = np.array([ np.hstack( [ \
-                    self.data[diag][0][i][0][:bucket], np.zeros(bucket-len(self.data[diag][0][i][0]))] \
-                ) for i in batch_data], dtype=np.int32)
+            inp = []
+            for i in batch_data:
+                if len( self.data[diag][0][i][0]) < bucket:
+                    inp.append( np.hstack( [self.data[diag][0][i][0], np.zeros( bucket - len( self.data[diag][0][i][0]) )] ) )
+                else:
+                    inp.append( self.data[diag][0][i][0][:bucket] )
+            inp = np.array( inp, dtype=np.int32)  
             tar = np.array([ self.data[diag][1][i] for i in batch_data], dtype=np.int32)
             assert inp.shape[-1] == bucket
             batch[diag] = inp, tar
@@ -102,9 +106,9 @@ class UnlabledInput(object):
 
     def __init__(self, path, config):
         self.data = p.load(open(path,'rb'))
-        evalOnly = False
-        if evalOnly:
-            self.data = [d for d in self.data if ('test_set' in d and d['test_set'] ) or ('pakistani' in d and d['pakistani'] )]
+        #evalOnly = False
+        #if evalOnly:
+        #    self.data = [d for d in self.data if ('test_set' in d and d['test_set'] ) or ('pakistani' in d and d['pakistani'] )]
         self.batch_size = config.batch_size
         self.config = config
         self.length = len(self.data)

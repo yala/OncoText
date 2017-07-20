@@ -41,7 +41,7 @@ def postProcessRules(db_train):
 
         for k in r.keys():
             if type(r[k]) is unicode:
-                r[k] = str(r[k])
+                r[k] = r[k].encode('ascii','replace')
             if r[k] in ["Present", "Yes", "Positive", "Anatomic", "breast"]:
                 r[k] = "1"
             if r[k] in ["Absent", "No", "Negative", "Cytology", "non-breast"]:
@@ -94,11 +94,14 @@ def filt(report, validKeys, blackout):
 
 
 def updateAccesDB(reportDB, tableName):
-
+   
+    reportDB = postProcessRules(reportDB)
     print "Exporting", len(reportDB), "breast records to name", tableName
 
     db = MySQLdb.connect(host="localhost",user="root",passwd="nlpdb",db="reports")
     cur = db.cursor()
+    cur.execute("TRUNCATE TABLE "+tableName)
+    db.commit()
     dbKeys, placeholders = [k for k in accessDbKeys if k in reportDB[0]], ["%s" for i in accessDbKeys if i in reportDB[0] ]
     
 
@@ -253,7 +256,6 @@ def main():
                 del r["ruleBreastSide"]
 
         p.dump(resultRecords, open('atypiaExport.p','wb'))
-        resultRecords = postProcessRules(resultRecords)
 
         keys = [k for k in key_order_convention if k in resultRecords[0].keys()] + ['Report_Date_Time', 'MRN', 'EMPI']
         filtRecs = []

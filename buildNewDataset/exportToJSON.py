@@ -17,8 +17,8 @@ def portToJSON(data, path=None, episodeMode = False, write=False):
         try:
             for k in report:
                 l = report[k]
-                if isinstance(l, datetime.datetime) or isinstance(l, datetime.date):
-                    report[k] = preprocessRawDb.utcToDate(l).isoformat()
+                if k in ['Report_Date_Time','Report_Date_TimePlusX']:
+                    report[k] = preprocessRawDb.utcToDate(l).isoformat().split('T')[0]
         except Exception, e:
             print 'wtf'
             print report
