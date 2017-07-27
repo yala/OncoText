@@ -1,8 +1,8 @@
 #!/bin/bash
-pathTypes1=("Red_CancerSuspicious" "Red_TubularCancer" "Red_InvasiveSuspicious" "Red_SuspiciousForPhyllodes" "TumorGrade" "Oncotype_score" "Red_CancerInvInsituNOS" "Red_InsituNOS" )
-pathTypes2=("Red_InvasiveSuspicious" "Red_CancerNOS" "Red_Phylodes" "Red_ADH_DCIS" "BiopsyType" "Red_DCIS" "Red_LCIS" "Red_IDC" "Red_ILC" "Red_ALH" "Red_ADH" "Red_LobularNeoplasia")
-pathTypes3=("atypia" "Are_there_positive_LN?" "ITC" "PR"  "Her2_(Fish)" "ER" "ECE" "LVI" "BVI" "Red_FlatEpithelial" "Red_BluntAdenosis" "Red_BreastSide" "cancer")
-pathTypes4=("Red_DCIS" "Red_LCIS" "Red_IDC" "Red_Papill" 'Red_CancerInvasive'  'Red_CancerInvNOS'  'NodeTissue'  'CancerNotOfBreastOrigin' 'PathologyType' 'Organ')
+pathTypes1=("Red_CancerSuspicious" "Red_TubularCancer" "Red_InvasiveSuspicious" "Red_SuspiciousForPhyllodes"   "Red_CancerInvInsituNOS" "Red_InsituNOS" )
+pathTypes2=("Red_InvasiveSuspicious" "Red_CancerNOS"  "BiopsyType" "Her2" "Her2_IHC" "ER_Intensity" "PR_Intensity")
+pathTypes3=( "ITC" "PR"  "Her2_(Fish)" "ER" "ECE" "LVI" "BVI" 'PathologyType' 'Organ')
+pathTypes4=( "Red_Papill" 'Red_CancerInvasive'  'Red_CancerInvNOS'  'NodeTissue'  'CancerNotOfBreastOrigin' )
 stem="$1"
 outStem="../../../classification_results/API/$1"
 

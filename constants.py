@@ -35,12 +35,12 @@ if MODE == "TAGHIAN":
     'Red SuspiciousForPhyllodes',
     'Red CancerSuspicious', 'Red TubularCancer', 'Red Papill',
     'Red CancerInvasive', 'Red CancerInvNOS', 'NodeTissue', 'CancerNotOfBreastOrigin', 'PathologyType',
-    "Organ"  ]
+    "Organ", "ER_Intensity", "PR_Intensity", "Her2", "Her2_IHC"  ]
 
   boostexer_diagnoses = ['ITC ', 'Red CancerNOS', 'BiopsyType', 'Red BluntAdenosis',
   'Red CancerInvInsituNOS', 'Are there positive LN?', 'PR', 'Her2 (Fish)', 'ER', 'ECE', 'LVI', 'BVI',
   'Red CancerInvasive', 'Red CancerInvNOS', 'NodeTissue', 'CancerNotOfBreastOrigin', 'PathologyType',
-  "Organ",
+  "Organ", "ER_Intensity", "PR_Intensity", "Her2", "Her2_IHC"
   ]
 
   feb_new_diagnoses = ['Red CancerInvasive', 'Red CancerInvNOS', 'NodeTissue', 'CancerNotOfBreastOrigin', 'PathologyType', "Organ"
@@ -68,13 +68,14 @@ if MODE == "TAGHIAN":
   'ALH','ADH', 'FlatEpithelial', 'LCIS', 'ADH_DCIS', 'LobularNeoplasia'
   ]
 
+
   key_order = ['Report_Text_Segmented' , 'Report_Text', "Organ", "PathologyType",'Red BreastSide' ,'Red CancerSuspicious' ,'Red InvasiveSuspicious',
   'Red CancerInvInsituNOS','Red InsituNOS','Red IDC','Red ILC','Red TubularCancer', 'Red CancerInvasive', 'Red CancerInvNOS', 'CancerNotOfBreastOrigin', 
-  'Red DCIS', 'cancer', 'ER', 'PR', 'Her2 (Fish)', 'Are there positive LN?','ECE','ITC ' ,'BVI', 'LVI'  ,'Red LCIS',
+  'Red DCIS', 'cancer', 'ER', "ER_Intensity", 'PR',"PR_Intensity", "Her2", 'Her2 (Fish)',  "Her2_IHC", 'Are there positive LN?','ECE','ITC ' ,'BVI', 'LVI'  ,'Red LCIS',
   'Red LobularNeoplasia','Red ALH', 'Red ADH_DCIS', 'Red ADH' ,'Red FlatEpithelial' ,'Red Phylodes',
   'Red SuspiciousForPhyllodes', 'Red Papill']
 
-  markers = [ 'ER', 'PR', 'Her2 (Fish)',  'Are there Positive LN?','ECE','ITC' ,'BVI', 'LVI']
+  markers = [ 'ER', "ER_Intensity", 'PR',"PR_Intensity", "Her2", 'Her2 (Fish)',  "Her2_IHC",  'Are there Positive LN?','ECE','ITC' ,'BVI', 'LVI']
   groupings = {
     "atypias": [ 'Report_Text_Segmented', 'Red BreastSide', 'Red LCIS',
         'Red LobularNeoplasia','Red ALH', 'Red ADH_DCIS', 'Red ADH' ,'Red FlatEpithelial'],
@@ -94,7 +95,9 @@ if MODE == "TAGHIAN":
   diagToConventionDict = {
     'Are there positive LN?': 'Are there positive LN?' ,
     'ITC ':'ITC',
-    'Her2 (Fish)':'Her2',
+    'Her2':'Her2',
+    'Her2 (Fish)':'Her2Fish',
+    'Her2_IHC':'Her2_IHC',
     'Red ILC':'ILC',
     'Red ALH':'ALH',
     'Red DCIS':'DCIS',
@@ -170,6 +173,7 @@ if MODE == "TAGHIAN":
       'CancerNotOfBreastOrigin':'Absent', #CancerNotOfBreastOrigin
       'PathologyType':'Anatomic',
       "Organ":"non-breast"
+      "ER_Intensity":"NA", "PR_Intensity":"NA", "Her2":"NA", "Her2_IHC":"NA"
       }
 
 
@@ -182,6 +186,10 @@ if MODE == "TAGHIAN":
     'Her2 (Fish)': ['Positive', 'Negative','NA'],
     'ITC ': ['Yes', 'No'],
     'PR': ['NA', 'Negative', 'Positive'],
+    "ER_Intensity":["NA", 'Negative', "Weak", 'Moderate','Strong'], 
+    "PR_Intensity":["NA", 'Negative', "Weak", 'Moderate','Strong'], 
+    "Her2":["NA",'Negative','Positive','Equivocal'], 
+    "Her2_IHC":["NA",'Negative','1+','2+','3+','4+']
     'BiopsyType': ['Core', 'Excision', 'NA', 'Other'],
     'ECE': ['Yes', 'No', 'NA'],
     'LVI': ['Yes', 'No', 'NA'],
@@ -227,6 +235,10 @@ if MODE == "TAGHIAN":
     'ECE': {'1':'Yes', '0':'No', '9':'NA'},
     'LVI': {'1':'Yes', '0':'No', '9':'NA'},
     'BVI': {'1':'Yes', '0':'No', '9':'NA'},
+    "ER_Intensity":{'9':"NA", '0':'Negative', '1':"Weak", '2':'Moderate','3':'Strong'}, 
+    "PR_Intensity":{'9':"NA", '0':'Negative', '1':"Weak", '2':'Moderate','3':'Strong'}, 
+    "Her2":{'9':"NA",'0':'Negative','1':'Positive','999':'Equivocal'}, 
+    "Her2_IHC":{'9':"NA",'0':'Negative','1':'1+','2':'2+','3':'3+','4':'4+'}
     'Red DCIS':  {'1':'Present','0':'Absent'},
     'Red LCIS': {'1':'Present','0':'Absent'},
     'Red IDC': {'1':'Present','0':'Absent'},
@@ -300,7 +312,9 @@ if MODE == "TAGHIAN":
     'Report_Date_Time':'Report_Date_Time',
     'Are there positive LN?':'PositiveLN',
     'ITC':'ITC',
-    'Her2':'Her2Fish',
+    'Her2':'Her2',
+    'Her2_IHC':'Her2_IHC',
+    'Her2Fish':'Her2Fish',
     'ILC':'ILC',
     'ALH':'ALH',
     'DCIS':'DCIS',
@@ -343,7 +357,11 @@ if MODE == "TAGHIAN":
     'PathologyType':'PathologyType',
     'Report_Text_Segmented':'Report_Text_Segmented',
     'LVI':'LVI',
-    'EMPI':'EMPI'
+    'EMPI':'EMPI',
+    "ER_Intensity":"ER_Intensity",
+    "PR_Intensity":"PR_Intensity",
+    "Her2":"Her2",
+    "Her2_IHC":"Her2_IHC"
     }
 
   AccessDbToGregDict = {v: k for k, v in gregToAccessDbDict.items()}
@@ -355,7 +373,36 @@ if MODE == "TAGHIAN":
 
 
 
-
+  gregToMongoDict = {       
+                'Are there positive LN?':'PositiveLN',
+                'HER2':'Her2',
+                'Her2Fish':'Her2 (Fish)',
+                'Her2_IHC':'Her2_IHC',
+                'ITC ':'ITC',
+                'Red ILC':'ILC',
+                'Red ALH':'ALH',
+                'Red DCIS':'DCIS',
+                'Red LCIS':'LCIS',
+                'Red IDC':'IDC',
+                'Red ADH':'ADH',
+                'Red BreastSide':'BreastSide',
+                'Red FlatEpithelial':'FlatEpithelial',
+                'Red BluntAdenosis':'BluntAdenosis',
+                'Red LobularNeoplasia':'LobularNeoplasia',
+                'Red ADH_DCIS':'ADH_DCIS',
+                'Red Phylodes':'Phylodes',
+                'Red CancerNOS':'CancerNOS',
+                'Red InvasiveSuspicious':'InvasiveSuspicious',
+                'Red InsituNOS':'InsituNOS',
+                'Red CancerInvInsituNOS':'CancerInvInsituNOS',
+                'Red SuspiciousForPhyllodes':'SuspiciousForPhyllodes',
+                'Red CancerSuspicious':'CancerSuspicious',
+                'Red TubularCancer':'TubularCancer',
+                'Red Papill':'Papill',
+                'Red CancerInvasive':'CancerInvasive',
+                'Red CancerInvNOS':'CancerInvNOS',
+                'Oncotype score':'OncotypeScore'  
+                }                                                                                                                                                     }
 
 
 
