@@ -76,14 +76,14 @@ def retagLabels(oldLabels, newLabels):
     assert len(oldLabels[0]) == len(cols) or not 'DOBPlusX' in oldLabels[0]
     results = []
     for i in range(len(oldLabels)):
-        if not len(newLabels[i]) == len(diagnoses):
-            print newLabels[i], "has len", len(newLabels[i]), "!=", len(diagnoses)
-        assert len(newLabels[i]) == len(diagnoses)
-        combinedLabels = newLabels[i] + oldLabels[i][len(diagnoses):]
+        if not len(newLabels[i]) == len(boostexer_diagnoses):
+            print newLabels[i], "has len", len(newLabels[i]), "!=", len(boostexer_diagnoses)
+        assert len(newLabels[i]) == len(boostexer_diagnoses)
+        combinedLabels = newLabels[i] + oldLabels[i][len(boostexer_diagnoses):]
         if 'PLACEHOLDER' in combinedLabels:
             print "newLabels", zip(cols,newLabels)
             print "old Labels", zip(cols, oldLabels)
-            print "oldSupPart", zip(cols, oldLabels)[len(diagnoses):]
+            print "oldSupPart", zip(cols, oldLabels)[len(boostexer_diagnoses):]
             raw_input()
         assert not 'PLACEHOLDER' in combinedLabels
         results.append( combinedLabels)
@@ -126,7 +126,7 @@ def getLabelsAndReports(data):
         diags = []
         sample = data[i]
 
-        for diag in diagnoses:    
+        for diag in boostexer_diagnoses:    
             if diag in sample and not sample[diag] == None and sample[diag] in labelDict[diag]:
                 diags.append(sample[diag])
 
@@ -161,7 +161,7 @@ def say(s):
 def parseResultsFiles(stem, debug = False):
     results = []
     i = 0
-    for diag in diagnoses:
+    for diag in boostexer_diagnoses:
         with open(stem+replaceSpaces(diag)+".txt", "rb") as f:
             samples = f.readlines()
 
@@ -197,7 +197,7 @@ def parseResultsFiles(stem, debug = False):
 
     if debug:
         print 'len(results)', len(results)
-        print 'len(results)[0]', 'len(diagnoses):', len(results[0]), len(diagnoses)
+        print 'len(results)[0]', 'len(boostexer_diagnoses):', len(results[0]), len(boostexer_diagnoses)
     return results
 
 #Iterate though reports in data-dict and get maxDx
@@ -246,13 +246,13 @@ def getMaxDXSingleReport(report):
 ## dirty flag is useful for when we aren't enforcing that the values are in the label dict, pre-preprocess
 def validateRepsDB(reps, flex = False, dirty = False):
     for r in reps:
-        checks = diagnoses + hueLabels if MODE == "TAGHIAN" else diagnoses
+        checks = boostexer_diagnoses + hueLabels if MODE == "TAGHIAN" else boostexer_diagnoses
     
         for c in checks:
             assert flex or c in r
 
             if MODE == "TAGHIAN":
-                if c in diagnoses:
+                if c in boostexer_diagnoses:
                     if flex:
                         if c in r and not( replaceSpaces(r[c]) in labelDict[c] or dirty):
                             print 'r[c]',  r[c]
@@ -372,7 +372,7 @@ def buildEpisodes(data, labelMaxDXBool, debug = False):
             episode[label] = reports[0][label]
 
 
-        for diag in diagnoses:
+        for diag in boostexer_diagnoses:
             res = defaultLabelDict[diag]
             lastRep = ''
             for rep in reports:

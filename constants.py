@@ -40,7 +40,7 @@ if MODE == "TAGHIAN":
   boostexer_diagnoses = ['ITC ', 'Red CancerNOS', 'BiopsyType', 'Red BluntAdenosis',
   'Red CancerInvInsituNOS', 'Are there positive LN?', 'PR', 'Her2 (Fish)', 'ER', 'ECE', 'LVI', 'BVI',
   'Red CancerInvasive', 'Red CancerInvNOS', 'NodeTissue', 'CancerNotOfBreastOrigin', 'PathologyType',
-  "Organ", "ER_Intensity", "PR_Intensity", "Her2", "Her2_IHC"
+  "Organ", "Her2", "Her2_IHC"#, "ER_Intensity", "PR_Intensity"
   ]
 
   feb_new_diagnoses = ['Red CancerInvasive', 'Red CancerInvNOS', 'NodeTissue', 'CancerNotOfBreastOrigin', 'PathologyType', "Organ"
@@ -172,7 +172,7 @@ if MODE == "TAGHIAN":
       'NodeTissue':'Absent', #'Node_x0020_tissue'
       'CancerNotOfBreastOrigin':'Absent', #CancerNotOfBreastOrigin
       'PathologyType':'Anatomic',
-      "Organ":"non-breast"
+      "Organ":"non-breast",
       "ER_Intensity":"NA", "PR_Intensity":"NA", "Her2":"NA", "Her2_IHC":"NA"
       }
 
@@ -189,7 +189,7 @@ if MODE == "TAGHIAN":
     "ER_Intensity":["NA", 'Negative', "Weak", 'Moderate','Strong'], 
     "PR_Intensity":["NA", 'Negative', "Weak", 'Moderate','Strong'], 
     "Her2":["NA",'Negative','Positive','Equivocal'], 
-    "Her2_IHC":["NA",'Negative','1+','2+','3+','4+']
+    "Her2_IHC":["NA",'Negative','1+','2+','3+','4+'],
     'BiopsyType': ['Core', 'Excision', 'NA', 'Other'],
     'ECE': ['Yes', 'No', 'NA'],
     'LVI': ['Yes', 'No', 'NA'],
@@ -238,7 +238,7 @@ if MODE == "TAGHIAN":
     "ER_Intensity":{'9':"NA", '0':'Negative', '1':"Weak", '2':'Moderate','3':'Strong'}, 
     "PR_Intensity":{'9':"NA", '0':'Negative', '1':"Weak", '2':'Moderate','3':'Strong'}, 
     "Her2":{'9':"NA",'0':'Negative','1':'Positive','999':'Equivocal'}, 
-    "Her2_IHC":{'9':"NA",'0':'Negative','1':'1+','2':'2+','3':'3+','4':'4+'}
+    "Her2_IHC":{'9':"NA",'0':'Negative','1':'1+','2':'2+','3':'3+','4':'4+'},
     'Red DCIS':  {'1':'Present','0':'Absent'},
     'Red LCIS': {'1':'Present','0':'Absent'},
     'Red IDC': {'1':'Present','0':'Absent'},
@@ -401,9 +401,7 @@ if MODE == "TAGHIAN":
                 'Red Papill':'Papill',
                 'Red CancerInvasive':'CancerInvasive',
                 'Red CancerInvNOS':'CancerInvNOS',
-                'Oncotype score':'OncotypeScore'  
-                }                                                                                                                                                     }
-
+                'Oncotype score':'OncotypeScore'  }
 
 
   JSONLabelNameDict = diagToConventionDict
