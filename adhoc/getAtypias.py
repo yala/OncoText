@@ -100,7 +100,12 @@ def updateAccesDB(reportDB, tableName):
 
     db = MySQLdb.connect(host="localhost",user="root",passwd="nlpdb",db="reports")
     cur = db.cursor()
-    cur.execute("TRUNCATE TABLE "+tableName)
+    try: 
+        cur.execute("DROP TABLE "+ tableName)
+    except Exception, e:
+        pass
+
+    cur.execute("CREATE TABLE "+tableName +" LIKE "+ reportsTableName)
     db.commit()
     dbKeys, placeholders = [k for k in accessDbKeys if k in reportDB[0]], ["%s" for i in accessDbKeys if i in reportDB[0] ]
     

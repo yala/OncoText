@@ -6,16 +6,15 @@ import pprint
 from operator import itemgetter
 import sys
 import copy
-sys.path.append("..")
-sys.path.append('preprocessDataset')
+sys.path.append("/home/nlp/pathology")
+sys.path.append('/home/nlp/pathology/preprocessDataset')
 import preprocessRawDb
 from constants import *
- 
 random.seed(1)
 labelDict = constantValidLabelDict
 
 # Read boost result files and consolidate into a single database format
-def aggregateResults(allData, stem):
+def aggregateResults(allData, stem, export_as_list=False):
 
     #valid input db isn't corrupted
 
@@ -67,6 +66,9 @@ def aggregateResults(allData, stem):
 
     assert len(exportableData) == len(restLabels)
 
+    if export_as_list:
+        db_as_list = [exportableData[k] for k in exportableData]
+	return db_as_list
     return exportableData
 
 # HELPER: read the result files and return the tags
@@ -440,9 +442,9 @@ def removeUnexpectedColumns(allData):
     return cleanData
 
 if __name__ == "__main__": 
-    allDataPath = redRawDBPath
-    allData = p.load(open(allDataPath, 'rb'))  
-    run(allData, "../classification_results/Breast/red_class_results_all_", save=True)
+    allDataPath = '/home/nlp/pathology/reportDBAPI_test.p'
+    allData = p.load(open(allDataPath, 'rb'))['mghMar']
+    aggregateResults(allData, "/home/nlp/pathology/classification_results/API/Prod_mghMar_")
 
 
 
