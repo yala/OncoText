@@ -262,13 +262,9 @@ def predictHelper(name):
     ## aggregate boost predict
     stem = "classification_results/API/Prod_"+name+"_"
     db_unlabeled = p.load(open(DB_UNLABLED_PATH,'rb'))[name]
-    reportDB = createEpisodes.aggregateResults(db_unlabeled, stem)
-    print "Calling labelMaxDXBool"
-    createEpisodes.getMaxDX(reportDB)
-    print "Calling build episode"
-    reportDBBoost, episodeDB = createEpisodes.buildEpisodes(reportDB, True)
+    reportDBBoost = createEpisodes.aggregateResults(db_unlabeled, stem, export_as_list=True)
     p.dump(reportDBBoost, open('boostDB_'+name+'.p','w'))
-    reportDBBoost = p.load(open('boostDB_'+name+'.p','r'))
+    #reportDBBoost = p.load(open('boostDB_'+name+'.p','r'))
     neuralFlags = { 'unlabled_mode':True, 'unlabeledPath':'unlalbeldReps_'+name+".p", 'outPath':'lableledReps_'+name+'.p'}
 
     p.dump( neuralFlags, open('rnn/flags.p','w'))
@@ -324,7 +320,6 @@ def updateAccesDB(reportDB):
 
     print "Exporting breast records..."
     sql = ("insert into "+reportsTableName+" ("+", ".join(dbKeys)+") VALUES ("+", ".join(placeholders)+")")
-    print reportDBJ[0]
     for report in reportDBJ:
         try:
             values = [report[AccessDbToGregDict[k]] for k in dbKeys]

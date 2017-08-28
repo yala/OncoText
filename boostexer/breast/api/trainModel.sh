@@ -2,7 +2,7 @@
 pathTypes1=("Red_CancerSuspicious" "Red_TubularCancer" "Red_InvasiveSuspicious" "Red_SuspiciousForPhyllodes"   "Red_CancerInvInsituNOS" "Red_InsituNOS" )
 pathTypes2=("Red_InvasiveSuspicious" "Red_CancerNOS"  "BiopsyType" "Her2" "Her2_IHC" "ER_Intensity" "PR_Intensity")
 pathTypes3=( "ITC" "PR"  "Her2_(Fish)" "ER" "ECE" "LVI" "BVI" 'PathologyType' 'Organ')
-pathTypes4=( "Red_Papill" 'Red_CancerInvasive'  'Red_CancerInvNOS'  'NodeTissue'  'CancerNotOfBreastOrigin' )
+pathTypes4=( "Red_Papill" 'Red_CancerInvasive'  'Red_CancerInvNOS'  'NodeTissue'  'CancerNotOfBreastOrigin' "Red_BluntAdenosis" "Are_there_positive_LN?")
 stem="$1"
 outStem="../../../classification_results/API/$1"
 

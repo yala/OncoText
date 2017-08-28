@@ -109,4 +109,4 @@ def main(mode='eval', outPath='/home/nlp/Dropbox (Partners HealthCare)/NLP_Resul
 
 
 if __name__ == "__main__":
-    main()
+    main(sendText=False)
