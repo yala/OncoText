@@ -1,12 +1,13 @@
 import cPickle as p
 from constants import *
-import sys
-sys.path.append("buildNewDataset")
-sys.path.append("trainClassifier")
-sys.path.append("preprocessDataset")
-sys.path.append("analysis")
-sys.path.append("rnn")
-sys.path.append("adhoc")
+import sys, os
+sys.path.append("/home/nlp/pathology/")
+sys.path.append("/home/nlp/pathology/buildNewDataset")
+sys.path.append("/home/nlp/pathology/trainClassifier")
+sys.path.append("/home/nlp/pathology/preprocessDataset")
+sys.path.append("/home/nlp/pathology/analysis")
+sys.path.append("/home/nlp/pathology/rnn")
+sys.path.append("/home/nlp/pathology/adhoc")
 import createEpisodes
 import preprocessTrain
 import preprocessUnlabeled
@@ -23,7 +24,7 @@ from flask import Flask
 from flask import render_template
 from flask import request
 import json
-from datetime import datetime
+from datetime import date, datetime
 import re
 import MySQLdb
 import copy
@@ -31,16 +32,18 @@ import time
 
 app = Flask(__name__)
 app.config.from_object(__name__)
-DB_TRAIN_PATH = "reportDBAPI_train.p"
-DB_UNLABLED_PATH = "reportDBAPI_test.p"
+CURR_PATH = "/home/nlp/pathology/"
+DB_TRAIN_PATH = CURR_PATH+"reportDBAPI_train.p"
+DB_UNLABLED_PATH = CURR_PATH+"reportDBAPI_test.p"
 
 
 
 ## Handle relevant initialization of files
 
-rawPath = "reportDB+red+clean.p"
-additPath = "additionalTrainRepsMar10.p"
+rawPath = CURR_PATH+"reportDB+red+clean.p"
+additPath = CURR_PATH+"additionalTrainRepsMar10.p"
 raws = p.load(open(rawPath,'rb')) + p.load( open(additPath,'rb'))
+
 
 def hasCat(r, cat, loose=False):
     for c in cat:
@@ -72,9 +75,10 @@ except Exception, e:
     db_train = {'default':base}
     db_unlabeled = {'default': base[:10]}
     neuralTrain = preprocessTrain.main(base)
-    p.dump(neuralTrain, open('rnn/diagDictTrain.p','wb'))
+    p.dump(neuralTrain, open(CURR_PATH+'rnn/diagDictTrain.p','wb'))
     p.dump(db_train, open(DB_TRAIN_PATH,'wb'))
     p.dump(db_unlabeled, open(DB_UNLABLED_PATH,'wb'))
+
 
 
 
@@ -150,6 +154,7 @@ def addUnlabeledData():
         for d in diagnoses:
             if d in r:
                 r['TaghianGold'] = 1
+        r['Report_Text_Segmented'] = preprocessText(r['Report_Text_Segmented'])
 
     db_unlabeled[name].extend(data)
     p.dump(db_unlabeled, open(DB_UNLABLED_PATH,'wb'))
@@ -214,44 +219,91 @@ def train():
     subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
     return "Success"
 
+evalDir = '/home/nlp/Dropbox (Partners HealthCare)/Extraction/EvalSets/'
 ## Kicks off job to run model on the corresping data
 ## Will return all unlabeled data
 @app.route("/predict", methods=['GET'])
 def predict():
-    #return p.load(open('returnedDB_'+name+'.p','w'))
     name = request.args.get("name") or "default"
-    reportDB = predictHelper(name)
-    #reportDB = p.load(open('validateDB_'+name+'.p','rb'))
+    if request.args.get("debug") == "True":
+        reportDB = p.load(open('validateDB_'+name+'.p', 'rb'))
+    else:
+        reportDB = predictHelper(name)
+
     for r in reportDB:
         if 'MRN_Type' in r:
             r['Institution'] = r['MRN_Type']
     reportDB = aggregateEpisodes(reportDB)
-    reportDB_Conv = exportToJSON.portToJSON(reportDB)
-    p.dump(reportDB_Conv, open('exportableDB_'+name+'.p','w'))
-    reportDBJ = []
-    reportDB_Eval = []
-    reportDB_Pakis = []
-    for r in reportDB_Conv:
-        if 'test_set' in r and r['test_set']:
-            reportDB_Eval.append(r)
-        elif 'pakistani' in r and r['pakistani']:
-            reportDB_Pakis.append(r)
-        else:
-            reportDBJ.append(r)
-    print "len reportDB", len(reportDBJ)
-    print "len test set", len(reportDB_Eval)
-    print "len pakistani set", len(reportDB_Pakis)
+    reportDB = exportToJSON.portToJSON(reportDB)
+    p.dump(reportDB, open('exportableDB_'+name+'.p','w'))
+    #reportDBJ = []
+    # reportDB_Eval = []
+    # reportDB_Pakis = []
+    #for r in reportDB_Conv:
+        # if 'test_set' in r and r['test_set']:
+        #     reportDB_Eval.append(r)
+        # elif 'pakistani' in r and r['pakistani']:
+        #     reportDB_Pakis.append(r)
+        # else:
+        #reportDBJ.append(r)
+    print "len reportDB", len(reportDB)
+    # print "len test set", len(reportDB_Eval)
+    # print "len pakistani set", len(reportDB_Pakis)
 
-    p.dump(reportDBJ, open('returnedDB_'+name+'.p','w'))
-    p.dump(reportDB_Eval, open('evalDB_'+name+'.p','w'))
-    p.dump(reportDB_Pakis, open('pakistaniDB_'+name+'.p','w'))
+    p.dump(reportDB, open('returnedDB_'+name+'.p','w'))
+    # p.dump(reportDB_Eval, open('evalDB_'+name+'.p','w'))
+    # p.dump(reportDB_Pakis, open('pakistaniDB_'+name+'.p','w'))
 
-    updateAccesDB(copy.deepcopy(reportDBJ))
+    updateAccesDB(copy.deepcopy(reportDB))
     getAtypias.main()
-    evalModelRun.main()
-    return json.dumps({'reportDB':reportDBJ})
+    for goldset in os.listdir(evalDir):
+        if goldset.endswith('.xlsx'):
+            evalModelRun.main(goldset)
+    pruneNonBreast(reportDB, name)
+    for r in reportDB:
+        for k in r:
+            if isinstance(r[k], (datetime, date)):
+                r[k] = r[k].isoformat()
+    return json.dumps({'reportDB':reportDB})
 
 ################ Helpers ######################
+def pruneNonBreast(reportDB, name):
+    print("Loading db_unlabeled...")
+    #reportDB = p.load(open('/home/nlp/pathology/validateDB_'+name+'.p'))
+    nonbreast_path = '/home/nlp/pathology/reportDBAPI_nonbreasts.p'
+    db_unlabeled = p.load(open(DB_UNLABLED_PATH,'rb'))
+    print("Finding non-breast reports...")
+    
+    if os.path.exists(nonbreast_path):
+       nonbreasts_unlabeled = p.load(open(nonbreast_path, 'rb'))
+    else:
+       nonbreasts_unlabeled = {name: []}
+
+    count = 0
+    for r in reportDB:
+        if r['Organ'].lower() != 'breast':
+            matchingReports = [i for i in range(len(db_unlabeled[name])) if db_unlabeled[name][i]['Report_Text_Segmented']==r['Report_Text_Segmented']]
+            #print(matchingReports, r['Organ'])
+            count += len(matchingReports)
+            for j in reversed(matchingReports):
+                nonbreasts_unlabeled[name].append(db_unlabeled[name].pop(j))
+
+    p.dump(db_unlabeled, open(DB_UNLABLED_PATH,'wb'))
+    p.dump(nonbreasts_unlabeled, open(nonbreast_path, 'wb'))
+    print("Moved "+str(count)+" non-breast reports to "+nonbreast_path+"!")
+
+def pruneEvals(name):
+    print("Loading db_unlabeled...")
+    db_unlabeled = p.load(open(DB_UNLABLED_PATH,'rb'))
+    print("Finding gold reports...")
+    count = 0
+    for r in reversed(db_unlabeled[name]):
+        if 'filename' in r and r['filename'] in os.listdir(evalDir):
+            db_unlabeled[name].remove(r)
+            count += 1
+    p.dump(db_unlabeled, open(DB_UNLABLED_PATH,'wb'))
+    print("Deleted "+str(count)+" gold reports!")
+
 def predictHelper(name):
     ## run boost predict
     mode = "Prod"
@@ -287,6 +339,7 @@ def predictHelper(name):
 
 #sends all breast reports to the AccessDB
 def updateAccesDB(reportDB):
+    reportDB = [r for r in reportDB if ('filename' in r and r['filename'] not in os.listdir(evalDir))]
     reportDB = postProcessRules(reportDB)
     reportDB = aggregateEpisodes(reportDB)
     #reportDB = exportToJSON.portToJSON(reportDB)
@@ -418,6 +471,7 @@ def preprocessText(text):
     cleanText = cleanText.lower()
     return cleanText
 
+
 def mergeDBs(boost, cnn):
     mergeDB = []
     #assert len(boost) == len(cnn)
@@ -456,6 +510,7 @@ def applyCorrections(test, gold):
     	text = preprocessText(t['Report_Text_Segmented'])
         t['validated'] = text in textToLabel
         if text in textToLabel:
+            t['train'] = 1
             for d in textToLabel[text]:
                 if d in t  and d in diagnoses and not t[d] == textToLabel[text][d]:
                     corrections += 1
@@ -486,6 +541,9 @@ def postProcessRules(db_train):
     print(db_train[0].keys())
 
     for r in db_train:
+        if not "filename" in r:
+            r['filename'] = "Unknown"
+
         if hasCat(r, const_cancers_mod):
             r['cancer'] = 'Present'
         else:
@@ -500,8 +558,8 @@ def postProcessRules(db_train):
                 r[k] = 'NA'
 
         for k in r.keys():
-            if type(r[k]) is unicode:
-                r[k] = str(r[k])
+            #if type(r[k]) is unicode:
+                #r[k] = r[k]
             if r[k] in ["Present", "Yes", "Positive", "Anatomic", "breast"]:
                 r[k] = "1"
             if r[k] in ["Absent", "No", "Negative", "Cytology", "non-breast"]:

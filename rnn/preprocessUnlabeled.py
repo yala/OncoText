@@ -7,6 +7,7 @@ from constants import *
 import re
 import numpy as np
 sys.path.append('../preprocessDataset')
+sys.path.append('/home/nlp/pathology/rnn')
 from aggregateDatasets import parseXLS
 
 
@@ -75,9 +76,9 @@ def main(allReps, dev=False, outname='unlabledReps.p'):
         # for i,s in enumerate(allSentences):
         #   allSentences[i] = preprocessText(s)
         
-        model = word2vec.load('rnn/embeddings.bin')
-        embeddings = model.vectors
-        vocab      = model.vocab
+        #model = word2vec.load('rnn/embeddings.p')
+        #embeddings = model.vectors
+        #vocab      = model.vocab
 
         
         

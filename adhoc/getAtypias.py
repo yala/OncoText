@@ -1,5 +1,5 @@
 import cPickle as p
-import sys
+import sys, os
 sys.path.append("..")
 sys.path.append("../preprocessDataset")
 from preprocessRawDb import *
@@ -71,7 +71,7 @@ def getMRNDB(db):
     for mrn in mrns:
         reports = mrns[mrn]
         
-        sortedReports = sorted( reports, key=itemgetter('Report_Date_Time') )
+        sortedReports = sorted( reports, key=lambda x: x.get('Report_Date_Time', "") )
 
         mrns[mrn] = sortedReports
 
@@ -154,7 +154,7 @@ def main():
     dataPath = "/home/nlp/pathology/returnedDB_mghMar.p"
 
     db = p.load( open (dataPath, 'rb'))
-    db = [d for d in db if d['Organ'] == 'breast']
+    db = [d for d in db if ((d['Organ'] == 'breast') and (('filename' not in d) or (d['filename'] not in os.listdir('/home/nlp/Dropbox (Partners HealthCare)/Extraction/EvalSets'))))]
     print "len seed DB", len(db)
 
     exportPaths = ["allFEAsTable", "allADHsTable", "allAtypiaTable", 

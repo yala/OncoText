@@ -35,7 +35,7 @@ if MODE == "TAGHIAN":
     'Red SuspiciousForPhyllodes',
     'Red CancerSuspicious', 'Red TubularCancer', 'Red Papill',
     'Red CancerInvasive', 'Red CancerInvNOS', 'NodeTissue', 'CancerNotOfBreastOrigin', 'PathologyType',
-    "Organ", "ER_Intensity", "PR_Intensity", "Her2", "Her2_IHC"  ]
+    "Organ", "Her2", "Her2_IHC" ]#, "ER_Intensity", "PR_Intensity" ]
 
   boostexer_diagnoses = ['ITC ', 'Red CancerNOS', 'BiopsyType', 'Red BluntAdenosis',
   'Red CancerInvInsituNOS', 'Are there positive LN?', 'PR', 'Her2 (Fish)', 'ER', 'ECE', 'LVI', 'BVI',
@@ -189,7 +189,7 @@ if MODE == "TAGHIAN":
     "ER_Intensity":["NA", 'Negative', "Weak", 'Moderate','Strong'], 
     "PR_Intensity":["NA", 'Negative', "Weak", 'Moderate','Strong'], 
     "Her2":["NA",'Negative','Positive','Equivocal'], 
-    "Her2_IHC":["NA",'Negative','1+','2+','3+','4+'],
+    "Her2_IHC":["NA",'Negative','1','2','3','4'],
     'BiopsyType': ['Core', 'Excision', 'NA', 'Other'],
     'ECE': ['Yes', 'No', 'NA'],
     'LVI': ['Yes', 'No', 'NA'],
@@ -238,7 +238,7 @@ if MODE == "TAGHIAN":
     "ER_Intensity":{'9':"NA", '0':'Negative', '1':"Weak", '2':'Moderate','3':'Strong'}, 
     "PR_Intensity":{'9':"NA", '0':'Negative', '1':"Weak", '2':'Moderate','3':'Strong'}, 
     "Her2":{'9':"NA",'0':'Negative','1':'Positive','999':'Equivocal'}, 
-    "Her2_IHC":{'9':"NA",'0':'Negative','1':'1+','2':'2+','3':'3+','4':'4+'},
+    "Her2_IHC":{'9':"NA",'0':'Negative','1':'1','2':'2','3':'3','4':'4'},
     'Red DCIS':  {'1':'Present','0':'Absent'},
     'Red LCIS': {'1':'Present','0':'Absent'},
     'Red IDC': {'1':'Present','0':'Absent'},
@@ -338,7 +338,7 @@ if MODE == "TAGHIAN":
     'CancerInvasive':'CancerInvasive',
     'CancerInvNOS':'CancerInvNOS',
     'CancerNotOfBreastOrigin':'CancerNotOfBreastOrigin',
-    #'filename':'filename',
+    'filename':'filename',
     'PR':'PR',
     'ECE':'ECE',
     'validated':'validated',
@@ -361,7 +361,8 @@ if MODE == "TAGHIAN":
     "ER_Intensity":"ER_Intensity",
     "PR_Intensity":"PR_Intensity",
     "Her2":"Her2",
-    "Her2_IHC":"Her2_IHC"
+    "Her2_IHC":"Her2_IHC",
+    "train": "train"
     }
 
   AccessDbToGregDict = {v: k for k, v in gregToAccessDbDict.items()}
@@ -421,7 +422,7 @@ if MODE == "TAGHIAN":
   allDataStem = "../boostexer/breast/unlabled/red_all"
 
 
-  cols = diagnoses + metaData + ['Report_Text_Segmented', 'Report_Text']
+  cols = boostexer_diagnoses + metaData + ['Report_Text_Segmented', 'Report_Text']
 
   outPath = "../reportDB+new.p"
   dataPath = "../rawBreastPathReport.p"

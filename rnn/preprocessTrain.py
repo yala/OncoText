@@ -67,9 +67,9 @@ def main(allData):
         embeddings = model.vectors
         vocab      = model.vocab
 
-        p.dump(model, open('rnn/word2vecModel.p','wb'))
-        p.dump(embeddings, open('rrn/embeddings.p','wb'))
-        p.dump(vocab, open('rnn/vocab.p','wb'))
+        p.dump(model, open('/home/nlp/pathology/rnn/word2vecModel.p','wb'))
+        p.dump(embeddings, open('/home/nlp/pathology/rnn/embeddings.p','wb'))
+        p.dump(vocab, open('/home/nlp/pathology/rnn/vocab.p','wb'))
 
 
 
