@@ -2,12 +2,10 @@ import cPickle as p
 from constants import *
 import sys, os
 sys.path.append("/home/nlp/pathology/")
-sys.path.append("/home/nlp/pathology/buildNewDataset")
 sys.path.append("/home/nlp/pathology/trainClassifier")
 sys.path.append("/home/nlp/pathology/preprocessDataset")
-sys.path.append("/home/nlp/pathology/analysis")
+#sys.path.append("/home/nlp/pathology/analysis")
 sys.path.append("/home/nlp/pathology/rnn")
-sys.path.append("/home/nlp/pathology/adhoc")
 import createEpisodes
 import preprocessTrain
 import preprocessUnlabeled
@@ -15,7 +13,7 @@ import exportToJSON
 import generateClassifierFilesForProd
 import generateClassifierFilesForDev
 import preprocessRawDb
-import interpretResults
+#import interpretResults
 import getAtypias
 import evalModelRun
 from operator import itemgetter
@@ -258,7 +256,7 @@ def predict():
     getAtypias.main()
     for goldset in os.listdir(evalDir):
         if goldset.endswith('.xlsx'):
-            evalModelRun.main(goldset)
+            evalModelRun.main(goldset, sendText=False)
     pruneNonBreast(reportDB, name)
     for r in reportDB:
         for k in r:
@@ -308,7 +306,13 @@ def predictHelper(name):
     ## run boost predict
     mode = "Prod"
     shellScript1 = "cd boostexer/breast/api/"
-    shellScript2 = "./runModel.sh "+mode+"_"+name+"_"
+    boost_diags = [replaceSpaces(l) for l in boostexer_diagnoses]
+    inds = [0, (len(boost_diags)/4)+1, (len(boost_diags)/2)+1, (3*len(boost_diags)/4)+1, len(boost_diags)+1]
+    boost_diags1 = (" ".join(boost_diags[inds[0]:inds[1]]))
+    boost_diags2 = (" ".join(boost_diags[inds[1]:inds[2]]))
+    boost_diags3 = (" ".join(boost_diags[inds[2]:inds[3]]))
+    boost_diags4 = (" ".join(boost_diags[inds[3]:inds[4]]))
+    shellScript2 = "./runModel.sh "+mode+"_"+name+"_ "+boost_diags1+" "+boost_diags2+" "+boost_diags3+" "+boost_diags4
     subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
 
     ## aggregate boost predict
@@ -348,6 +352,8 @@ def updateAccesDB(reportDB):
     reportDBO = [r for r in reportDB if r['Organ'] == '0']
     print "Exporting", len(reportDBJ), "breast records"
     print "Exporting", len(reportDBO), "other records"
+
+    p.dump(reportDBJ, open('/home/nlp/pathology/reportDB_access.p', 'wb'))
 
     db = MySQLdb.connect(host="localhost",user="root",passwd="nlpdb",db="reports")
     cur = db.cursor()
@@ -512,10 +518,11 @@ def applyCorrections(test, gold):
         if text in textToLabel:
             t['train'] = 1
             for d in textToLabel[text]:
-                if d in t  and d in diagnoses and not t[d] == textToLabel[text][d]:
-                    corrections += 1
-                t[d] = textToLabel[text][d]
-                num_match+=1
+                if textToLabel[text][d] in constantValidLabelDict[d]:
+                    if d in t  and d in diagnoses and not t[d] == textToLabel[text][d]:
+                        corrections += 1
+                    t[d] = textToLabel[text][d]
+                    num_match+=1
     print("num corrected", corrections, num_match)
 ## Given a list of dicts, where  each dict represent a report:
 ## If the report text covers a single breast, we assign it an id and nothing happens
@@ -554,7 +561,7 @@ def postProcessRules(db_train):
             r['atypia'] = "Absent"
 
         if r['cancer'] == 'Absent':
-            for k in ['ER','PR','Her2 (Fish)', 'ECE', 'LVI','BVI', 'Are there positive LN?', 'ITC ']:
+            for k in ['ER','PR','Her2Fish', 'ECE', 'LVI','BVI', 'Are there positive LN?', 'ITC ']:
                 r[k] = 'NA'
 
         for k in r.keys():

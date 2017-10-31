@@ -16,14 +16,14 @@ hueLabels = []
 if MODE == "TAGHIAN":
   reportTextKey = "Report_Text_Segmented"
 
-  lauraDictToIndx = {'Biposy 1':0, 'Biopsy 2':1, 'Biopsy 3':2, 'Surgery 1':3, 'Surgery2':4, 'Surgery 3':5}
-  maxedOutDictToIndx = {'Oncotype score':-1, 'Oncotype date':-1}
-  maxedOutList = ['Oncotype score', 'Oncotype date']
-  externalList = ['TumorGrade', 'Red SuspiciousForPhyllodes', 'Red Phylodes']
+  # lauraDictToIndx = {'Biposy 1':0, 'Biopsy 2':1, 'Biopsy 3':2, 'Surgery 1':3, 'Surgery2':4, 'Surgery 3':5}
+  # maxedOutDictToIndx = {'Oncotype score':-1, 'Oncotype date':-1}
+  # maxedOutList = ['Oncotype score', 'Oncotype date']
+  # externalList = ['TumorGrade', 'Red SuspiciousForPhyllodes', 'Red Phylodes']
 
 
   diagnoses = [
-    'Are there positive LN?','ITC ', 'PR',  'Her2 (Fish)', 'ER', 'ECE', 'LVI', 'BVI',
+    'Are there positive LN?','ITC ', 'PR',  'Her2Fish', 'ER', 'ECE', 'LVI', 'BVI',
     'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC',
     'Red ADH', 'Red BreastSide', 'Red FlatEpithelial', 'Red BluntAdenosis',
     'Red LobularNeoplasia','BiopsyType',
@@ -37,14 +37,17 @@ if MODE == "TAGHIAN":
     'Red CancerInvasive', 'Red CancerInvNOS', 'NodeTissue', 'CancerNotOfBreastOrigin', 'PathologyType',
     "Organ", "Her2", "Her2_IHC" ]#, "ER_Intensity", "PR_Intensity" ]
 
-  boostexer_diagnoses = ['ITC ', 'Red CancerNOS', 'BiopsyType', 'Red BluntAdenosis',
-  'Red CancerInvInsituNOS', 'Are there positive LN?', 'PR', 'Her2 (Fish)', 'ER', 'ECE', 'LVI', 'BVI',
-  'Red CancerInvasive', 'Red CancerInvNOS', 'NodeTissue', 'CancerNotOfBreastOrigin', 'PathologyType',
-  "Organ", "Her2", "Her2_IHC"#, "ER_Intensity", "PR_Intensity"
+  boostexer_diagnoses = ["Red CancerInvInsituNOS", "Red CancerNOS", "BiopsyType", "Her2", "Her2_IHC", "ITC", "PR", "Her2Fish", "ER", "ECE", "LVI", "BVI", "PathologyType", "Organ", "Red CancerInvasive", "Red CancerInvNOS", "NodeTissue", "CancerNotOfBreastOrigin", "Red BluntAdenosis", "Are there positive LN?" #, "ER_Intensity", "PR_Intensity"
   ]
 
-  feb_new_diagnoses = ['Red CancerInvasive', 'Red CancerInvNOS', 'NodeTissue', 'CancerNotOfBreastOrigin', 'PathologyType', "Organ"
-  ]
+  # boostexer_diagnoses = ['ITC ', 'Red CancerNOS', 'BiopsyType', 'Red BluntAdenosis',
+  # 'Red CancerInvInsituNOS', 'Are there positive LN?', 'PR', 'Her2Fish', 'ER', 'ECE', 'LVI', 'BVI',
+  # 'Red CancerInvasive', 'Red CancerInvNOS', 'NodeTissue', 'CancerNotOfBreastOrigin', 'PathologyType',
+  # "Organ", "Her2", "Her2_IHC"#, "ER_Intensity", "PR_Intensity"
+  # ]
+
+  #feb_new_diagnoses = ['Red CancerInvasive', 'Red CancerInvNOS', 'NodeTissue', 'CancerNotOfBreastOrigin', 'PathologyType', "Organ"
+ # ]
 
   nn_diagnoses = [d for d in diagnoses if not d in boostexer_diagnoses]
 
@@ -71,17 +74,17 @@ if MODE == "TAGHIAN":
 
   key_order = ['Report_Text_Segmented' , 'Report_Text', "Organ", "PathologyType",'Red BreastSide' ,'Red CancerSuspicious' ,'Red InvasiveSuspicious',
   'Red CancerInvInsituNOS','Red InsituNOS','Red IDC','Red ILC','Red TubularCancer', 'Red CancerInvasive', 'Red CancerInvNOS', 'CancerNotOfBreastOrigin', 
-  'Red DCIS', 'cancer', 'ER', "ER_Intensity", 'PR',"PR_Intensity", "Her2", 'Her2 (Fish)',  "Her2_IHC", 'Are there positive LN?','ECE','ITC ' ,'BVI', 'LVI'  ,'Red LCIS',
+  'Red DCIS', 'cancer', 'ER', "ER_Intensity", 'PR',"PR_Intensity", "Her2", 'Her2Fish',  "Her2_IHC", 'Are there positive LN?','ECE','ITC ' ,'BVI', 'LVI'  ,'Red LCIS',
   'Red LobularNeoplasia','Red ALH', 'Red ADH_DCIS', 'Red ADH' ,'Red FlatEpithelial' ,'Red Phylodes',
   'Red SuspiciousForPhyllodes', 'Red Papill']
 
-  markers = [ 'ER', "ER_Intensity", 'PR',"PR_Intensity", "Her2", 'Her2 (Fish)',  "Her2_IHC",  'Are there Positive LN?','ECE','ITC' ,'BVI', 'LVI']
+  markers = [ 'ER', "ER_Intensity", 'PR',"PR_Intensity", "Her2", 'Her2Fish',  "Her2_IHC",  'Are there Positive LN?','ECE','ITC' ,'BVI', 'LVI']
   groupings = {
     "atypias": [ 'Report_Text_Segmented', 'Red BreastSide', 'Red LCIS',
         'Red LobularNeoplasia','Red ALH', 'Red ADH_DCIS', 'Red ADH' ,'Red FlatEpithelial'],
     # 'cancers': ['Report_Text_Segmented' ,'Red BreastSide' ,'Red CancerSuspicious' ,'Red InvasiveSuspicious',
     #     'Red CancerInvInsituNOS','Red InsituNOS','Red InvasiveNOS','Red IDC','Red ILC','Red TubularCancer',
-    #     'Red DCIS', 'ER', 'PR', 'Her2 (Fish)',  'Are there Positive LN?','ECE','ITC' ,'BVI', 'LVI'],
+    #     'Red DCIS', 'ER', 'PR', 'Her2Fish',  'Are there Positive LN?','ECE','ITC' ,'BVI', 'LVI'],
     #'markers': markers,
     'cancersSansMarkers': ['Report_Text_Segmented' ,'Red BreastSide' ,'Red CancerSuspicious' ,'Red InvasiveSuspicious',
         'Red CancerInvInsituNOS','Red InsituNOS','Red InvasiveNOS','Red IDC','Red ILC','Red TubularCancer',
@@ -96,7 +99,7 @@ if MODE == "TAGHIAN":
     'Are there positive LN?': 'Are there positive LN?' ,
     'ITC ':'ITC',
     'Her2':'Her2',
-    'Her2 (Fish)':'Her2Fish',
+    'Her2Fish':'Her2Fish',
     'Her2_IHC':'Her2_IHC',
     'Red ILC':'ILC',
     'Red ALH':'ALH',
@@ -159,7 +162,7 @@ if MODE == "TAGHIAN":
   redRawDBPath = '../reportDB+red+clean.p'
 
   defaultLabelDict = { 'Are there positive LN?': 'No', 'Type of sampled LN (choice=None)':'Unchecked', 'ITC ':'No', 'PR':'NA',
-      'BiopsyType':'NA', 'Her2 (Fish)':'NA', 'ER': 'NA', 'ECE':'No',
+      'BiopsyType':'NA', 'Her2Fish':'NA', 'ER': 'NA', 'ECE':'No',
       'LVI': 'NA', 'BVI': 'NA', 'TumorGrade': 'NA', 'Red DCIS':'Absent', 'Red LCIS':'Absent', 'Red IDC':'Absent', 'Red ILC':'Absent',
       'Red ALH':'Absent', 'Red ADH':'Absent', 'Red BreastSide':'RIGHT', 'Red FlatEpithelial':'Absent','Red BluntAdenosis':'Absent', 'Red LobularNeoplasia': 'Absent',
       'cancer':'Absent', 'atypia':'Absent',
@@ -183,7 +186,7 @@ if MODE == "TAGHIAN":
 
   constantValidLabelDict = {'Are there positive LN?': ['Yes', 'No'],
     'ER': ['Positive','Negative','NA'],
-    'Her2 (Fish)': ['Positive', 'Negative','NA'],
+    'Her2Fish': ['Positive', 'Negative','NA'],
     'ITC ': ['Yes', 'No'],
     'PR': ['NA', 'Negative', 'Positive'],
     "ER_Intensity":["NA", 'Negative', "Weak", 'Moderate','Strong'], 
@@ -229,7 +232,7 @@ if MODE == "TAGHIAN":
 
   sqlToLabelDict = {'Are there positive LN?': {'1':'Yes', '0':'No'},
     'ER': {'1':'Positive','0':'Negative','9':'NA'},
-    'Her2 (Fish)': {'1':'Positive', '0':'Negative','9':'NA'},
+    'Her2Fish': {'1':'Positive', '0':'Negative','9':'NA'},
     'ITC ': {'1':'Yes', '0':'No'},
     'PR': {'9':'NA', '0':'Negative', '1':'Positive'},
     'ECE': {'1':'Yes', '0':'No', '9':'NA'},
@@ -271,7 +274,7 @@ if MODE == "TAGHIAN":
 
   analysisLabelDict = {'Are there positive LN?': ['Yes', 'No'],
     'ER': ['NA', 'Negative', 'Positive'],
-    'Her2 (Fish)': ['NA', 'Negative', 'Positive'],
+    'Her2Fish': ['NA', 'Negative', 'Positive'],
     'ITC ': ['Yes', 'No'],
     'PR': ['NA', 'Negative', 'Positive'],
     'ECE': ['Yes', 'No'],
@@ -377,7 +380,7 @@ if MODE == "TAGHIAN":
   gregToMongoDict = {       
                 'Are there positive LN?':'PositiveLN',
                 'HER2':'Her2',
-                'Her2Fish':'Her2 (Fish)',
+                'Her2Fish':'Her2Fish',
                 'Her2_IHC':'Her2_IHC',
                 'ITC ':'ITC',
                 'Red ILC':'ILC',
