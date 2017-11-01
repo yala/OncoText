@@ -7,7 +7,7 @@ from operator import itemgetter
 import sys
 import copy
 sys.path.append("/home/nlp/pathology")
-sys.path.append('/home/nlp/pathology/preprocessDataset')
+#sys.path.append('/home/nlp/pathology/preprocessDataset')
 import preprocessRawDb
 from constants import *
 random.seed(1)

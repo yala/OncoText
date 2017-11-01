@@ -3,7 +3,7 @@ from constants import *
 import sys, os
 sys.path.append("/home/nlp/pathology/")
 sys.path.append("/home/nlp/pathology/trainClassifier")
-sys.path.append("/home/nlp/pathology/preprocessDataset")
+#sys.path.append("/home/nlp/pathology/preprocessDataset")
 #sys.path.append("/home/nlp/pathology/analysis")
 sys.path.append("/home/nlp/pathology/rnn")
 import createEpisodes
@@ -83,6 +83,12 @@ except Exception, e:
 RequiredPreprocessFields = ['Report_Text', "Report_Date_TimePlusX"]
 RequiredTrainDbFields = ['ReportID', 'Report_Text_Segmented']
 
+boost_diags = [replaceSpaces(l) for l in boostexer_diagnoses]
+inds = [0, (len(boost_diags)/4)+1, (len(boost_diags)/2)+1, (3*len(boost_diags)/4)+1, len(boost_diags)+1]
+global boost_diags1 = (" ".join(boost_diags[inds[0]:inds[1]]))
+global boost_diags2 = (" ".join(boost_diags[inds[1]:inds[2]]))
+global boost_diags3 = (" ".join(boost_diags[inds[2]:inds[3]]))
+global boost_diags4 = (" ".join(boost_diags[inds[3]:inds[4]]))
 
 ## Given a JSON list of dicts, where  each dict represent a report:
 ## Parse the dict for daignoses, and add annotations if found
@@ -208,7 +214,7 @@ def train():
     name = request.args.get("name") or "default"
     mode = request.args.get("mode") or "Prod"
     shellScript1 = "cd boostexer/breast/api/"
-    shellScript2 = "./trainModel.sh "+mode+"_"+name+"_"
+shellScript2 = "./trainModel.sh "+mode+"_"+name+"_ "+boost_diags1+" "+boost_diags2+" "+boost_diags3+" "+boost_diags4
     subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
     neuralFlags = { 'unlabled_mode':False, 'trainPath':'diagDictTrain_'+name+".p"}
     p.dump( neuralFlags, open('rnn/flags.p','wb'))
@@ -306,12 +312,6 @@ def predictHelper(name):
     ## run boost predict
     mode = "Prod"
     shellScript1 = "cd boostexer/breast/api/"
-    boost_diags = [replaceSpaces(l) for l in boostexer_diagnoses]
-    inds = [0, (len(boost_diags)/4)+1, (len(boost_diags)/2)+1, (3*len(boost_diags)/4)+1, len(boost_diags)+1]
-    boost_diags1 = (" ".join(boost_diags[inds[0]:inds[1]]))
-    boost_diags2 = (" ".join(boost_diags[inds[1]:inds[2]]))
-    boost_diags3 = (" ".join(boost_diags[inds[2]:inds[3]]))
-    boost_diags4 = (" ".join(boost_diags[inds[3]:inds[4]]))
     shellScript2 = "./runModel.sh "+mode+"_"+name+"_ "+boost_diags1+" "+boost_diags2+" "+boost_diags3+" "+boost_diags4
     subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
 

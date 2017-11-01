@@ -6,7 +6,7 @@ sys.path.append("..")
 from constants import *
 import re
 import numpy as np
-sys.path.append('../preprocessDataset')
+#sys.path.append('../preprocessDataset')
 sys.path.append('/home/nlp/pathology/rnn')
 from aggregateDatasets import parseXLS
 
