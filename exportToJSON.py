@@ -7,7 +7,6 @@ from operator import itemgetter
 import json
 import sys
 sys.path.append("..")
-#sys.path.append('../preprocessDataset')
 import preprocessRawDb
 from constants import *
 
@@ -33,7 +32,7 @@ def portToJSON(data, path=None, episodeMode = False, write=False):
         for label in redLabels:
 
             #Replace spaces in label name because otherwise website will breast
-            assert "Red DCIS" in JSONLabelNameDict
+            assert "DCIS" in JSONLabelNameDict
             if label in JSONLabelNameDict:
                 temp = report[label]
                 del report[label]

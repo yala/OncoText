@@ -1,14 +1,31 @@
 import requests
 import cPickle as p
 import json
-import  datetime
+#import datetime
+from datetime import date, datetime
 import numpy as np
 from constants import *
 
 domain = "http://localhost:5000/"
 #un_reps = p.load(open('oldReports.p','rb'))
-un_reps = p.load(open('/home/nlp/pathology/rnn/devReps.p','rb')) + p.load(open('/home/nlp/pathology/rnn/testReps.p','rb'))
+#un_reps = p.load(open('/home/nlp/pathology/rnn/devReps.p','rb')) + p.load(open('/home/nlp/pathology/rnn/testReps.p','rb'))
+test_reps = p.load(open('/home/nlp/pathology/reportDBAPI_train_small2.p', 'rb'))
+un_reps = p.load(open('/home/nlp/pathology/reportDBAPI_test_small2.p', 'rb'))
+for t in test_reps:
+    if 'date' in t:
+        t['date'] = t['date'].isoformat()
+    if 'Report_Date_Time' in t:
+        t['Report_Date_Time'] = t['Report_Date_Time'].isoformat()
+    if 'Report_Date_TimePlusX' in t:
+        t['Report_Date_TimePlusX'] = t['Report_Date_TimePlusX'].isoformat()
+
 for u in un_reps:
+    if 'date' in u:
+        u['date'] = u['date'].isoformat()
+    # if 'Report_Date_Time' in u:
+    #     u['Report_Date_Time'] = u['Report_Date_Time'].isoformat()
+    if 'Report_Date_TimePlusX' in u:
+        u['Report_Date_TimePlusX'] = u['Report_Date_TimePlusX'].isoformat()
     u['test_set'] = True
     del_keys = []
     for d in u:
@@ -21,24 +38,24 @@ for u in un_reps:
 name = "mghMar"
 
 # add train
-addTrainResp = requests.post(domain+"addTrain",data=json.dumps([]),params={"name":name,"raw":False})
-assert addTrainResp.status_code==200
+#addTrainResp = requests.post(domain+"addTrain",data=json.dumps(test_reps),params={"name":name,"raw":True})
+#assert addTrainResp.status_code==200
 
 # add unlabeled
-addUnlabeledResp = requests.post(domain+"addUnlabeled", data=json.dumps(un_reps) , params={'name':name, 'raw':True})
-assert addUnlabeledResp.status_code == 200
+#addUnlabeledResp = requests.post(domain+"addUnlabeled", data=json.dumps(un_reps) , params={'name':name, 'raw':True})
+#assert addUnlabeledResp.status_code == 200
 
 # update train
-updateTrainResp = requests.get(domain+"updateTrainSet",   params={'name':name})
-assert updateTrainResp.status_code == 200
+#updateTrainResp = requests.get(domain+"updateTrainSet", params={'name':name})
+#assert updateTrainResp.status_code == 200
 
 # update unlabeled
-updateUnlResp = requests.get(domain+"updateUnlabeledSet" , params={'name':name})
-assert updateUnlResp.status_code == 200
+#updateUnlResp = requests.get(domain+"updateUnlabeledSet", params={'name':name})
+#assert updateUnlResp.status_code == 200
 
 # train
-trainResp = requests.get(domain+"train" , params={'name':name})
-assert trainResp.status_code == 200
+#trainResp = requests.get(domain+"train" , params={'name':name})
+#assert trainResp.status_code == 200
 
 # predict
 predResp = requests.get(domain+"predict" , params={'name':name, "debug":"True"})

@@ -70,27 +70,11 @@ def send_mail(results, path):
 
 def main(inFile, outPath='/home/nlp/Dropbox (Partners HealthCare)/NLP_Results/',sendText=True) :
 
-    #if mode == 'eval':
-    #    db = p.load(open('/home/nlp/pathology/evalDB_'+name+'.p','rb'))
-    #    testSet = p.load(open('/home/nlp/pathology/rnn/devReps.p','rb')) + p.load(open('/home/nlp/pathology/rnn/testReps.p','rb'))
-    #elif mode == 'pakistani':
-    #    db = p.load(open('/home/nlp/pathology/pakistaniDB_'+name+'.p','rb'))
-    #    testSet = p.load(open('/home/nlp/pathology/externalDataSources/pakistani_data.p','rb'))
-
     reports = p.load(open('/home/nlp/pathology/returnedDB_'+name+'.p', 'rb'))
     db = [r for r in reports if ('filename' in r and r['filename']==inFile)]
     testSet = parseXLS(evalDir+inFile)
     text_to_gold = {}
     for d in testSet:
-        # if mode == 'eval' or True:
-        #     for k in diagToConventionDict:
-        #         if not k in d:
-        #             continue 
-        #         ##Convert label from diag format to clean conv
-        #         d[diagToConventionDict[k]] = d[k]
-        #         ## convert frome onehot to str label
-        #         label_ind = np.argmax(d[k])
-        #         d[diagToConventionDict[k]] = constantValidLabelDict[k][label_ind]
         if not 'Report_Text_Segmented' in d:
             d['Report_Text_Segmented'] = preprocessText(unicode(d['Report_Text']).encode('utf-8'))
         text_to_gold[ d['Report_Text_Segmented']] = d
@@ -122,12 +106,12 @@ def main(inFile, outPath='/home/nlp/Dropbox (Partners HealthCare)/NLP_Results/',
         if len(pred) == 0:
             continue
         res['accuracy'] = sum([ pred[i] == gold[i] for i in range(len(pred))] )*100./ len(pred)
-        res['percentPos'] = sum ([ g in ['Present','Yes'] for g in gold]) * 100./ len(gold)
+        res['percentPos'] = sum ([ g in ['1'] for g in gold]) * 100./ len(gold)
         
-        truePos =  sum([gold[i] in ['Present', 'Yes'] and pred[i] in ['Present', 'Yes'] for i in range(len(pred))])
-        falsePos = sum([gold[i] in ['Absent', 'No'] and pred[i] in ['Present', 'Yes'] for i in range(len(pred))])
-        trueNeg  = sum([gold[i] in ['Absent', 'No'] and pred[i] in ['Absent', 'No'] for i in range(len(pred))])
-        falseNeg = sum([gold[i] in ['Present', 'Yes'] and pred[i] in ['Absent', 'No'] for i in range(len(pred))])
+        truePos =  sum([gold[i] in ['1'] and pred[i] in ['1'] for i in range(len(pred))])
+        falsePos = sum([gold[i] in ['0'] and pred[i] in ['0'] for i in range(len(pred))])
+        trueNeg  = sum([gold[i] in ['0'] and pred[i] in ['0'] for i in range(len(pred))])
+        falseNeg = sum([gold[i] in ['1'] and pred[i] in ['0'] for i in range(len(pred))])
 
 
         precision = 1. * truePos / (truePos + falsePos) if (truePos + falsePos) > 0 else 0

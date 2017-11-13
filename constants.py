@@ -16,46 +16,30 @@ hueLabels = []
 if MODE == "TAGHIAN":
   reportTextKey = "Report_Text_Segmented"
 
-  # lauraDictToIndx = {'Biposy 1':0, 'Biopsy 2':1, 'Biopsy 3':2, 'Surgery 1':3, 'Surgery2':4, 'Surgery 3':5}
-  # maxedOutDictToIndx = {'Oncotype score':-1, 'Oncotype date':-1}
-  # maxedOutList = ['Oncotype score', 'Oncotype date']
-  # externalList = ['TumorGrade', 'Red SuspiciousForPhyllodes', 'Red Phylodes']
-
-
   diagnoses = [
-    'Are there positive LN?','ITC ', 'PR',  'Her2Fish', 'ER', 'ECE', 'LVI', 'BVI',
-    'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC',
-    'Red ADH', 'Red BreastSide', 'Red FlatEpithelial', 'Red BluntAdenosis',
-    'Red LobularNeoplasia','BiopsyType',
-    'Red ADH_DCIS', 'Red Phylodes',
-    'Red CancerNOS',
-    'Red InvasiveSuspicious',
-    'Red InsituNOS',
-    'Red CancerInvInsituNOS',
-    'Red SuspiciousForPhyllodes',
-    'Red CancerSuspicious', 'Red TubularCancer', 'Red Papill',
-    'Red CancerInvasive', 'Red CancerInvNOS', 'NodeTissue', 'CancerNotOfBreastOrigin', 'PathologyType',
-    "Organ", "Her2", "Her2_IHC" ]#, "ER_Intensity", "PR_Intensity" ]
+    'PositiveLN','ITC', 'PR',  'Her2Fish', 'ER', 'ECE', 'LVI', 'BVI',
+    'ILC', 'ALH','DCIS', 'LCIS', 'IDC',
+    'ADH', 'BreastSide', 'FlatEpithelial', 'BluntAdenosis',
+    'LobularNeoplasia','BiopsyType',
+    'ADH_DCIS', 'Phyllodes',
+    'CancerNOS',
+    'InvasiveSuspicious',
+    'InsituNOS',
+    'CancerInvInsituNOS',
+    'SuspiciousForPhyllodes',
+    'CancerSuspicious', 'TubularCancer', 'Papill',
+    'CancerInvasive', 'CancerInvNOS', 'NodeTissue', 'CancerNotOfBreastOrigin', 'PathologyType',
+    "Organ", "Her2", "Her2_IHC" ]
 
-  boostexer_diagnoses = ["Red CancerInvInsituNOS", "Red CancerNOS", "BiopsyType", "Her2", "Her2_IHC", "ITC", "PR", "Her2Fish", "ER", "ECE", "LVI", "BVI", "PathologyType", "Organ", "Red CancerInvasive", "Red CancerInvNOS", "NodeTissue", "CancerNotOfBreastOrigin", "Red BluntAdenosis", "Are there positive LN?" #, "ER_Intensity", "PR_Intensity"
-  ]
-
-  # boostexer_diagnoses = ['ITC ', 'Red CancerNOS', 'BiopsyType', 'Red BluntAdenosis',
-  # 'Red CancerInvInsituNOS', 'Are there positive LN?', 'PR', 'Her2Fish', 'ER', 'ECE', 'LVI', 'BVI',
-  # 'Red CancerInvasive', 'Red CancerInvNOS', 'NodeTissue', 'CancerNotOfBreastOrigin', 'PathologyType',
-  # "Organ", "Her2", "Her2_IHC"#, "ER_Intensity", "PR_Intensity"
-  # ]
-
-  #feb_new_diagnoses = ['Red CancerInvasive', 'Red CancerInvNOS', 'NodeTissue', 'CancerNotOfBreastOrigin', 'PathologyType', "Organ"
- # ]
+  boostexer_diagnoses = ["CancerInvInsituNOS", "CancerNOS", "BiopsyType", "Her2", "Her2_IHC", "ITC", "PR", "Her2Fish", "ER", "ECE", "LVI", "BVI", "PathologyType", "Organ", "CancerInvasive", "CancerInvNOS", "NodeTissue", "CancerNotOfBreastOrigin", "BluntAdenosis", "PositiveLN"]
 
   nn_diagnoses = [d for d in diagnoses if not d in boostexer_diagnoses]
 
-  const_cancers = [
-  'Red ILC','Red DCIS', 'Red IDC',
-  'Red TubularCancer',
-  'Red CancerInvasive', 'Red CancerInvNOS', 'CancerNotOfBreastOrigin'
-  ]
+  # const_cancers = [
+  # 'ILC','DCIS', 'IDC',
+  # 'TubularCancer',
+  # 'CancerInvasive', 'CancerInvNOS', 'CancerNotOfBreastOrigin'
+  # ]
 
   const_cancers_mod = [
     'ILC','DCIS', 'IDC',
@@ -63,66 +47,61 @@ if MODE == "TAGHIAN":
     'CancerInvasive', 'CancerInvNOS', 'CancerNotOfBreastOrigin'
     ]
 
-  const_atypias = [
-  'Red ALH','Red ADH', 'Red FlatEpithelial', 'Red LCIS', 'Red ADH_DCIS', 'Red LobularNeoplasia'
-  ]
+  # const_atypias = [
+  # 'ALH','ADH', 'FlatEpithelial', 'LCIS', 'ADH_DCIS', 'LobularNeoplasia'
+  # ]
 
   const_atypias_mod = [
   'ALH','ADH', 'FlatEpithelial', 'LCIS', 'ADH_DCIS', 'LobularNeoplasia'
   ]
 
-
-  key_order = ['Report_Text_Segmented' , 'Report_Text', "Organ", "PathologyType",'Red BreastSide' ,'Red CancerSuspicious' ,'Red InvasiveSuspicious',
-  'Red CancerInvInsituNOS','Red InsituNOS','Red IDC','Red ILC','Red TubularCancer', 'Red CancerInvasive', 'Red CancerInvNOS', 'CancerNotOfBreastOrigin', 
-  'Red DCIS', 'cancer', 'ER', "ER_Intensity", 'PR',"PR_Intensity", "Her2", 'Her2Fish',  "Her2_IHC", 'Are there positive LN?','ECE','ITC ' ,'BVI', 'LVI'  ,'Red LCIS',
-  'Red LobularNeoplasia','Red ALH', 'Red ADH_DCIS', 'Red ADH' ,'Red FlatEpithelial' ,'Red Phylodes',
-  'Red SuspiciousForPhyllodes', 'Red Papill']
+  key_order = ['Report_Text_Segmented' , 'Report_Text', "Organ", "PathologyType",'BreastSide' ,'CancerSuspicious' ,'InvasiveSuspicious',
+  'CancerInvInsituNOS','InsituNOS','IDC','ILC','TubularCancer', 'CancerInvasive', 'CancerInvNOS', 'CancerNotOfBreastOrigin', 
+  'DCIS', 'cancer', 'ER', "ER_Intensity", 'PR',"PR_Intensity", "Her2", 'Her2Fish',  "Her2_IHC", 'PositiveLN','ECE','ITC' ,'BVI', 'LVI'  ,'LCIS',
+  'LobularNeoplasia','ALH', 'ADH_DCIS', 'ADH' ,'FlatEpithelial' ,'Phyllodes',
+  'SuspiciousForPhyllodes', 'Papill']
 
   markers = [ 'ER', "ER_Intensity", 'PR',"PR_Intensity", "Her2", 'Her2Fish',  "Her2_IHC",  'Are there Positive LN?','ECE','ITC' ,'BVI', 'LVI']
   groupings = {
-    "atypias": [ 'Report_Text_Segmented', 'Red BreastSide', 'Red LCIS',
-        'Red LobularNeoplasia','Red ALH', 'Red ADH_DCIS', 'Red ADH' ,'Red FlatEpithelial'],
-    # 'cancers': ['Report_Text_Segmented' ,'Red BreastSide' ,'Red CancerSuspicious' ,'Red InvasiveSuspicious',
-    #     'Red CancerInvInsituNOS','Red InsituNOS','Red InvasiveNOS','Red IDC','Red ILC','Red TubularCancer',
-    #     'Red DCIS', 'ER', 'PR', 'Her2Fish',  'Are there Positive LN?','ECE','ITC' ,'BVI', 'LVI'],
-    #'markers': markers,
-    'cancersSansMarkers': ['Report_Text_Segmented' ,'Red BreastSide' ,'Red CancerSuspicious' ,'Red InvasiveSuspicious',
-        'Red CancerInvInsituNOS','Red InsituNOS','Red InvasiveNOS','Red IDC','Red ILC','Red TubularCancer',
-        'Red DCIS'],
-    'phyllodesAndPapil':[ 'Report_Text_Segmented' ,'Red BreastSide', 'Red Phylodes', 'Red SuspiciousForPhyllodes',
-       'Red Papill'],
+    'atypias': [ 'Report_Text_Segmented', 'BreastSide', 'LCIS',
+        'LobularNeoplasia','ALH', 'ADH_DCIS', 'ADH' ,'FlatEpithelial'],
+    'cancersSansMarkers': ['Report_Text_Segmented' ,'BreastSide' ,'CancerSuspicious' ,'InvasiveSuspicious',
+        'CancerInvInsituNOS','InsituNOS','InvasiveNOS','IDC','ILC','TubularCancer',
+        'DCIS'],
+    'phyllodesAndPapil':[ 'Report_Text_Segmented' ,'BreastSide', 'Phyllodes', 'SuspiciousForPhyllodes',
+       'Papill'],
      'allNN': [k for k in key_order if k in diagnoses and not k in boostexer_diagnoses],
      'allNNSansMarkers': [k for k in key_order if not k in markers and k in diagnoses and not k in boostexer_diagnoses],
   }
 
   diagToConventionDict = {
-    'Are there positive LN?': 'Are there positive LN?' ,
-    'ITC ':'ITC',
+    'PositiveLN': 'PositiveLN' ,
+    'ITC':'ITC',
     'Her2':'Her2',
     'Her2Fish':'Her2Fish',
     'Her2_IHC':'Her2_IHC',
-    'Red ILC':'ILC',
-    'Red ALH':'ALH',
-    'Red DCIS':'DCIS',
-    'Red LCIS':'LCIS',
-    'Red IDC':'IDC',
-    'Red ADH' :'ADH',
-    'Red BreastSide':'BreastSide',
-    'Red FlatEpithelial':'FlatEpithelial',
-    'Red BluntAdenosis':'BluntAdenosis',
-    'Red LobularNeoplasia':'LobularNeoplasia',
-    'Red ADH_DCIS': 'ADH_DCIS',
-    'Red Phylodes':'Phylodes',
-    'Red CancerNOS':'CancerNOS',
-    'Red InvasiveSuspicious': 'InvasiveSuspicious',
-    'Red InsituNOS':'InsituNOS',
-    'Red CancerInvInsituNOS': 'CancerInvInsituNOS',
-    'Red SuspiciousForPhyllodes':'SuspiciousForPhyllodes',
-    'Red CancerSuspicious':'CancerSuspicious',
-    'Red TubularCancer':'TubularCancer',
-    'Red Papill':'Papill',
-    'Red CancerInvasive':'CancerInvasive',
-    'Red CancerInvNOS':'CancerInvNOS',
+    'ILC':'ILC',
+    'ALH':'ALH',
+    'DCIS':'DCIS',
+    'LCIS':'LCIS',
+    'IDC':'IDC',
+    'ADH' :'ADH',
+    'BreastSide':'BreastSide',
+    'FlatEpithelial':'FlatEpithelial',
+    'BluntAdenosis':'BluntAdenosis',
+    'LobularNeoplasia':'LobularNeoplasia',
+    'ADH_DCIS': 'ADH_DCIS',
+    'Phyllodes':'Phyllodes',
+    'CancerNOS':'CancerNOS',
+    'InvasiveSuspicious': 'InvasiveSuspicious',
+    'InsituNOS':'InsituNOS',
+    'CancerInvInsituNOS': 'CancerInvInsituNOS',
+    'SuspiciousForPhyllodes':'SuspiciousForPhyllodes',
+    'CancerSuspicious':'CancerSuspicious',
+    'TubularCancer':'TubularCancer',
+    'Papill':'Papill',
+    'CancerInvasive':'CancerInvasive',
+    'CancerInvNOS':'CancerInvNOS',
     'CancerNotOfBreastOrigin':'CancerNotOfBreastOrigin',
     "Organ":"Organ",
     "Cytology":"Cytology"
@@ -142,178 +121,173 @@ if MODE == "TAGHIAN":
 
   if baseline:
     diagnoses = [
-    'Red ILC', 'Red ALH','Red DCIS', 'Red LCIS', 'Red IDC',
-    'Red ADH', 'Red BreastSide', 'Red FlatEpithelial','Red BluntAdenosis',
-    'Red LobularNeoplasia']
+    'ILC', 'ALH','DCIS', 'LCIS', 'IDC',
+    'ADH', 'BreastSide', 'FlatEpithelial','BluntAdenosis',
+    'LobularNeoplasia']
 
 
 
-  HueAnotationSource= ['DCIS', 'LCIS', 'IDC', 'ILC', 'ALH', 'ADH', 'BreastSide', 'FlatEpithelial', 'BluntAdenosis', 'LobularNeoplasia',
-  'ADH_DCIS', 'Phylodes', 'CancerNOS', 'InvasiveSuspicious', 'InsituNOS', 'CancerInvInsituNOS','CancerSuspicious',
-  'TubularCancer' ]
-  diagSkip = ['ALH', 'ILC']
-  BiopAnotationSource= [a + " Biop" for a in HueAnotationSource  if not a in diagSkip]
-  SurgAnotationSource= [a + " Surg" for a in HueAnotationSource  if not a in diagSkip]
+  # HueAnotationSource= ['DCIS', 'LCIS', 'IDC', 'ILC', 'ALH', 'ADH', 'BreastSide', 'FlatEpithelial', 'BluntAdenosis', 'LobularNeoplasia',
+  # 'ADH_DCIS', 'Phyllodes', 'CancerNOS', 'InvasiveSuspicious', 'InsituNOS', 'CancerInvInsituNOS','CancerSuspicious',
+  # 'TubularCancer' ]
+  # diagSkip = ['ALH', 'ILC']
+  # BiopAnotationSource= [a + " Biop" for a in HueAnotationSource  if not a in diagSkip]
+  # SurgAnotationSource= [a + " Surg" for a in HueAnotationSource  if not a in diagSkip]
 
 
-  MixedAnotations= ["Red "+d for d in HueAnotationSource]
+  # MixedAnotations= [d for d in HueAnotationSource]
 
 
   redRawDBPath = '../reportDB+red+clean.p'
 
-  defaultLabelDict = { 'Are there positive LN?': 'No', 'Type of sampled LN (choice=None)':'Unchecked', 'ITC ':'No', 'PR':'NA',
-      'BiopsyType':'NA', 'Her2Fish':'NA', 'ER': 'NA', 'ECE':'No',
-      'LVI': 'NA', 'BVI': 'NA', 'TumorGrade': 'NA', 'Red DCIS':'Absent', 'Red LCIS':'Absent', 'Red IDC':'Absent', 'Red ILC':'Absent',
-      'Red ALH':'Absent', 'Red ADH':'Absent', 'Red BreastSide':'RIGHT', 'Red FlatEpithelial':'Absent','Red BluntAdenosis':'Absent', 'Red LobularNeoplasia': 'Absent',
-      'cancer':'Absent', 'atypia':'Absent',
-      'Oncotype score':'Low_risk',
-      'Red ADH_DCIS':'Absent', 'Red Phylodes':'Absent', 'Red CancerNOS':'Absent', 'Red InvasiveSuspicious':'Absent', 'Red InsituNOS':'Absent', 'Red CancerInvInsituNOS':'Absent',
-      'Red SuspiciousForPhyllodes':'Absent', 'Red CancerSuspicious':'Absent', 'Red TubularCancer':'Absent',
-      'Red Papill':'Absent',
-      'Red CancerInvasive':'Absent',
-      'Red CancerInvNOS':'Absent',
-      'NodeTissue':'Absent', #'Node_x0020_tissue'
-      'CancerNotOfBreastOrigin':'Absent', #CancerNotOfBreastOrigin
-      'PathologyType':'Anatomic',
-      "Organ":"non-breast",
-      "ER_Intensity":"NA", "PR_Intensity":"NA", "Her2":"NA", "Her2_IHC":"NA"
+  defaultLabelDict = { 'PositiveLN': '0', 'Type of sampled LN (choice=None)':'Unchecked', 'ITC':'0', 'PR':'9',
+      'BiopsyType':'9', 'Her2Fish':'9', 'ER': '9', 'ECE':'0',
+      'LVI': '9', 'BVI': '9', 'TumorGrade': '9', 'DCIS':'0', 'LCIS':'0', 'IDC':'0', 'ILC':'0',
+      'ALH':'0', 'ADH':'0', 'BreastSide':'r', 'FlatEpithelial':'0','BluntAdenosis':'0', 'LobularNeoplasia': '0',
+      'cancer':'0', 'atypia':'0',
+      'OncotypeScore':'Low_risk',
+      'ADH_DCIS':'0', 'Phyllodes':'0', 'CancerNOS':'0', 'InvasiveSuspicious':'0', 'InsituNOS':'0', 'CancerInvInsituNOS':'0',
+      'SuspiciousForPhyllodes':'0', 'CancerSuspicious':'0', 'TubularCancer':'0',
+      'Papill':'0',
+      'CancerInvasive':'0',
+      'CancerInvNOS':'0',
+      'NodeTissue':'0', #'Node_x0020_tissue'
+      'CancerNotOfBreastOrigin':'0', #CancerNotOfBreastOrigin
+      'PathologyType':'1',
+      "Organ":'0',
+      "ER_Intensity":'9', "PR_Intensity":'9', "Her2":'9', "Her2_IHC":'9'
       }
 
 
-  extractions = [u'Max Tumor Size', 'Non Sentinel LN (# Malignant)', 'Sentinel LN (# Sampled)']
-
-
-
-  constantValidLabelDict = {'Are there positive LN?': ['Yes', 'No'],
-    'ER': ['Positive','Negative','NA'],
-    'Her2Fish': ['Positive', 'Negative','NA'],
-    'ITC ': ['Yes', 'No'],
-    'PR': ['NA', 'Negative', 'Positive'],
-    "ER_Intensity":["NA", 'Negative', "Weak", 'Moderate','Strong'], 
-    "PR_Intensity":["NA", 'Negative', "Weak", 'Moderate','Strong'], 
-    "Her2":["NA",'Negative','Positive','Equivocal'], 
-    "Her2_IHC":["NA",'Negative','1','2','3','4'],
-    'BiopsyType': ['Core', 'Excision', 'NA', 'Other'],
-    'ECE': ['Yes', 'No', 'NA'],
-    'LVI': ['Yes', 'No', 'NA'],
-    'BVI': ['Yes', 'No', 'NA'],
-    'TumorGrade': ['Well_differentiated_(grade_I)', 'Moderate_(grade_II)', 'Poor_(grade_III)_Undifferentiated', 'NA'],
-    'Red DCIS':  ['Present','Absent'],
-    'Red LCIS': ['Present','Absent'],
-    'Red IDC': ['Present','Absent'],
-    'Red ILC': ['Present','Absent'],
-    'Red ALH': ['Present','Absent'],
-    'Red ADH': ['Present','Absent'],
-    'Red Papill': ['Present','Absent'],
-    'Red FlatEpithelial':['Present','Absent'],
-    'Red BluntAdenosis':['Present','Absent'],
-    'Red LobularNeoplasia':['Present','Absent'],
-    'cancer': ['Present','Absent'],
-    'atypia': ['Present','Absent'],
-    'Red BreastSide': ['RIGHT', 'LEFT'],
-    'Oncotype score': ['Low_risk', 'High_risk'],
-    'Red ADH_DCIS': ['Present','Absent'],
-    'Red Phylodes': ['Present','Absent'],
-    'Red CancerNOS': ['Present','Absent'],
-    'Red InvasiveSuspicious': ['Present','Absent'],
-    'Red InsituNOS': ['Present','Absent'],
-    'Red CancerInvInsituNOS': ['Present','Absent'],
-    'Red SuspiciousForPhyllodes': ['Present','Absent'],
-    'Red CancerSuspicious':['Present','Absent'],
-    'Red TubularCancer':['Present','Absent'],
-
-    'Red CancerInvasive':['Present','Absent'],
-    'Red CancerInvNOS':['Present','Absent'],
-    'NodeTissue':['Present','Absent'], #'Node_x0020_tissue'
-    'CancerNotOfBreastOrigin':['Present','Absent'], #CancerNotOfBreastOrigin
-    'PathologyType':['Anatomic','Cytology'],  #'Pathology_x0020_type'
-    "Organ":["non-breast","breast"]
+  constantValidLabelDict = {'PositiveLN': ['1', '0'],
+    'ER': ['1','0','9'],
+    'Her2Fish': ['1', '0','9'],
+    'ITC': ['1', '0'],
+    'PR': ['9', '0', '1'],
+    "ER_Intensity":['9', '0', '1', '2','3'], 
+    "PR_Intensity":['9', '0', '1', '2','3'], 
+    "Her2":['9','0','1','999'], 
+    "Her2_IHC":['9','0','1','2','3','4'],
+    'BiopsyType': ['Core', 'Excision', '9', 'Other'],
+    'ECE': ['1', '0', '9'],
+    'LVI': ['1', '0', '9'],
+    'BVI': ['1', '0', '9'],
+    'TumorGrade': ['Well_differentiated_(grade_I)', 'Moderate_(grade_II)', 'Poor_(grade_III)_Undifferentiated', '9'],
+    'DCIS':  ['1','0'],
+    'LCIS': ['1','0'],
+    'IDC': ['1','0'],
+    'ILC': ['1','0'],
+    'ALH': ['1','0'],
+    'ADH': ['1','0'],
+    'Papill': ['1','0'],
+    'FlatEpithelial':['1','0'],
+    'BluntAdenosis':['1','0'],
+    'LobularNeoplasia':['1','0'],
+    'cancer': ['1','0'],
+    'atypia': ['1','0'],
+    'BreastSide': ['r', 'l'],
+    'OncotypeScore': ['Low_risk', 'High_risk'],
+    'ADH_DCIS': ['1','0'],
+    'Phyllodes': ['1','0'],
+    'CancerNOS': ['1','0'],
+    'InvasiveSuspicious': ['1','0'],
+    'InsituNOS': ['1','0'],
+    'CancerInvInsituNOS': ['1','0'],
+    'SuspiciousForPhyllodes': ['1','0'],
+    'CancerSuspicious':['1','0'],
+    'TubularCancer':['1','0'],
+    'CancerInvasive':['1','0'],
+    'CancerInvNOS':['1','0'],
+    'NodeTissue':['1','0'], #'Node_x0020_tissue'
+    'CancerNotOfBreastOrigin':['1','0'], #CancerNotOfBreastOrigin
+    'PathologyType':['1','0'],  #'Pathology_x0020_type'
+    "Organ":['0','1']
   }
 
-  sqlToLabelDict = {'Are there positive LN?': {'1':'Yes', '0':'No'},
-    'ER': {'1':'Positive','0':'Negative','9':'NA'},
-    'Her2Fish': {'1':'Positive', '0':'Negative','9':'NA'},
-    'ITC ': {'1':'Yes', '0':'No'},
-    'PR': {'9':'NA', '0':'Negative', '1':'Positive'},
-    'ECE': {'1':'Yes', '0':'No', '9':'NA'},
-    'LVI': {'1':'Yes', '0':'No', '9':'NA'},
-    'BVI': {'1':'Yes', '0':'No', '9':'NA'},
-    "ER_Intensity":{'9':"NA", '0':'Negative', '1':"Weak", '2':'Moderate','3':'Strong'}, 
-    "PR_Intensity":{'9':"NA", '0':'Negative', '1':"Weak", '2':'Moderate','3':'Strong'}, 
-    "Her2":{'9':"NA",'0':'Negative','1':'Positive','999':'Equivocal'}, 
-    "Her2_IHC":{'9':"NA",'0':'Negative','1':'1','2':'2','3':'3','4':'4'},
-    'Red DCIS':  {'1':'Present','0':'Absent'},
-    'Red LCIS': {'1':'Present','0':'Absent'},
-    'Red IDC': {'1':'Present','0':'Absent'},
-    'Red ILC': {'1':'Present','0':'Absent'},
-    'Red ALH': {'1':'Present','0':'Absent'},
-    'Red ADH': {'1':'Present','0':'Absent'},
-    'Red Papill': {'1':'Present','0':'Absent'},
-    'Red FlatEpithelial':{'1':'Present','0':'Absent'},
-    'Red BluntAdenosis':{'1':'Present','0':'Absent'},
-    'Red LobularNeoplasia':{'1':'Present','0':'Absent'},
-    'cancer': {'1':'Present','0':'Absent'},
-    'atypia': {'1':'Present','0':'Absent'},
-    'Red BreastSide': {'r':'RIGHT', 'l':'LEFT'},
-    'Red ADH_DCIS': {'1':'Present','0':'Absent'},
-    'Red Phylodes': {'1':'Present','0':'Absent'},
-    'Red CancerNOS': {'1':'Present','0':'Absent'},
-    'Red InvasiveSuspicious': {'1':'Present','0':'Absent'},
-    'Red InsituNOS': {'1':'Present','0':'Absent'},
-    'Red CancerInvInsituNOS': {'1':'Present','0':'Absent'},
-    'Red SuspiciousForPhyllodes': {'1':'Present','0':'Absent'},
-    'Red CancerSuspicious':{'1':'Present','0':'Absent'},
-    'Red TubularCancer':{'1':'Present','0':'Absent'},
-    'Red CancerInvasive':{'1':'Present','0':'Absent'},
-    'Red CancerInvNOS':{'1':'Present','0':'Absent'},
-    'NodeTissue':{'1':'Present','0':'Absent'}, #'Node_x0020_tissue'
-    'CancerNotOfBreastOrigin':{'1':'Present','0':'Absent'}, #CancerNotOfBreastOrigin
-    'PathologyType':{'1':'Anatomic','0':'Cytology'},  #'Pathology_x0020_type'
-    "Organ":{'0':"non-breast",'1':"breast"}
+  sqlToLabelDict = {'PositiveLN': {'1':'1','0':'0'},
+    'ER': {'1':'1','0':'0','9':'9'},
+    'Her2Fish': {'1':'1','0':'0','9':'9'},
+    'ITC': {'1':'1','0':'0'},
+    'PR': {'9':'9','0':'0','1':'1'},
+    'ECE': {'1':'1','0':'0','9':'9'},
+    'LVI': {'1':'1','0':'0','9':'9'},
+    'BVI': {'1':'1','0':'0','9':'9'},
+    "ER_Intensity":{'9':'9','0':'0','1':'1','2':'2','3':'3'}, 
+    "PR_Intensity":{'9':'9','0':'0','1':'1','2':'2','3':'3'}, 
+    "Her2":{'9':'9','0':'0','1':'1','999':'999'}, 
+    "Her2_IHC":{'9':'9','0':'0','1':'1','2':'2','3':'3','4':'4'},
+    'DCIS':  {'1':'1','0':'0'},
+    'LCIS': {'1':'1','0':'0'},
+    'IDC': {'1':'1','0':'0'},
+    'ILC': {'1':'1','0':'0'},
+    'ALH': {'1':'1','0':'0'},
+    'ADH': {'1':'1','0':'0'},
+    'Papill': {'1':'1','0':'0'},
+    'FlatEpithelial':{'1':'1','0':'0'},
+    'BluntAdenosis':{'1':'1','0':'0'},
+    'LobularNeoplasia':{'1':'1','0':'0'},
+    'cancer': {'1':'1','0':'0'},
+    'atypia': {'1':'1','0':'0'},
+    'BreastSide': {'r':'r', 'l':'l'},
+    'ADH_DCIS': {'1':'1','0':'0'},
+    'Phyllodes': {'1':'1','0':'0'},
+    'CancerNOS': {'1':'1','0':'0'},
+    'InvasiveSuspicious': {'1':'1','0':'0'},
+    'InsituNOS': {'1':'1','0':'0'},
+    'CancerInvInsituNOS': {'1':'1','0':'0'},
+    'SuspiciousForPhyllodes': {'1':'1','0':'0'},
+    'CancerSuspicious':{'1':'1','0':'0'},
+    'TubularCancer':{'1':'1','0':'0'},
+    'CancerInvasive':{'1':'1','0':'0'},
+    'CancerInvNOS':{'1':'1','0':'0'},
+    'NodeTissue':{'1':'1','0':'0'}, #'Node_x0020_tissue'
+    'CancerNotOfBreastOrigin':{'1':'1','0':'0'}, #CancerNotOfBreastOrigin
+    'PathologyType':{'1':'1','0':'0'},  #'Pathology_x0020_type'
+    "Organ":{'0':'0','1':'1'}
   }
 
-  analysisLabelDict = {'Are there positive LN?': ['Yes', 'No'],
-    'ER': ['NA', 'Negative', 'Positive'],
-    'Her2Fish': ['NA', 'Negative', 'Positive'],
-    'ITC ': ['Yes', 'No'],
-    'PR': ['NA', 'Negative', 'Positive'],
-    'ECE': ['Yes', 'No'],
-    'LVI': ['Yes', 'No', 'NA'],
-    'BVI': ['Yes', 'No', 'NA'],
-    'TumorGrade': ['Well_differentiated_(grade_I)', 'Moderate_(grade_II)', 'Poor_(grade_III)_Undifferentiated'],
-    'Red DCIS':  ['Present','Absent'],
-    'Red LCIS': ['Present','Absent'],
-    'Red IDC': ['Present','Absent'],
-    'Red ILC': ['Present','Absent'],
-    'Red ALH': ['Present','Absent'],
-    'Red ADH': ['Present','Absent'],
-    'Red FlatEpithelial':['Present','Absent'],
-    'Red BluntAdenosis':['Present','Absent'],
-    'Red LobularNeoplasia':['Present','Absent'],
-    'Red Papill': ['Present','Absent'],
-    'Red BreastSide': ['RIGHT', 'LEFT'],
-    'cancer': ['cancer','no_cancer'],
-    'atypia': ['atypia','no_atypia'],
-    'BiopsyType': ['Core', 'Excision', 'Other'],
-    'Oncotype score': ['Low_risk', 'High_risk'],
-    'Red ADH_DCIS': ['Present','Absent'],
-    'Red Phylodes': ['Present','Absent'],
-    'Red CancerNOS': ['Present','Absent'],
-    'Red InvasiveSuspicious': ['Present','Absent'],
-    'Red InsituNOS': ['Present','Absent'],
-    'Red CancerInvInsituNOS': ['Present','Absent'],
-    'Red SuspiciousForPhyllodes': ['Present', 'Absent'],
-    'Red CancerSuspicious':['Present','Absent'],
-    'Red TubularCancer':['Present','Absent'],
-    "Organ":["non-breast","breast"]
-    }
+  # analysisLabelDict = {'PositiveLN': ['1', '0'],
+  #   'ER': ['9', '0', '1'],
+  #   'Her2Fish': ['9', '0', '1'],
+  #   'ITC': ['1', '0'],
+  #   'PR': ['9', '0', '1'],
+  #   'ECE': ['1', '0'],
+  #   'LVI': ['1', '0', '9'],
+  #   'BVI': ['1', '0', '9'],
+  #   'TumorGrade': ['Well_differentiated_(grade_I)', 'Moderate_(grade_II)', 'Poor_(grade_III)_Undifferentiated'],
+  #   'DCIS':  ['1','0'],
+  #   'LCIS': ['1','0'],
+  #   'IDC': ['1','0'],
+  #   'ILC': ['1','0'],
+  #   'ALH': ['1','0'],
+  #   'ADH': ['1','0'],
+  #   'FlatEpithelial':['1','0'],
+  #   'BluntAdenosis':['1','0'],
+  #   'LobularNeoplasia':['1','0'],
+  #   'Papill': ['1','0'],
+  #   'BreastSide': ['r', 'l'],
+  #   'cancer': ['1','0'],
+  #   'atypia': ['1','0'],
+  #   'BiopsyType': ['Core', 'Excision', 'Other'],
+  #   'OncotypeScore': ['Low_risk', 'High_risk'],
+  #   'ADH_DCIS': ['1','0'],
+  #   'Phyllodes': ['1','0'],
+  #   'CancerNOS': ['1','0'],
+  #   'InvasiveSuspicious': ['1','0'],
+  #   'InsituNOS': ['1','0'],
+  #   'CancerInvInsituNOS': ['1','0'],
+  #   'SuspiciousForPhyllodes': ['1', '0'],
+  #   'CancerSuspicious':['1','0'],
+  #   'TubularCancer':['1','0'],
+  #   "Organ":['0','1']
+  #   }
 
 
 
 
   gregToAccessDbDict = {
     'Report_Date_Time':'Report_Date_Time',
-    'Are there positive LN?':'PositiveLN',
+    'PositiveLN':'PositiveLN',
     'ITC':'ITC',
     'Her2':'Her2',
     'Her2_IHC':'Her2_IHC',
@@ -329,7 +303,7 @@ if MODE == "TAGHIAN":
     'BluntAdenosis':'BluntAdenosis',
     'LobularNeoplasia':'LobularNeoplasia',
     'ADH_DCIS':'ADH_DCIS',
-    'Phylodes':'Phylodes',
+    'Phyllodes':'Phyllodes',
     'CancerNOS':'CancerNOS',
     'InvasiveSuspicious':'InvasiveSuspicious',
     'InsituNOS':'InsituNOS',
@@ -378,34 +352,34 @@ if MODE == "TAGHIAN":
 
 
   gregToMongoDict = {       
-                'Are there positive LN?':'PositiveLN',
-                'HER2':'Her2',
+                'PositiveLN':'PositiveLN',
+                'Her2':'Her2',
                 'Her2Fish':'Her2Fish',
                 'Her2_IHC':'Her2_IHC',
-                'ITC ':'ITC',
-                'Red ILC':'ILC',
-                'Red ALH':'ALH',
-                'Red DCIS':'DCIS',
-                'Red LCIS':'LCIS',
-                'Red IDC':'IDC',
-                'Red ADH':'ADH',
-                'Red BreastSide':'BreastSide',
-                'Red FlatEpithelial':'FlatEpithelial',
-                'Red BluntAdenosis':'BluntAdenosis',
-                'Red LobularNeoplasia':'LobularNeoplasia',
-                'Red ADH_DCIS':'ADH_DCIS',
-                'Red Phylodes':'Phylodes',
-                'Red CancerNOS':'CancerNOS',
-                'Red InvasiveSuspicious':'InvasiveSuspicious',
-                'Red InsituNOS':'InsituNOS',
-                'Red CancerInvInsituNOS':'CancerInvInsituNOS',
-                'Red SuspiciousForPhyllodes':'SuspiciousForPhyllodes',
-                'Red CancerSuspicious':'CancerSuspicious',
-                'Red TubularCancer':'TubularCancer',
-                'Red Papill':'Papill',
-                'Red CancerInvasive':'CancerInvasive',
-                'Red CancerInvNOS':'CancerInvNOS',
-                'Oncotype score':'OncotypeScore'  }
+                'ITC':'ITC',
+                'ILC':'ILC',
+                'ALH':'ALH',
+                'DCIS':'DCIS',
+                'LCIS':'LCIS',
+                'IDC':'IDC',
+                'ADH':'ADH',
+                'BreastSide':'BreastSide',
+                'FlatEpithelial':'FlatEpithelial',
+                'BluntAdenosis':'BluntAdenosis',
+                'LobularNeoplasia':'LobularNeoplasia',
+                'ADH_DCIS':'ADH_DCIS',
+                'Phyllodes':'Phyllodes',
+                'CancerNOS':'CancerNOS',
+                'InvasiveSuspicious':'InvasiveSuspicious',
+                'InsituNOS':'InsituNOS',
+                'CancerInvInsituNOS':'CancerInvInsituNOS',
+                'SuspiciousForPhyllodes':'SuspiciousForPhyllodes',
+                'CancerSuspicious':'CancerSuspicious',
+                'TubularCancer':'TubularCancer',
+                'Papill':'Papill',
+                'CancerInvasive':'CancerInvasive',
+                'CancerInvNOS':'CancerInvNOS',
+                'OncotypeScore':'OncotypeScore'  }
 
 
   JSONLabelNameDict = diagToConventionDict

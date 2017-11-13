@@ -91,8 +91,8 @@ def main(allData):
             newTexts = splitRep(rep['Report_Text'])
 
             ## Do not make 2 reps for golds for simplicty
-            if ('BreastSide' in rep and 'Correct' in rep and rep['Correct'] == 'Y') or 'Red BreastSide' in rep:
-                b_key = 'BreastSide' if 'BreastSide' in rep else 'Red BreastSide'
+            if ('BreastSide' in rep and 'Correct' in rep and rep['Correct'] == 'Y'):
+                b_key = 'BreastSide'
                 relevantSideText = newTexts[rep[b_key]]
                 rep['Report_Text_Segmented'] = relevantSideText
                 rep['ReportID'] = repId

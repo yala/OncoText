@@ -1,7 +1,6 @@
 import cPickle as p
 import sys, os
 sys.path.append("..")
-#sys.path.append("../preprocessDataset")
 from preprocessRawDb import *
 from operator import itemgetter
 from dicttoxml import dicttoxml
@@ -14,7 +13,7 @@ import MySQLdb
 def hasCat(r, cat, loose=False):
     for c in cat:
         if not loose:
-            if r[c] == 'Present' or str(r[c]) == '1':
+            if str(r[c]) == '1':
                 return True
         else:
             if c in r:
@@ -27,31 +26,31 @@ def postProcessRules(db_train):
 
     for r in db_train:
         if hasCat(r, const_cancers_mod):
-            r['cancer'] = 'Present'
+            r['cancer'] = '1'
         else:
-            r['cancer'] = "Absent"
+            r['cancer'] = '0'
             if hasCat(r, const_atypias_mod):
-                r['atypia'] = 'Present'
+                r['atypia'] = '1'
             else:
-                r['atypia'] = "Absent"
+                r['atypia'] = '0'
 
-        if r['cancer'] == 'Absent':
-            for k in ['ER','PR','Her2 (Fish)', 'ECE', 'LVI','BVI', 'Are there positive LN?', 'ITC ']:
-                r[k] = 'NA'
+        if r['cancer'] == '0':
+            for k in ['ER','PR','Her2Fish', 'ECE', 'LVI','BVI', 'PositiveLN', 'ITC']:
+                r[k] = '9'
 
         for k in r.keys():
             if type(r[k]) is unicode:
                 r[k] = r[k].encode('ascii','replace')
-            if r[k] in ["Present", "Yes", "Positive", "Anatomic", "breast"]:
-                r[k] = "1"
-            if r[k] in ["Absent", "No", "Negative", "Cytology", "non-breast"]:
-                r[k] = "0"
-            if r[k] == "NA":
-                r[k] = "9"
-            if r[k] == "RIGHT":
-                r[k] = 'r'
-            if r[k] == "LEFT":
-                r[k] = "l"
+            # if r[k] in ['1']:
+            #     r[k] = '1'
+            # if r[k] in ['0', "No", "Negative", "Cytology", "non-breast"]:
+            #     r[k] = "0"
+            # if r[k] == "NA":
+            #     r[k] = "9"
+            # if r[k] == "RIGHT":
+            #     r[k] = 'r'
+            # if r[k] == "LEFT":
+            #     r[k] = "l"
             #TODO change these to ints and reconfigure the db
 
     return db_train#[d for d in db_train if d['Organ'] == 'breast']
@@ -81,13 +80,13 @@ def getMRNDB(db):
 def filt(report, validKeys, blackout):
        
     for diag in blackout:
-        assert str(report[diag]) in ['1','0', 'Present','Absent']
-        if report[diag] in [1, 'Present']:
+        assert str(report[diag]) in ['1','0']
+        if str(report[diag]) in ['1']:
             return False
     
     for diag in validKeys:
-        assert str(report[diag]) in ['1','0', 'Present','Absent']
-        if str(report[diag]) in ['1', 'Present']:
+        assert str(report[diag]) in ['1','0']
+        if str(report[diag]) in ['1']:
             return True
     
     return 'benign'
@@ -197,34 +196,41 @@ def main():
         for mrn in mrns:
             reports = mrns[mrn]
             for r in reports:
-                r['date'] = utcToDate(r['Report_Date_Time']) 
-
+                if 'Report_Date_Time' in r:
+                    r['date'] = utcToDate(r['Report_Date_Time'])
+                else:
+                    r['date'] = utcToDate(r['Report_Date_TimePlusX'])
             sortedReports = sorted( reports, key=itemgetter('date') )
 
             for r in sortedReports:
-                if type(r['Report_Date_Time']) == datetime.datetime:
-                    r['Report_Date_Time'] = r['Report_Date_Time'].isoformat()
+                if 'Report_Date_Time' in r:
+                    if type(r['Report_Date_Time']) == datetime.datetime:
+                        r['Report_Date_Time'] = r['Report_Date_Time'].isoformat()
+                else:
+                    if type(r['Report_Date_TimePlusX']) == datetime.datetime:
+                        r['Report_Date_TimePlusX'] = r['Report_Date_TimePlusX'].isoformat()
+
 
             assert len(reports) == len(sortedReports)
             
             assert len(sortedReports) > 0
             indx = 0
-            firstRep =  sortedReports[indx]
-            while not 'breast' in firstRep['Report_Text'].lower() and indx < len(sortedReports) -1:
-                indx +=1
-                firstRep =  sortedReports[indx]
+            firstRep = sortedReports[indx]
             
-            time = firstRep['Report_Date_Time'].split("T")[0]
+            if 'Report_Date_Time' in firstRep:
+                time = firstRep['Report_Date_Time'].split("T")[0]
+            else:
+                time = firstRep['Report_Date_TimePlusX'].split("T")[0]
 
             passes = filt(firstRep, atypias,cancer)
             queryIndx = indx
 
+
             def crit():
-                passBool = passes == True and sortedReports[queryIndx]['date'].year < 2010 and yearFilt
                 repBool = passes == 'benign' #or passBool
                 return repBool and queryIndx < len(sortedReports) -1
 
-            while  crit():
+            while crit():
                 queryIndx +=1
                 passes = filt(sortedReports[queryIndx], atypias,cancer)
 
@@ -242,7 +248,7 @@ def main():
                     conc =filt(r, atypias, cancer)
                     if conc == False:
                         concurrentCancr = True
-
+                
                 if not concurrentCancr:
                     results.append( (mrn, time) ) 
                     resultRecords.extend([r for r in sortedReports if 'breast' in r['Report_Text'].lower()])
@@ -255,24 +261,27 @@ def main():
         print "Number of Fitting query", len(results)
         print "Num MRNs", len( set([r['MRN'] for r in resultRecords] ))
         print "Number of Records", len(resultRecords)
+                
+        if len(resultRecords) > 0:
+            for r in resultRecords:
+                if "ruleBreastSide" in r:
+                    del r["ruleBreastSide"]
 
-        for r in resultRecords:
-            if "ruleBreastSide" in r:
-                del r["ruleBreastSide"]
+            p.dump(resultRecords, open('atypiaExport.p','wb'))
 
-        p.dump(resultRecords, open('atypiaExport.p','wb'))
+            keys = [k for k in key_order_convention if k in resultRecords[0].keys()] + ['Report_Date_Time', 'MRN', 'EMPI']
+            filtRecs = []
+            
+            for r in resultRecords:
+                filtR = {}
+                for k in r:
+                    if k in keys:
+                        filtR[k] = r[k]
+                filtRecs.append(filtR)
+            
+            resultRecords = filtRecs
 
-        keys = [k for k in key_order_convention if k in resultRecords[0].keys()] + ['Report_Date_Time', 'MRN', 'EMPI']
-        filtRecs = []
-        for r in resultRecords:
-            filtR = {}
-            for k in r:
-                if k in keys:
-                    filtR[k] = r[k]
-            filtRecs.append(filtR)
-        resultRecords = filtRecs
-
-        updateAccesDB(resultRecords, exportPath)
+            updateAccesDB(resultRecords, exportPath)
 
 if __name__ == "__main__":
     main()

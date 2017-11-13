@@ -7,7 +7,6 @@ from operator import itemgetter
 import sys
 import copy
 sys.path.append("/home/nlp/pathology")
-#sys.path.append('/home/nlp/pathology/preprocessDataset')
 import preprocessRawDb
 from constants import *
 random.seed(1)
@@ -202,45 +201,45 @@ def parseResultsFiles(stem, debug = False):
         print 'len(results)[0]', 'len(boostexer_diagnoses):', len(results[0]), len(boostexer_diagnoses)
     return results
 
-#Iterate though reports in data-dict and get maxDx
-def getMaxDX(data):
-    for key in data:
-        report = data[key]
-        report['MaxDX'] = getMaxDXSingleReport(report)
-        data[key] = report
-    return False
+# #Iterate though reports in data-dict and get maxDx
+# def getMaxDX(data):
+#     for key in data:
+#         report = data[key]
+#         report['MaxDX'] = getMaxDXSingleReport(report)
+#         data[key] = report
+#     return False
 
-def getMaxDXSingleReport(report):
-    if 'Medullary' in report and report['Medullary'] == 1:
-        return 'Medullary'
-    elif ('ILC' in report and report['ILC'] == 1) or ('Red ILC' in report and report['Red ILC'] == 'Present'):
-        return  'ILC'
-    elif ('IDC' in report and report['IDC'] == 1) or ('Red IDC' in report and report['Red IDC'] == 'Present'):
-        return  'IDC'
-    elif 'TubularCancer' in report and report['TubularCancer'] == 1:
-        return  'TubularCancer'
-    elif 'CancerNOS' in report and report['CancerNOS'] == 1:
-        return  'CancerNOS'
-    elif ('DCIS' in report and report['DCIS'] == 1) or ('Red DCIS' in report and report['Red DCIS']=="Present"):
-        return  'DCIS'
-    elif 'CancerInvInsituNOS' in report and report['CancerInvInsituNOS'] == 1:
-        return  'CancerInvInsituNOS'
-    elif 'Borderline' in report and report['Borderline'] == 1:
-        return  'Borderline'
-    elif 'InsituNOS' in report and report['InsituNOS'] == 1:
-        return  'InsituNOS'
-    elif ('LCIS' in report and report['LCIS'] == 1) or ('Red LCIS' in report and report['Red LCIS'] == 'Present'):
-        return  'LCIS'
-    elif ('ALH' in report and report['ALH'] == 1) or ('Red ALH' in report and report['Red ALH'] == 'Present'):
-        return  'ALH'
-    elif 'LobularNeoplasia' in report and report['LobularNeoplasia'] == 1:
-        return  'LobularNeoplasia'
-    elif ('ADH' in report and report['ADH'] == 1) or ('Red ADH' in report and report['Red ADH'] == 'Present'):
-        return  'ADH'
-    elif 'Phylodes' in report and report['Phylodes'] == 1:
-        return  'Phylodes'
-    else:
-        return 'None'
+# def getMaxDXSingleReport(report):
+#     if 'Medullary' in report and report['Medullary'] == 1:
+#         return 'Medullary'
+#     elif ('ILC' in report and report['ILC'] == 1) or ('Red ILC' in report and report['Red ILC'] == 'Present'):
+#         return  'ILC'
+#     elif ('IDC' in report and report['IDC'] == 1) or ('Red IDC' in report and report['Red IDC'] == 'Present'):
+#         return  'IDC'
+#     elif 'TubularCancer' in report and report['TubularCancer'] == 1:
+#         return  'TubularCancer'
+#     elif 'CancerNOS' in report and report['CancerNOS'] == 1:
+#         return  'CancerNOS'
+#     elif ('DCIS' in report and report['DCIS'] == 1) or ('Red DCIS' in report and report['Red DCIS']=="Present"):
+#         return  'DCIS'
+#     elif 'CancerInvInsituNOS' in report and report['CancerInvInsituNOS'] == 1:
+#         return  'CancerInvInsituNOS'
+#     elif 'Borderline' in report and report['Borderline'] == 1:
+#         return  'Borderline'
+#     elif 'InsituNOS' in report and report['InsituNOS'] == 1:
+#         return  'InsituNOS'
+#     elif ('LCIS' in report and report['LCIS'] == 1) or ('Red LCIS' in report and report['Red LCIS'] == 'Present'):
+#         return  'LCIS'
+#     elif ('ALH' in report and report['ALH'] == 1) or ('Red ALH' in report and report['Red ALH'] == 'Present'):
+#         return  'ALH'
+#     elif 'LobularNeoplasia' in report and report['LobularNeoplasia'] == 1:
+#         return  'LobularNeoplasia'
+#     elif ('ADH' in report and report['ADH'] == 1) or ('Red ADH' in report and report['Red ADH'] == 'Present'):
+#         return  'ADH'
+#     elif 'Phylodes' in report and report['Phylodes'] == 1:
+#         return  'Phylodes'
+#     else:
+#         return 'None'
 
 
 ## Flex (for flexible) flag means we runs asserts on a label only if it is present in the sample
@@ -265,7 +264,7 @@ def validateRepsDB(reps, flex = False, dirty = False):
                         assert c in r and (replaceSpaces(r[c]) in labelDict[c] or dirty)
                 else:
                     assert c in hueLabels
-                    if c in r and not (r[c] in [0,1,'RIGHT','LEFT', '0', '1']):
+                    if c in r and not (r[c] in [0,1,'r','l','0','1']):
                         print "C", c
                         print "r[c]", r[c]
                         assert False
@@ -284,10 +283,10 @@ def buildEpisodes(data, labelMaxDXBool, debug = False):
         if not data[i]['MRNPlusX'] in mrns:
             mrns[data[i]['MRNPlusX']] = {}
 
-        if not data[i]['Red BreastSide'] in mrns[data[i]['MRNPlusX']]:
-            mrns[data[i]['MRNPlusX']][data[i]['Red BreastSide']] = [data[i]]
+        if not data[i]['BreastSide'] in mrns[data[i]['MRNPlusX']]:
+            mrns[data[i]['MRNPlusX']][data[i]['BreastSide']] = [data[i]]
         else:
-            mrns[data[i]['MRNPlusX']][data[i]['Red BreastSide']].append(data[i])
+            mrns[data[i]['MRNPlusX']][data[i]['BreastSide']].append(data[i])
 
     #Structure : List of Reports with Episode IDs
     reportsDB = []
@@ -417,18 +416,18 @@ def buildEpisodes(data, labelMaxDXBool, debug = False):
     return reportsDB, episodeDB
 
 
-def run(allData, stem, save=False):
-    filtData = removeUnexpectedColumns(allData)     
-    print "Calling export"
-    reportDB = aggregateResults(filtData, stem)
-    print "Calling labelMaxDXBool"
-    getMaxDX(reportDB)
-    print "Calling build episode"
-    reportDB, episodeDB = buildEpisodes(reportDB, True)
-    if save:
-        p.dump( reportDB, open(outPath, 'wb'))
-        p.dump( episodeDB, open(episodePath, 'wb'))
-    reportDB, episodeDB
+# def run(allData, stem, save=False):
+#     filtData = removeUnexpectedColumns(allData)     
+#     print "Calling export"
+#     reportDB = aggregateResults(filtData, stem)
+#     print "Calling labelMaxDXBool"
+#     getMaxDX(reportDB)
+#     print "Calling build episode"
+#     reportDB, episodeDB = buildEpisodes(reportDB, True)
+#     if save:
+#         p.dump( reportDB, open(outPath, 'wb'))
+#         p.dump( episodeDB, open(episodePath, 'wb'))
+#     reportDB, episodeDB
 
 # Remove unexpected cols for code safety
 def removeUnexpectedColumns(allData):

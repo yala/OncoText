@@ -26,6 +26,7 @@ def oneHot(diag, label):
         arr = np.zeros( (len(constantValidLabelDict[diag]), ))
         arr[ constantValidLabelDict[diag].index(label) ]  = 1
     except Exception, e:
+        print str(e)
         print diag, label
         return np.zeros( (len(constantValidLabelDict[diag]), ))
     return arr

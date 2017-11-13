@@ -3,17 +3,13 @@ from constants import *
 import sys, os
 sys.path.append("/home/nlp/pathology/")
 sys.path.append("/home/nlp/pathology/trainClassifier")
-#sys.path.append("/home/nlp/pathology/preprocessDataset")
-#sys.path.append("/home/nlp/pathology/analysis")
 sys.path.append("/home/nlp/pathology/rnn")
 import createEpisodes
 import preprocessTrain
 import preprocessUnlabeled
 import exportToJSON
 import generateClassifierFilesForProd
-import generateClassifierFilesForDev
 import preprocessRawDb
-#import interpretResults
 import getAtypias
 import evalModelRun
 from operator import itemgetter
@@ -32,7 +28,9 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 CURR_PATH = "/home/nlp/pathology/"
 DB_TRAIN_PATH = CURR_PATH+"reportDBAPI_train.p"
+#DB_TRAIN_PATH = CURR_PATH+"reportDBAPI_train_small.p"
 DB_UNLABLED_PATH = CURR_PATH+"reportDBAPI_test.p"
+#DB_UNLABLED_PATH = CURR_PATH+"reportDBAPI_test_small.p"
 
 
 
@@ -46,7 +44,7 @@ raws = p.load(open(rawPath,'rb')) + p.load( open(additPath,'rb'))
 def hasCat(r, cat, loose=False):
     for c in cat:
         if not loose:
-            if r[c] == 'Present':
+            if r[c] == '1':
                 return True
         else:
             if c in r:
@@ -83,12 +81,15 @@ except Exception, e:
 RequiredPreprocessFields = ['Report_Text', "Report_Date_TimePlusX"]
 RequiredTrainDbFields = ['ReportID', 'Report_Text_Segmented']
 
+global boost_diags1, boost_diags2, boost_diags3, boost_diags4, boost_diags5, boost_diags6  
 boost_diags = [replaceSpaces(l) for l in boostexer_diagnoses]
-inds = [0, (len(boost_diags)/4)+1, (len(boost_diags)/2)+1, (3*len(boost_diags)/4)+1, len(boost_diags)+1]
-global boost_diags1 = (" ".join(boost_diags[inds[0]:inds[1]]))
-global boost_diags2 = (" ".join(boost_diags[inds[1]:inds[2]]))
-global boost_diags3 = (" ".join(boost_diags[inds[2]:inds[3]]))
-global boost_diags4 = (" ".join(boost_diags[inds[3]:inds[4]]))
+inds = [0, (len(boost_diags)/6), (len(boost_diags)/3), (len(boost_diags)/2), (2*len(boost_diags)/3), (5*len(boost_diags)/6), len(boost_diags)]
+boost_diags1 = (".".join(boost_diags[inds[0]:inds[1]]))
+boost_diags2 = (".".join(boost_diags[inds[1]:inds[2]]))
+boost_diags3 = (".".join(boost_diags[inds[2]:inds[3]]))
+boost_diags4 = (".".join(boost_diags[inds[3]:inds[4]]))
+boost_diags5 = (".".join(boost_diags[inds[4]:inds[5]]))
+boost_diags6 = (".".join(boost_diags[inds[5]:inds[6]]))
 
 ## Given a JSON list of dicts, where  each dict represent a report:
 ## Parse the dict for daignoses, and add annotations if found
@@ -153,14 +154,18 @@ def addUnlabeledData():
         print "Adding", name, "to db_unlabeled"
         db_unlabeled[name] = []
     ## mark the files to note as annoations
+    unlabeledTexts = [r['Report_Text_Segmented'] for r in db_unlabeled[name]]
+    newData = []
     for r in data:
-        r['Owner'] = name
-        for d in diagnoses:
-            if d in r:
-                r['TaghianGold'] = 1
         r['Report_Text_Segmented'] = preprocessText(r['Report_Text_Segmented'])
+        if r['Report_Text_Segmented'] not in unlabeledTexts:
+            r['Owner'] = name
+            for d in diagnoses:
+                if d in r:
+                    r['TaghianGold'] = 1
+            newData.append(r)
 
-    db_unlabeled[name].extend(data)
+    db_unlabeled[name].extend(newData)
     p.dump(db_unlabeled, open(DB_UNLABLED_PATH,'wb'))
     print db_unlabeled.keys()
     return "Success"
@@ -214,10 +219,10 @@ def train():
     name = request.args.get("name") or "default"
     mode = request.args.get("mode") or "Prod"
     shellScript1 = "cd boostexer/breast/api/"
-shellScript2 = "./trainModel.sh "+mode+"_"+name+"_ "+boost_diags1+" "+boost_diags2+" "+boost_diags3+" "+boost_diags4
+    shellScript2 = "./trainModel.sh "+mode+"_"+name+"_ "+boost_diags1+" "+boost_diags2+" "+boost_diags3+" "+boost_diags4+" "+boost_diags5+" "+boost_diags6
     subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
     neuralFlags = { 'unlabled_mode':False, 'trainPath':'diagDictTrain_'+name+".p"}
-    p.dump( neuralFlags, open('rnn/flags.p','wb'))
+    p.dump( neuralFlags, open('/home/nlp/pathology/rnn/flags.p','wb'))
     shellScript1 = "cd rnn; rm -rf logsIndep_"+name + "; mkdir logsIndep_"+name
     shellScript2 = "./run.sh runIndep.py logsIndep_"+name
     subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
@@ -262,7 +267,7 @@ def predict():
     getAtypias.main()
     for goldset in os.listdir(evalDir):
         if goldset.endswith('.xlsx'):
-            evalModelRun.main(goldset, sendText=False)
+            evalModelRun.main(goldset)
     pruneNonBreast(reportDB, name)
     for r in reportDB:
         for k in r:
@@ -312,7 +317,7 @@ def predictHelper(name):
     ## run boost predict
     mode = "Prod"
     shellScript1 = "cd boostexer/breast/api/"
-    shellScript2 = "./runModel.sh "+mode+"_"+name+"_ "+boost_diags1+" "+boost_diags2+" "+boost_diags3+" "+boost_diags4
+    shellScript2 = "./runModel.sh "+mode+"_"+name+"_ "+boost_diags1+" "+boost_diags2+" "+boost_diags3+" "+boost_diags4+" "+boost_diags5+" "+boost_diags6
     subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
 
     ## aggregate boost predict
@@ -323,7 +328,7 @@ def predictHelper(name):
     #reportDBBoost = p.load(open('boostDB_'+name+'.p','r'))
     neuralFlags = { 'unlabled_mode':True, 'unlabeledPath':'unlalbeldReps_'+name+".p", 'outPath':'lableledReps_'+name+'.p'}
 
-    p.dump( neuralFlags, open('rnn/flags.p','w'))
+    p.dump( neuralFlags, open('/home/nlp/pathology/rnn/flags.p','w'))
     assert p.load(open('rnn/flags.p','rb')) == neuralFlags
     shellScript1 = "cd rnn "
     shellScript2 = "./run.sh runIndep.py logsIndep_"+name
@@ -343,7 +348,7 @@ def predictHelper(name):
 
 #sends all breast reports to the AccessDB
 def updateAccesDB(reportDB):
-    reportDB = [r for r in reportDB if ('filename' in r and r['filename'] not in os.listdir(evalDir))]
+    reportDB = [r for r in reportDB if ('filename' not in r or r['filename'] not in os.listdir(evalDir))]
     reportDB = postProcessRules(reportDB)
     reportDB = aggregateEpisodes(reportDB)
     #reportDB = exportToJSON.portToJSON(reportDB)
@@ -518,11 +523,10 @@ def applyCorrections(test, gold):
         if text in textToLabel:
             t['train'] = 1
             for d in textToLabel[text]:
-                if textToLabel[text][d] in constantValidLabelDict[d]:
-                    if d in t  and d in diagnoses and not t[d] == textToLabel[text][d]:
-                        corrections += 1
-                    t[d] = textToLabel[text][d]
-                    num_match+=1
+                if d in t  and d in diagnoses and not t[d] == textToLabel[text][d]:
+                    corrections += 1
+                t[d] = textToLabel[text][d]
+                num_match+=1
     print("num corrected", corrections, num_match)
 ## Given a list of dicts, where  each dict represent a report:
 ## If the report text covers a single breast, we assign it an id and nothing happens
@@ -552,31 +556,31 @@ def postProcessRules(db_train):
             r['filename'] = "Unknown"
 
         if hasCat(r, const_cancers_mod):
-            r['cancer'] = 'Present'
+            r['cancer'] = '1'
         else:
-            r['cancer'] = "Absent"
+            r['cancer'] = '0'
         if hasCat(r, const_atypias_mod):
-            r['atypia'] = 'Present'
+            r['atypia'] = '1'
         else:
-            r['atypia'] = "Absent"
+            r['atypia'] = '0'
 
-        if r['cancer'] == 'Absent':
-            for k in ['ER','PR','Her2Fish', 'ECE', 'LVI','BVI', 'Are there positive LN?', 'ITC ']:
-                r[k] = 'NA'
+        if r['cancer'] == '0':
+            for k in ['ER','PR','Her2Fish', 'ECE', 'LVI','BVI', 'PositiveLN', 'ITC']:
+                r[k] = '9'
 
         for k in r.keys():
-            #if type(r[k]) is unicode:
-                #r[k] = r[k]
-            if r[k] in ["Present", "Yes", "Positive", "Anatomic", "breast"]:
-                r[k] = "1"
-            if r[k] in ["Absent", "No", "Negative", "Cytology", "non-breast"]:
-                r[k] = "0"
-            if r[k] == "NA":
-                r[k] = "9"
-            if r[k] == "RIGHT":
-                r[k] = 'r'
-            if r[k] == "LEFT":
-                r[k] = "l"
+            if type(r[k]) is unicode:
+                r[k] = str(r[k])
+            # if r[k] in ["Present", "Yes", "Positive", "Anatomic", "breast"]:
+            #     r[k] = "1"
+            # if r[k] in ["Absent", "No", "Negative", "Cytology", "non-breast"]:
+            #     r[k] = "0"
+            # if r[k] == "NA":
+            #     r[k] = "9"
+            # if r[k] == "RIGHT":
+            #     r[k] = 'r'
+            # if r[k] == "LEFT":
+            #     r[k] = "l"
             #TODO change these to ints and reconfigure the db
 
     return db_train#[d for d in db_train if d['Organ'] == 'breast']
@@ -585,7 +589,7 @@ def aggregateEpisodes(data):
     data  = preprocessRawDb.unicodeToDatetime(data)
     # label episode ids for data
     mrns = {}
-    sideKey = "Red BreastSide" if "Red BreastSide" in data[0] else "BreastSide"
+    sideKey = "BreastSide"
     assert sideKey in data[0]
     for i in range(len(data)):
         if not sideKey in data[i]:
