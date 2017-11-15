@@ -73,7 +73,7 @@ class TextCNN(object):
         useRelu = False
         for d in nn_diagnoses:
             diag = diagName(d)      
-            num_classes = len(constantValidLabelDict[d])
+            num_classes = len(post_diagnoses[d])
             featMap = featureMaps[diag]
             size = 160 # size of feature map
             if useRelu:

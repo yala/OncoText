@@ -115,15 +115,19 @@ def addTrainData():
     if not name in db_train:
         print "Adding", name, "to db_train"
         db_train[name] = base
-
+    
     ## mark the files to note as annoations
+    trainTexts = [r['Report_Text_Segmented'] for r in db_train[name]]
+    newData = []
     for r in data:
-        r['Owner'] = name
-        for d in diagnoses:
-            if d in r:
-                r['TaghianGold'] = 1
+        if r['Report_Text_Segmented'] not in trainTexts:
+            r['Owner'] = name
+            for d in diagnoses:
+                if d in r:
+                    r['TaghianGold'] = 1
+            newData.append(r)
 
-    db_train[name].extend(data)
+    db_train[name].extend(newData)
     print "Len train", len(db_train[name])
     p.dump(db_train, open(DB_TRAIN_PATH,'wb'))
     print db_train.keys()
@@ -222,7 +226,7 @@ def train():
     shellScript2 = "./trainModel.sh "+mode+"_"+name+"_ "+boost_diags1+" "+boost_diags2+" "+boost_diags3+" "+boost_diags4+" "+boost_diags5+" "+boost_diags6
     subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
     neuralFlags = { 'unlabled_mode':False, 'trainPath':'diagDictTrain_'+name+".p"}
-    p.dump( neuralFlags, open('/home/nlp/pathology/rnn/flags.p','wb'))
+    p.dump( neuralFlags, open('rnn/flags.p','wb'))
     shellScript1 = "cd rnn; rm -rf logsIndep_"+name + "; mkdir logsIndep_"+name
     shellScript2 = "./run.sh runIndep.py logsIndep_"+name
     subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
@@ -244,30 +248,12 @@ def predict():
             r['Institution'] = r['MRN_Type']
     reportDB = aggregateEpisodes(reportDB)
     reportDB = exportToJSON.portToJSON(reportDB)
-    p.dump(reportDB, open('exportableDB_'+name+'.p','w'))
-    #reportDBJ = []
-    # reportDB_Eval = []
-    # reportDB_Pakis = []
-    #for r in reportDB_Conv:
-        # if 'test_set' in r and r['test_set']:
-        #     reportDB_Eval.append(r)
-        # elif 'pakistani' in r and r['pakistani']:
-        #     reportDB_Pakis.append(r)
-        # else:
-        #reportDBJ.append(r)
     print "len reportDB", len(reportDB)
-    # print "len test set", len(reportDB_Eval)
-    # print "len pakistani set", len(reportDB_Pakis)
-
     p.dump(reportDB, open('returnedDB_'+name+'.p','w'))
-    # p.dump(reportDB_Eval, open('evalDB_'+name+'.p','w'))
-    # p.dump(reportDB_Pakis, open('pakistaniDB_'+name+'.p','w'))
 
     updateAccesDB(copy.deepcopy(reportDB))
     getAtypias.main()
-    for goldset in os.listdir(evalDir):
-        if goldset.endswith('.xlsx'):
-            evalModelRun.main(goldset)
+    evalModelRun.main()
     pruneNonBreast(reportDB, name)
     for r in reportDB:
         for k in r:
@@ -290,7 +276,7 @@ def pruneNonBreast(reportDB, name):
 
     count = 0
     for r in reportDB:
-        if r['Organ'].lower() != 'breast':
+        if r['Organ'].lower() != '1':
             matchingReports = [i for i in range(len(db_unlabeled[name])) if db_unlabeled[name][i]['Report_Text_Segmented']==r['Report_Text_Segmented']]
             #print(matchingReports, r['Organ'])
             count += len(matchingReports)
@@ -328,7 +314,7 @@ def predictHelper(name):
     #reportDBBoost = p.load(open('boostDB_'+name+'.p','r'))
     neuralFlags = { 'unlabled_mode':True, 'unlabeledPath':'unlalbeldReps_'+name+".p", 'outPath':'lableledReps_'+name+'.p'}
 
-    p.dump( neuralFlags, open('/home/nlp/pathology/rnn/flags.p','w'))
+    p.dump( neuralFlags, open('rnn/flags.p','w'))
     assert p.load(open('rnn/flags.p','rb')) == neuralFlags
     shellScript1 = "cd rnn "
     shellScript2 = "./run.sh runIndep.py logsIndep_"+name
@@ -353,7 +339,7 @@ def updateAccesDB(reportDB):
     reportDB = aggregateEpisodes(reportDB)
     #reportDB = exportToJSON.portToJSON(reportDB)
 
-    reportDBJ = [r for r in reportDB if r['Organ']=='1']
+    reportDBJ = [r for r in reportDB if r['Organ'] == '1']
     reportDBO = [r for r in reportDB if r['Organ'] == '0']
     print "Exporting", len(reportDBJ), "breast records"
     print "Exporting", len(reportDBO), "other records"
@@ -362,16 +348,18 @@ def updateAccesDB(reportDB):
 
     db = MySQLdb.connect(host="localhost",user="root",passwd="nlpdb",db="reports")
     cur = db.cursor()
-    dbKeys, placeholders = [k for k in accessDbKeys if k in reportDBJ[0]], ["%s" for i in accessDbKeys if i in reportDBJ[0] ]
+    dbKeys, placeholders = [k for k in keys if k in reportDBJ[0]], ["%s" for i in keys if i in reportDBJ[0] ]
 
     try:
-        cur.execute("DROP TABLE "+backupTableName )
-    except Exception, e:
+        cur.execute("DROP TABLE "+backupTableName)
+    except Exception as e:
+        print str(e)
         pass
 
     try:
         cur.execute("DROP TABLE "+ backupNoBreastTableName )
     except Exception, e:
+        print str(e)
         pass
 
     print "Moving breast reports to backup table..."
@@ -386,10 +374,10 @@ def updateAccesDB(reportDB):
     sql = ("insert into "+reportsTableName+" ("+", ".join(dbKeys)+") VALUES ("+", ".join(placeholders)+")")
     for report in reportDBJ:
         try:
-            values = [report[AccessDbToGregDict[k]] for k in dbKeys]
+            values = [report[k] for k in dbKeys]
         except Exception , e:
             print e
-            print report.keys(), "but looking for keys", [AccessDbToGregDict[k] for k in dbKeys]
+            print report.keys(), "but looking for keys", [k for k in dbKeys]
             continue
 
         try:
@@ -427,10 +415,10 @@ def updateAccesDB(reportDB):
     #print reportDBO[0]
     for report in reportDBO:
         try:
-            values = [report[AccessDbToGregDict[k]] for k in dbKeys]
+            values = [report[k] for k in dbKeys]
         except Exception , e:
             print e
-            print report.keys(), "but looking for keys", [AccessDbToGregDict[k] for k in dbKeys]
+            print report.keys(), "but looking for keys", [k for k in dbKeys]
             continue
 
         try:
@@ -467,8 +455,8 @@ def validateTrainDb(trainDb):
         #assert 'Report_Text_Segmented' in r #and 'ReportID' in r
 
         for d in diagnoses:
-            if d in r and not r[d] in constantValidLabelDict[d]:
-                print "Found ", r[d], "as value or diag", d, "but validLabels are only", constantValidLabelDict[d]
+            if d in r and not r[d] in diagnoses[d]:
+                print "Found "+str(r[d])+" as value for diag "+str(d)+" but valid labels are only", diagnoses[d]
 
          #       assert r[d] in constantValidLabelDict[d]
 	        return False
@@ -555,11 +543,11 @@ def postProcessRules(db_train):
         if not "filename" in r:
             r['filename'] = "Unknown"
 
-        if hasCat(r, const_cancers_mod):
+        if hasCat(r, const_cancers):
             r['cancer'] = '1'
         else:
             r['cancer'] = '0'
-        if hasCat(r, const_atypias_mod):
+        if hasCat(r, const_atypias):
             r['atypia'] = '1'
         else:
             r['atypia'] = '0'

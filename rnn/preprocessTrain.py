@@ -9,10 +9,6 @@ import numpy as np
 from sklearn.linear_model import LogisticRegression
 
 
-
-
-
-
 def preprocessText(text):
     cleanText = re.sub(r"\W", " ", text) 
     cleanText = ' '.join(cleanText.split('\n'))
@@ -23,12 +19,12 @@ def preprocessText(text):
 
 def oneHot(diag, label):
     try:
-        arr = np.zeros( (len(constantValidLabelDict[diag]), ))
-        arr[ constantValidLabelDict[diag].index(label) ]  = 1
+        arr = np.zeros((len(post_diagnoses[diag]), ))
+        arr[post_diagnoses[diag].index(label)] = 1
     except Exception, e:
         print str(e)
         print diag, label
-        return np.zeros( (len(constantValidLabelDict[diag]), ))
+        return np.zeros((len(post_diagnoses[diag]), ))
     return arr
 
 def main(allData):

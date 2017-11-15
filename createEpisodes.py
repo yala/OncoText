@@ -10,7 +10,7 @@ sys.path.append("/home/nlp/pathology")
 import preprocessRawDb
 from constants import *
 random.seed(1)
-labelDict = constantValidLabelDict
+labelDict = post_diagnoses
 
 # Read boost result files and consolidate into a single database format
 def aggregateResults(allData, stem, export_as_list=False):

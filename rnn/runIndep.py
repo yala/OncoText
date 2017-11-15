@@ -170,7 +170,7 @@ def label_dataset(session, models, dev_input, config, outPath='labeledReps.p', v
             for d in nn_diagnoses:
 		diag = diagName(d)
 		labelInd = pred[diag][k]
-                r[d] = constantValidLabelDict[d][labelInd]
+                r[d] = post_diagnoses[d][labelInd]
 
         allReps.extend(reports)
 
@@ -190,7 +190,6 @@ def main(_):
     print("flags:", n_flags)
     if unlabled_mode:
         devPath = n_flags['unlabeledPath']
-
         dev_input = UnlabledInput(devPath, config)
     else:
         devPath = 'devReps.p'

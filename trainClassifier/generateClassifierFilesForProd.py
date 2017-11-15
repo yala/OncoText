@@ -11,7 +11,7 @@ import os
 here = os.path.dirname(os.path.realpath(__file__))
 
 random.seed(1)
-labelDict = constantValidLabelDict
+labelDict = post_diagnoses
 
 
 def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem, writeTrain=True, writeTest=True):

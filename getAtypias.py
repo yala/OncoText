@@ -25,11 +25,11 @@ def hasCat(r, cat, loose=False):
 def postProcessRules(db_train):
 
     for r in db_train:
-        if hasCat(r, const_cancers_mod):
+        if hasCat(r, const_cancers):
             r['cancer'] = '1'
         else:
             r['cancer'] = '0'
-            if hasCat(r, const_atypias_mod):
+            if hasCat(r, const_atypias):
                 r['atypia'] = '1'
             else:
                 r['atypia'] = '0'
@@ -106,7 +106,7 @@ def updateAccesDB(reportDB, tableName):
 
     cur.execute("CREATE TABLE "+tableName +" LIKE "+ reportsTableName)
     db.commit()
-    dbKeys, placeholders = [k for k in accessDbKeys if k in reportDB[0]], ["%s" for i in accessDbKeys if i in reportDB[0] ]
+    dbKeys, placeholders = [k for k in keys if k in reportDB[0]], ["%s" for i in keys if i in reportDB[0]]
     
 
     print "Exporting breast records... to", tableName
@@ -114,10 +114,10 @@ def updateAccesDB(reportDB, tableName):
     #print reportDB[0]
     for report in reportDB:
         try:
-            values = [report[AccessDbToGregDict[k]] for k in dbKeys]
+            values = [report[k] for k in dbKeys]
         except Exception , e:
             print e
-            print report.keys(), "but looking for keys", [AccessDbToGregDict[k] for k in dbKeys]
+            print report.keys(), "but looking for keys", [k for k in dbKeys]
             continue
 
         try:
@@ -153,32 +153,30 @@ def main():
     dataPath = "/home/nlp/pathology/returnedDB_mghMar.p"
 
     db = p.load( open (dataPath, 'rb'))
-    db = [d for d in db if ((d['Organ'] == 'breast') and (('filename' not in d) or (d['filename'] not in os.listdir('/home/nlp/Dropbox (Partners HealthCare)/Extraction/EvalSets'))))]
+    db = [d for d in db if ((d['Organ'] == '1') and (('filename' not in d) or (d['filename'] not in os.listdir('/home/nlp/Dropbox (Partners HealthCare)/Extraction/EvalSets'))))]
     print "len seed DB", len(db)
 
     exportPaths = ["allFEAsTable", "allADHsTable", "allAtypiaTable", 
     "allAtypia2010Table", "allCancersTable"]
 
-
     yearFilts = [ False, False, False, True, False]
 
+    # cancerT = [
+    #    'ILC','DCIS', 'IDC', 
+    #     'TubularCancer', 'CancerInvNOS', 'CancerInvasive',
+    #     'CancerNotOfBreastOrigin'
+    #    ]
 
-    cancerT = [
-       'ILC','DCIS', 'IDC', 
-        'TubularCancer', 'CancerInvNOS', 'CancerInvasive',
-        'CancerNotOfBreastOrigin'
-       ]
+    all_cancer = [const_cancers, const_cancers, const_cancers, const_cancers, []]
 
-    all_cancer = [cancerT, cancerT, cancerT, cancerT, [] ]
-
-    atypiasT = [
-       'ALH','ADH', 'FlatEpithelial', 'LCIS', 'ADH_DCIS', 'LobularNeoplasia'
-       ]
+    # atypiasT = [
+    #    'ALH','ADH', 'FlatEpithelial', 'LCIS', 'ADH_DCIS', 'LobularNeoplasia'
+    #    ]
 
     fea = ["FlatEpithelial"]
     adh = ["ADH"]
 
-    all_atypias = [fea, adh,atypiasT, atypiasT, cancerT ]
+    all_atypias = [fea, adh, const_atypias, const_atypias, const_cancers]
 
     for i in range(0,4):#len(exportPaths)):
 
@@ -251,7 +249,7 @@ def main():
                 
                 if not concurrentCancr:
                     results.append( (mrn, time) ) 
-                    resultRecords.extend([r for r in sortedReports if 'breast' in r['Report_Text'].lower()])
+                    resultRecords.extend([r for r in sortedReports])
                     resultFirstRecs.append(sortedReports[queryIndx])
 
 
@@ -269,7 +267,7 @@ def main():
 
             p.dump(resultRecords, open('atypiaExport.p','wb'))
 
-            keys = [k for k in key_order_convention if k in resultRecords[0].keys()] + ['Report_Date_Time', 'MRN', 'EMPI']
+            keys = [k for k in diagnoses if k in resultRecords[0].keys()]
             filtRecs = []
             
             for r in resultRecords:

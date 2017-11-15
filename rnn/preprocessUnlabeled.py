@@ -6,11 +6,8 @@ sys.path.append("..")
 from constants import *
 import re
 import numpy as np
-#sys.path.append('../preprocessDataset')
 sys.path.append('/home/nlp/pathology/rnn')
 from aggregateDatasets import parseXLS
-
-
 
 
 def preprocessText(text):
@@ -23,11 +20,11 @@ def preprocessText(text):
 
 def oneHot(diag, label):
     try:
-        arr = np.zeros( (len(constantValidLabelDict[diag]), ))
-        arr[ constantValidLabelDict[diag].index(label) ]  = 1
+        arr = np.zeros((len(post_diagnoses[diag]), ))
+        arr[post_diagnoses[diag].index(label)]  = 1
     except Exception, e:
         print diag, label
-        return np.zeros( (len(constantValidLabelDict[diag]), ))
+        return np.zeros((len(post_diagnoses[diag]), ))
     return arr
 
 
@@ -40,17 +37,12 @@ def main(allReps, dev=False, outname='unlabledReps.p'):
         for r in allReps:
             newR = {}
             for key in r:
-                if key in conventionToDiagDict:
-                    targetKey = conventionToDiagDict[key]
-                    
-                else:
-                    targetKey = key
-                newR[targetKey] = r[key] if (targetKey not in diagnoses or r[key] in constantValidLabelDict[targetKey]) else defaultLabelDict[targetKey]
+                newR[key] = r[key]
             for d in diagnoses:
                 if not d in newR:
-                    #print "D", d
+        #             #print "D", d
                     newR[d] = defaultLabelDict[d]                            
-                    #print newR[d]
+        #             #print newR[d]
                     
             newReps.append(newR)
 
@@ -68,8 +60,8 @@ def main(allReps, dev=False, outname='unlabledReps.p'):
                     r[diag] = oneHot(diag, r[diag])
 
         if dev:
-            devReps = allReps[: len(allReps)/2]
-            testReps = allReps[len(allReps)/2 :]
+            devReps = allReps[ :len(allReps)/2]
+            testReps = allReps[len(allReps)/2: ]
         
 
 
@@ -84,9 +76,9 @@ def main(allReps, dev=False, outname='unlabledReps.p'):
         
         vocabIndxDict = p.load(open('rnn/vocabIndxDict.p','rb'))
         if dev:
-            targetTyps = [('devReps.',devReps), ('testReps.',testReps)]
+            targetTyps = [('devReps.', devReps), ('testReps.', testReps)]
         else:
-            targetTyps = [(outname ,allReps)]
+            targetTyps = [(outname, allReps)]
         for name, reps in targetTyps:
             for j,r in enumerate(reps):
                 sent = r['Report_Text_Segmented']    
@@ -97,7 +89,7 @@ def main(allReps, dev=False, outname='unlabledReps.p'):
             p.dump(reps, open(name,'wb'))
 
 if __name__ == "__main__":
-    allReps =  p.load( open(path, 'rb'))
+    allReps = p.load(open(path, 'rb'))
     main(allReps, dev=False)
 
 

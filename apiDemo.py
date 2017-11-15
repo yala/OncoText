@@ -38,27 +38,27 @@ for u in un_reps:
 name = "mghMar"
 
 # add train
-#addTrainResp = requests.post(domain+"addTrain",data=json.dumps(test_reps),params={"name":name,"raw":True})
-#assert addTrainResp.status_code==200
+addTrainResp = requests.post(domain+"addTrain",data=json.dumps(test_reps),params={"name":name,"raw":True})
+assert addTrainResp.status_code==200
 
 # add unlabeled
-#addUnlabeledResp = requests.post(domain+"addUnlabeled", data=json.dumps(un_reps) , params={'name':name, 'raw':True})
-#assert addUnlabeledResp.status_code == 200
+addUnlabeledResp = requests.post(domain+"addUnlabeled", data=json.dumps(un_reps) , params={'name':name, 'raw':True})
+assert addUnlabeledResp.status_code == 200
 
 # update train
-#updateTrainResp = requests.get(domain+"updateTrainSet", params={'name':name})
-#assert updateTrainResp.status_code == 200
+updateTrainResp = requests.get(domain+"updateTrainSet", params={'name':name})
+assert updateTrainResp.status_code == 200
 
 # update unlabeled
-#updateUnlResp = requests.get(domain+"updateUnlabeledSet", params={'name':name})
-#assert updateUnlResp.status_code == 200
+updateUnlResp = requests.get(domain+"updateUnlabeledSet", params={'name':name})
+assert updateUnlResp.status_code == 200
 
 # train
-#trainResp = requests.get(domain+"train" , params={'name':name})
-#assert trainResp.status_code == 200
+trainResp = requests.get(domain+"train" , params={'name':name})
+assert trainResp.status_code == 200
 
 # predict
-predResp = requests.get(domain+"predict" , params={'name':name, "debug":"True"})
+predResp = requests.get(domain+"predict" , params={'name':name, "debug":"False"})
 assert predResp.status_code == 200
 
 #newDb = json.loads(predResp.text)['reportDB']
