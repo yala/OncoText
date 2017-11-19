@@ -33,7 +33,7 @@ def splitRep(txt):
         mode = "right" if mode == "left" else "left"
 
 
-    return {"LEFT":leftTxt, "RIGHT": rightTxt}
+    return {"l":leftTxt, "r": rightTxt}
 
 def utcToDate(date):
         if isinstance(date, datetime.date):
@@ -101,7 +101,7 @@ def main(allData):
 
             ## Make 2 reps for rest of bilats
             else:
-                for side in ["RIGHT", "LEFT"]:
+                for side in ["r", "l"]:
                     newRep = copy.deepcopy(rep)
                     newRep['Report_Text_Segmented'] =  newTexts[side]
                     newRep['BreastSide'] = side
@@ -116,9 +116,9 @@ def main(allData):
             rep['ReportID'] = repId
             if not 'BreastSide' in rep:
                 if 'left' in rep['Report_Text'].lower():
-                    rep['BreastSide'] = 'LEFT'
+                    rep['BreastSide'] = 'l'
                 else: ##okay for this to be noisy because we'll reannotate this anyways
-                    rep['BreastSide'] = 'RIGHT'
+                    rep['BreastSide'] = 'r'
 
             repId +=1
             newData.append(rep)

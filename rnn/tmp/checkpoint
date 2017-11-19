@@ -1,0 +1,6 @@
+model_checkpoint_path: "jmodel-4"
+all_model_checkpoint_paths: "jmodel-0"
+all_model_checkpoint_paths: "jmodel-1"
+all_model_checkpoint_paths: "jmodel-2"
+all_model_checkpoint_paths: "jmodel-3"
+all_model_checkpoint_paths: "jmodel-4"

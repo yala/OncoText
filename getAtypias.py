@@ -41,19 +41,8 @@ def postProcessRules(db_train):
         for k in r.keys():
             if type(r[k]) is unicode:
                 r[k] = r[k].encode('ascii','replace')
-            # if r[k] in ['1']:
-            #     r[k] = '1'
-            # if r[k] in ['0', "No", "Negative", "Cytology", "non-breast"]:
-            #     r[k] = "0"
-            # if r[k] == "NA":
-            #     r[k] = "9"
-            # if r[k] == "RIGHT":
-            #     r[k] = 'r'
-            # if r[k] == "LEFT":
-            #     r[k] = "l"
-            #TODO change these to ints and reconfigure the db
 
-    return db_train#[d for d in db_train if d['Organ'] == 'breast']
+    return db_train
 
 
 
@@ -106,7 +95,7 @@ def updateAccesDB(reportDB, tableName):
 
     cur.execute("CREATE TABLE "+tableName +" LIKE "+ reportsTableName)
     db.commit()
-    dbKeys, placeholders = [k for k in keys if k in reportDB[0]], ["%s" for i in keys if i in reportDB[0]]
+    dbKeys, placeholders = [k for k in columnKeys if k in reportDB[0]], ["%s" for i in columnKeys if i in reportDB[0]]
     
 
     print "Exporting breast records... to", tableName
@@ -161,17 +150,7 @@ def main():
 
     yearFilts = [ False, False, False, True, False]
 
-    # cancerT = [
-    #    'ILC','DCIS', 'IDC', 
-    #     'TubularCancer', 'CancerInvNOS', 'CancerInvasive',
-    #     'CancerNotOfBreastOrigin'
-    #    ]
-
     all_cancer = [const_cancers, const_cancers, const_cancers, const_cancers, []]
-
-    # atypiasT = [
-    #    'ALH','ADH', 'FlatEpithelial', 'LCIS', 'ADH_DCIS', 'LobularNeoplasia'
-    #    ]
 
     fea = ["FlatEpithelial"]
     adh = ["ADH"]

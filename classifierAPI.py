@@ -2,7 +2,7 @@ import cPickle as p
 from constants import *
 import sys, os
 sys.path.append("/home/nlp/pathology/")
-sys.path.append("/home/nlp/pathology/trainClassifier")
+#sys.path.append("/home/nlp/pathology/trainClassifier")
 sys.path.append("/home/nlp/pathology/rnn")
 import createEpisodes
 import preprocessTrain
@@ -69,11 +69,11 @@ except Exception, e:
     ## Data doesn't exist so init base and preprocess neural min
     print "Init db_train"
     db_train = {'default':base}
-    db_unlabeled = {'default': base[:10]}
+    #db_unlabeled = {'default': base[:10]}
     neuralTrain = preprocessTrain.main(base)
     p.dump(neuralTrain, open(CURR_PATH+'rnn/diagDictTrain.p','wb'))
     p.dump(db_train, open(DB_TRAIN_PATH,'wb'))
-    p.dump(db_unlabeled, open(DB_UNLABLED_PATH,'wb'))
+    #p.dump(db_unlabeled, open(DB_UNLABLED_PATH,'wb'))
 
 
 
@@ -112,12 +112,12 @@ def addTrainData():
     if not validateTrainDb(data):
         data = preprocessReports(data)
 
-    if not name in db_train:
+    if name not in db_train:
         print "Adding", name, "to db_train"
         db_train[name] = base
     
     ## mark the files to note as annoations
-    trainTexts = [r['Report_Text_Segmented'] for r in db_train[name]]
+    trainTexts = [r['Report_Text_Segmented'] for r in db_train[name] if 'Report_Text_Segmented' in r]
     newData = []
     for r in data:
         if r['Report_Text_Segmented'] not in trainTexts:
@@ -158,7 +158,8 @@ def addUnlabeledData():
         print "Adding", name, "to db_unlabeled"
         db_unlabeled[name] = []
     ## mark the files to note as annoations
-    unlabeledTexts = [r['Report_Text_Segmented'] for r in db_unlabeled[name]]
+    unlabeledTexts = [r['Report_Text_Segmented'] for r in db_unlabeled[name] if 'Report_Text_Segmented' in r]
+    #unlabeledTexts = []
     newData = []
     for r in data:
         r['Report_Text_Segmented'] = preprocessText(r['Report_Text_Segmented'])
@@ -184,7 +185,7 @@ def updateTrainSet():
     #return "S"
     db_train = p.load(open(DB_TRAIN_PATH,'rb'))
     name = request.args.get("name") or "default"
-
+            
     ## Generate relevant files in some directory with a name path
     trainDb = db_train[name]
     stem = "boostexer/breast/api/"+"Prod"+"_"+name+"_"
@@ -348,7 +349,7 @@ def updateAccesDB(reportDB):
 
     db = MySQLdb.connect(host="localhost",user="root",passwd="nlpdb",db="reports")
     cur = db.cursor()
-    dbKeys, placeholders = [k for k in keys if k in reportDBJ[0]], ["%s" for i in keys if i in reportDBJ[0] ]
+    dbKeys, placeholders = [k for k in columnKeys if k in reportDBJ[0]], ["%s" for i in columnKeys if i in reportDBJ[0] ]
 
     try:
         cur.execute("DROP TABLE "+backupTableName)
@@ -452,13 +453,11 @@ def validateTrainDb(trainDb):
         if not "Report_Text_Segmented" in r:
             print "Report_Text_Segmented not found in db!"
             return False
-        #assert 'Report_Text_Segmented' in r #and 'ReportID' in r
 
         for d in diagnoses:
             if d in r and not r[d] in diagnoses[d]:
                 print "Found "+str(r[d])+" as value for diag "+str(d)+" but valid labels are only", diagnoses[d]
 
-         #       assert r[d] in constantValidLabelDict[d]
 	        return False
     return True
 
@@ -511,10 +510,11 @@ def applyCorrections(test, gold):
         if text in textToLabel:
             t['train'] = 1
             for d in textToLabel[text]:
-                if d in t  and d in diagnoses and not t[d] == textToLabel[text][d]:
-                    corrections += 1
-                t[d] = textToLabel[text][d]
-                num_match+=1
+                if d in diagnoses:
+                    if d in t and t[d] != textToLabel[text][d]:
+                        corrections += 1
+                    t[d] = textToLabel[text][d]
+                    num_match+=1
     print("num corrected", corrections, num_match)
 ## Given a list of dicts, where  each dict represent a report:
 ## If the report text covers a single breast, we assign it an id and nothing happens
@@ -525,8 +525,17 @@ def preprocessReports(reports):
     ## Can assume reports all ready preprocessed into left/right
     ## Some annotations per report
     ## gen boostexer files, and continue training. add to existing files
-    for r in reports:
-        assert 'Report_Text' in r
+    for r in reversed(reports):
+        if 'Report_Text' in r and 'Report_Text_Segmented' in r:
+            pass
+        elif 'Report_Text' not in r and 'Report_Text_Segmented' in r:
+            r['Report_Text'] = r['Report_Text_Segmented']
+        elif 'Report_Text_Segmented' not in r and 'Report_Text' in r:
+            r['Report_Text_Segmented'] = r['Report_Text']
+        else:
+            print ("report only has keys", r.keys())
+            reports.remove(r)
+       # assert 'Report_Text' in r or 'Report_Text_Segmented' in r
 
     results = preprocessRawDb.main(reports)
     return results
@@ -559,19 +568,8 @@ def postProcessRules(db_train):
         for k in r.keys():
             if type(r[k]) is unicode:
                 r[k] = str(r[k])
-            # if r[k] in ["Present", "Yes", "Positive", "Anatomic", "breast"]:
-            #     r[k] = "1"
-            # if r[k] in ["Absent", "No", "Negative", "Cytology", "non-breast"]:
-            #     r[k] = "0"
-            # if r[k] == "NA":
-            #     r[k] = "9"
-            # if r[k] == "RIGHT":
-            #     r[k] = 'r'
-            # if r[k] == "LEFT":
-            #     r[k] = "l"
-            #TODO change these to ints and reconfigure the db
-
-    return db_train#[d for d in db_train if d['Organ'] == 'breast']
+            
+    return db_train
 
 def aggregateEpisodes(data):
     data  = preprocessRawDb.unicodeToDatetime(data)

@@ -106,9 +106,6 @@ class UnlabledInput(object):
 
     def __init__(self, path, config):
         self.data = p.load(open(path,'rb'))
-        #evalOnly = False
-        #if evalOnly:
-        #    self.data = [d for d in self.data if ('test_set' in d and d['test_set'] ) or ('pakistani' in d and d['pakistani'] )]
         self.batch_size = config.batch_size
         self.config = config
         self.length = len(self.data)

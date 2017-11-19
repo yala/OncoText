@@ -5,7 +5,7 @@ sys.path.append("../buildNewDataset")
 from constants import *
 import datetime
 from operator import itemgetter
-from anonymize import deIdenText
+# from anonymize import deIdenText
 import cPickle as p
 import xmltodict
 

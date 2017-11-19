@@ -22,22 +22,6 @@ def portToJSON(data, path=None, episodeMode = False, write=False):
             print 'wtf'
             print report
             raw_input()
-
-        # if episodeMode:
-        #     redLabels = labelsForEpisodes
-        # else:
-        #     redLabels = diagnoses
-
-        #assert "ECE" in redLabels
-        
-        #for label in redLabels:
-            #Replace spaces in label name because otherwise website will breast
-            #assert "DCIS" in diagnoses
-            # if label in diagnoses:
-            #     temp = report[label]
-            #     del report[label]
-            #     assert not label in report
-            #     report[ JSONLabelNameDict[label] ] = temp
         
         if "MRNPlusX" in report:
             mrn = report["MRNPlusX"]

@@ -63,7 +63,7 @@ def writeNameFiles(stem):
         with open(stem+replaceSpaces(diag)+".names", "wb") as f:
             if MODE == "Breast":
                 if diag == u'BreastSide':
-                    labels = "RIGHT, LEFT.\n"
+                    labels = "r, l.\n"
                 else:
                     labels = diag + ", " + "no_"+diag+".\n"
             elif MODE == "TAGHIAN":
@@ -85,7 +85,7 @@ def binarizeFilesForClassification(allData, stem, write = True, writeTrain=True,
         return isTaghian or isHughes
     
     trainData = [d for d in allData if isGold(d)] 
-    additTrainData =  p.load( open(here+'/../xmlTrainingData.p','rb') )
+    additTrainData =  p.load( open(here+'/xmlTrainingData.p','rb') )
     
     for adit in additTrainData:
         adit['Report_Text_Segmented'] = adit['Report_Text']
@@ -97,7 +97,9 @@ def binarizeFilesForClassification(allData, stem, write = True, writeTrain=True,
     # Since the training error is ~0, this wont hurt us.
     
     remainData = allData
-    
+    for r in remainData:
+        if 'Report_Text_Segmented' not in r:
+            r['Report_Text_Segmented'] = r['Report_Text'] if 'Report_Text' in r else 'ReportText'
     export = not write
     ## gen train data
 
@@ -145,38 +147,6 @@ def getLabelsAndReports(data):
 
 def say(s):
     pprint.pprint(s)
-
-
-
-
-## Flex (for flexible) flag means we runs asserts on a label only if it is present in the sample
-## We don't enforce that all labels are present. this is useful for pre-complete dbs
-def validateRepsDB(reps, flex = False, dirty = False):
-    for r in reps:
-        checks = diagnoses + hueLabels if MODE == "TAGHIAN" else diagnoses
-    
-        for c in checks:
-            assert flex or c in r
-
-            if MODE == "TAGHIAN":
-                if c in diagnoses:
-                    if flex:
-                        if c in r and not( replaceSpaces(r[c]) in labelDict[c] or dirty):
-                            print 'r[c]',  r[c]
-                            print 'c', c
-                            print labelDict[c]
-                        assert not (c in r) or replaceSpaces(r[c]) in labelDict[c] or dirty
-                    else:
-                        assert c in r and (replaceSpaces(r[c]) in labelDict[c] or dirty)
-                else:
-                    assert c in hueLabels
-                    if c in r and not (r[c] in [0,1,'RIGHT','LEFT', '0', '1']):
-                        print "C", c
-                        print "r[c]", r[c]
-                        assert False
-
-
-
 
 
 

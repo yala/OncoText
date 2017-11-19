@@ -260,7 +260,7 @@ def main(_):
 
 
 if __name__ == "__main__":
-    runSolo = False
+    runSolo = True
     if runSolo:
         neuralFlags = { 'unlabled_mode':False, 'trainPath':'diagDictTrain_mghMar.p'}
         p.dump( neuralFlags, open('flags.p','wb'))

@@ -128,9 +128,9 @@ def calcScores(inFile, outPath='/home/nlp/Dropbox (Partners HealthCare)/NLP_Resu
     print results
    
     today = date.now().strftime("%Y-%d-%m")
-    dateStr = "-".join([str(s) for s in today])
+    #dateStr = "-".join([str(s) for s in today])
     setName = inFile.split('.')[0]
-    path = outPath+setName+'_'+dateStr+'.csv'
+    path = outPath+setName+'_'+today+'.csv'
     keys = ['NAME', 'PERCENTPOS', 'ACCURACY', 'PRECISION', 'RECALL', 'F1']
     print "Saving results to", path
     with open(path,'w') as outCSV:
