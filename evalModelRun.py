@@ -16,9 +16,7 @@ import string
 ACCOUNT_SID = 'AC7d8e9d65e6c370c90c464417090c1e75'
 AUTH_TOKEN = '10e49b7b726debdfcd044f6b9ed2dbc5'
 
-evalDir = '/home/nlp/Dropbox (Partners HealthCare)/Extraction/EvalSets/'
 name = "mghMar"
-
 
 def preprocessText(text):
     import re
@@ -64,14 +62,14 @@ def send_mail(msg):
     server.quit()
 
 
-def calcScores(inFile, outPath='/home/nlp/Dropbox (Partners HealthCare)/NLP_Results/'):
+def calcScores(inFile, outPath=RESULTSDIR):
     reports = p.load(open('/home/nlp/pathology/returnedDB_'+name+'.p', 'rb'))
     db = [r for r in reports if ('filename' in r and r['filename']==inFile)]
-    testSet = parseXLS(evalDir+inFile)
+    testSet = parseXLS(EVALDIR+inFile)
     text_to_gold = {}
     for d in testSet:
-        if not 'Report_Text_Segmented' in d:
-            d['Report_Text_Segmented'] = preprocessText(unicode(d['Report_Text']).encode('utf-8'))
+        #if not 'Report_Text_Segmented' in d:
+        d['Report_Text_Segmented'] = preprocessText(d['Report_Text'])
         text_to_gold[ d['Report_Text_Segmented']] = d
     print "Len gold", len(text_to_gold)
 
@@ -83,16 +81,16 @@ def calcScores(inFile, outPath='/home/nlp/Dropbox (Partners HealthCare)/NLP_Resu
     print "Len text_to_pred", len(text_to_pred)
 
     results = []
-    for d in [diag for diag in diagnoses if len(diagnoses[diag])>0]:
+    for d in post_diagnoses:
         res = {'NAME':d}
         texts = [t for t in text_to_pred]
 
-        for t in texts:
-            if d in text_to_gold[t] and type(text_to_gold[t][d]) != str:
-                text_to_gold[t][d] = str(unicode(text_to_gold[t][d]).encode('utf-8'))
-            if d in text_to_gold[t] and text_to_gold[t][d] not in diagnoses[d]:
-                texts.remove(t)
-                print "Removing report with unknown value "+text_to_gold[t][d]+" for "+d
+        #for t in texts:
+            #if d in text_to_gold[t] and type(text_to_gold[t][d]) != str:
+                #text_to_gold[t][d] = str(unicode(text_to_gold[t][d]).encode('utf-8'))
+            #if d in text_to_gold[t] and text_to_gold[t][d] not in post_diagnoses[d]:
+                #texts.remove(t)
+                #print "Removing report with unknown value "+text_to_gold[t][d]+" for "+d
 
         pred, gold = [text_to_pred[t][d] for t in texts if d in text_to_pred[t] and d in text_to_gold[t]],  [text_to_gold[t][d] for t in texts if d in text_to_pred[t] and d in text_to_gold[t]]
         
@@ -102,10 +100,14 @@ def calcScores(inFile, outPath='/home/nlp/Dropbox (Partners HealthCare)/NLP_Resu
         res['PERCENTPOS'] = sum([g in ['1'] for g in gold])*100. / len(gold)
 
         truePos = sum([gold[i] == '1' and pred[i] == '1' for i in range(len(pred))])
-        falsePos = sum([gold[i] == '0' and pred[i] == '0' for i in range(len(pred))])
+        falsePos = sum([gold[i] == '0' and pred[i] == '1' for i in range(len(pred))])
         trueNeg = sum([gold[i] == '0' and pred[i] == '0' for i in range(len(pred))])
         falseNeg = sum([gold[i] == '1' and pred[i] == '0' for i in range(len(pred))])
 
+        #print d
+        #print "truePos", truePos
+        #print "falsePos", falsePos
+        #print "falseNeg", falseNeg
         precision = 1.*truePos / (truePos+falsePos) if (truePos+falsePos) > 0 else 0
         recall = 1.*truePos / (truePos+falseNeg) if (truePos+falseNeg) > 0 else 0
         f1 = 2.*(precision*recall)/(precision+recall) if (precision+recall) >0 else 0
@@ -142,7 +144,7 @@ def calcScores(inFile, outPath='/home/nlp/Dropbox (Partners HealthCare)/NLP_Resu
     
 def main(sendText=True):
     message = ""
-    for goldset in os.listdir(evalDir):
+    for goldset in os.listdir(EVALDIR):
         if goldset.endswith('.xlsx'):
             results, path = calcScores(goldset)
             message += "\nRetraining completed today for "+str(goldset)+"!\nAverage accuracy was "+str(results[-1]['ACCURACY'])+". Full results are stored at "+path+".\n"

@@ -9,8 +9,11 @@ import numpy as np
 import tensorflow as tf
 import sys
 sys.path.append("..")
-
+import pickle as p
 from constants import *
+
+NN_DIAGS = p.load(open('/home/nlp/pathology/rnn/diagDictTrain_mghMar.p'))
+NN_DIAGS = [k for k in NN_DIAGS if len(NN_DIAGS[k][0])>0]
 
 def data_type():
   return tf.float32
@@ -40,7 +43,7 @@ class TextCNN(object):
 
         self._keep_prob = tf.placeholder( tf.float32, name="keep_prob")
 
-        for d in nn_diagnoses:
+        for d in NN_DIAGS:
             diag = diagName(d)
             inps[diag] = tf.placeholder( tf.int32, shape=(batch_size, None), name="input_"+diag)
             tars[diag] = tf.placeholder( tf.int32, shape=(batch_size, None), name="target_"+diag)
@@ -53,7 +56,7 @@ class TextCNN(object):
         inputs = {}
         featureMaps = {}
 
-        for i,d in enumerate(nn_diagnoses):
+        for i,d in enumerate(NN_DIAGS):
             diag = diagName(d)
             inputs_reg =  tf.nn.embedding_lookup(embedding, inps[diag])
             inputs[diag] = tf.expand_dims(inputs_reg, -1)
@@ -71,7 +74,7 @@ class TextCNN(object):
         self._correct_ans = {}
 
         useRelu = False
-        for d in nn_diagnoses:
+        for d in NN_DIAGS:
             diag = diagName(d)      
             num_classes = len(post_diagnoses[d])
             featMap = featureMaps[diag]
@@ -97,7 +100,7 @@ class TextCNN(object):
             self._costs[diag] = tf.reduce_sum(tf.nn.softmax_cross_entropy_with_logits(logits, tars[diag], name="SoftMax"+diag))
 
 
-        self._joint_loss  =  tf.reduce_sum( tf.pack([self._costs[diagName(d)] for d in nn_diagnoses]) )
+        self._joint_loss  =  tf.reduce_sum( tf.pack([self._costs[diagName(d)] for d in NN_DIAGS]) )
         
 
 

@@ -45,7 +45,8 @@ class Config(object):
     filter_sizes = [1,3,5,7,9]
     bucket_lengths = [2700]
     num_filters = 32
-    nn_diagnoses = nn_diagnoses
+    nn_diags = p.load(open('/home/nlp/pathology/rnn/diagDictTrain_mghMar.p'))
+    nn_diags = [k for k in nn_diags if len(nn_diags[k][0])>0]
 
 def run_epoch(session, models, train_input, config, verbose = True):
     epoch_size = 500
@@ -66,7 +67,7 @@ def run_epoch(session, models, train_input, config, verbose = True):
         feed_dict= {
             models[bucket].keep_prob: .50
         }
-        for d in nn_diagnoses:
+        for d in config.nn_diags:
             diag = diagName(d)
             feed_dict[ models[bucket].inps[diag] ] = batch[d][0]
             assert batch[d][0].shape[-1] == bucket
@@ -120,16 +121,19 @@ def run_eval_epoch(session, models, dev_input, config, verbose = True):
         feed_dict= {
             models[bucket].keep_prob:  1.0
         }
-        for d in nn_diagnoses:
+        for d in config.nn_diags:
             diag = diagName(d)
             feed_dict[ models[bucket].inps[diag] ] = batch[d][0]
             feed_dict[ models[bucket].tars[diag] ] = batch[d][1]
-
-        vals = session.run(fetch, feed_dict=feed_dict)
+        
+        try:
+          vals = session.run(fetch, feed_dict=feed_dict)
+        except ValueError:
+          continue
         pred, gold = vals['predAndGold']
         preds.append(pred)
         golds.append(gold)
-        inputStrs.append(batch[nn_diagnoses[0]][0])
+        inputStrs.append(batch[config.nn_diags[0]][0])
 
         cost = vals['joint_loss']
 
@@ -156,7 +160,7 @@ def label_dataset(session, models, dev_input, config, outPath='labeledReps.p', v
             models[bucket].keep_prob:  1.0
         }
 
-        for d in nn_diagnoses:
+        for d in config.nn_diags:
             diag = diagName(d)
             feed_dict[ models[bucket].inps[diag] ] = batch[d][0]
             feed_dict[ models[bucket].tars[diag] ] = batch[d][1]
@@ -167,7 +171,7 @@ def label_dataset(session, models, dev_input, config, outPath='labeledReps.p', v
         pred, gold = vals['predAndGold']
 
         for k,r in enumerate(reports):
-            for d in nn_diagnoses:
+            for d in config.nn_diags:
 		diag = diagName(d)
 		labelInd = pred[diag][k]
                 r[d] = post_diagnoses[d][labelInd]
@@ -210,7 +214,7 @@ def main(_):
                 models[bucket] = TextCNN(max_length=bucket, config=config, embeddingMatrix=embeddings)
         
 
-        for d in nn_diagnoses:
+        for d in config.nn_diags:
             diag = diagName(d)      
             diagLoss = tf.reduce_sum(tf.pack([models[b].costs[diag] for b in config.bucket_lengths]))
 
@@ -260,7 +264,7 @@ def main(_):
 
 
 if __name__ == "__main__":
-    runSolo = True
+    runSolo = False
     if runSolo:
         neuralFlags = { 'unlabled_mode':False, 'trainPath':'diagDictTrain_mghMar.p'}
         p.dump( neuralFlags, open('flags.p','wb'))

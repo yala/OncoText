@@ -24,15 +24,24 @@ def parseKeys(inp):
     return data
 
 
+HOMEDIR = '/home/nlp/'
+PATHOLOGYDIR = HOMEDIR+'pathology/'
+DROPBOXDIR = HOMEDIR+'Dropbox (Partners HealthCare)/NLP_Extraction/'
+EVALDIR = DROPBOXDIR+'GoldSets/'
+PARSINGDIR = DROPBOXDIR+'ForParsing/'
+TRAININGDIR = DROPBOXDIR+'ForTraining/'
+RESULTSDIR = DROPBOXDIR+'NLP_Results/'
+
 metaData = ['Report_Date_TimePlusX', 'MRNPlusX', 'ReportID', 'Correct', 'Institution', 'DOBPlusX']
 
 SIX_MONTHS = datetime.timedelta(365/2)
+#SIX_MONTHS = 365/2
 
 hueLabels = []
 if MODE == "TAGHIAN":
   reportTextKey = "Report_Text_Segmented"
 
-  columnKeys = parseKeys('/home/nlp/Dropbox/Extraction/diagnoses.xlsx')
+  columnKeys = parseKeys(DROPBOXDIR+'SQL_KeysAndValues.xlsx')
   # columnKeys = {
   #     'Report_Text_Segmented': [],
   #     'Report_Text': [],
@@ -93,24 +102,24 @@ if MODE == "TAGHIAN":
   post_diagnoses['ER_Intensity'] = ['0', '1', '2', '3', '9']
   post_diagnoses['PR_Intensity'] = ['0', '1', '2', '3', '9']
 
-  #defaultLabelDict = {k:post_diagnoses[k][0] for k in post_diagnoses}
-  defaultLabelDict = { 'PositiveLN': '0', 'Type of sampled LN (choice=None)':'Unchecked', 'ITC':'0', 'PR':'9',
-      'BiopsyType':'9', 'Her2Fish':'9', 'ER': '9', 'ECE':'0',
-      'LVI': '9', 'BVI': '9', 'TumorGrade': '9', 'DCIS':'0', 'LCIS':'0', 'IDC':'0', 'ILC':'0',
-      'ALH':'0', 'ADH':'0', 'BreastSide':'r', 'FlatEpithelial':'0','BluntAdenosis':'0', 'LobularNeoplasia': '0',
-      'cancer':'0', 'atypia':'0',
-      'Oncotype score':'Low_risk',
-      'ADH_DCIS':'0', 'Phyllodes':'0', 'CancerNOS':'0', 'InvasiveSuspicious':'0', 'InsituNOS':'0', 'CancerInvInsituNOS':'0',
-      'SuspiciousForPhyllodes':'0', 'CancerSuspicious':'0', 'TubularCancer':'0',
-      'Papill':'0',
-      'CancerInvasive':'0',
-      'CancerInvNOS':'0',
-      'NodeTissue':'0', #'Node_x0020_tissue'
-      'CancerNotOfBreastOrigin':'0', #CancerNotOfBreastOrigin
-      'PathologyType':'Anatomic',
-      "Organ":"0",
-      "ER_Intensity":"9", "PR_Intensity":"9", "Her2":"9", "Her2_IHC":"9"
-      }
+  defaultLabelDict = {k:post_diagnoses[k][0] for k in post_diagnoses}
+  # defaultLabelDict = { 'PositiveLN': '0', 'Type of sampled LN (choice=None)':'Unchecked', 'ITC':'0', 'PR':'9',
+  #     'BiopsyType':'9', 'Her2Fish':'9', 'ER': '9', 'ECE':'0',
+  #     'LVI': '9', 'BVI': '9', 'TumorGrade': '9', 'DCIS':'0', 'LCIS':'0', 'IDC':'0', 'ILC':'0',
+  #     'ALH':'0', 'ADH':'0', 'BreastSide':'r', 'FlatEpithelial':'0','BluntAdenosis':'0', 'LobularNeoplasia': '0',
+  #     'cancer':'0', 'atypia':'0',
+  #     'Oncotype score':'Low_risk',
+  #     'ADH_DCIS':'0', 'Phyllodes':'0', 'CancerNOS':'0', 'InvasiveSuspicious':'0', 'InsituNOS':'0', 'CancerInvInsituNOS':'0',
+  #     'SuspiciousForPhyllodes':'0', 'CancerSuspicious':'0', 'TubularCancer':'0',
+  #     'Papill':'0',
+  #     'CancerInvasive':'0',
+  #     'CancerInvNOS':'0',
+  #     'NodeTissue':'0', #'Node_x0020_tissue'
+  #     'CancerNotOfBreastOrigin':'0', #CancerNotOfBreastOrigin
+  #     'PathologyType':'Anatomic',
+  #     "Organ":"0",
+  #     "ER_Intensity":"9", "PR_Intensity":"9", "Her2":"9", "Her2_IHC":"9"
+  #     }
 
   boostexer_diagnoses = ["CancerInvInsituNOS", "CancerNOS", "BiopsyType", "Her2", "Her2_IHC", "ITC", "PR", "Her2Fish", "ER", "ECE", "LVI", "BVI", "PathologyType", "Organ", "CancerInvasive", "CancerInvNOS", "NodeTissue", "CancerNotOfBreastOrigin", "BluntAdenosis", "PositiveLN"]
   boostexer_diagnoses = [d for d in boostexer_diagnoses if d in diagnoses]

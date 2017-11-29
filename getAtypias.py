@@ -142,7 +142,7 @@ def main():
     dataPath = "/home/nlp/pathology/returnedDB_mghMar.p"
 
     db = p.load( open (dataPath, 'rb'))
-    db = [d for d in db if ((d['Organ'] == '1') and (('filename' not in d) or (d['filename'] not in os.listdir('/home/nlp/Dropbox (Partners HealthCare)/Extraction/EvalSets'))))]
+    db = [d for d in db if ((d['Organ'] == '1') and (('filename' not in d) or (d['filename'] not in os.listdir(EVALDIR))))]
     print "len seed DB", len(db)
 
     exportPaths = ["allFEAsTable", "allADHsTable", "allAtypiaTable", 

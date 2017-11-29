@@ -23,14 +23,16 @@ import re
 import MySQLdb
 import copy
 import time
+import numpy as np
+import xlsxwriter
 
 app = Flask(__name__)
 app.config.from_object(__name__)
 CURR_PATH = "/home/nlp/pathology/"
-DB_TRAIN_PATH = CURR_PATH+"reportDBAPI_train.p"
-#DB_TRAIN_PATH = CURR_PATH+"reportDBAPI_train_small.p"
-DB_UNLABLED_PATH = CURR_PATH+"reportDBAPI_test.p"
-#DB_UNLABLED_PATH = CURR_PATH+"reportDBAPI_test_small.p"
+#DB_TRAIN_PATH = CURR_PATH+"reportDBAPI_train.p"
+DB_TRAIN_PATH = CURR_PATH+"reportDBAPI_train_small.p"
+#DB_UNLABLED_PATH = CURR_PATH+"reportDBAPI_test.p"
+DB_UNLABLED_PATH = CURR_PATH+"reportDBAPI_test_small.p"
 
 
 
@@ -117,15 +119,78 @@ def addTrainData():
         db_train[name] = base
     
     ## mark the files to note as annoations
-    trainTexts = [r['Report_Text_Segmented'] for r in db_train[name] if 'Report_Text_Segmented' in r]
+    #trainTexts = [r['Report_Text_Segmented'] for r in db_train[name] if 'Report_Text_Segmented' in r]
+    trainTexts = []
+    trainKeys = []
+    for r in db_train[name]:
+        for k in r:
+            if k not in trainKeys:
+                trainKeys.append(k)
+
     newData = []
+    newDevReps = []
     for r in data:
         if r['Report_Text_Segmented'] not in trainTexts:
             r['Owner'] = name
             for d in diagnoses:
                 if d in r:
                     r['TaghianGold'] = 1
+            
+        newKeys = [key for key in r if key not in trainKeys and key in post_diagnoses]
+        if len(newKeys) > 0:
+            newDevReps.append(r)
+        else:
             newData.append(r)
+
+    if len(newDevReps) > 0:
+        # 40% goes to normal training
+        newData.extend(newDevReps[int(len(newDevReps)*0.4): ])
+        
+        # make gold set from 20%
+        newGold = newDevReps[int(len(newDevReps)*0.2):int(len(newDevReps)*0.4)]
+        dbKeys = [k for k in columnKeys if k in newGold[0]]
+
+        outputFile = EVALDIR+"".join(newKeys)+'DB.xlsx'
+        workbook = xlsxwriter.Workbook(outputFile)
+        worksheet = workbook.add_worksheet()
+
+        row = 0
+        for key in dbKeys:
+            col = dbKeys.index(key)
+            worksheet.write(row, col, key)
+        row = 1
+        for r in newGold:
+            for k in r:
+                try:
+                    col = dbKeys.index(k)
+                    worksheet.write(row, col, r[k])
+                except ValueError:
+                    pass
+            row += 1
+
+        workbook.close()
+
+        # with open(outputFile, 'wb') as output_file:
+        #     dict_writer = csv.DictWriter(output_file, dbKeys, extrasaction='ignore')
+        #     dict_writer.writeheader()
+        #     dict_writer.writerows(newGold)
+
+        # rest is processed and added to rnn/devReps.p
+        vocabIndxDict = p.load(open('rnn/vocabIndxDict.p','rb'))
+        for r in newDevReps[ :int(len(newDevReps)*0.2)]:
+            for k in r:
+                if k in post_diagnoses:
+                    temp = r[k]
+                    r[k] = np.zeros(len(post_diagnoses[k]))
+                    r[k][post_diagnoses[k].index(temp)] = 1.
+            sent = r['Report_Text_Segmented']    
+            words = sent.split(" ")
+            indices = [ vocabIndxDict[w] for w in words if w in vocabIndxDict]
+            r['NN_Text'] = np.array(indices)
+        devReps = p.load(open(PATHOLOGYDIR+'rnn/devReps.p'))
+        devReps.extend(newDevReps[ :int(len(newDevReps)*0.2)])
+        p.dump(devReps, open(PATHOLOGYDIR+'rnn/devReps.p', 'wb'))
+        
 
     db_train[name].extend(newData)
     print "Len train", len(db_train[name])
@@ -158,8 +223,8 @@ def addUnlabeledData():
         print "Adding", name, "to db_unlabeled"
         db_unlabeled[name] = []
     ## mark the files to note as annoations
-    unlabeledTexts = [r['Report_Text_Segmented'] for r in db_unlabeled[name] if 'Report_Text_Segmented' in r]
-    #unlabeledTexts = []
+    #unlabeledTexts = [r['Report_Text_Segmented'] for r in db_unlabeled[name] if 'Report_Text_Segmented' in r]
+    unlabeledTexts = []
     newData = []
     for r in data:
         r['Report_Text_Segmented'] = preprocessText(r['Report_Text_Segmented'])
@@ -233,7 +298,6 @@ def train():
     subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
     return "Success"
 
-evalDir = '/home/nlp/Dropbox (Partners HealthCare)/Extraction/EvalSets/'
 ## Kicks off job to run model on the corresping data
 ## Will return all unlabeled data
 @app.route("/predict", methods=['GET'])
@@ -255,11 +319,13 @@ def predict():
     updateAccesDB(copy.deepcopy(reportDB))
     getAtypias.main()
     evalModelRun.main()
-    pruneNonBreast(reportDB, name)
+    #pruneNonBreast(reportDB, name)
     for r in reportDB:
         for k in r:
             if isinstance(r[k], (datetime, date)):
                 r[k] = r[k].isoformat()
+            if isinstance(r[k], np.ndarray):
+                r[k] = ""
     return json.dumps({'reportDB':reportDB})
 
 ################ Helpers ######################
@@ -294,7 +360,7 @@ def pruneEvals(name):
     print("Finding gold reports...")
     count = 0
     for r in reversed(db_unlabeled[name]):
-        if 'filename' in r and r['filename'] in os.listdir(evalDir):
+        if 'filename' in r and r['filename'] in os.listdir(EVALDIR):
             db_unlabeled[name].remove(r)
             count += 1
     p.dump(db_unlabeled, open(DB_UNLABLED_PATH,'wb'))
@@ -335,7 +401,7 @@ def predictHelper(name):
 
 #sends all breast reports to the AccessDB
 def updateAccesDB(reportDB):
-    reportDB = [r for r in reportDB if ('filename' not in r or r['filename'] not in os.listdir(evalDir))]
+    reportDB = [r for r in reportDB if ('filename' not in r or r['filename'] not in os.listdir(EVALDIR))]
     reportDB = postProcessRules(reportDB)
     reportDB = aggregateEpisodes(reportDB)
     #reportDB = exportToJSON.portToJSON(reportDB)
@@ -367,12 +433,13 @@ def updateAccesDB(reportDB):
     cur.execute("CREATE TABLE "+backupTableName+" LIKE "+reportsTableName)
     cur.execute("INSERT INTO "+backupTableName+" SELECT * FROM "+reportsTableName)
     db.commit();
-    cur.execute("TRUNCATE TABLE "+reportsTableName)
+    cur.execute("DROP TABLE "+reportsTableName)
+    cur.execute("CREATE TABLE "+reportsTableName+" ("+" TEXT, ".join(dbKeys)+" TEXT)")
     db.commit();
     print "done."
 
     print "Exporting breast records..."
-    sql = ("insert into "+reportsTableName+" ("+", ".join(dbKeys)+") VALUES ("+", ".join(placeholders)+")")
+    sql = ("INSERT INTO "+reportsTableName+" ("+", ".join(dbKeys)+") VALUES ("+", ".join(placeholders)+")")
     for report in reportDBJ:
         try:
             values = [report[k] for k in dbKeys]
@@ -407,7 +474,8 @@ def updateAccesDB(reportDB):
     cur.execute("CREATE TABLE "+backupNoBreastTableName+" LIKE "+reportsNoBreastTableName)
     cur.execute("INSERT INTO "+backupNoBreastTableName+" SELECT * FROM "+reportsNoBreastTableName)
     db.commit();
-    cur.execute("TRUNCATE TABLE "+reportsNoBreastTableName)
+    cur.execute("DROP TABLE "+reportsNoBreastTableName)
+    cur.execute("CREATE TABLE "+reportsNoBreastTableName+" ("+" TEXT, ".join(dbKeys)+" TEXT)")
     db.commit();
     print "done."
 
@@ -490,7 +558,10 @@ def mergeDBs(boost, cnn):
         for d in [k for k in boostexer_diagnoses if k in boostR]:
             newR[d] = boostR[d]
         for d in nn_diagnoses:
-            newR[d] = cnnR[d]
+            if d in cnnR:
+                newR[d] = cnnR[d]
+            else:
+                newR[d] = ""
         for k in [key for key in cnnR if not key in boostexer_diagnoses + nn_diagnoses ] :
             newR[k] = cnnR[k]
         for k in [key for key in boostR if not key in newR]:
@@ -603,6 +674,9 @@ def aggregateEpisodes(data):
         episodeId = -1
         episodeDateDict[mrn] = []
         for side in patient:
+            for r in patient[side]:
+                if r['Report_Date_TimePlusX']==0:
+                    r['Report_Date_TimePlusX'] = datetime(1900, 1, 1)
             patient[side] = sorted( patient[side], key=itemgetter('Report_Date_TimePlusX') )
             for idx, rep in enumerate(patient[side]):
 

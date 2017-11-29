@@ -7,9 +7,13 @@ import sys
 sys.path.append("..")
 from constants import *
 import pprint
+import cPickle as p
 
-vocab = p.load(open('vocab.p','rb'))
-vocabIndxDict = p.load(open('vocabIndxDict.p','rb'))
+NN_DIAGS = p.load(open('/home/nlp/pathology/rnn/diagDictTrain_mghMar.p'))
+NN_DIAGS = [k for k in NN_DIAGS if len(NN_DIAGS[k][0])>0]
+
+#vocab = p.load(open('vocab.p','rb'))
+#vocabIndxDict = p.load(open('vocabIndxDict.p','rb'))
 
 def diagName(d):
     diag = "_".join(d.split())
@@ -34,7 +38,7 @@ def evaluate(preds, golds, inputs = None):
 
 
     accuracy = {}
-    for d in nn_diagnoses:
+    for d in NN_DIAGS:
         diag = diagName(d)
         accuracy[diag] = sum([preds[i][diag] == golds[i][diag] for i in range(len(preds))]) / len(preds)
 
@@ -48,7 +52,7 @@ def evaluate(preds, golds, inputs = None):
             groupWrong = False
             for member in groupings[groupKey]:
                 if not groupWrong:
-                    if member in nn_diagnoses:
+                    if member in NN_DIAGS:
                         diag = diagName(member)
                         if not groupKey in rowAccuracy:
                             rowAccuracy[groupKey] = 0
@@ -63,7 +67,7 @@ def evaluate(preds, golds, inputs = None):
     for key in rowAccuracy:
         rowAccuracy[key] = 1 -  rowAccuracy[key]/len(preds)
 
-    averageAccuracy = sum([ accuracy[ diagName(d) ] for d in nn_diagnoses ]) / len(nn_diagnoses)
+    averageAccuracy = sum([ accuracy[ diagName(d) ] for d in NN_DIAGS ]) / len(NN_DIAGS)
 
     pprint.pprint("Group level Accuracies")
     pprint.pprint(rowAccuracy)
