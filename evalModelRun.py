@@ -43,13 +43,13 @@ def send_text_msg(results,path):
 def send_mail(msg):
     HOST = "nlp.partners.org"
     FROM =  "nlp@nlp.partners.org"
-    SUBJECT = "Pathology Parser Update! (testing)"
+    SUBJECT = "Pathology Parser Update!"
 
     server = smtplib.SMTP(HOST)
 
     print "Sending msg", msg  
 
-    for email in ["cyli@mgh.harvard.edu"]:#, "ayala@mgh.harvard.edu"]:
+    for email in ["cyli@mgh.harvard.edu", "ayala@mgh.harvard.edu", "KSHUGHES@PARTNERS.ORG"]:
         BODY = string.join((
             "From: %s" % FROM,
             "To: %s" % email,

@@ -1,48 +1,41 @@
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
-import numpy as np
+import cPickle as p
+import pprint
 import re
 import sys
 sys.path.append("..")
 from constants import *
-import pprint
-import cPickle as p
+
 
 NN_DIAGS = p.load(open('/home/nlp/pathology/rnn/diagDictTrain_mghMar.p'))
-NN_DIAGS = [k for k in NN_DIAGS if len(NN_DIAGS[k][0])>0]
+NN_DIAGS = [k for k in NN_DIAGS if len(NN_DIAGS[k][0]) > 0]
 
-#vocab = p.load(open('vocab.p','rb'))
-#vocabIndxDict = p.load(open('vocabIndxDict.p','rb'))
+vocab = p.load(open('vocab.p', 'rb'))
+vocabIndxDict = p.load(open('vocabIndxDict.p', 'rb'))
+
 
 def diagName(d):
     diag = "_".join(d.split())
-    diag = re.sub(r'\W','',diag)
+    diag = re.sub(r'\W', '', diag)
     return diag
 
-def evaluate(preds, golds, inputs = None):
 
+def evaluate(preds, golds, inputs=None):
     predHist = {}
     for key in preds[0]:
         predHist[key] = {}
-        for p in preds:
-            sample = p[key][0]
+        for pr in preds:
+            sample = pr[key][0]
             if sample not in predHist[key]:
                 predHist[key][sample] = 0
-            predHist[key][sample] +=1
-    # print("------------------------")
-    # print("Predicition Histogram")
-    # pprint.pprint(predHist)
-
-
-
+            predHist[key][sample] += 1
 
     accuracy = {}
     for d in NN_DIAGS:
         diag = diagName(d)
         accuracy[diag] = sum([preds[i][diag] == golds[i][diag] for i in range(len(preds))]) / len(preds)
-
-
 
     numExamples = 0
     rowAccuracy = {}
@@ -54,20 +47,20 @@ def evaluate(preds, golds, inputs = None):
                 if not groupWrong:
                     if member in NN_DIAGS:
                         diag = diagName(member)
-                        if not groupKey in rowAccuracy:
+                        if groupKey not in rowAccuracy:
                             rowAccuracy[groupKey] = 0
                         if not preds[i][diag] == golds[i][diag]:
                             groupWrong = True
-                            rowAccuracy[groupKey] +=1
+                            rowAccuracy[groupKey] += 1
                             # if numExamples < 10 and not inputs == None:
-                            #     print(diag, "Guessed", preds[i][diag], "Gold,",golds[i][diag])
-                            #     print(" ".join([vocab[vocabIndxDict[k]] for k in inputs[i] ]))    
+                            # print(diag, "Guessed", preds[i][diag], "Gold, ", golds[i][diag])
+                            # print(" ".join([vocab[vocabIndxDict[k]] for k in inputs[i]]))
                             break
     
     for key in rowAccuracy:
-        rowAccuracy[key] = 1 -  rowAccuracy[key]/len(preds)
+        rowAccuracy[key] = 1-rowAccuracy[key]/len(preds)
 
-    averageAccuracy = sum([ accuracy[ diagName(d) ] for d in NN_DIAGS ]) / len(NN_DIAGS)
+    averageAccuracy = sum([accuracy[diagName(d)] for d in NN_DIAGS])/len(NN_DIAGS)
 
     pprint.pprint("Group level Accuracies")
     pprint.pprint(rowAccuracy)
@@ -79,4 +72,3 @@ def evaluate(preds, golds, inputs = None):
     print("-----------------------------")
     
     return averageAccuracy[0]
-

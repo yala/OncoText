@@ -61,6 +61,9 @@ class TestInput(object):
         self.config = config
         self.length = len(self.data)
         self.index = 0
+        self.validInds = {}
+        for diag in NN_DIAGS:
+            self.validInds[diag] = [i for i in range(len(self.data)) if diag in self.data[i]]
 
     def get_batch(self):
         batch = {}
@@ -84,11 +87,7 @@ class TestInput(object):
 
         # pad all sentences to match bucket length
         for diag in NN_DIAGS:
-            validInds = []
-            for i in range(len(self.data)):
-                if diag in self.data[i]:
-                    validInds.append(i)
-            batch_data = [validInds[ind] for ind in working_arr if ind < len(validInds)]
+            batch_data = [self.validInds[diag][ind] for ind in working_arr if ind < len(self.validInds[diag])]
             #batch_data = working_arr
             inp = np.array([ np.hstack( [ \
                 self.data[i]['NN_Text'], np.zeros(bucket-len(self.data[i]['NN_Text']))] \
@@ -118,6 +117,9 @@ class UnlabledInput(object):
         self.config = config
         self.length = len(self.data)
         self.index = 0
+        self.validInds = {}
+        for diag in NN_DIAGS:
+            self.validInds[diag] = [i for i in range(len(self.data)) if diag in self.data[i]]
 
     def get_batch(self):
         batch = {}
@@ -141,11 +143,7 @@ class UnlabledInput(object):
 
         # pad all sentences to match bucket length
         for diag in NN_DIAGS:
-            validInds = []
-            for i in range(len(self.data)):
-                if diag in self.data[i]:
-                    validInds.append(i)
-            batch_data = [validInds[ind] for ind in working_arr if ind < len(validInds)]
+            batch_data = [self.validInds[diag][ind] for ind in working_arr if ind < len(self.validInds[diag])]
             #batch_data = working_arr
             inp = np.array([ np.hstack( [ \
                 self.data[i]['NN_Text'][:bucket], \
