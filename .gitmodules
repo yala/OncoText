@@ -1,0 +1,3 @@
+[submodule "medtext_ie/rationale-net"]
+	path = medtext_ie/rationale-net
+	url = git@github.com:yala/rationale-net.git
