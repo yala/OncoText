@@ -1,14 +1,13 @@
 import xmltodict
 import pickle as p
 import re
-import datefinder
 
-months = ["jan", "feb", "mar", "apr", "jun", "jul", "sep", "oct", "nov", "dec",\
-"january", "febuary", "march", "april", "june", "july", "september", "october", "november", "december"]
+months = ["jan", "feb", "mar", "apr", "jun", "jul", "sep", "oct", "nov", "dec", "january", "febuary", "march", "april", "june", "july", "september", "october", "november", "december"]
 
 replaceStrings = ["REMOVED_DATE", "REMOVED_MONTH", "REMOVED_PATIENT_NAME", "REMOVED_ACCESSION_ID", "REMOVED_CASE_ID"]
 
-#dump xml file into a deindentified python dictionary called deIdentifiedDict
+
+# dump xml file into a deindentified python dictionary called deIdentifiedDict
 def deIden(data):
     print "Calling Deint data"
     print "Number of dirty reports", len(data)
@@ -18,11 +17,11 @@ def deIden(data):
     for pathReport in data:
         cleanedReport = {}
         for key in pathReport:
-            #These keys constitute the annotation
+            # These keys constitute the annotation
             if not key == reportKey:
                 cleanedReport[key] = pathReport[key]
-        #This is the raw patient report. Might contain Patient Name, or dates or Accession number 
-        ## All of which must be removed
+        # This is the raw patient report. Might contain Patient Name, or dates or Accession number
+        # All of which must be removed
         try:
             dirtyText = pathReport[reportKey]
             cleanText = deIdenText(dirtyText)
@@ -39,7 +38,7 @@ def deIden(data):
                 examplesShown += 1
                 raw_input()
 
-        except Exception, e:
+        except Exception:
             if debug:
                 print "Example diff report"
                 print pathReport
@@ -50,7 +49,7 @@ def deIden(data):
     return cleanedData
 
 
-#Takes a single path report and removes names, dates, and ID numbers
+# Takes a single path report and removes names, dates, and ID numbers
 def deIdenText(dirtyText):
     debug = False
     if debug:
@@ -61,11 +60,11 @@ def deIdenText(dirtyText):
     cleanLines = []
     lines = dirtyText.split('\n')
     for line in lines:
-        ## Check for dates (12/23/1212) format and if it matches months
-        ## Check for accesion number and &quot&
-        ## Check for patient names, with PATIENT
-        ## Remove Pathology Report Number
-        ## Format is [UPPERCASE]+[NUMBER]+
+        # Check for dates (12/23/1212) format and if it matches months
+        # Check for accesion number and &quot&
+        # Check for patient names, with PATIENT
+        # Remove Pathology Report Number
+        # Format is [UPPERCASE]+[NUMBER]+
 
         cleanLine = stripDates(line)
         cleanLine = stripPatientName(cleanLine)
@@ -84,7 +83,8 @@ def deIdenText(dirtyText):
 
     return cleanedText
 
-#remove ,.?;; from end of string
+
+# remove ,.?;; from end of string
 def stripDelims(word):
     if word[-1] in ",.?;:":
         return word[:-1]
@@ -92,12 +92,12 @@ def stripDelims(word):
         return word
 
 
-#Remove dates and replaces with REMOVED_DATE or REMOVED_MONTH
+# Remove dates and replaces with REMOVED_DATE or REMOVED_MONTH
 def stripDates(line):
     cleanWords = []
 
     words = line.split()
-    #Remove months
+    # Remove months
     for w in words:
         word = stripDelims(w.lower())
         if word in months:
@@ -106,14 +106,15 @@ def stripDates(line):
             cleanWords.append(w)
 
     cleanedLine = " ".join(cleanWords) + " "
-    ## Replace "1.2 cm" with "1.2cm" so we don't remove measurments as dates
-    cleanedLine   = re.sub(mmMeasurementRegex, "mm ", cleanedLine)
-    cleanedLine   = re.sub(cmMeasurementRegex, "cm ", cleanedLine)
+    # Replace "1.2 cm" with "1.2cm" so we don't remove measurments as dates
+    cleanedLine = re.sub(mmMeasurementRegex, "mm ", cleanedLine)
+    cleanedLine = re.sub(cmMeasurementRegex, "cm ", cleanedLine)
     cleanedLine = re.sub(dateRegex, " REMOVED_DATE ", cleanedLine)
 
     return cleanedLine
 
-#Remove names of patients and replace with REMOVED_PATIENT_NAME
+
+# Remove names of patients and replace with REMOVED_PATIENT_NAME
 def stripPatientName(line):
     result = line
     if "PATIENT:" in result:
@@ -123,7 +124,8 @@ def stripPatientName(line):
     
     return result
 
-#Remove all occurances of accession number and repalce with "REMOVED_ACCESSION_ID"
+
+# Remove all occurances of accession number and repalce with "REMOVED_ACCESSION_ID"
 def stripAccesionNumber(line):
     cleanedLine = re.sub(accesionNumberRegex, ' REMOVED_ACCESSION_ID ', line)
     cleanedLine = re.sub(caseNumberRegex, " REMOVED_CASE_ID ", cleanedLine)
@@ -131,7 +133,6 @@ def stripAccesionNumber(line):
     cleanedLine = re.sub(mrnRegex, "REMOVE_MRN", cleanedLine)    
 
     return cleanedLine
-
 
 
 dateRegex = r"[ ]+\d+[- /.]+\d+[- /.]?\d*[ ,.;:?\n]"
@@ -145,18 +146,9 @@ nameRegex3 = r"labeled \"?\w+ \w+"
 mrnRegex = r"#\d+-\d+-\d+"
 
 
-testString = "Accession Number: S0430461B                   Report Status Final\n"+\
-            "Type Surginal 03\nPathology Report  S04-30465-B BREAST CORE NEEDLE\n"+\
-            "Accesioned On: 05/02003\nRICHARDSON, ANDREA, K, M,D~PH.D\nPATIENT: Adam Yala\n"+\
-            "Something on June first/second/third yaknow 02/25/1995 Feb, 02, 2016, 1992/02/12, 1992-02-12, 0-2-1992\n"+\
-            "Case NUMBER: 425752 with report id being S04-304-61B 0.12 cm" +\
-            "PATIENT: Adam Yala other content 32cm 23 mm haha 12 mm 15 in 1.2 mm 02/1995" +\
-            "Patient Name: Adam, yala roye jorce, gsdf sdfhsd fsdfh"
+testString = "Accession Number: S0430461B                   Report Status Final\n" + "Type Surginal 03\nPathology Report  S04-30465-B BREAST CORE NEEDLE\n" + "Accesioned On: 05/02003\nRICHARDSON, ANDREA, K, M,D~PH.D\nPATIENT: Adam Yala\n" + "Something on June first/second/third yaknow 02/25/1995 Feb, 02, 2016, 1992/02/12, 1992-02-12, 0-2-1992\n" + "Case NUMBER: 425752 with report id being S04-304-61B 0.12 cm" + "PATIENT: Adam Yala other content 32cm 23 mm haha 12 mm 15 in 1.2 mm 02/1995" + "Patient Name: Adam, yala roye jorce, gsdf sdfhsd fsdfh"
 
-goldString = "Accession Number: REMOVED_ACCESSION_ID                   Report Status Final\n"+\
-            "Type Surginal 03\nPathology Report  REMOVED_ACCESSION_ID BREAST CORE NEEDLE\n"+\
-            "Accesioned On: REMOVED_DATE\nRICHARDSON, ANDREA, K, M,D~PH.D\nPATIENT: REMOVED_PATIENT_NAME\n"+\
-            "Something on REMOVED_MONTH first/second/third yaknow REMOVED_DATE REMOVED_MONTH, 02, 2016, REMOVED_DATE, REMOVED_DATE, REMOVED_DATE 0.12 cm" 
+goldString = "Accession Number: REMOVED_ACCESSION_ID                   Report Status Final\n" + "Type Surginal 03\nPathology Report  REMOVED_ACCESSION_ID BREAST CORE NEEDLE\n" + "Accesioned On: REMOVED_DATE\nRICHARDSON, ANDREA, K, M,D~PH.D\nPATIENT: REMOVED_PATIENT_NAME\n" + "Something on REMOVED_MONTH first/second/third yaknow REMOVED_DATE REMOVED_MONTH, 02, 2016, REMOVED_DATE, REMOVED_DATE, REMOVED_DATE 0.12 cm"
 
 
 test = False
@@ -164,7 +156,7 @@ readXmlFile = True
 deanon = True
 dump = True
 
-## TODO: Matt, change these variables to point to where the XML file is, and what the path report column is labeled.
+# TODO: Matt, change these variables to point to where the XML file is, and what the path report column is labeled.
 xmlPath = "/c/Users/ksh1/Desktop/ReportDiagnosesByMRNDateSideMaxDXAll.xml"
 outPath = "deidentifiedPathReports.p"
 reportKey = "Report_Text"
@@ -186,14 +178,6 @@ if __name__ == '__main__':
             if dump:
                 p.dump(cleanData, open(outPath, 'wb')) 
 
-
     if test:
         cleanedAttempt = deIdenText(testString)
         print cleanedAttempt
-
-
-
-
-
-
-

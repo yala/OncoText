@@ -1,0 +1,161 @@
+import cPickle as p
+import re
+import random
+import datetime
+import pprint
+from operator import itemgetter
+import sys
+sys.path.append("..")
+from constants import *
+import os
+here = os.path.dirname(os.path.realpath(__file__))
+
+random.seed(1)
+labelDict = post_diagnoses
+
+
+def genTrainTestFiles(trainReports, trainLabels, testReports, testLabels, stem, writeTrain=True, writeTest=True):
+    writeNameFiles(stem)
+
+    trainSuf = 'data'
+    testSuf = 'test'
+    for indx, diag in enumerate(diagnoses):
+        trainStem = stem
+        labelCountDict = {}
+        if writeTrain:
+            with open(trainStem+replaceSpaces(diag)+"."+trainSuf, "wb") as f: 
+                for a in range(len(trainReports)):                
+                    if trainLabels[a][indx] in labelDict[diag]:
+                        label = trainLabels[a][indx]
+                    else:
+                        continue
+                    if not label in labelCountDict:
+                        labelCountDict[label] = 0
+                    labelCountDict[label] +=1
+
+                    report = trainReports[a]
+
+                    assert not "\n" in report
+                    f.write(report + ", " + label + '.\n')
+
+            print "Saved", trainStem+replaceSpaces(diag)+"."+trainSuf
+            print "With distribution", labelCountDict
+            print "---"
+
+        testStem = stem
+        if writeTest:
+            with open(testStem+replaceSpaces(diag)+"."+testSuf, "wb") as f: 
+                for b in range(len(testReports)):   
+                    if testLabels[b][indx] in labelDict[diag]:
+                        label = testLabels[b][indx]
+                    else:
+                        label = defaultLabelDict[diag]
+
+                    report = testReports[b]
+
+                    assert not "\n" in report
+                    f.write(report + ", " + label + '.\n')
+
+            print "Saved", testStem+replaceSpaces(diag)+"."+testSuf
+
+def writeNameFiles(stem):
+    for diag in diagnoses:
+        with open(stem+replaceSpaces(diag)+".names", "wb") as f:
+            if MODE == "Breast":
+                if diag == u'BreastSide':
+                    labels = "r, l.\n"
+                else:
+                    labels = diag + ", " + "no_"+diag+".\n"
+            elif MODE == "TAGHIAN":
+                labels = ", ".join(labelDict[diag])+".\n"
+            features = "pathReport : text.\n"
+            f.write(labels)
+            f.write(features)
+
+# Set write to true to generate train and test files for classification. 
+# Set write to false to collace files for export
+def binarizeFilesForClassification(allData, stem, write = True, writeTrain=True, writeTest=True):
+    
+
+    #valid input db isn't corrupted
+
+    def isGold(r):
+        isTaghian = 'TaghianGold' in r and r['TaghianGold'] == 1
+        isHughes = 'Correct' in r and r['Correct'] == 'Y'
+        return isTaghian or isHughes
+    
+    trainData = [d for d in allData if isGold(d)] 
+    additTrainData =  p.load( open(here+'/xmlTrainingData.p','rb') )
+    
+    for adit in additTrainData:
+        adit['Report_Text_Segmented'] = adit['Report_Text']
+
+    trainData.extend(additTrainData)
+
+    # For taghian, because TaghianGold has a different number of things annotated per diagnosis in gold
+    # Using gold labels by themselves would be a pain, so we will re-annotate the whole thing.
+    # Since the training error is ~0, this wont hurt us.
+    
+    remainData = allData
+    for r in remainData:
+        if 'Report_Text_Segmented' not in r:
+            r['Report_Text_Segmented'] = r['Report_Text'] if 'Report_Text' in r else 'ReportText'
+    export = not write
+    ## gen train data
+
+    trainReports, trainLabels = getLabelsAndReports(trainData)
+    restReports,  restLabels =  getLabelsAndReports(remainData)
+    assert len(restReports) == len(remainData)
+
+    genTrainTestFiles(trainReports, trainLabels, restReports, restLabels, stem, writeTrain=writeTrain, writeTest=writeTest)
+
+
+
+def preprocessReports(reports):
+    cleanReports = [ re.sub(r"\W", " ", d) for d in reports]
+    cleanReports = [ ' '.join(d.split('\n')) for d in cleanReports]
+    cleanReports = [ re.sub(r"(----)+", "", d) for d in cleanReports]
+    cleanReports = [ re.sub(r"(====)+", "", d) for d in cleanReports]
+    cleanReports = [ d.lower() for d in cleanReports]
+    return cleanReports
+
+# Function takes [ reports ] and returns a tuple or reports, labels
+# If export is true, returns only diagnoses, if false, also returns metaData
+def getLabelsAndReports(data):
+    reports = [d[reportTextKey] for d in data]
+    cleanReports = preprocessReports(reports)
+
+    labels = []
+
+    for i in range(len(data)):
+        diags = []
+        sample = data[i]
+
+        for diag in diagnoses:    
+            if diag in sample and not sample[diag] == None and sample[diag] in labelDict[diag]:
+                diags.append(sample[diag])
+
+                assert replaceSpaces(sample[diag]) in labelDict[diag]
+
+            else:
+                diags.append('PLACEHOLDER')
+
+        labels.append(diags)
+
+    return cleanReports, labels
+
+
+def say(s):
+    pprint.pprint(s)
+
+
+
+
+if __name__ == "__main__": 
+    allDataPath = redRawDBPath
+    allData = p.load(open(allDataPath, 'rb'))
+    binarizeFilesForClassification(allData, '../boostexer/breast/unlabled/red_all_', writeTrain=True, writeTest = True)
+
+
+
+

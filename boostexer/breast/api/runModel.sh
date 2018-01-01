@@ -1,33 +1,51 @@
 #!/bin/bash
-pathTypes1=("Red_CancerSuspicious" "Red_TubularCancer" "Red_InvasiveSuspicious" "Red_SuspiciousForPhyllodes" "Red_CancerInvInsituNOS" "Red_InsituNOS")
-pathTypes2=("Red_InvasiveSuspicious" "Red_CancerNOS" "BiopsyType" "Her2" "Her2_IHC" "ER_Intensity" "PR_Intensity")
-pathTypes3=("ITC" "PR"  "Her2_(Fish)" "ER" "ECE" "LVI" "BVI" 'PathologyType' 'Organ')
-pathTypes4=("Red_Papill" "Red_CancerInvasive" "Red_CancerInvNOS" "NodeTissue" "CancerNotOfBreastOrigin" "Red_BluntAdenosis" "Are_there_positive_LN?")
+
 stem="$1"
 outStem="../../../classification_results/API/$1"
 
-for name in "${pathTypes1[@]}"; do
+boost1=(${2//./ })
+boost2=(${3//./ })
+boost3=(${4//./ })
+boost4=(${5//./ })
+boost5=(${6//./ })
+boost6=(${7//./ })
+
+for name in "${boost1[@]}"; do
     touch $outStem$name.txt &&
     ./../../boostexter -C -S $stem$name < $stem$name.test  > $outStem$name.txt &
 done
 wait
-echo "Done p1"
-for name in "${pathTypes2[@]}"; do
+echo "Done ${boost1[@]}"
+for name in "${boost2[@]}"; do
     touch $outStem$name.txt &&
     ./../../boostexter -C -S $stem$name < $stem$name.test  > $outStem$name.txt &done
 wait
-echo "Done p2"
-for name in "${pathTypes3[@]}"; do
+echo "Done ${boost2[@]}"
+for name in "${boost3[@]}"; do
     touch $outStem$name.txt &&
     ./../../boostexter -C -S $stem$name < $stem$name.test  > $outStem$name.txt &
 done
 wait
-echo "Done p3"
+echo "Done ${boost3[@]}"
     
-for name in "${pathTypes4[@]}"; do
+for name in "${boost4[@]}"; do
     touch $outStem$name.txt &&
     ./../../boostexter -C -S $stem$name < $stem$name.test  > $outStem$name.txt &
 done
 wait
-echo "Done p4"
+echo "Done ${boost4[@]}"
+
+for name in "${boost5[@]}"; do
+    touch $outStem$name.txt &&
+    ./../../boostexter -C -S $stem$name < $stem$name.test  > $outStem$name.txt &
+done
+wait
+echo "Done ${boost5[@]}"
+
+for name in "${boost6[@]}"; do
+    touch $outStem$name.txt &&
+    ./../../boostexter -C -S $stem$name < $stem$name.test  > $outStem$name.txt &
+done
+wait
+echo "Done ${boost6[@]}"
     

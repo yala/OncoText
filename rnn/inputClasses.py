@@ -7,6 +7,8 @@ import sys
 sys.path.append("..")
 from constants import *
 
+NN_DIAGS = p.load(open('/home/nlp/pathology/rnn/diagDictTrain_mghMar.p'))
+NN_DIAGS = [k for k in NN_DIAGS if len(NN_DIAGS[k][0])>0]
 
 class PathInput(object):
 
@@ -20,7 +22,7 @@ class PathInput(object):
         working_dict = {}
         maxLength = 0
         ## Sample sentences and find max length
-        for diag in self.data.keys():
+        for diag in NN_DIAGS:
             batch_data = np.random.choice(len(self.data[diag][0]), self.batch_size)
             lens =  np.array([ len(self.data[diag][0][i]) for i in batch_data], dtype=np.int32 )
             maxSentLength = np.max(lens)
@@ -36,7 +38,7 @@ class PathInput(object):
                 break
 
         # pad all sentences to match bucket length
-        for diag in self.data.keys():
+        for diag in NN_DIAGS:
             batch_data = working_dict[diag]
             inp = []
             for i in batch_data:
@@ -59,6 +61,9 @@ class TestInput(object):
         self.config = config
         self.length = len(self.data)
         self.index = 0
+        self.validInds = {}
+        for diag in NN_DIAGS:
+            self.validInds[diag] = [i for i in range(len(self.data)) if diag in self.data[i]]
 
     def get_batch(self):
         batch = {}
@@ -66,7 +71,7 @@ class TestInput(object):
         ## Sample sentences and find max length
         startIndex = min( self.index, self.length - self.config.batch_size)
         batch_data = range(startIndex, startIndex + self.config.batch_size )
-
+        
         lens =  np.array([ len(self.data[i]['NN_Text']) for i in batch_data], dtype=np.int32 )
         maxSentLength = np.max(lens)
         if maxSentLength > maxLength:
@@ -81,19 +86,21 @@ class TestInput(object):
                 break
 
         # pad all sentences to match bucket length
-        for diag in nn_diagnoses:
-            batch_data = working_arr
+        for diag in NN_DIAGS:
+            batch_data = [self.validInds[diag][ind] for ind in working_arr if ind < len(self.validInds[diag])]
+            #batch_data = working_arr
             inp = np.array([ np.hstack( [ \
                 self.data[i]['NN_Text'], np.zeros(bucket-len(self.data[i]['NN_Text']))] \
-                ) for i in batch_data], dtype=np.int32)
+                                    ) for i in batch_data], dtype=np.int32)
             try:
                 tar = np.array([ self.data[i][diag] for i in batch_data], dtype=np.int32)
             except Exception, e:
                 print(batch_data)
+                #print(self.data[0])
 
                 print(diag)
                 print( [ self.data[i][diag] for i in batch_data])
-                print( [ self.data[i][diag] for i in batch_data])
+                #print( [ self.data[i][diag] for i in batch_data])
                 raw_input()
 
             batch[diag] = inp, tar
@@ -106,13 +113,13 @@ class UnlabledInput(object):
 
     def __init__(self, path, config):
         self.data = p.load(open(path,'rb'))
-        #evalOnly = False
-        #if evalOnly:
-        #    self.data = [d for d in self.data if ('test_set' in d and d['test_set'] ) or ('pakistani' in d and d['pakistani'] )]
         self.batch_size = config.batch_size
         self.config = config
         self.length = len(self.data)
         self.index = 0
+        self.validInds = {}
+        for diag in NN_DIAGS:
+            self.validInds[diag] = [i for i in range(len(self.data)) if diag in self.data[i]]
 
     def get_batch(self):
         batch = {}
@@ -135,25 +142,27 @@ class UnlabledInput(object):
                 break
 
         # pad all sentences to match bucket length
-        for diag in nn_diagnoses:
-            batch_data = working_arr
+        for diag in NN_DIAGS:
+            batch_data = [self.validInds[diag][ind] for ind in working_arr if ind < len(self.validInds[diag])]
+            #batch_data = working_arr
             inp = np.array([ np.hstack( [ \
                 self.data[i]['NN_Text'][:bucket], \
 		np.zeros(max(0,bucket-len(self.data[i]['NN_Text'])))] \
-                ) for i in batch_data], dtype=np.int32)
+                                    ) for i in batch_data], dtype=np.int32)
             try:
                 tar = np.array([ self.data[i][diag] for i in batch_data], dtype=np.int32)
             except Exception, e:
                 print(batch_data)
 
                 print(diag)
+                print(self.data[0].keys())
                 print( [ self.data[i][diag] for i in batch_data])
-                print( [ self.data[i][diag] for i in batch_data])
+                #print( [ self.data[i][diag] for i in batch_data])
                 raw_input()
 
             batch[diag] = inp, tar
 
-        reports = [ self.data[i] for i in batch_data]
+        reports = [ self.data[i] for i in batch_data ]
 
         self.index += self.config.batch_size 
         self.index %= self.length

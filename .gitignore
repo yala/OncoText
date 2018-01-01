@@ -5,12 +5,15 @@ episodeDB.p
 episodeDB*
 tmp.*
 reportDB*
+*logs*
 deiden_AllOthr*
 goldPath*
 *.xls*
 *.xml
 *.csv
 *.txt
+*.meta
+*.pbtxt
 taghian/*.p
 rawBreastPathReport.p
 rawBreastPathReport.bak.p
