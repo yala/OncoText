@@ -12,6 +12,7 @@ import sys, os
 import json
 import copy
 import re
+from random import shuffle
 from constants import *
 sys.path.append("/home/nlp/pathology/")
 sys.path.append("/home/nlp/pathology/rnn")
@@ -118,8 +119,8 @@ def addTrainData():
         db_train[name] = base
     
     # mark the files to note as annoations
-    # trainTexts = [r['Report_Text_Segmented'] for r in db_train[name] if 'Report_Text_Segmented' in r]
-    trainTexts = []
+    trainTexts = [r['Report_Text_Segmented'] for r in db_train[name] if 'Report_Text_Segmented' in r]
+    #trainTexts = []
     trainKeys = []
     for r in db_train[name]:
         for k in r:
@@ -135,61 +136,85 @@ def addTrainData():
                 if d in r:
                     r['TaghianGold'] = 1
             
-        newKeys = [key for key in r if key not in trainKeys and key in post_diagnoses]
+        newKeys = [key for key in diagnoses if key not in trainKeys and key in r]
+        #print(newKeys)
         if len(newKeys) > 0:
             newDevReps.append(r)
+            #print(newKeys)
         else:
             newData.append(r)
 
+    #print newDevReps
     if len(newDevReps) > 0:
-        # 40% goes to normal training
-        newData.extend(newDevReps[int(len(newDevReps)*0.4): ])
-        
-        # make gold set from 20%
-        newGold = newDevReps[int(len(newDevReps)*0.2):int(len(newDevReps)*0.4)]
-        dbKeys = [k for k in columnKeys if k in newGold[0]]
-
-        outputFile = EVALDIR + "".join(newKeys)+'DB.xlsx'
-        workbook = xlsxwriter.Workbook(outputFile)
-        worksheet = workbook.add_worksheet()
-
-        row = 0
-        for key in dbKeys:
-            col = dbKeys.index(key)
-            worksheet.write(row, col, key)
-        row = 1
-        for r in newGold:
-            for k in r:
-                try:
-                    col = dbKeys.index(k)
-                    worksheet.write(row, col, r[k])
-                except ValueError:
-                    pass
-            row += 1
-
-        workbook.close()
-
-        # with open(outputFile, 'wb') as output_file:
-        #     dict_writer = csv.DictWriter(output_file, dbKeys, extrasaction='ignore')
-        #     dict_writer.writeheader()
-        #     dict_writer.writerows(newGold)
-
-        # rest is processed and added to rnn/devReps.p
+        shuffle(newDevReps)
+        # 40% devReps, 20% gold set, 40% normal train
+        partInds = [int(len(newDevReps)*0.2), int(len(newDevReps)*0.2), int(len(newDevReps)*0.6)]
+        #add different values to rnn dev reps until it reaches 40% of new data
+        evalReps = []
+        keyPool = {}
+        for k in diagnoses:
+            valPool = {}
+            for v in diagnoses[k]:
+                pool = [r for r in newDevReps if k in r and r[k] == v]
+                valPool[v] = pool
+            keyPool[k] = valPool
+        while len(evalReps) < partInds[0]:
+            for k in keyPool:
+                for v in keyPool[k]:
+                    if len(keyPool[k][v]) == 0:
+                        continue
+                    else:
+                        for i in range(len(keyPool[k][v])-1, -1, -1):
+                            if keyPool[k][v][i] in evalReps:
+                                keyPool[k][v].pop(i)
+                            else:
+                                evalReps.append(keyPool[k][v][i])
+                                newDevReps.remove(keyPool[k][v][i])
+                                keyPool[k][v].pop(i)
+                                break
         vocabIndxDict = p.load(open('rnn/vocabIndxDict.p', 'rb'))
-        for r in newDevReps[ :int(len(newDevReps)*0.2)]:
+        for r in evalReps:
             for k in r:
-                if k in post_diagnoses:
+                if k in diagnoses:
                     temp = r[k]
-                    r[k] = np.zeros(len(post_diagnoses[k]))
-                    r[k][post_diagnoses[k].index(temp)] = 1.
+                    r[k] = np.zeros(len(diagnoses[k]))
+                    r[k][diagnoses[k].index(temp)] = 1.
             sent = r['Report_Text_Segmented']
             words = sent.split(" ")
             indices = [vocabIndxDict[w] for w in words if w in vocabIndxDict]
             r['NN_Text'] = np.array(indices)
         devReps = p.load(open(PATHOLOGYDIR + 'rnn/devReps.p'))
-        devReps.extend(newDevReps[ :int(len(newDevReps)*0.2)])
+        devReps.extend(evalReps)
         p.dump(devReps, open(PATHOLOGYDIR + 'rnn/devReps.p', 'wb'))
-        
+
+        # # make gold set from 20%
+        # newGold = newDevReps[ :partInds[1]]
+        # dbKeys = [k for k in columnKeys if k in newGold[0]]
+
+        # outputFile = EVALDIR + "".join(newKeys)+'DB.xlsx'
+        # workbook = xlsxwriter.Workbook(outputFile)
+        # worksheet = workbook.add_worksheet()
+
+        # row = 0
+        # for key in dbKeys:
+        #     col = dbKeys.index(key)
+        #     worksheet.write(row, col, key)
+        # row = 1
+        # for r in newGold:
+        #     for k in r:
+        #         try:
+        #             col = dbKeys.index(k)
+        #             worksheet.write(row, col, r[k])
+        #         except ValueError:
+        #             pass
+        #     row += 1
+
+        # workbook.close()
+
+        # rest goes to normal training
+        #newData.extend(newDevReps[partInds[1]: ])
+        newData.extend(newDevReps)
+
     db_train[name].extend(newData)
     print "Len train", len(db_train[name])
     p.dump(db_train, open(DB_TRAIN_PATH, 'wb'))
@@ -250,9 +275,9 @@ def updateTrainSet():
             
     # Generate relevant files in some directory with a name path
     trainDb = db_train[name]
-    stem = "boostexer/breast/api/"+"Prod"+"_"+name+"_"
+    #stem = "boostexer/breast/api/"+"Prod"+"_"+name+"_"
     trainDb = db_train[name] + db_train['default']
-    generateClassifierFilesForProd.binarizeFilesForClassification(trainDb, stem, writeTrain=True, writeTest=False)
+    #generateClassifierFilesForProd.binarizeFilesForClassification(trainDb, stem, writeTrain=True, writeTest=False)
     preprocessTrain.main(trainDb)
 
     diagDictNew = preprocessTrain.main(trainDb)
@@ -273,8 +298,8 @@ def updateUnlabeledSet():
     db_test = db_test_all[name]
     test_filt = db_test if batch_id == "none" else [d for d in db_test if "batch_id" in d and d["batch_id"] in batch_id]
     # Generate relevant files in some directory with a name path
-    stem = "boostexer/breast/api/"+"Prod"+"_"+name+"_"
-    generateClassifierFilesForProd.binarizeFilesForClassification(test_filt, stem, writeTrain=False, writeTest=True)
+    #stem = "boostexer/breast/api/"+"Prod"+"_"+name+"_"
+    #generateClassifierFilesForProd.binarizeFilesForClassification(test_filt, stem, writeTrain=False, writeTest=True)
     preprocessUnlabeled.main(test_filt, False, outname='rnn/unlalbeldReps_'+name+".p")
     return "Success"
 
@@ -285,9 +310,9 @@ def train():
     # return "S"
     name = request.args.get("name") or "default"
     mode = request.args.get("mode") or "Prod"
-    shellScript1 = "cd boostexer/breast/api/"
-    shellScript2 = "./trainModel.sh "+mode+"_"+name+"_ "+boost_diags1+" "+boost_diags2+" "+boost_diags3+" "+boost_diags4+" "+boost_diags5+" "+boost_diags6
-    subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
+    #shellScript1 = "cd boostexer/breast/api/"
+    #shellScript2 = "./trainModel.sh "+mode+"_"+name+"_ "+boost_diags1+" "+boost_diags2+" "+boost_diags3+" "+boost_diags4+" "+boost_diags5+" "+boost_diags6
+    #subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
     neuralFlags = {'unlabled_mode': False, 'trainPath': 'diagDictTrain_'+name+".p"}
     p.dump(neuralFlags, open('rnn/flags.p', 'wb'))
     shellScript1 = "cd rnn; rm -rf logsIndep_"+name + "; mkdir logsIndep_"+name
@@ -312,9 +337,10 @@ def predict():
     reportDB = aggregateEpisodes(reportDB)
     reportDB = exportToJSON.portToJSON(reportDB)
     print "len reportDB", len(reportDB)
-    p.dump(reportDB, open('returnedDB_'+name+'.p', 'w'))
+    p.dump(reportDB, open('validateDB_'+name+'.p', 'w'))
 
-    updateAccesDB(copy.deepcopy(reportDB))
+    reportDB = updateAccesDB(copy.deepcopy(reportDB))
+    p.dump(reportDB, open('returnedDB_'+name+'.p', 'w'))
     getAtypias.main()
     evalModelRun.main()
     # pruneNonBreast(reportDB, name)
@@ -370,16 +396,6 @@ def pruneEvals(name):
 def predictHelper(name):
     # run boost predict
     mode = "Prod"
-    shellScript1 = "cd boostexer/breast/api/"
-    shellScript2 = "./runModel.sh "+mode+"_"+name+"_ "+boost_diags1+" "+boost_diags2+" "+boost_diags3+" "+boost_diags4+" "+boost_diags5+" "+boost_diags6
-    subprocess.call(shellScript1 + ";" + shellScript2, shell=True)
-
-    # aggregate boost predict
-    stem = "classification_results/API/Prod_"+name+"_"
-    db_unlabeled = p.load(open(DB_UNLABLED_PATH, 'rb'))[name]
-    reportDBBoost = createEpisodes.aggregateResults(db_unlabeled, stem, export_as_list=True)
-    p.dump(reportDBBoost, open('boostDB_'+name+'.p', 'w'))
-    # reportDBBoost = p.load(open('boostDB_'+name+'.p', 'r'))
     neuralFlags = {'unlabled_mode': True, 'unlabeledPath': 'unlalbeldReps_'+name+".p", 'outPath': 'lableledReps_'+name+'.p'}
 
     p.dump(neuralFlags, open('rnn/flags.p', 'w'))
@@ -393,7 +409,7 @@ def predictHelper(name):
             del r['NN_Text']
     p.dump(reportDBCNN, open('cnnDB_'+name+'.p', 'wb'))
     # reportDBCNN = p.load(open('cnnDB_'+name+'.p', 'r'))
-    reportDB = mergeDBs(reportDBBoost, reportDBCNN)
+    reportDB = reportDBCNN #mergeDBs(reportDBBoost, reportDBCNN)
     corrections = p.load(open(DB_TRAIN_PATH, 'rb'))[name]
     applyCorrections(reportDB, corrections)
     p.dump(reportDB, open("validateDB_"+name+".p", "w"))
@@ -403,13 +419,12 @@ def predictHelper(name):
 
 # sends all breast reports to the AccessDB
 def updateAccesDB(reportDB):
-    reportDB = [r for r in reportDB if ('filename' not in r or r['filename'] not in os.listdir(EVALDIR))]
     reportDB = postProcessRules(reportDB)
     reportDB = aggregateEpisodes(reportDB)
     # reportDB = exportToJSON.portToJSON(reportDB)
-
-    reportDBJ = [r for r in reportDB if r['Organ'] == '1']
-    reportDBO = [r for r in reportDB if r['Organ'] == '0']
+    reportDB_nongold = [r for r in reportDB if ('filename' not in r or r['filename'] not in os.listdir(EVALDIR))]
+    reportDBJ = [r for r in reportDB_nongold if r['Organ'] == '1']
+    reportDBO = [r for r in reportDB_nongold if r['Organ'] == '0']
     print "Exporting", len(reportDBJ), "breast records"
     print "Exporting", len(reportDBO), "other records"
 
@@ -516,7 +531,7 @@ def updateAccesDB(reportDB):
     cur.close()
     db.close()
 
-    return "Success"
+    return reportDB
 
 
 def validateTrainDb(trainDb):
@@ -612,6 +627,11 @@ def preprocessReports(reports):
         else:
             print ("report only has keys", r.keys())
             reports.remove(r)
+        r['Report_Text'].replace("_x000D_", "\n")
+        r['Report_Text_Segmented'].replace("_x000D_", "\n")
+        r['Report_Text_Segmented'].replace("_x000d_", "\n")
+        
+
     # assert 'Report_Text' in r or 'Report_Text_Segmented' in r
 
     results = preprocessRawDb.main(reports)
@@ -639,9 +659,19 @@ def postProcessRules(db_train):
             for k in ['ER', 'PR', 'Her2Fish', 'ECE', 'LVI', 'BVI', 'PositiveLN', 'ITC']:
                 r[k] = '9'
 
+        if 'Her2Fish' in r and r['Her2Fish'] != '9':
+            r['her2'] = r['Her2Fish']
+        else:
+            if 'Her2_IHC' not in r or r['Her2_IHC'] == '9':
+                r['her2'] = '9'
+            elif r['Her2_IHC'] == '3':
+                r['her2'] = '1'
+            elif r['Her2_IHC'] in ['0', '1', '2']:
+                r['her2'] = '0'
+
         for k in r.keys():
             if type(r[k]) is unicode:
-                r[k] = str(r[k])
+                r[k] = r[k].encode('utf-8')
             
     return db_train
 
@@ -655,7 +685,7 @@ def aggregateEpisodes(data):
     for i in range(len(data)):
         if sideKey not in data[i]:
             print data[i]
-            raw_input('sidekey is ' + sideKey)
+            #raw_input('sidekey is ' + sideKey)
         if 'MRN' not in data[i] and 'MRNPlusX' in data[i]:
             data[i]['MRN'] = data[i]['MRNPlusX']
         try:

@@ -49,7 +49,7 @@ def send_mail(msg):
 
     print "Sending msg", msg  
 
-    for email in ["cyli@mgh.harvard.edu", "ayala@mgh.harvard.edu", "KSHUGHES@PARTNERS.ORG"]:
+    for email in ["cyli@mgh.harvard.edu"]: #, "ayala@mgh.harvard.edu", "KSHUGHES@PARTNERS.ORG"]:
         BODY = string.join((
             "From: %s" % FROM,
             "To: %s" % email,
@@ -81,7 +81,7 @@ def calcScores(inFile, outPath=RESULTSDIR):
     print "Len text_to_pred", len(text_to_pred)
 
     results = []
-    for d in post_diagnoses:
+    for d in [k for k in columnKeys if k in diagnoses]:
         res = {'NAME':d}
         texts = [t for t in text_to_pred]
 

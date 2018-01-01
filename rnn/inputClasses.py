@@ -101,7 +101,7 @@ class TestInput(object):
                 print(diag)
                 print( [ self.data[i][diag] for i in batch_data])
                 #print( [ self.data[i][diag] for i in batch_data])
-                raw_input()
+                #raw_input()
 
             batch[diag] = inp, tar
 
@@ -158,7 +158,7 @@ class UnlabledInput(object):
                 print(self.data[0].keys())
                 print( [ self.data[i][diag] for i in batch_data])
                 #print( [ self.data[i][diag] for i in batch_data])
-                raw_input()
+                #raw_input()
 
             batch[diag] = inp, tar
 

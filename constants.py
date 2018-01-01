@@ -48,18 +48,20 @@ if MODE == "TAGHIAN":
     post_diagnoses = {k: diagnoses[k] for k in diagnoses}
     post_diagnoses['cancer'] = ['0', '1']
     post_diagnoses['atypia'] = ['0', '1']
-    post_diagnoses['ER_Intensity'] = ['0', '1', '2', '3', '9']
-    post_diagnoses['PR_Intensity'] = ['0', '1', '2', '3', '9']
+    post_diagnoses['her2'] = ['0', '1', '9']
 
     defaultLabelDict = {k: post_diagnoses[k][0] for k in post_diagnoses}
 
-    boostexer_diagnoses = ["CancerInvInsituNOS", "CancerNOS", "BiopsyType", "Her2", "Her2_IHC", "ITC", "PR", "Her2Fish", "ER", "ECE", "LVI", "BVI", "PathologyType", "Organ", "CancerInvasive", "CancerInvNOS", "NodeTissue", "CancerNotOfBreastOrigin", "BluntAdenosis", "PositiveLN"]
+    #boostexer_diagnoses = ["CancerInvInsituNOS", "CancerNOS", "BiopsyType", "Her2", "Her2_IHC", "ITC", "PR", "Her2Fish", "ER", "ECE", "LVI", "BVI", "PathologyType", "CancerInvasive", "CancerInvNOS", "NodeTissue", "CancerNotOfBreastOrigin", "BluntAdenosis", "PositiveLN"]
+    #boostexer_diagnoses = ["ITC", "BVI", "LVI", "CancerNOS", "CancerInvNOS", "CancerNotOfBreastOrigin"]
+    boostexer_diagnoses = []
     boostexer_diagnoses = [d for d in boostexer_diagnoses if d in diagnoses]
+    boostexer_diagnoses = []
     nn_diagnoses = [d for d in diagnoses if d not in boostexer_diagnoses]
 
-    const_cancers = ['ILC', 'DCIS', 'IDC', 'TubularCancer', 'CancerInvasive', 'CancerInvNOS', 'CancerNotOfBreastOrigin']
+    const_cancers = [k for k in ['ILC', 'DCIS', 'IDC', 'TubularCancer', 'CancerInvasive', 'CancerInvNOS', 'CancerNotOfBreastOrigin'] if k in post_diagnoses]
 
-    const_atypias = ['ALH', 'ADH', 'FlatEpithelial', 'LCIS', 'ADH_DCIS', 'LobularNeoplasia']
+    const_atypias = [k for k in ['ALH', 'ADH', 'FlatEpithelial', 'LCIS', 'ADH_DCIS', 'LobularNeoplasia'] if k in post_diagnoses]
 
     markers = ['ER', "ER_Intensity", 'PR', "PR_Intensity", "Her2", 'Her2Fish', "Her2_IHC", 'Are there Positive LN?', 'ECE', 'ITC', 'BVI', 'LVI']
     groupings = {

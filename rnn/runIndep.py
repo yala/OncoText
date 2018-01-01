@@ -41,7 +41,7 @@ class Config(object):
     max_epoch = 25
     keep_prob = 1.0
     batch_size = 1
-    vocab_size = 17082
+    vocab_size = 299540
     epoch_size = 1000
     filter_sizes = [1, 3, 5, 7, 9]
     bucket_lengths = [2700]

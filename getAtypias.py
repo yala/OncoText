@@ -35,6 +35,16 @@ def postProcessRules(db_train):
             for k in ['ER', 'PR', 'Her2Fish', 'ECE', 'LVI', 'BVI', 'PositiveLN', 'ITC']:
                 r[k] = '9'
 
+        if 'Her2Fish' in r and r['Her2Fish'] != '9':
+            r['her2'] = r['Her2Fish']
+        else:
+            if 'Her2_IHC' not in r or r['Her2_IHC'] == '9':
+                r['her2'] = '9'
+            elif r['Her2_IHC'] == '3':
+                r['her2'] = '1'
+            elif r['Her2_IHC'] in ['0', '1', '2']:
+                r['her2'] = '0'
+
         for k in r.keys():
             if type(r[k]) is unicode:
                 r[k] = r[k].encode('ascii', 'replace')
@@ -134,7 +144,7 @@ def updateAccesDB(reportDB, tableName):
 
 
 def main():
-    dataPath = "/home/nlp/pathology/returnedDB_mghMar.p"
+    dataPath = "/home/nlp/pathology/validateDB_mghMar.p"
 
     db = p.load(open(dataPath, 'rb'))
     db = [d for d in db if ((d['Organ'] == '1') and (('filename' not in d) or (d['filename'] not in os.listdir(EVALDIR))))]
