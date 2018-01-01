@@ -2,10 +2,6 @@ import datetime
 from openpyxl import load_workbook
 from collections import OrderedDict
 
-baseline = False
-submode = False
-
-
 def replaceSpaces(label):
     return '_'.join(str(label).split())
 

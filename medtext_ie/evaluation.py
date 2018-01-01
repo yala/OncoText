@@ -13,9 +13,6 @@ import pdb
 import smtplib
 import string
 
-ACCOUNT_SID = 'AC7d8e9d65e6c370c90c464417090c1e75'
-AUTH_TOKEN = '10e49b7b726debdfcd044f6b9ed2dbc5'
-
 name = "mghMar"
 
 def preprocessText(text):
@@ -27,18 +24,6 @@ def preprocessText(text):
     cleanText = cleanText.lower()
     return cleanText
 
-def send_text_msg(results,path):
-    num_categories = len(results)
-    average_accur = sum([r['accuracy'] for r in results]) / num_categories
-    msg = "Pathology Parser update: Retraining completed today! Average accuracy was "+ str(average_accur)+ " and full results are stored at "+path+"."
-    print "Sending msg", msg  
-    
-    client = Client(ACCOUNT_SID, AUTH_TOKEN)
-    for number in [ '+12244657241', '+16176427014', '+18572651715']:
-        client.messages.create(
-           to= number, from_='+12248083411', body=msg)   
-    return "Success"
-
 
 def send_mail(msg):
     HOST = "nlp.partners.org"
@@ -47,7 +32,7 @@ def send_mail(msg):
 
     server = smtplib.SMTP(HOST)
 
-    print "Sending msg", msg  
+    print "Sending msg", msg
 
     for email in ["cyli@mgh.harvard.edu", "ayala@mgh.harvard.edu", "KSHUGHES@PARTNERS.ORG"]:
         BODY = string.join((
@@ -93,7 +78,7 @@ def calcScores(inFile, outPath=RESULTSDIR):
                 #print "Removing report with unknown value "+text_to_gold[t][d]+" for "+d
 
         pred, gold = [text_to_pred[t][d] for t in texts if d in text_to_pred[t] and d in text_to_gold[t]],  [text_to_gold[t][d] for t in texts if d in text_to_pred[t] and d in text_to_gold[t]]
-        
+
         if len(pred) == 0:
             continue
         res['ACCURACY'] = sum([pred[i] == gold[i] for i in range(len(pred))])*100. / len(pred)
@@ -117,7 +102,7 @@ def calcScores(inFile, outPath=RESULTSDIR):
         res['F1'] = f1
 
         results.append(res)
-    
+
     overallRes = {'NAME':'AVERAGE'}
     overallRes['ACCURACY'] = sum([r['ACCURACY'] for r in results]) / len(results)
     overallRes['PRECISION'] = sum([r['PRECISION'] for r in results]) / len(results)
@@ -128,7 +113,7 @@ def calcScores(inFile, outPath=RESULTSDIR):
     results.append(overallRes)
 
     print results
-   
+
     today = date.now().strftime("%Y-%d-%m")
     #dateStr = "-".join([str(s) for s in today])
     setName = inFile.split('.')[0]
@@ -141,7 +126,7 @@ def calcScores(inFile, outPath=RESULTSDIR):
         writer.writerows(results)
 
     return results, path
-    
+
 def main(sendText=True):
     message = ""
     for goldset in os.listdir(EVALDIR):

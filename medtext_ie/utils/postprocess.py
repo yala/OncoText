@@ -80,6 +80,10 @@ def postProcessRules(db_train):
             if type(r[k]) is unicode:
                 r[k] = str(r[k])
 
+        if 'MRN_Type' in r:
+            r['Institution'] = r['MRN_Type']
+
+
     return db_train
 
 

@@ -22,16 +22,23 @@ def portToJSON(data, path=None, episodeMode = False, write=False):
             print 'wtf'
             print report
             raw_input()
-        
+
         if "MRNPlusX" in report:
             mrn = report["MRNPlusX"]
             del report["MRNPlusX"]
             report["FakeMRN"] = mrn
         #assert "EIC" in report
 
+        r = report
+        for k in r:
+            if isinstance(r[k], (datetime.datetime, datetime.date)):
+                r[k] = r[k].isoformat()
+            if isinstance(r[k], np.ndarray):
+                r[k] = ""
+
     if write:
         chunkLen = len(data)/10
-        for i in range(10):    
+        for i in range(10):
             jsonData = json.dumps(data[i* chunkLen : (i+1)*chunkLen])
             print "Len data to dump to JSON", len(jsonData)
             with open(path.split('.')[0]+'_'+str(i)+".json", 'wb') as f:
