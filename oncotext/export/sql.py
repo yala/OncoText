@@ -1,118 +1,81 @@
 import MySQLdb
 
-# sends all breast reports to the AccessDB
-def updateAccesDB(reportDB):
-    reportDB = [r for r in reportDB if ('filename' not in r or r['filename'] not in os.listdir(EVALDIR))]
-    reportDB = postProcessRules(reportDB)
-    reportDB = aggregateEpisodes(reportDB)
-    # reportDB = exportToJSON.portToJSON(reportDB)
+def replace_sql_table(table, reports, column_keys,
+                      sql_host, sql_user, sql_pass, sql_db):
 
-    reportDBJ = [r for r in reportDB if r['Organ'] == '1']
-    reportDBO = [r for r in reportDB if r['Organ'] == '0']
-    print "Exporting", len(reportDBJ), "breast records"
-    print "Exporting", len(reportDBO), "other records"
-
-    p.dump(reportDBJ, open('/home/nlp/pathology/reportDB_access.p', 'wb'))
-
-    db = MySQLdb.connect(host="localhost", user="root", passwd="nlpdb", db="reports")
+    db = MySQLdb.connect(host=sql_host,
+                         user=sql_user,
+                         passwd=sql_pass,
+                         db=sql_db)
     cur = db.cursor()
-    dbKeys, placeholders = [k for k in columnKeys if k in reportDBJ[0]], ["%s" for i in columnKeys if i in reportDBJ[0]]
+
+    dbKeys, placeholders = [k for k in column_keys if k in reports[0]], ["%s" for i in column_keys if i in reports[0]]
 
     try:
-        cur.execute("DROP TABLE " + backupTableName)
-    except Exception as e:
-        print str(e)
-        pass
-
-    try:
-        cur.execute("DROP TABLE " + backupNoBreastTableName )
+        logger.info("Export SQL: Drop table {}".format(table))
+        cur.execute("DROP TABLE {}".format(table))
     except Exception, e:
-        print str(e)
+        logger.info("Export SQL: Drop table {} failed!".format(table))
         pass
 
-    print "Moving breast reports to backup table..."
-    cur.execute("CREATE TABLE " + backupTableName + " LIKE " + reportsTableName)
-    cur.execute("INSERT INTO " + backupTableName + " SELECT * FROM " + reportsTableName)
+    logger.info("Export SQL: Create table {}".format(table))
+    cur.execute("CREATE TABLE {}  (  {} TEXT)".format(table, " TEXT, ".join(dbKeys) ))
     db.commit()
-    cur.execute("DROP TABLE " + reportsTableName)
-    cur.execute("CREATE TABLE " + reportsTableName + " (" + " TEXT, ".join(dbKeys) + " TEXT)")
-    db.commit()
-    print "done."
 
-    print "Exporting breast records..."
-    sql = ("INSERT INTO " + reportsTableName + " (" + ", ".join(dbKeys) + ") VALUES (" + ", ".join(placeholders) + ")")
-    for report in reportDBJ:
+
+    logger.info("Export SQL:  Start populating table")
+
+    sql_statement = ("INSERT INTO {} ( {} ) VALUES ({})").format(
+                                    table,
+                                    dbKeys,
+                                    ", ".join(placeholders))
+
+    for report in reports:
         try:
             values = [report[k] for k in dbKeys]
         except Exception, e:
-            print e
-            print report.keys(), "but looking for keys", [k for k in dbKeys]
+            missing_keys = [k for k in dbKeys if not k in report]
+            logger.error("Export SQL: Keys not found. Missing keys [{}]".format(missing_keys))
             continue
 
         try:
             cur.execute(sql, tuple(values))
-        except MySQLdb.Error, e:
-            try:
-                print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
-                print report
-                return None
-            except IndexError:
-                print "MySQL Error: %s" % str(e)
-                print report
-                return None
-        except TypeError, e:
-            print("MySQL TypeError", e)
-            print report
-            return None
-        except ValueError, e:
-            print("MySQL ValueError", e)
-            print report
-            return None
-    db.commit()
-    print "done."
-
-    print "Moving non breast reports to backup table..."
-    cur.execute("CREATE TABLE " + backupNoBreastTableName + " LIKE " + reportsNoBreastTableName)
-    cur.execute("INSERT INTO " + backupNoBreastTableName + " SELECT * FROM " + reportsNoBreastTableName)
-    db.commit()
-    cur.execute("DROP TABLE " + reportsNoBreastTableName)
-    cur.execute("CREATE TABLE " + reportsNoBreastTableName + " (" + " TEXT, ".join(dbKeys) + " TEXT)")
-    db.commit()
-    print "done."
-
-    print "Exporting non breast records..."
-    sql = ("insert into " + reportsNoBreastTableName + " (" + ", ".join(dbKeys) + ") VALUES (" + ", ".join(placeholders) + ")")
-    # print reportDBO[0]
-    for report in reportDBO:
-        try:
-            values = [report[k] for k in dbKeys]
         except Exception, e:
-            print e
-            print report.keys(), "but looking for keys", [k for k in dbKeys]
-            continue
+            logger.error("Export SQL: SQL Insert failed. Exception({})".format(e))
+            cur.close()
+            db.close()
+            return False
 
-        try:
-            cur.execute(sql, tuple(values))
-        except MySQLdb.Error, e:
-            try:
-                print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
-                print report
-                return None
-            except IndexError:
-                print "MySQL Error: %s" % str(e)
-                print report
-                return None
-        except TypeError, e:
-            print("MySQL TypeError", e)
-            print report
-            return None
-        except ValueError, e:
-            print("MySQL ValueError", e)
-            print report
-            return None
     db.commit()
-    print "done."
+    logger.info("Export SQL:  Done populating table")
+
     cur.close()
     db.close()
+    return True
 
-    return "Success"
+
+def export(reportDB, config, logger):
+    prune_key = config['PRUNE_KEY']
+    sql_host = config['SQL_HOST']
+    sql_user = config['SQL_USER']
+    sql_pass = config['SQL_PASSWD']
+    sql_db = config['SQL_DB']
+    breast_table = config['BREAST_REPORT_TABLE']
+    nonbreast_table = config['NOBREAST_REPORT_TABLE']
+    column_keys = config['columnKeys']
+
+
+    reportDB_breast = [r for r in reportDB if r[prune_key] == '1']
+    reportDB_other = [r for r in reportDB if r[prune_key] == '0']
+
+    logger.info( "Export SQL: Found {} Breast reports. Found {} Non-breast reports".format(len(reportDB_breast), len(reportDB_other)))
+
+
+    for table, reports in [ (breast_table, reportDB_breast), (nonbreast_table, reportDB_other)]:
+
+        sql_insert_fail = replace_sql_table(table, reports, column_keys,
+                      sql_host, sql_user, sql_pass, sql_db)
+
+        if sql_insert_fail:
+            return False
+    return True

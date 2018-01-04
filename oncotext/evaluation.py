@@ -10,8 +10,7 @@ import string
 import sklearn
 import oncotext.utils.parsing as parsing
 import oncotext.utils.preprocess as preprocess
-
-
+import sklearn.metrics
 
 def score_on_test_set(reports, test_set, config, logger):
 
@@ -33,64 +32,45 @@ def score_on_test_set(reports, test_set, config, logger):
     logger.info("evaluation - filename filtered report set has {} unique preprocessed texts".format(len(text_to_pred)))
 
     results = []
+    keys = ['NAME', 'PERCENTPOS', 'ACCURACY', 'PRECISION', 'RECALL', 'F1']
     for d in diagnoses:
         res = {'NAME':d}
         texts = [t for t in text_to_pred]
 
-        pred, gold = [text_to_pred[t][d] for t in texts if d in text_to_pred[t] and d in text_to_gold[t]],  [text_to_gold[t][d] for t in texts if d in text_to_pred[t] and d in text_to_gold[t]]
+        preds = [text_to_pred[t][d] for t in texts if d in text_to_pred[t] and d in text_to_gold[t]]
+        golds =  [text_to_gold[t][d] for t in texts if d in text_to_pred[t] and d in text_to_gold[t]]
 
-        if len(pred) == 0:
+        if len(preds) == 0 or len(golds) == 0:
+            logger.warnings("evaluation [{}] - skipping because num preds {}, num golds {}".format(d, len(preds), len(golds)))
             continue
-        res['ACCURACY'] = sum([pred[i] == gold[i] for i in range(len(pred))])*100. / len(pred)
-        res['PERCENTPOS'] = sum([g in ['1'] for g in gold])*100. / len(gold)
 
-        truePos = sum([gold[i] == '1' and pred[i] == '1' for i in range(len(pred))])
-        falsePos = sum([gold[i] == '0' and pred[i] == '1' for i in range(len(pred))])
-        trueNeg = sum([gold[i] == '0' and pred[i] == '0' for i in range(len(pred))])
-        falseNeg = sum([gold[i] == '1' and pred[i] == '0' for i in range(len(pred))])
+        res['ACCURACY'] = sklearn.metrics.accuracy_score(preds, golds)
+        res['PERCENTPOS'] = sum([g in ['tmux1'] for g in gold])*100. / len(gold)
 
-        #print d
-        #print "truePos", truePos
-        #print "falsePos", falsePos
-        #print "falseNeg", falseNeg
-        precision = 1.*truePos / (truePos+falsePos) if (truePos+falsePos) > 0 else 0
-        recall = 1.*truePos / (truePos+falseNeg) if (truePos+falseNeg) > 0 else 0
-        f1 = 2.*(precision*recall)/(precision+recall) if (precision+recall) >0 else 0
-
-        res['PRECISION'] = precision
-        res['RECALL'] = recall
-        res['F1'] = f1
+        res['PRECISION'] = sklearn.metrics.precision_score(preds, golds)
+        res['RECALL'] = sklearn.metrics.recall_score(preds, golds)
+        res['F1'] = sklearn.metrics.f1_score(preds, golds)
 
         results.append(res)
 
     overallRes = {'NAME':'AVERAGE'}
-    overallRes['ACCURACY'] = sum([r['ACCURACY'] for r in results]) / len(results)
-    overallRes['PRECISION'] = sum([r['PRECISION'] for r in results]) / len(results)
-    overallRes['RECALL'] = sum([r['RECALL'] for r in results]) / len(results)
-    overallRes['F1'] = sum([r['F1'] for r in results]) / len(results)
-    overallRes['PERCENTPOS'] = 'NA'
+    overallRes['ACCURACY'] = np.mean([r['ACCURACY'] for r in results])
+    overallRes['PRECISION'] = np.mean([r['PRECISION'] for r in results])
+    overallRes['RECALL'] = np.mean([r['RECALL'] for r in results])
+    overallRes['F1'] = np.mean([r['F1'] for r in results])
 
     results.append(overallRes)
 
-    print results
-
-    today = date.now().strftime("%Y-%d-%m")
-    #dateStr = "-".join([str(s) for s in today])
-    setName = inFile.split('.')[0]
-    path = outPath+setName+'_'+today+'.csv'
-    keys = ['NAME', 'PERCENTPOS', 'ACCURACY', 'PRECISION', 'RECALL', 'F1']
-    print "Saving results to", path
-    with open(path,'w') as outCSV:
-        writer = DictWriter(outCSV, keys)
-        writer.writeheader()
-        writer.writerows(results)
-
-    return results, path
+    return results, keys
 
 
 def evaluate(reportDB, config, logger):
     test_set_paths = os.listdir( config['EVALDIR'])
+    results_dir = config['RESULTSDIR']
     test_file_names = [p for p in test_set_paths if p.endswith('.xlsx')]
+
+    today = date.now().strftime("%m-%d-%Y")
+    result_paths = []
 
     for file_name in test_file_names:
         test_path = os.path.join(config['EVALDIR'], file_name)
@@ -98,10 +78,23 @@ def evaluate(reportDB, config, logger):
         logger.info("Scoring reportDB against test_set {}".format(test_path))
         test_set = parsing.parse_XLS(test_path)
         logger.info("Scoring reportDB has {} records matching  test_set {} records".format(len(relevant_reports), len(test_set)))
-        results, result_path = score_on_test_set(relevant_reports, test_set,
+        results, result_keys = score_on_test_set(relevant_reports, test_set,
                                                  config, logger)
 
-    return None
+        out_name = "{}_{}.csv".format(file_name.split('.')[0], today)
+        out_path = os.path.join(results_dir, out_name)
+
+        logger.info("Saving results for {} to {}".format(file_name, out_path))
+
+        result_paths.append(out_path)
+
+        with open(out_path,'w') as out_csv:
+            writer = DictWriter(out_csv, result_keys)
+            writer.writeheader()
+            writer.writerows(results)
+
+
+    return result_paths
 
 def main(sendText=True):
     message = ""

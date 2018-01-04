@@ -145,7 +145,7 @@ def predict():
 
     pickle.dump(reportDB, open('returnedDB_'+name+'.p', 'w'))
 
-    exports.run_all_exports(reportDB, config, logger)
+    export.export.apply_rules(reportDB, config, logger)
     evaluation.evaluate(reportDB, config, logger)
     reportDB = postprocess.prune_non_breast(reportDB, name, config, logger)
     return json.dumps({'reportDB': json_export.port_to_json(reportDB)})

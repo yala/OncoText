@@ -1,52 +1,13 @@
 from operator import itemgetter
 import cPickle as p
-import MySQLdb
 import os, sys
 sys.path.append("..")
-from constants import *
-from preprocessRawDb import *
 
-
-def hasCat(r, cat, loose=False):
-    for c in cat:
-        if not loose:
-            if str(r[c]) == '1':
-                return True
-        else:
-            if c in r:
-                return True
-    return False
-
-
-# Runs enforces global constraints like ER/PR NA given no cancer
-def postProcessRules(db_train):
-
-    for r in db_train:
-        if hasCat(r, const_cancers):
-            r['cancer'] = '1'
-        else:
-            r['cancer'] = '0'
-            if hasCat(r, const_atypias):
-                r['atypia'] = '1'
-            else:
-                r['atypia'] = '0'
-
-        if r['cancer'] == '0':
-            for k in ['ER', 'PR', 'Her2Fish', 'ECE', 'LVI', 'BVI', 'PositiveLN', 'ITC']:
-                r[k] = '9'
-
-        for k in r.keys():
-            if type(r[k]) is unicode:
-                r[k] = r[k].encode('ascii', 'replace')
-
-    return db_train
-
-
-def getMRNDB(db):
+def getMRNDB(db, id_key, date_key):
     mrns = {}
 
     for report in db:
-        mrn = report['MRN'] if 'MRN' in report else report['MRNPlusX']
+        mrn = report[id_key]
         if mrn in mrns:
             mrns[mrn].append(report)
         else:
@@ -54,206 +15,94 @@ def getMRNDB(db):
 
     for mrn in mrns:
         reports = mrns[mrn]
-        
-        sortedReports = sorted(reports, key=lambda x: x.get('Report_Date_Time', ""))
-
+        sortedReports = sorted(reports, key=lambda x: x.get(date_key, ""))
         mrns[mrn] = sortedReports
+    return mrns
 
-    return mrns    
 
+def fits_criteria(report, include, exlude):
 
-def filt(report, validKeys, blackout):
-       
-    for diag in blackout:
+    for diag in exlude:
         assert str(report[diag]) in ['1', '0']
         if str(report[diag]) in ['1']:
             return False
-    
-    for diag in validKeys:
+
+    for diag in include:
         assert str(report[diag]) in ['1', '0']
         if str(report[diag]) in ['1']:
             return True
-    
-    return 'benign'
+
+    return 'neither'
+
+def run_query(exclude, include, yearFilt, config, logger):
+
+    date_key = config['REPORT_TIME_KEY']
+    id_key = config['PATIENT_ID_KEY']
+    side_key = config['SIDE_KEY']
+
+    results = []
+    resultRecords = []
+    resultFirstRecs = []
+
+    mrns = getMRNDB(db, id_key, date_key)
+
+    for mrn in mrns:
+        reports = mrns[mrn]
+
+        indx = 0
+        firstRep = reports[indx]
+        passes = fits_criteria(firstRep, include, exclude)
+        queryIndx = indx
+
+        def crit():
+            repBool = passes == 'neither'
+            return repBool and queryIndx < len(reports)-1
+
+        while crit():
+            queryIndx += 1
+            passes = filt(reports[queryIndx], include, exclude)
+
+        if passes is True:
+            if yearFilt and sortedReports[queryIndx]['date'].year >= 2010:
+                continue
+
+            concurrent_exlcusion = False
+
+            def inRange(r):
+                return abs((r['date'] - reports[queryIndx]['date']).days) < 183
+
+            concReps = [r for r in reports if inRange(r)]
+            for r in concReps:
+                conc = filt(r, include, exclude)
+                if conc is False:
+                    concurrent_exlcusion = True
+
+            if not concurrent_exlcusion:
+                results.extend(reports)
+
+    return results
 
 
-def updateAccesDB(reportDB, tableName):
-   
-    reportDB = postProcessRules(reportDB)
-    print "Exporting", len(reportDB), "breast records to name", tableName
 
-    db = MySQLdb.connect(host="localhost", user="root", passwd="nlpdb", db="reports")
-    cur = db.cursor()
-    try: 
-        cur.execute("DROP TABLE " + tableName)
-    except Exception, e:
-        pass
+def export(reports, config, logger):
 
-    cur.execute("CREATE TABLE " + tableName + " LIKE " + reportsTableName)
-    db.commit()
-    dbKeys, placeholders = [k for k in columnKeys if k in reportDB[0]], ["%s" for i in columnKeys if i in reportDB[0]]
-    
+    sql_host = config['SQL_HOST']
+    sql_user = config['SQL_USER']
+    sql_pass = config['SQL_PASSWD']
+    sql_db = config['SQL_DB']
+    breast_table = config['BREAST_REPORT_TABLE']
+    nonbreast_table = config['NOBREAST_REPORT_TABLE']
+    column_keys = config['columnKeys']
 
-    print "Exporting breast records... to", tableName
-    sql = ("insert into " + tableName + " (" + ", ".join(dbKeys) + ") VALUES (" + ", ".join(placeholders) + ")")
+    atypia_tables = config['ATYPIA_TABLES']
 
-    for report in reportDB:
-        try:
-            values = [report[k] for k in dbKeys]
-        except Exception, e:
-            print e
-            print report.keys(), "but looking for keys", [k for k in dbKeys]
-            continue
+    for i, table_details in enumerate(export_tables):
 
-        try:
-            cur.execute(sql, tuple(values))
-        except MySQLdb.Error, e:
-            try:
-                print "MySQL Error [%d]: %s" % (e.args[0], e.args[1])
-                print report
-                return None
-            except IndexError:
-                print "MySQL Error: %s" % str(e)
-                print report
-                return None
-        except TypeError, e:
-            print("MySQL TypeError", e)
-            print report
-            return None
-        except ValueError, e:
-            print("MySQL ValueError", e)
-            print report
-            return None
-    db.commit()
-    print "done."
+        table, exclusion_crit, inclusion_crit, yearFilt = table_details
+        reports = run_query(exclusion_crit, inclusion_crit, yearFilt)
 
-    cur.close()
-    db.close()
+        replace_sql_table(table, reports, column_keys,
+                      sql_host, sql_user, sql_pass, sql_db)
 
-    return "Success"
-
-
-def main():
-    dataPath = "/home/nlp/pathology/returnedDB_mghMar.p"
-
-    db = p.load(open(dataPath, 'rb'))
-    db = [d for d in db if ((d['Organ'] == '1') and (('filename' not in d) or (d['filename'] not in os.listdir(EVALDIR))))]
-    print "len seed DB", len(db)
-
-    exportPaths = ["allFEAsTable", "allADHsTable", "allAtypiaTable",
-                   "allAtypia2010Table", "allCancersTable"]
-
-    yearFilts = [False, False, False, True, False]
-
-    all_cancer = [const_cancers, const_cancers, const_cancers, const_cancers, []]
-
-    fea = ["FlatEpithelial"]
-    adh = ["ADH"]
-
-    all_atypias = [fea, adh, const_atypias, const_atypias, const_cancers]
-
-    for i in range(0, 4):
-
-        exportPath = exportPaths[i]
-        cancer = all_cancer[i]
-        atypias = all_atypias[i]
-        yearFilt = yearFilts[i]
-
-        results = []
-        resultRecords = []
-        resultFirstRecs = []
-
-        mrns = getMRNDB(db)
-
-        for mrn in mrns:
-            reports = mrns[mrn]
-            for r in reports:
-                if 'Report_Date_Time' in r:
-                    r['date'] = utcToDate(r['Report_Date_Time'])
-                else:
-                    r['date'] = utcToDate(r['Report_Date_TimePlusX'])
-            sortedReports = sorted(reports, key=itemgetter('date'))
-
-            for r in sortedReports:
-                if 'Report_Date_Time' in r:
-                    if type(r['Report_Date_Time']) == datetime.datetime:
-                        r['Report_Date_Time'] = r['Report_Date_Time'].isoformat()
-                else:
-                    if type(r['Report_Date_TimePlusX']) == datetime.datetime:
-                        r['Report_Date_TimePlusX'] = r['Report_Date_TimePlusX'].isoformat()
-
-            assert len(reports) == len(sortedReports)
-            
-            assert len(sortedReports) > 0
-            indx = 0
-            firstRep = sortedReports[indx]
-            
-            if 'Report_Date_Time' in firstRep:
-                time = firstRep['Report_Date_Time'].split("T")[0]
-            else:
-                time = firstRep['Report_Date_TimePlusX'].split("T")[0]
-
-            passes = filt(firstRep, atypias, cancer)
-            queryIndx = indx
-
-            def crit():
-                repBool = passes == 'benign'
-                return repBool and queryIndx < len(sortedReports)-1
-
-            while crit():
-                queryIndx += 1
-                passes = filt(sortedReports[queryIndx], atypias, cancer)
-
-            if passes is True:
-                if sortedReports[queryIndx]['date'].year >= 2010 and yearFilt:
-                    continue
-                #epId = sortedReports[queryIndx]["EpisodeID"]
-                concurrentCancr = False
-                
-                def inRange(r):
-                    return abs((r['date'] - sortedReports[queryIndx]['date']).days) < 183
-                concReps = [r for r in sortedReports if inRange(r)]
-                for r in concReps:
-                    conc = filt(r, atypias, cancer)
-                    if conc is False:
-                        concurrentCancr = True
-                
-                if not concurrentCancr:
-                    results.append((mrn, time))
-                    resultRecords.extend([r for r in sortedReports])
-                    resultFirstRecs.append(sortedReports[queryIndx])
-
-            assert len(set([r[0] for r in results])) == len(results)
-
-        print "-------------"
-        print "query", exportPath
-        print "Number of Fitting query", len(results)
-        print "Num MRNs", len(set([r['MRN'] for r in resultRecords]))
-        print "Number of Records", len(resultRecords)
-                
-        if len(resultRecords) > 0:
-            for r in resultRecords:
-                if "ruleBreastSide" in r:
-                    del r["ruleBreastSide"]
-
-            p.dump(resultRecords, open('atypiaExport.p', 'wb'))
-
-            keys = [k for k in diagnoses if k in resultRecords[0].keys()]
-            filtRecs = []
-            
-            for r in resultRecords:
-                filtR = {}
-                for k in r:
-                    if k in keys:
-                        filtR[k] = r[k]
-                filtRecs.append(filtR)
-            
-            resultRecords = filtRecs
-
-            updateAccesDB(resultRecords, exportPath)
-
-
-if __name__ == "__main__":
-    main()
-
-
+        logger.info("Atypias: Export {} with {} Records".format(table,
+                                                             len(reports))

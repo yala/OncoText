@@ -2,6 +2,11 @@ import datetime
 import medtext_ie.utils.parsing as parsing
 import os
 
+class Args(object):
+    def __init__(self, config_dict):
+        self.__dict__.update(config_dict)
+
+
 class Config(object):
 
     HOMEDIR = '/home/nlp/'
@@ -13,6 +18,7 @@ class Config(object):
     TRAININGDIR = os.path.join(DROPBOXDIR,'ForTraining/')
     RESULTSDIR = os.path.join(DROPBOXDIR,'NLP_Results/')
 
+
     DB_TRAIN_PATH = os.path.join(PICKLEDIR, "reportDBAPI_train.p")
     DB_BASE_PATH = os.path.join(PICKLEDIR, "reportDBAPI_train.p")
     DB_UNLABLED_PATH = os.path.join(PICKLEDIR, "reportDBAPI_test.p")
@@ -22,6 +28,13 @@ class Config(object):
     FROM =  "nlp@nlp.partners.org"
     SUBJECT = "Pathology Parser Update!"
     EMAIL_LIST =  ["cyli@mgh.harvard.edu", "ayala@mgh.harvard.edu", "KSHUGHES@PARTNERS.ORG"]
+
+    SQL_HOST = 'localhost'
+    SQL_USER = 'root'
+    SQL_PASSWD = 'nlpdb'
+    SQL_DB = 'reports'
+    BREAST_REPORT_TABLE = "reports"
+    NOBREAST_REPORT_TABLE = "nonbreastReports"
 
     SIX_MONTHS = datetime.timedelta(365/2)
 
@@ -59,5 +72,24 @@ class Config(object):
         'allNNSansMarkers': ['Report_Text_Segmented'] + [k for k in nn_diagnoses if k not in markers],
     }
 
-    BREAST_REPORT_TABLE = "reports"
-    NOBREAST_REPORT_TABLE = "nonbreastReports"
+    ATYPIA_TABLES = [("allFEAsTable", cancers, ["FlatEpithelial"], False )
+                     ("allADHsTable", cancers, ['ADH'], False),
+                     ("allAtypiaTable", cancers, atypias, False),
+                     ("allAtypia2010Table", cancers, atypias, True),
+                     ("allCancersTable", [], cancers, False)]
+
+    RATIONALE_NET_CONFIG = {
+        'cuda': False,
+        'dropout': .1,
+        'init_lr': 0.0001,
+        'model_form': 'cnn',
+        'hidden_dim': 100,
+        'dataset': 'pathology_oncotext',
+        'num_layers': 1,
+        'filters': '3,4,5',
+        'filter_num': 100,,
+        'epochs': 1,
+        'patience': 5,
+        'objective':'cross_entropy',
+        'results_path': 'snapshot/{}.pt',
+    }
