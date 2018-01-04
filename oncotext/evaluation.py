@@ -1,81 +1,41 @@
 import cPickle as p
 from datetime import datetime as date
 import sys, os
-sys.path.append("/home/nlp/RecordManagement")
-from utils import parseXLS
-sys.path.append("..")
-import re
 import numpy as np
 from constants import *
 from csv import DictWriter
-from twilio.rest import Client
 import pdb
 import smtplib
 import string
-
-name = "mghMar"
-
-def preprocessText(text):
-    import re
-    cleanText = re.sub(r"\W", " ", text)
-    cleanText = ' '.join(cleanText.split('\n'))
-    cleanText = re.sub(r"(----)+", "", cleanText)
-    cleanText = re.sub(r"(====)+", "", cleanText)
-    cleanText = cleanText.lower()
-    return cleanText
+import sklearn
+import oncotext.utils.parsing as parsing
+import oncotext.utils.preprocess as preprocess
 
 
-def send_mail(msg):
-    HOST = "nlp.partners.org"
-    FROM =  "nlp@nlp.partners.org"
-    SUBJECT = "Pathology Parser Update!"
 
-    server = smtplib.SMTP(HOST)
+def score_on_test_set(reports, test_set, config, logger):
 
-    print "Sending msg", msg
+    gold_reports = preprocess.apply_rules(test_set)
+    preprocessed_text_key = config['PREPROCESSED_REPORT_TEXT_KEY']
+    diagnoses = config['post_diagnoses']
 
-    for email in ["cyli@mgh.harvard.edu", "ayala@mgh.harvard.edu", "KSHUGHES@PARTNERS.ORG"]:
-        BODY = string.join((
-            "From: %s" % FROM,
-            "To: %s" % email,
-            "Subject: %s" % SUBJECT ,
-            "",
-            msg
-        ), "\r\n")
-
-        server.sendmail(FROM, email, BODY)
-    server.quit()
-
-
-def calcScores(inFile, outPath=RESULTSDIR):
-    reports = p.load(open('/home/nlp/pathology/returnedDB_'+name+'.p', 'rb'))
-    db = [r for r in reports if ('filename' in r and r['filename']==inFile)]
-    testSet = parseXLS(EVALDIR+inFile)
     text_to_gold = {}
-    for d in testSet:
-        #if not 'Report_Text_Segmented' in d:
-        d['Report_Text_Segmented'] = preprocessText(d['Report_Text'])
-        text_to_gold[ d['Report_Text_Segmented']] = d
-    print "Len gold", len(text_to_gold)
+    for r in gold_reports:
+        text = r[preprocessed_text_key]
+        text_to_gold[ text ] = r
+
+    logger.info("evaluation - test set has {} unique preprocessed texts".format(len(text_to_gold)))
 
     text_to_pred = {}
-    for d in db:
-        if d['Report_Text_Segmented'] in text_to_gold:
-            text_to_pred[d['Report_Text_Segmented']] = d
-    print "Len db", len(db)
-    print "Len text_to_pred", len(text_to_pred)
+    for r in reports:
+        text = r[preprocessed_text_key]
+        text_to_pred[text] = r
+    logger.info("evaluation - filename filtered report set has {} unique preprocessed texts".format(len(text_to_pred)))
 
     results = []
-    for d in post_diagnoses:
+    for d in diagnoses:
         res = {'NAME':d}
         texts = [t for t in text_to_pred]
-
-        #for t in texts:
-            #if d in text_to_gold[t] and type(text_to_gold[t][d]) != str:
-                #text_to_gold[t][d] = str(unicode(text_to_gold[t][d]).encode('utf-8'))
-            #if d in text_to_gold[t] and text_to_gold[t][d] not in post_diagnoses[d]:
-                #texts.remove(t)
-                #print "Removing report with unknown value "+text_to_gold[t][d]+" for "+d
 
         pred, gold = [text_to_pred[t][d] for t in texts if d in text_to_pred[t] and d in text_to_gold[t]],  [text_to_gold[t][d] for t in texts if d in text_to_pred[t] and d in text_to_gold[t]]
 
@@ -126,6 +86,22 @@ def calcScores(inFile, outPath=RESULTSDIR):
         writer.writerows(results)
 
     return results, path
+
+
+def evaluate(reportDB, config, logger):
+    test_set_paths = os.listdir( config['EVALDIR'])
+    test_file_names = [p for p in test_set_paths if p.endswith('.xlsx')]
+
+    for file_name in test_file_names:
+        test_path = os.path.join(config['EVALDIR'], file_name)
+        relevant_reports = [r for r in reportDB if r['filename'] == file_name]
+        logger.info("Scoring reportDB against test_set {}".format(test_path))
+        test_set = parsing.parse_XLS(test_path)
+        logger.info("Scoring reportDB has {} records matching  test_set {} records".format(len(relevant_reports), len(test_set)))
+        results, result_path = score_on_test_set(relevant_reports, test_set,
+                                                 config, logger)
+
+    return None
 
 def main(sendText=True):
     message = ""
