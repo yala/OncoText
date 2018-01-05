@@ -33,6 +33,9 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 logger = logger.get_logger(LOGNAME, LOGPATH)
 
+DB_TRAIN_PATH = config['DB_TRAIN_PATH']
+DB_UNLABLED_PATH = config['DB_UNLABLED_PATH']
+
 SUCCESS_MSG = "Request Success"
 NOP_MSG = "Request No Op. Invalid arg"
 
@@ -120,7 +123,8 @@ def train():
         returns:- msg: status code
     '''
     name = request.args.get("name") or "default"
-    rationale_net_wrapper.train(name, config, logger)
+    db_train = pickle.load(open(DB_TRAIN_PATH, 'rb'))
+    rationale_net_wrapper.train(db_train[name], config, logger)
     return 200
 
 
@@ -139,7 +143,12 @@ def predict():
     if request.args.get("debug") == "True":
         reportDB = p.load(open('validateDB_'+name+'.p', 'rb'))
     else:
-        reportDB = rationale_net_wrapper.label_reports(name, config, logger)
+        db_unlabeled = p.load(open(DB_UNLABLED_PATH, 'rb'))
+
+        reportDB = rationale_net_wrapper.label_reports(
+                                                db_unlabeled[name],
+                                                config,
+                                                logger)
 
     reportDB = postprocess.apply_rules(reportDB, config, logger)
 

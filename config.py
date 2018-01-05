@@ -90,6 +90,10 @@ class Config(object):
         'filter_num': 100,,
         'epochs': 1,
         'patience': 5,
+        'snapshot': None,
         'objective':'cross_entropy',
-        'results_path': 'snapshot/{}.pt',
+        'num_gpus ': 1,
+        'results_path': 'snapshot/oncotext_{}.pt',
     }
+
+    rationale_net_args = Args(RATIONALE_NET_CONFIG)
