@@ -1,3 +1,5 @@
+import config
+
 '''
 Run preprocessing on all db's inside train and unlabeled
 '''
