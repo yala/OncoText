@@ -5,7 +5,7 @@ import sys
 sys.path.append(dirname(dirname(realpath(__file__))))
 sys.path.append(os.path.join(dirname(dirname(realpath(__file__))),
                              'rationale_net'))
-import medtext_ie.logger
+import oncotext.logger as logger
 from flask import Flask
 from flask import request, json, jsonify
 import oncotext.rationale_net_wrapper as rationale_net_wrapper
@@ -23,7 +23,7 @@ LOG_FILE = 'LOGS'
 CONFIG_NAME = 'Config'
 app.config.from_object(CONFIG_NAME)
 # create logger
-logger = oncoserve.logger.get_logger('oncotext', LOG_FILE)
+logger = logger.get_logger('oncotext', LOG_FILE)
 config = app.config
 # Init onconet wrapper
 onconet = onconet_wrapper.OncoNetWrapper(onconet_args, app.config['AGGREGATION'], logger)
@@ -158,11 +158,6 @@ def predict():
     evaluation.evaluate(reportDB, config, logger)
     reportDB = postprocess.prune_non_breast(reportDB, name, config, logger)
     return json.dumps({'reportDB': json_export.port_to_json(reportDB)})
-
-def run_exports(reportDB):
-    updateAccesDB(copy.deepcopy(reportDB))
-    getAtypias.
-    evalModelRun.main()
 
 
 if __name__ == "__main__":
