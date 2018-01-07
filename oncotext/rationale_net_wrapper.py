@@ -4,30 +4,26 @@ import torch.autograd as autograd
 import rationale_net.utils.generic as generic
 import rationale_net.utils.parsing as parsing
 import rationale_net.utils.model as model
+import rationale_net.utils.dataset as dataset_utils
+import oncotext.utils.dataset_factory as dataset_factory
 import pdb
-
-
-INIT_MESSAGE = "OncoNet- Initializing OncoNet Wrapper..."
-TRANSF_MESSAGE = "OncoNet- Transfomers succesfully composed"
-MODEL_MESSAGE = "OncoNet- Model successfully loaded from : {}"
-AGGREGATOR_MESSAGE = "OncoNet- Aggregator [{}] succesfully loaded"
-IMG_CLASSIF_MESSAGE = "OncoNet- Image classification produced {}"
-EXAM_CLASSIF_MESSAGE = "OncoNet- Exam classification complete!"
-
 
 
 def train(reports, config, logger):
 
     args = generic.parse_args()
     diagnoses = config['diagnoses']
+    label_maps = config['post_diagnoses']
 
-    embeddings, word_to_indx = utils.dataset.get_embedding_tensor(args)
+    embeddings, word_to_indx = dataset_utils.get_embedding_tensor(args)
+    logger.info("RN Wrapper: Succesffuly got embeddings")
     model_paths = []
 
 
     for diagnosis in diagnoses:
+        logger.info("RN Wrapper: Training model for {}".format(diagnosis))
         args.aspect = diagnosis
-        train_data, dev_data = datasets.factory.get_oncotext_dataset_train(reports, args, word_to_indx)
+        train_data, dev_data = datasets_factory.get_oncotext_dataset_train(reports, label_maps, args, word_to_indx)
 
         args.model_path = args.results_path.format(diagnosis)
         model_paths.append( args.model_path)
@@ -45,13 +41,14 @@ def train(reports, config, logger):
 def label_reports(un_reports, config, logger):
     args = config['rationale_net_args']
     diagnoses = config['diagnoses']
+    label_maps = config['post_diagnoses']
 
-    embeddings, word_to_indx = utils.dataset.get_embedding_tensor(args)
+    embeddings, word_to_indx = dataset_utils.get_embedding_tensor(args)
 
-    test_data = datasets.factory.get_oncotext_dataset_test(un_reports, args, word_to_indx)
+    test_data = datasets_factory.get_oncotext_dataset_test(un_reports, label_maps, args, word_to_indx)
 
     for indx, diagnosis in diagnoses:
-
+        logger.info("RN Wrapper: Start labeling reports for {}".format(diagnosis))
         args.aspect = diagnosis
 
         snapshot_path = args.results_path.format(diagnosis)
@@ -64,7 +61,7 @@ def label_reports(un_reports, config, logger):
         preds = preds
         pdb.set_trace()
         for i in range(len(test_data)):
-            prediction = preds[i] # Wrap with label map
+            prediction = label_maps[diagnosis][preds[i]] # Wrap with label map
             test_data.dataset[i][diagnosis] = prediction
 
     return test_data.dataset

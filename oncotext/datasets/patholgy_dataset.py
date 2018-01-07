@@ -1,0 +1,46 @@
+import torch
+import torch.utils.data as data
+import gzip
+import tqdm
+import pickle
+import json
+import pdb
+from rationale_net.datasets.abstract_dataset import AbstractDataset
+import rationale_net.utils.dataset as utils
+import random
+
+
+SMALL_TRAIN_SIZE = 800
+random.seed(0)
+
+
+class PathologyDataset(AbstractDataset):
+
+    def __init__(self, args, reports, label_map, word_to_indx, name, max_length=720):
+        self.name = name
+        self.args = args
+        diagnosis = args.aspect
+        self.word_to_indx  = word_to_indx
+        self.max_length = max_length
+        self.dataset = reports
+
+        self.class_balance = {}
+        for i, sample in tqdm.tqdm(enumerate(self.dataset)):
+            sample['x'] = self.processLine(sample['text'])
+            if name == 'test':
+                    sample['y'] = 0
+                else:
+                    sample['y'] = label_map[diagnosis].index(sample[diagnosis])
+            sample['i'] = i
+            val = sample[diagnosis]
+            if not val in self.class_balance:
+                self.class_balance[ val ] = 0
+            self.class_balance[val] += 1
+        print ("Class balance", self.class_balance)
+
+
+    ## Convert one line from beer dataset to {Text, Tensor, Labels}
+    def processLine(self, raw_text):
+        text = raw_text.split()[:self.max_length]
+        x =  utils.get_indices_tensor(text, self.word_to_indx, self.max_length)
+        return x

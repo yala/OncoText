@@ -85,6 +85,7 @@ class Config(object):
         'model_form': 'cnn',
         'hidden_dim': 100,
         'dataset': 'pathology_oncotext',
+        'embedding': 'pathology',
         'num_layers': 1,
         'filters': '3,4,5',
         'filter_num': 100,,
@@ -94,6 +95,8 @@ class Config(object):
         'objective':'cross_entropy',
         'num_gpus ': 1,
         'results_path': 'snapshot/oncotext_{}.pt',
+        'train_split': .80
     }
+
 
     rationale_net_args = Args(RATIONALE_NET_CONFIG)
