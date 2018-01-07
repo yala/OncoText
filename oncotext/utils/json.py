@@ -1,0 +1,60 @@
+import pickle as p
+import re
+import random
+import datetime
+import pprint
+from operator import itemgetter
+import json
+import sys
+sys.path.append("..")
+import preprocessRawDb
+from constants import *
+
+
+def portToJSON(data, path=None, episodeMode = False, write=False):
+    for report in data:
+        try:
+            for k in report:
+                l = report[k]
+                if k in ['Report_Date_Time','Report_Date_TimePlusX']:
+                    report[k] = preprocessRawDb.utcToDate(l).isoformat().split('T')[0]
+        except Exception, e:
+            print 'wtf'
+            print report
+            raw_input()
+
+        if "MRNPlusX" in report:
+            mrn = report["MRNPlusX"]
+            del report["MRNPlusX"]
+            report["FakeMRN"] = mrn
+        #assert "EIC" in report
+
+        r = report
+        for k in r:
+            if isinstance(r[k], (datetime.datetime, datetime.date)):
+                r[k] = r[k].isoformat()
+            if isinstance(r[k], np.ndarray):
+                r[k] = ""
+
+    if write:
+        chunkLen = len(data)/10
+        for i in range(10):
+            jsonData = json.dumps(data[i* chunkLen : (i+1)*chunkLen])
+            print "Len data to dump to JSON", len(jsonData)
+            with open(path.split('.')[0]+'_'+str(i)+".json", 'wb') as f:
+                f.write(jsonData)
+    else:
+        return data
+
+if __name__ == "__main__":
+
+    reportDB = p.load( open(outPath, 'rb'))
+    episodeDB = p.load( open(episodePath, 'rb'))
+
+    print "Dumping ReportDB"
+    portToJSON(reportDB, JSONReportPath, write=True)
+    print "Dumping EpisodeDB"
+    portToJSON(episodeDB, JSONEpisodePath, True, write=True)
+
+
+

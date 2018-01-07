@@ -1,0 +1,128 @@
+import re
+import oncotext.utils.date as date
+import uuid
+
+def preprocess_text(text):
+    text = re.sub(r"\W", " ", text)
+    text = ' '.join(text.split('\n'))
+    text = re.sub(r"(----)+", "", text)
+    text = re.sub(r"(====)+", "", text)
+    text = text.lower()
+    return text
+
+def segment_text(txt):
+    leftTxt = ""
+    rightTxt = ""
+
+    leftIndx = txt.lower().index("left") if "left" in txt.lower() else len(txt)
+    rightIndx = txt.lower().index("right") if "right" in txt.lower() else len(txt)
+
+    leadTxtIndx = min(rightIndx, leftIndx)
+    leftTxt += txt[:leadTxtIndx]
+    rightTxt += txt[:leadTxtIndx]
+    mode = "left" if leftIndx < rightIndx else "right"
+    txt = txt[leadTxtIndx:]
+    while "left" in txt.lower() or "right" in txt.lower():
+        leftIndx = txt.lower().index("left") if "left" in txt.lower() else len(txt)
+        rightIndx = txt.lower().index("right") if "right" in txt.lower() else len(txt)
+
+        leadTxtIndx = rightIndx if mode == "left" else leftIndx
+
+        if mode == "left":
+            leftTxt += txt[:leadTxtIndx]
+        else:
+            rightTxt += txt[:leadTxtIndx]
+
+        txt = txt[leadTxtIndx:]
+
+        mode = "right" if mode == "left" else "left"
+
+    return {"l": leftTxt, "r": rightTxt}
+
+def is_bilateral(text):
+    '''
+        params: text- lowercase text
+        returns: True if report is believed to be bilateral
+
+    '''
+    bilat = "right" in text and "left" in text
+    return not bilat
+
+
+def segment_report(report, raw_text_key, preprocessed_text_key, side_key, logger):
+    '''
+        If report is bilateral, split into two reports. else return single
+        report.
+
+        params:
+        - report: full text repot
+        - raw_text_key: key for full text
+        - preprocessed_text_key: key for full text
+        - side_key: where to store side information
+        - logger
+
+        returns:
+        -segmented_reports: list of reports
+    '''
+    segmented_reports = []
+
+    full_text = preprocess_text(report[raw_text_key])
+
+    contains_side_annotation = side in report
+
+    if is_bilateral(full_text) and not contains_side_annotation:
+        segmented_text = segment_text(full_text)
+        for side, s_text in segmented_text:
+            segemented_r = copy.deepcopy(report)
+            segemented_r[side_key] = side
+            segemented_r[preprocessed_text_key] = s_text
+            segmented_reports.append(segemented_r)
+    else:
+        report[preprocessed_text_key] = full_text
+        segmented_reports = [report]
+
+    return segmented_reports
+
+def set_uuid(report):
+    if not 'ID' in r:
+        r['ID'] = str(uuid.uuid4())
+    return r
+
+def apply_rules(reports, raw_text_key, preprocessed_text_key,
+                time_key, side_key, logger):
+    '''
+        Go through list of reports and do the following:
+        - Segement into left/right
+        - lower case and throw away non alpha neumeric characters
+        - throw away reports with no text
+        - add uuid
+
+        params:
+        - reports: list of dicts (each dict is a report) to operate over
+        - raw_text_key: key for raw report text
+        - preprocessed_text_key: key to store preprocess_text report text
+        - logger: pylogger object
+
+        returns:
+        preprocessed_reports: a preprocess reports list
+    '''
+    segemented_reports = []
+    for r in reports:
+        # Skip reports with no text in it
+        if not raw_text_key in r:
+            logger.warnings("preprocess - report has no {} feild.".format(raw_text_key))
+            continue
+        # append already preprocessed reports
+        if preprocessed_text_key in r:
+            preprocessed_reports.append(r)
+        else:
+            preprocessed_reports.extend( segment_report(r,
+                                                        raw_text_key,
+                                                        preprocessed_text_key,
+                                                        side_key,
+                                                        logger) )
+
+    preprocessed_reports = [ date.set_timestamp(report, time_key, logger) for report in segemented_reports]
+
+    preprocessed_reports = [set_uuid(report) for report in preprocessed_reports ]
+    return preprocessed_reports
