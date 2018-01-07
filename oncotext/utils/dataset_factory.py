@@ -2,7 +2,7 @@ import random
 import oncotext.datasets.patholgy_dataset
 
 def get_oncotext_dataset_train(all_reports, label_maps, args, word_to_indx, get_train, logger):
-    reports = [r for r in if args.aspect in all_reports]
+    reports = [r for r in all_reports if args.aspect in r]
     random.shuffle(reports)
     split_indx = int(len(reports)* args.train_split)
     train_reports = reports[: split_indx]

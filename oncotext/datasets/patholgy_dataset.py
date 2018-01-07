@@ -28,9 +28,9 @@ class PathologyDataset(AbstractDataset):
         for i, sample in tqdm.tqdm(enumerate(self.dataset)):
             sample['x'] = self.processLine(sample['text'])
             if name == 'test':
-                    sample['y'] = 0
-                else:
-                    sample['y'] = label_map[diagnosis].index(sample[diagnosis])
+                 sample['y'] = 0
+            else:
+                sample['y'] = label_map[diagnosis].index(sample[diagnosis])
             sample['i'] = i
             val = sample[diagnosis]
             if not val in self.class_balance:

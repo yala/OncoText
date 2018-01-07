@@ -1,6 +1,8 @@
 import datetime
-import medtext_ie.utils.parsing as parsing
+import oncotext.utils.parsing as parsing
 import os
+import pdb
+import copy
 
 class Args(object):
     def __init__(self, config_dict):
@@ -8,7 +10,6 @@ class Args(object):
 
 
 class Config(object):
-
     HOMEDIR = '/home/nlp/'
     PATHOLOGYDIR = os.path.join(HOMEDIR, 'pathology/')
     PICKLEDIR = os.path.join(PATHOLOGYDIR, "pickle_files")
@@ -45,18 +46,16 @@ class Config(object):
     PATIENT_ID_KEY = "MRN"
     PRUNE_KEY = "Organ"
 
+    columnKeys = parsing.parse_XLS( os.path.join(DROPBOXDIR,'SQL_KeysAndValues.xlsx'))
 
-    columnKeys = parsing.parse_XLS(DROPBOXDIR + 'SQL_KeysAndValues.xlsx')
-
-    diagnoses = {k: columnKeys[k] for k in columnKeys if len(columnKeys[k]) > 0}
-
-    post_diagnoses = {k: diagnoses[k] for k in diagnoses}
+    diagnoses = {k: v for k, v in columnKeys.items() if len(v) > 0}
+    post_diagnoses = copy.deepcopy(diagnoses)
     post_diagnoses['cancer'] = ['0', '1']
     post_diagnoses['atypia'] = ['0', '1']
     post_diagnoses['ER_Intensity'] = ['0', '1', '2', '3', '9']
     post_diagnoses['PR_Intensity'] = ['0', '1', '2', '3', '9']
 
-    defaultLabelDict = {k: post_diagnoses[k][0] for k in post_diagnoses}
+    defaultLabelDict = {k: v[0] for k, v in post_diagnoses.items()}
 
     cancers = ['ILC', 'DCIS', 'IDC', 'TubularCancer', 'CancerInvasive', 'CancerInvNOS', 'CancerNotOfBreastOrigin']
 
@@ -64,15 +63,7 @@ class Config(object):
 
     markers = ['ER', "ER_Intensity", 'PR', "PR_Intensity", "Her2", 'Her2Fish', "Her2_IHC", 'Are there Positive LN?', 'ECE', 'ITC', 'BVI', 'LVI']
 
-    groupings = {
-        'atypias': [k for k in ['Report_Text_Segmented', 'BreastSide', 'LCIS', 'LobularNeoplasia', 'ALH', 'ADH_DCIS', 'ADH', 'FlatEpithelial'] if k in columnKeys],
-        'cancersSansMarkers': [k for k in ['Report_Text_Segmented', 'BreastSide', 'CancerSuspicious', 'InvasiveSuspicious', 'CancerInvInsituNOS', 'InsituNOS', 'InvasiveNOS', 'IDC', 'ILC', 'TubularCancer', 'DCIS'] if k in columnKeys],
-        'phyllodesAndPapil': [k for k in ['Report_Text_Segmented', 'BreastSide', 'Phyllodes', 'SuspiciousForPhyllodes', 'Papill'] if k in columnKeys],
-        'allNN': ['Report_Text_Segmented'] + [k for k in nn_diagnoses],
-        'allNNSansMarkers': ['Report_Text_Segmented'] + [k for k in nn_diagnoses if k not in markers],
-    }
-
-    ATYPIA_TABLES = [("allFEAsTable", cancers, ["FlatEpithelial"], False )
+    ATYPIA_TABLES = [("allFEAsTable", cancers, ["FlatEpithelial"], False ),
                      ("allADHsTable", cancers, ['ADH'], False),
                      ("allAtypiaTable", cancers, atypias, False),
                      ("allAtypia2010Table", cancers, atypias, True),
@@ -88,7 +79,7 @@ class Config(object):
         'embedding': 'pathology',
         'num_layers': 1,
         'filters': '3,4,5',
-        'filter_num': 100,,
+        'filter_num': 100,
         'epochs': 1,
         'patience': 5,
         'snapshot': None,

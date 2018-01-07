@@ -1,6 +1,6 @@
 import datetime
 
-DEFUALT_DATE = datetime(1900, 1, 1)
+DEFUALT_DATE = datetime.datetime(1900, 1, 1)
 
 def utc_to_date(date):
     '''

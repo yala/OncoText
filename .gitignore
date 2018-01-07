@@ -1,4 +1,5 @@
 # large files
+LOGS
 *.bin
 secrets
 *.DS_Store

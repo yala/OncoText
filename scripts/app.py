@@ -4,30 +4,27 @@ from os.path import dirname, realpath
 import sys
 sys.path.append(dirname(dirname(realpath(__file__))))
 sys.path.append(os.path.join(dirname(dirname(realpath(__file__))),
-                             'rationale_net'))
+                             'rationale-net'))
 import oncotext.logger as logger
 from flask import Flask
 from flask import request, json, jsonify
 import oncotext.rationale_net_wrapper as rationale_net_wrapper
 import oncotext.utils.postprocess as postprocess
 import oncotext.utils.preprocess as preprocess
-import oncotext.utils.exports as exports
+import oncotext.export as export
 import oncotext.utils.generic as generic
 import oncotext.evaluation as evaluation
-import cPickle as pickle
+import pickle
 
 app = Flask(__name__)
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
-LOG_FILE = 'LOGS'
-CONFIG_NAME = 'Config'
+LOGPATH = 'LOGS'
+LOGNAME = 'oncotext'
+CONFIG_NAME = 'config.Config'
 app.config.from_object(CONFIG_NAME)
 # create logger
-logger = logger.get_logger('oncotext', LOG_FILE)
 config = app.config
-# Init onconet wrapper
-onconet = onconet_wrapper.OncoNetWrapper(onconet_args, app.config['AGGREGATION'], logger)
-
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -161,5 +158,4 @@ def predict():
 
 
 if __name__ == "__main__":
-    print "Begin API"
     app.run(host="0.0.0.0")

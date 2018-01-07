@@ -1,8 +1,6 @@
-import cPickle as p
 from datetime import datetime as date
 import sys, os
 import numpy as np
-from constants import *
 from csv import DictWriter
 import pdb
 import smtplib
@@ -92,21 +90,9 @@ def evaluate(reportDB, config, logger):
             writer = DictWriter(out_csv, result_keys)
             writer.writeheader()
             writer.writerows(results)
+        message = "Retraining completed for {} \n Avg accuracy was {}.\n  Full results stored at {}".format(file_name, results[-1]['ACCURACY'], out_path)
+        logger.info("Sending email")
+        send_mail(message)
 
 
     return result_paths
-
-def main(sendText=True):
-    message = ""
-    for goldset in os.listdir(EVALDIR):
-        if goldset.endswith('.xlsx'):
-            results, path = calcScores(goldset)
-            message += "\nRetraining completed today for "+str(goldset)+"!\nAverage accuracy was "+str(results[-1]['ACCURACY'])+". Full results are stored at "+path+".\n"
-
-    if sendText:
-        print "Sending email update..."
-        send_mail(message)
-    return results
-
-if __name__ == "__main__":
-    main(sendText=True)
