@@ -25,6 +25,7 @@ def train(name, reports, config, logger):
     for diagnosis in diagnoses:
         logger.info("RN Wrapper: Training model for {}".format(diagnosis))
         args.aspect = diagnosis
+        args.snapshot = None
         train_data, dev_data = dataset_factory.get_oncotext_dataset_train(
                 reports, label_maps, args, word_to_indx, text_key)
 
