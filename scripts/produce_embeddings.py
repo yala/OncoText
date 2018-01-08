@@ -2,6 +2,7 @@ import pickle
 import argparse
 import config.Config as Config
 import gensim.models.word2vec as word2vec
+import oncotext.utils.preprocess as preprocess
 
 parser.add_argument('--reports_path',  type=str, default='pickle_files/reportDBAPI_test.p', help="Place where reports are stored ")
 parser.add_argument('--embedding_path',  type=str, default='pickle_files/embeddings.p', help="Place where embeddings are stored ")
@@ -22,8 +23,8 @@ if __name__ == "__main__":
 
     sentences = []
     for r in reports:
-        text = r[Config.RAW_REPORT_TEXT_KEY].lower()
-        report_sentences = text.split('\n')
+        text = r[Config.RAW_REPORT_TEXT_KEY]
+        report_sentences = [ preprocess.preprocess_text(sentence) for sentence in text.split('\n')]
         sentences.extend(sentences)
 
     print("From {} reports, collected {} sentences".format(len(reports),len(sentences))
