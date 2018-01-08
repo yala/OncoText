@@ -75,7 +75,7 @@ class Config(object):
 
     RATIONALE_NET_CONFIG = {
         'cuda': False,
-        'num_workers': 4,
+        'num_workers': 8,
         'batch_size': 32,
         'class_balance': True,
         'dropout': .1,
@@ -112,6 +112,5 @@ class Config(object):
         'num_samples': 1,
         'debug_mode': False
     }
-
-
+    NUM_TORCH_THREADS = 8
     RATIONALE_NET_ARGS = Args(RATIONALE_NET_CONFIG)

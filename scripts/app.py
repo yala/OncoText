@@ -37,7 +37,7 @@ DB_UNLABLED_PATH = config['DB_UNLABLED_PATH']
 
 SUCCESS_MSG = "Request Success"
 NOP_MSG = "Request No Op. Invalid arg"
-NO_SUCH_USR_MSG = "Error! User {} doesn't have a {} db initialized! Using default user instead..."
+NO_SUCH_USR_MSG = "Error! User {} doesn't have a {} db initialized!"
 
 
 
@@ -128,8 +128,7 @@ def train():
     name = request.args.get("name") or "default"
     db_train = pickle.load(open(DB_TRAIN_PATH, 'rb'))
     if name not in db_train:
-        logger.warn(NO_SUCH_USR_MSG.format(name, 'train'))
-        name = config['DEFAULT_USERNAME']
+        return NO_SUCH_USR_MSG.format(name, 'train'), 500
 
     rationale_net_wrapper.train(name, db_train[name], config, logger)
     return SUCCESS_MSG, 200

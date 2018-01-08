@@ -16,6 +16,7 @@ def train(name, reports, config, logger):
     diagnoses = config['DIAGNOSES']
     label_maps = config['POST_DIAGNOSES']
     text_key = config['PREPROCESSED_REPORT_TEXT_KEY']
+    torch.set_num_threads(config['NUM_TORCH_THREADS'])
 
     embeddings, word_to_indx = dataset_utils.get_embedding_tensor(args)
     logger.info("RN Wrapper: Succesffuly got embeddings")

@@ -87,6 +87,16 @@ def segment_report(report, raw_text_key, preprocessed_text_key, side_key, logger
 def set_uuid(report):
     if not 'ID' in report:
         report['ID'] = str(uuid.uuid4())
+    if 'MRN_Type' in report:
+        report['Institution'] = report['MRN_Type']
+    elif not 'Institution' in report:
+        report['Institution'] = 'Unknown'
+
+    if 'MRNPlusX' in report and not 'MRN' in report:
+        report['MRN'] = report['MRNPlusX']
+    if not 'MRN' in report:
+        report['MRN'] = 'Unknown'
+
     return report
 
 def apply_rules(reports, raw_text_key, preprocessed_text_key,

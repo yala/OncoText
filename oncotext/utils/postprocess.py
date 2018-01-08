@@ -88,12 +88,6 @@ def generate_automatic_feilds(reportDB, config):
             for k in config['MARKERS']:
                 r[k] = '9'
 
-        if 'MRN_Type' in r:
-            r['Institution'] = r['MRN_Type']
-
-        if 'MRNPlusX' in r and not 'MRN' in r:
-            r['MRN'] = r['MRNPlusX']
-
     return reportDB
 
 
