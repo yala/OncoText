@@ -30,15 +30,16 @@ class PathologyDataset(data.Dataset):
             sample['x'] = self.processLine(sample[text_key])
             if name == 'test':
                  sample['y'] = 0
+                 val = 'NA'
             else:
                 sample['y'] = label_map[diagnosis].index(sample[diagnosis])
+                val = sample[diagnosis]
             sample['i'] = i
-            val = sample[diagnosis]
             if not val in self.class_balance:
                 self.class_balance[ val ] = 0
             self.class_balance[val] += 1
         print ("Class balance", self.class_balance)
-        args.num_class = len(label_map)
+        args.num_class = len(label_map[diagnosis])
 
 
     ## Convert one line from beer dataset to {Text, Tensor, Labels}

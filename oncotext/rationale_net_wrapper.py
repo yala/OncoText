@@ -51,12 +51,13 @@ def label_reports(name, un_reports, config, logger):
     text_key = config['PREPROCESSED_REPORT_TEXT_KEY']
 
     embeddings, word_to_indx = dataset_utils.get_embedding_tensor(args)
-
+    args.aspect = "ALL"
     test_data = dataset_factory.get_oncotext_dataset_test(un_reports, label_maps, args, word_to_indx, text_key)
 
-    for indx, diagnosis in diagnoses:
+    for indx, diagnosis in enumerate(diagnoses):
+        pdb.set_trace()
+        args.num_class = len(label_maps[diagnosis])
         logger.info("RN Wrapper: Start labeling reports for {}".format(diagnosis))
-        args.aspect = diagnosis
 
         snapshot_path = os.path.join( args.model_dir.format(name),
                                         args.model_file.format(diagnosis))
@@ -71,7 +72,8 @@ def label_reports(name, un_reports, config, logger):
 
         try:
             gen, model = model_utils.get_model(args, embeddings, None)
-            _, _, _, _, preds, _  = train_utils.test_model(test_data, model, gen, args)
+            test_stats  = train_utils.test_model(test_data, model, gen, args)
+            preds = test_stats['preds']
         except Exception as e:
             logger.warn("RN Wrapper. {} model failed to label reports! Following Exception({}). Populating all reports with 0 label".format(diagnosis, e))
             preds = np.zeros(len(test_data))

@@ -1,5 +1,6 @@
 import re
 import oncotext.utils.date as date
+import copy
 import uuid
 
 def preprocess_text(text):
@@ -72,7 +73,7 @@ def segment_report(report, raw_text_key, preprocessed_text_key, side_key, logger
 
     if is_bilateral(full_text) and not contains_side_annotation:
         segmented_text = segment_text(full_text)
-        for side, s_text in segmented_text:
+        for side, s_text in segmented_text.items():
             segemented_r = copy.deepcopy(report)
             segemented_r[side_key] = side
             segemented_r[preprocessed_text_key] = s_text
