@@ -62,7 +62,7 @@ def export(reportDB, config, logger):
     sql_db = config['SQL_DB']
     breast_table = config['BREAST_REPORT_TABLE']
     nonbreast_table = config['NOBREAST_REPORT_TABLE']
-    column_keys = config['columnKeys']
+    column_keys = config['COLUMN_KEYS']
 
 
     reportDB_breast = [r for r in reportDB if r[prune_key] == '1']

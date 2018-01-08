@@ -14,7 +14,7 @@ def score_on_test_set(reports, test_set, config, logger):
 
     gold_reports = preprocess.apply_rules(test_set)
     preprocessed_text_key = config['PREPROCESSED_REPORT_TEXT_KEY']
-    diagnoses = config['post_diagnoses']
+    diagnoses = config['POST_DIAGNOSES']
 
     text_to_gold = {}
     for r in gold_reports:
@@ -43,7 +43,7 @@ def score_on_test_set(reports, test_set, config, logger):
             continue
 
         res['ACCURACY'] = sklearn.metrics.accuracy_score(preds, golds)
-        res['PERCENTPOS'] = sum([g in ['tmux1'] for g in gold])*100. / len(gold)
+        res['PERCENTPOS'] = sum([g in ['1'] for g in gold])*100. / len(gold)
 
         res['PRECISION'] = sklearn.metrics.precision_score(preds, golds)
         res['RECALL'] = sklearn.metrics.recall_score(preds, golds)

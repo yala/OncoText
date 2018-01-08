@@ -68,7 +68,7 @@ def segment_report(report, raw_text_key, preprocessed_text_key, side_key, logger
 
     full_text = preprocess_text(report[raw_text_key])
 
-    contains_side_annotation = side in report
+    contains_side_annotation = side_key in report
 
     if is_bilateral(full_text) and not contains_side_annotation:
         segmented_text = segment_text(full_text)
@@ -84,9 +84,9 @@ def segment_report(report, raw_text_key, preprocessed_text_key, side_key, logger
     return segmented_reports
 
 def set_uuid(report):
-    if not 'ID' in r:
-        r['ID'] = str(uuid.uuid4())
-    return r
+    if not 'ID' in report:
+        report['ID'] = str(uuid.uuid4())
+    return report
 
 def apply_rules(reports, raw_text_key, preprocessed_text_key,
                 time_key, side_key, logger):
@@ -106,11 +106,11 @@ def apply_rules(reports, raw_text_key, preprocessed_text_key,
         returns:
         preprocessed_reports: a preprocess reports list
     '''
-    segemented_reports = []
+    preprocessed_reports = []
     for r in reports:
         # Skip reports with no text in it
         if not raw_text_key in r:
-            logger.warnings("preprocess - report has no {} feild.".format(raw_text_key))
+            logger.warn("preprocess - report has no {} feild.".format(raw_text_key))
             continue
         # append already preprocessed reports
         if preprocessed_text_key in r:
@@ -122,7 +122,7 @@ def apply_rules(reports, raw_text_key, preprocessed_text_key,
                                                         side_key,
                                                         logger) )
 
-    preprocessed_reports = [ date.set_timestamp(report, time_key, logger) for report in segemented_reports]
+    preprocessed_reports = [ date.set_timestamp(report, time_key, logger) for report in preprocessed_reports]
 
     preprocessed_reports = [set_uuid(report) for report in preprocessed_reports ]
     return preprocessed_reports

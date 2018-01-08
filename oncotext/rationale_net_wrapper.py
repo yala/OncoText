@@ -12,8 +12,8 @@ import pdb
 def train(reports, config, logger):
 
     args = generic.parse_args()
-    diagnoses = config['diagnoses']
-    label_maps = config['post_diagnoses']
+    diagnoses = config['DIAGNOSES']
+    label_maps = config['POST_DIAGNOSES']
 
     embeddings, word_to_indx = dataset_utils.get_embedding_tensor(args)
     logger.info("RN Wrapper: Succesffuly got embeddings")
@@ -39,9 +39,9 @@ def train(reports, config, logger):
 
 
 def label_reports(un_reports, config, logger):
-    args = config['rationale_net_args']
-    diagnoses = config['diagnoses']
-    label_maps = config['post_diagnoses']
+    args = config['RATIONALE_NET_ARGS']
+    diagnoses = config['DIAGNOSES']
+    label_maps = config['POST_DIAGNOSES']
 
     embeddings, word_to_indx = dataset_utils.get_embedding_tensor(args)
 

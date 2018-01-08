@@ -15,6 +15,7 @@ import oncotext.export as export
 import oncotext.utils.generic as generic
 import oncotext.evaluation as evaluation
 import pickle
+import pdb 
 
 app = Flask(__name__)
 
@@ -63,13 +64,13 @@ def addTrainData():
     logger.info( "addTrain - data has keys {}".format( data[0].keys()))
     logger.info("addTrain - [{}] len data {}".format(name, len(data)))
 
-    db_train = pickle.load(open(DB_TRAIN_PATH, 'rb'))
+    db_train = pickle.load(open(DB_TRAIN_PATH, 'rb'), encoding='bytes')
 
     if name not in db_train:
         logger.info("Adding {} to db_train".format(name))
-        db_train[name] = pickle.load(open(config['DB_BASE_PATH'],'rb'))
+        db_train[name] = pickle.load(open(config['DB_BASE_PATH'],'rb'), encoding='bytes')
 
-    db_train[name].extend(newData)
+    db_train[name].extend(data)
 
     logger.info("addTrain - Len train {}".format(len(db_train[name])))
     pickle.dump(db_train, open(DB_TRAIN_PATH, 'wb'))
@@ -100,7 +101,7 @@ def addUnlabeledData():
                                   config['REPORT_TIME_KEY'],
                                   config['SIDE_KEY'],
                                   logger)
-    db_unlabeled = p.load(open(DB_UNLABLED_PATH, 'rb'))
+    db_unlabeled = pickle.load(open(DB_UNLABLED_PATH, 'rb'), encoding='bytes')
 
     if name not in db_unlabeled:
         logger.info( "addUnlabeled - Adding {} to db_unlabeled".format(name))
@@ -108,8 +109,10 @@ def addUnlabeledData():
 
     db_unlabeled[name].extend(data)
     logger.info( "addUnlabeled - Adding {} reports to db_unlabeled".format(len(data)))
-    p.dump(db_unlabeled, open(DB_UNLABLED_PATH, 'wb'))
-    return 200
+    with open(DB_UNLABLED_PATH, 'wb') as f:
+        pickle.dump(db_unlabeled, f)
+    logger.info("addUnlabeled - db redumped to path {}".format(DB_UNLABLED_PATH))
+    return SUCCESS_MSG
 
 @app.route("/train", methods=['GET'])
 def train():
@@ -122,7 +125,7 @@ def train():
     name = request.args.get("name") or "default"
     db_train = pickle.load(open(DB_TRAIN_PATH, 'rb'))
     rationale_net_wrapper.train(db_train[name], config, logger)
-    return 200
+    return SUCCESS_MSG
 
 
 # Kicks off job to run model on the corresping data
@@ -138,9 +141,9 @@ def predict():
     '''
     name = request.args.get("name") or "default"
     if request.args.get("debug") == "True":
-        reportDB = p.load(open('validateDB_'+name+'.p', 'rb'))
+        reportDB = pickle.load(open('validateDB_'+name+'.p', 'rb'))
     else:
-        db_unlabeled = p.load(open(DB_UNLABLED_PATH, 'rb'))
+        db_unlabeled = pickle.load(open(DB_UNLABLED_PATH, 'rb'))
 
         reportDB = rationale_net_wrapper.label_reports(
                                                 db_unlabeled[name],
@@ -154,7 +157,7 @@ def predict():
     export.export.apply_rules(reportDB, config, logger)
     evaluation.evaluate(reportDB, config, logger)
     reportDB = postprocess.prune_non_breast(reportDB, name, config, logger)
-    return json.dumps({'reportDB': json_export.port_to_json(reportDB)})
+    return json.dumps({'reportDB': json_export.port_to_json(reportDB), msg: SUCCESS_MSG})
 
 
 if __name__ == "__main__":

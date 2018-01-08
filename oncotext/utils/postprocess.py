@@ -44,7 +44,7 @@ def prune_non_breast(reportDB, name, config, logger):
 
 def apply_corrections(reportDB, trainDB, config, logger):
     text_key = config['PREPROCESSED_REPORT_TEXT_KEY']
-    diagnoses = config['diagnoses']
+    diagnoses = config['DIAGNOSES']
     corrections = 0
     num_match = 0
     textToLabel = {}

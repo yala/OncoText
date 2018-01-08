@@ -22,7 +22,7 @@ class Config(object):
 
 
     DB_TRAIN_PATH = os.path.join(PICKLEDIR, "reportDBAPI_train.p")
-    DB_BASE_PATH = os.path.join(PICKLEDIR, "pickle_files/reportDB_base_train.p")
+    DB_BASE_PATH = os.path.join(PICKLEDIR, "reportDB_base_train.p")
     DB_UNLABLED_PATH = os.path.join(PICKLEDIR, "reportDBAPI_test.p")
     DB_NON_BREAST_PATH = os.path.join(PICKLEDIR, "reportDBAPI_nonbreasts.p")
 
@@ -47,16 +47,16 @@ class Config(object):
     PATIENT_ID_KEY = "MRN"
     PRUNE_KEY = "Organ"
 
-    columnKeys = parsing.parse_XLS( os.path.join(DROPBOXDIR,'SQL_KeysAndValues.xlsx'))
+    COLUMN_KEYS = parsing.parse_XLS( os.path.join(DROPBOXDIR,'SQL_KeysAndValues.xlsx'))
 
-    diagnoses = {k: v for k, v in columnKeys.items() if len(v) > 0}
-    post_diagnoses = copy.deepcopy(diagnoses)
+    DIAGNOSES = {k: v for k, v in COLUMN_KEYS.items() if len(v) > 0}
+    post_diagnoses = copy.deepcopy(DIAGNOSES)
     post_diagnoses['cancer'] = ['0', '1']
     post_diagnoses['atypia'] = ['0', '1']
     post_diagnoses['ER_Intensity'] = ['0', '1', '2', '3', '9']
     post_diagnoses['PR_Intensity'] = ['0', '1', '2', '3', '9']
+    POST_DIAGNOSES = post_diagnoses
 
-    defaultLabelDict = {k: v[0] for k, v in post_diagnoses.items()}
 
     cancers = ['ILC', 'DCIS', 'IDC', 'TubularCancer', 'CancerInvasive', 'CancerInvNOS', 'CancerNotOfBreastOrigin']
 
@@ -91,4 +91,4 @@ class Config(object):
     }
 
 
-    rationale_net_args = Args(RATIONALE_NET_CONFIG)
+    RATIONALE_NET_ARGS = Args(RATIONALE_NET_CONFIG)

@@ -41,7 +41,7 @@ def set_timestamp(report, time_key, logger):
         date = utc_to_date(report['Report_Date_Time'])
     else:
         date = DEFUALT_DATE
-        logger.warnings("date- date to set to {}. No known datefeild identified".format(DEFUALT_DATE))
+        logger.warn("date- date to set to {}. No known datefeild identified".format(DEFUALT_DATE))
 
     report[time_key] = date
     return report

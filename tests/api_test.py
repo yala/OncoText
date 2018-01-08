@@ -1,5 +1,5 @@
-import urllib2
 import json
+import os
 import requests
 import unittest
 import pdb
@@ -23,18 +23,23 @@ class Test_MIT_App(unittest.TestCase):
         self.prod_name = "mghMar"
 
     def tearDown(self):
-        train_db = pickle.load( open(TRAIN_DB_PATH,'rb'))
+        with open(TRAIN_DB_PATH,'rb') as f:
+            train_db = pickle.load(f, encoding='bytes')
         if self.name in train_db:
-            del train_db[key]
-        pickle.dump(train_db, open(TRAIN_DB_PATH, 'wb'))
-
-        unk_db = pickle.load( open(UNK_DB_PATH,'rb'))
+            del train_db[self.name]
+            with open(TRAIN_DB_PATH, 'wb') as f:
+                pickle.dump(train_db, f)
+        
+        with open(UNK_DB_PATH,'rb') as f:
+            unk_db = pickle.load( f, encoding='bytes')
         if self.name in unk_db:
-            del unk_db[key]
-        pickle.dump(unk_db, open(UNK_DB_PATH, 'wb'))
+            del unk_db[self.name]
+            with open(UNK_DB_PATH, 'wb') as f:
+                pickle.dump(unk_db, f)
 
     def test_add_train(self):
-        addit_train = pickle.load(open(ADD_TRAIN_PATH,'rb'))
+        with open(ADD_TRAIN_PATH,'rb') as f:
+            addit_train = pickle.load(f)
         payload = json.dumps(addit_train)
         params = {"name":self.name}
 
@@ -43,10 +48,11 @@ class Test_MIT_App(unittest.TestCase):
                                  data=payload,
                                  params=params )
 
-        assertEquals(response.status_code == 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_add_unk(self):
-        addit_unk = pickle.load(open(ADD_UNK_PATH,'rb'))
+        with open(ADD_UNK_PATH,'rb') as f:
+            addit_unk = pickle.load(f)
         payload = json.dumps(addit_unk)
         params = {"name":self.name}
 
@@ -54,15 +60,15 @@ class Test_MIT_App(unittest.TestCase):
                                  data=payload,
                                  params=params )
 
-        assertEquals(response.status_code == 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_train(self):
-        params = {"name":self.name}
+        params = {"name":self.prod_name}
 
         response = requests.get( os.path.join(DOMAIN, 'train'),
                                  params=params )
 
-        assertEquals(response.status_code == 200)
+        self.assertEqual(response.status_code, 200)
 
     def test_predict_flow(self):
         addit_unk = pickle.load(open(ADD_UNK_PATH,'rb'))
@@ -74,17 +80,17 @@ class Test_MIT_App(unittest.TestCase):
                                  params=params )
         response = requests.get( os.path.join(DOMAIN, 'train'),
                                  params=params )
-        assertEquals(response.status_code == 200)
+        self.assertEqual(response.status_code, 200)
         response = requests.get( os.path.join(DOMAIN, 'predict'),
                                  params=params )
-        assertEquals(response.status_code == 200)
+        self.assertEqual(response.status_code, 200)
 
 
     def test_predict_prod(self):
         params = {"name":self.prod_name}
         response = requests.get( os.path.join(DOMAIN, 'predict'),
                                  params=params )
-        assertEquals(response.status_code == 200)
+        self.assertEquals(response.status_code, 200)
 
 if __name__ == '__main__':
     unittest.main()
