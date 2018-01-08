@@ -13,6 +13,7 @@ import oncotext.utils.postprocess as postprocess
 import oncotext.utils.preprocess as preprocess
 import oncotext.export.export as export
 import oncotext.utils.generic as generic
+import oncotext.utils.json as json_utils
 import oncotext.evaluation as evaluation
 import pickle
 import pdb
@@ -165,16 +166,16 @@ def predict():
         user_train_db = train_db[name]
     else:
         user_train_db = train_db[ config['DEFAULT_USERNAME']]
-    reportDB = postprocess.apply_rules(reportDB, 
-                                        user_train_db, 
-                                        config, 
+    reportDB = postprocess.apply_rules(reportDB,
+                                        user_train_db,
+                                        config,
                                         logger)
 
     export.apply_rules(reportDB, config, logger)
     evaluation.evaluate(reportDB, config, logger)
     if config['PRUNE_AFTER_PREDICT']:
         reportDB = postprocess.prune_non_breast(reportDB, name, config, logger)
-    return json.dumps({'reportDB': json_export.port_to_json(reportDB), msg: SUCCESS_MSG})
+    return json.dumps({'reportDB': json_utils.make_json_compliant(reportDB), msg: SUCCESS_MSG})
 
 
 if __name__ == "__main__":
