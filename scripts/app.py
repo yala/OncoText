@@ -11,7 +11,7 @@ from flask import request, json, jsonify
 import oncotext.rationale_net_wrapper as rationale_net_wrapper
 import oncotext.utils.postprocess as postprocess
 import oncotext.utils.preprocess as preprocess
-import oncotext.export as export
+import oncotext.export.export as export
 import oncotext.utils.generic as generic
 import oncotext.evaluation as evaluation
 import pickle
@@ -165,12 +165,15 @@ def predict():
         user_train_db = train_db[name]
     else:
         user_train_db = train_db[ config['DEFAULT_USERNAME']]
-    reportDB = postprocess.apply_rules(reportDB, user_train_db, config, logger)
+    reportDB = postprocess.apply_rules(reportDB, 
+                                        user_train_db, 
+                                        config, 
+                                        logger)
 
-
-    export.export.apply_rules(reportDB, config, logger)
+    export.apply_rules(reportDB, config, logger)
     evaluation.evaluate(reportDB, config, logger)
-    reportDB = postprocess.prune_non_breast(reportDB, name, config, logger)
+    if config['PRUNE_AFTER_PREDICT']:
+        reportDB = postprocess.prune_non_breast(reportDB, name, config, logger)
     return json.dumps({'reportDB': json_export.port_to_json(reportDB), msg: SUCCESS_MSG})
 
 

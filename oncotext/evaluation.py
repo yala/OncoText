@@ -8,11 +8,18 @@ import string
 import sklearn
 import oncotext.utils.parsing as parsing
 import oncotext.utils.preprocess as preprocess
+import oncotext.utils.mail as mail
 import sklearn.metrics
 
 def score_on_test_set(reports, test_set, config, logger):
 
-    gold_reports = preprocess.apply_rules(test_set)
+    gold_reports = preprocess.apply_rules(
+                                    test_set,
+                                    config['RAW_REPORT_TEXT_KEY'],
+                                    config['PREPROCESSED_REPORT_TEXT_KEY'],
+                                    config['REPORT_TIME_KEY'],
+                                    config['SIDE_KEY'], 
+                                    logger)
     preprocessed_text_key = config['PREPROCESSED_REPORT_TEXT_KEY']
     diagnoses = config['POST_DIAGNOSES']
 
@@ -39,7 +46,7 @@ def score_on_test_set(reports, test_set, config, logger):
         golds =  [text_to_gold[t][d] for t in texts if d in text_to_pred[t] and d in text_to_gold[t]]
 
         if len(preds) == 0 or len(golds) == 0:
-            logger.warnings("evaluation [{}] - skipping because num preds {}, num golds {}".format(d, len(preds), len(golds)))
+            logger.warn("evaluation [{}] - skipping because num preds {}, num golds {}".format(d, len(preds), len(golds)))
             continue
 
         res['ACCURACY'] = sklearn.metrics.accuracy_score(preds, golds)
@@ -92,7 +99,7 @@ def evaluate(reportDB, config, logger):
             writer.writerows(results)
         message = "Retraining completed for {} \n Avg accuracy was {}.\n  Full results stored at {}".format(file_name, results[-1]['ACCURACY'], out_path)
         logger.info("Sending email")
-        send_mail(message)
+        mail.send_mail(message, config)
 
 
     return result_paths

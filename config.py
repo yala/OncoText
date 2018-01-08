@@ -24,13 +24,13 @@ class Config(object):
 
     DB_TRAIN_PATH = os.path.join(PICKLEDIR, "reportDBAPI_train.p")
     DB_BASE_PATH = os.path.join(PICKLEDIR, "reportDB_base_train.p")
-    DB_UNLABLED_PATH = os.path.join(PICKLEDIR, "reportDBAPI_test.p")
+    DB_UNLABLED_PATH = os.path.join(PICKLEDIR, "reportDBAPI_test_debug.p")
     DB_NON_BREAST_PATH = os.path.join(PICKLEDIR, "reportDBAPI_nonbreasts.p")
 
     HOST = "nlp.partners.org"
     FROM =  "nlp@nlp.partners.org"
     SUBJECT = "Pathology Parser Update!"
-    EMAIL_LIST =  ["cyli@mgh.harvard.edu", "ayala@mgh.harvard.edu", "KSHUGHES@PARTNERS.ORG"]
+    EMAIL_LIST =  ["ayala@mgh.harvard.edu"]#["cyli@mgh.harvard.edu", "ayala@mgh.harvard.edu", "KSHUGHES@PARTNERS.ORG"]
 
     SQL_HOST = 'localhost'
     SQL_USER = 'root'
@@ -47,6 +47,7 @@ class Config(object):
     SIDE_KEY = "BreastSide"
     PATIENT_ID_KEY = "MRN"
     PRUNE_KEY = "Organ"
+    PRUNE_AFTER_PREDICT = False
 
     COLUMN_KEYS = parsing.parse_XLS( os.path.join(DROPBOXDIR,'SQL_KeysAndValues.xlsx'))
 

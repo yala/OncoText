@@ -9,13 +9,11 @@ def send_mail(msg, config):
     server = smtplib.SMTP(HOST)
 
     for email in config['EMAIL_LIST']:
-        BODY = string.join((
-            "From: %s" % FROM,
-            "To: %s" % email,
-            "Subject: %s" % SUBJECT ,
-            "",
-            msg
-        ), "\r\n")
+        BODY = "From: {} \n\rTo: {} \n\rSubject:{}\n\r{}".format(
+                                                        FROM,
+                                                        email,
+                                                        SUBJECT,
+                                                        msg)
 
         server.sendmail(FROM, email, BODY)
     server.quit()
