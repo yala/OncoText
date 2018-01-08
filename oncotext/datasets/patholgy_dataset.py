@@ -14,7 +14,7 @@ SMALL_TRAIN_SIZE = 800
 random.seed(0)
 
 
-class PathologyDataset(AbstractDataset):
+class PathologyDataset(data.Dataset):
 
     def __init__(self, args, reports, label_map, word_to_indx, text_key, name, max_length=720):
         self.name = name
@@ -45,3 +45,10 @@ class PathologyDataset(AbstractDataset):
         text = raw_text.split()[:self.max_length]
         x =  utils.get_indices_tensor(text, self.word_to_indx, self.max_length)
         return x
+
+    def __len__(self):
+        return len(self.dataset)
+
+    def __getitem__(self,index):
+        sample = self.dataset[index]
+        return sample
