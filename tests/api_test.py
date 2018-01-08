@@ -23,7 +23,6 @@ class Test_MIT_App(unittest.TestCase):
         self.prod_name = "mghMar"
 
     def tearDown(self):
-        return
         with open(TRAIN_DB_PATH,'rb') as f:
             train_db = pickle.load(f, encoding='bytes')
         if self.name in train_db:
@@ -71,7 +70,7 @@ class Test_MIT_App(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-    def test_predict_flow(self):
+    def test_full_predict_flow(self):
         addit_unk = pickle.load(open(ADD_UNK_PATH,'rb'))
         payload = json.dumps(addit_unk)
         params = {"name":self.name}
@@ -79,6 +78,14 @@ class Test_MIT_App(unittest.TestCase):
         response = requests.post( os.path.join(DOMAIN, 'addUnlabeled'),
                                  data=payload,
                                  params=params )
+        self.assertEqual(response.status_code, 200)
+        response = requests.get( os.path.join(DOMAIN, 'train'),
+                                 params=params )
+        self.assertEqual(response.status_code, 500)
+        response = requests.post( os.path.join(DOMAIN, 'addTrain'),
+                                 data=payload,
+                                 params=params )
+        self.assertEqual(response.status_code, 200)
         response = requests.get( os.path.join(DOMAIN, 'train'),
                                  params=params )
         self.assertEqual(response.status_code, 200)
