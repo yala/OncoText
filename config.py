@@ -88,7 +88,7 @@ class Config(object):
         'objective':'cross_entropy',
         'num_gpus ': 1,
         'model_dir': 'snapshot/{}',
-        'model_file': 'oncotext_{}.pt'
+        'model_file': 'oncotext_{}.pt',
         'train_split': .80
     }
 
