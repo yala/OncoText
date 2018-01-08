@@ -1,8 +1,15 @@
 import pickle
+import os, shutil
+from os.path import dirname, realpath
+import sys
+sys.path.append(dirname(dirname(realpath(__file__))))
 import argparse
-import config.Config as Config
+from config import Config
 import gensim.models.word2vec as word2vec
 import oncotext.utils.preprocess as preprocess
+import tqdm
+
+parser = argparse.ArgumentParser(description='Embeddings Producer with Gensim Word2Vec')
 
 parser.add_argument('--reports_path',  type=str, default='pickle_files/reportDBAPI_test.p', help="Place where reports are stored ")
 parser.add_argument('--embedding_path',  type=str, default='pickle_files/embeddings.p', help="Place where embeddings are stored ")
@@ -22,12 +29,12 @@ if __name__ == "__main__":
     reports = report_db[args.user]
 
     sentences = []
-    for r in reports:
+    for r in tqdm.tqdm(reports):
         text = r[Config.RAW_REPORT_TEXT_KEY]
         report_sentences = [ preprocess.preprocess_text(sentence) for sentence in text.split('\n')]
         sentences.extend(sentences)
 
-    print("From {} reports, collected {} sentences".format(len(reports),len(sentences))
+    print("From {} reports, collected {} sentences".format(len(reports),len(sentences)))
     model = Word2Vec(
                     sentences,
                     size=args.dim,
@@ -36,7 +43,7 @@ if __name__ == "__main__":
                     workers=args.num_workers)
 
     embeddings = model.vectors
-    vocab_to_indx = {v: i for i, v enumerate(model.vocab)}
+    vocab_to_indx = {v: i for i, v in enumerate(model.vocab)}
     pickle.dump(embeddings, open(args.embedding_path,'wb'))
     pickle.dump(vocab_to_indx, open(args.word2indx_path,'wb'))
 
