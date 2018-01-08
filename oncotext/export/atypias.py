@@ -1,7 +1,5 @@
 from operator import itemgetter
-import cPickle as p
-import os, sys
-sys.path.append("..")
+import oncotext.export.sql as sql
 
 def getMRNDB(db, id_key, date_key):
     mrns = {}
@@ -20,7 +18,7 @@ def getMRNDB(db, id_key, date_key):
     return mrns
 
 
-def fits_criteria(report, include, exlude):
+def fits_include_exclude_criteria(report, include, exlude):
 
     for diag in exlude:
         assert str(report[diag]) in ['1', '0']
@@ -34,7 +32,7 @@ def fits_criteria(report, include, exlude):
 
     return 'neither'
 
-def run_query(exclude, include, yearFilt, config, logger):
+def run_query(db, exclude, include, yearFilt, config, logger):
 
     date_key = config['REPORT_TIME_KEY']
     id_key = config['PATIENT_ID_KEY']
@@ -51,7 +49,7 @@ def run_query(exclude, include, yearFilt, config, logger):
 
         indx = 0
         firstRep = reports[indx]
-        passes = fits_criteria(firstRep, include, exclude)
+        passes = fits_include_exclude_criteria(firstRep, include, exclude)
         queryIndx = indx
 
         def crit():
@@ -60,7 +58,7 @@ def run_query(exclude, include, yearFilt, config, logger):
 
         while crit():
             queryIndx += 1
-            passes = filt(reports[queryIndx], include, exclude)
+            passes = fits_include_exclude_criteria(reports[queryIndx], include, exclude)
 
         if passes is True:
             if yearFilt and sortedReports[queryIndx]['date'].year >= 2010:
@@ -73,7 +71,7 @@ def run_query(exclude, include, yearFilt, config, logger):
 
             concReps = [r for r in reports if inRange(r)]
             for r in concReps:
-                conc = filt(r, include, exclude)
+                conc = fits_include_exclude_criteria(r, include, exclude)
                 if conc is False:
                     concurrent_exlcusion = True
 
@@ -94,15 +92,15 @@ def export(reports, config, logger):
     nonbreast_table = config['NOBREAST_REPORT_TABLE']
     column_keys = config['COLUMN_KEYS']
 
-    atypia_tables = config['ATYPIA_TABLES']
+    adhoc_tables = config['ATYPIA_TABLES']
 
-    for i, table_details in enumerate(export_tables):
+    for i, table_details in enumerate(adhoc_tables):
 
         table, exclusion_crit, inclusion_crit, yearFilt = table_details
-        reports = run_query(exclusion_crit, inclusion_crit, yearFilt)
+        reports = run_query(reports, exclusion_crit, inclusion_crit, yearFilt, config, logger)
 
-        replace_sql_table(table, reports, column_keys,
-                      sql_host, sql_user, sql_pass, sql_db)
+        sql.replace_sql_table(table, reports, column_keys,
+                      sql_host, sql_user, sql_pass, sql_db, logger)
 
-        logger.info("Atypias: Export {} with {} Records".format(table,
-                                                             len(reports))
+        logger.info("Atypias: Export {} with {} Records".format(table, len(reports)))
+    return

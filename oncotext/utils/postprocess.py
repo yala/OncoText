@@ -1,3 +1,4 @@
+from operator import itemgetter
 import pickle
 from oncotext.utils.generic import hasCat
 
@@ -87,10 +88,6 @@ def generate_automatic_feilds(reportDB, config):
             for k in config['MARKERS']:
                 r[k] = '9'
 
-        for k in r.keys():
-            if type(r[k]) is unicode:
-                r[k] = str(r[k])
-
         if 'MRN_Type' in r:
             r['Institution'] = r['MRN_Type']
 
@@ -118,7 +115,7 @@ def aggregate_episodes(reports, config):
         if not side in patientDict[patientID]:
             patientDict[patientID][side] = []
 
-        patientDict[patientID][side].apppend(r)
+        patientDict[patientID][side].append(r)
 
     # Structure: List of Reports with Episode IDs
     reportsDB = []
@@ -135,7 +132,7 @@ def aggregate_episodes(reports, config):
                 if idx == 0:
                     episodeId += 1
                     rep['EpisodeID'] = 't'+str(episodeId)
-                    episodeDateDict[mrn].append(
+                    episodeDateDict[patientID].append(
                                             {'EpStartTime': rep[dateKey],
                                             'epID': 't'+str(episodeId)})
                 else:
@@ -160,13 +157,11 @@ def aggregate_episodes(reports, config):
             epID = dateDict['epID']
             episodeRelabelDict[patientID][epID] = indx
         assert len(episodeDateDict[patientID]) == len(epDates)
-    assert len(episodeRelabelDict) == len(patientID)
 
     for rep in reportsDB:
         oldID = rep['EpisodeID']
-        newID = episodeRelabelDict[rep['MRN']][oldID]
+        newID = episodeRelabelDict[rep[patientIDkey]][oldID]
         rep['EpisodeID'] = newID
-        assert isinstance(rep['EpisodeID'], int)
 
     return reportsDB
 

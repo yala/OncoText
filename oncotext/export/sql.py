@@ -1,20 +1,28 @@
 import MySQLdb
+import pdb
 
 def replace_sql_table(table, reports, column_keys,
-                      sql_host, sql_user, sql_pass, sql_db):
+                      sql_host, sql_user, sql_pass, sql_db, logger):
+    if len(reports) == 0:
+        logger.warn("Export SQL: Skip export {} because had 0 reports".format(table))
+        return
 
+    
     db = MySQLdb.connect(host=sql_host,
                          user=sql_user,
                          passwd=sql_pass,
                          db=sql_db)
     cur = db.cursor()
 
-    dbKeys, placeholders = [k for k in column_keys if k in reports[0]], ["%s" for i in column_keys if i in reports[0]]
-
+    dbKeys, placeholders = [], []
+    for k in column_keys:
+        if k in reports[0]:
+            dbKeys.append(k)
+            placeholders.append("%s")
     try:
         logger.info("Export SQL: Drop table {}".format(table))
         cur.execute("DROP TABLE {}".format(table))
-    except Exception, e:
+    except Exception as e:
         logger.info("Export SQL: Drop table {} failed!".format(table))
         pass
 
@@ -33,14 +41,14 @@ def replace_sql_table(table, reports, column_keys,
     for report in reports:
         try:
             values = [report[k] for k in dbKeys]
-        except Exception, e:
+        except Exception as e:
             missing_keys = [k for k in dbKeys if not k in report]
             logger.error("Export SQL: Keys not found. Missing keys [{}]".format(missing_keys))
             continue
 
         try:
             cur.execute(sql, tuple(values))
-        except Exception, e:
+        except Exception as e:
             logger.error("Export SQL: SQL Insert failed. Exception({})".format(e))
             cur.close()
             db.close()
@@ -74,7 +82,7 @@ def export(reportDB, config, logger):
     for table, reports in [ (breast_table, reportDB_breast), (nonbreast_table, reportDB_other)]:
 
         sql_insert_fail = replace_sql_table(table, reports, column_keys,
-                      sql_host, sql_user, sql_pass, sql_db)
+                      sql_host, sql_user, sql_pass, sql_db, logger)
 
         if sql_insert_fail:
             return False
