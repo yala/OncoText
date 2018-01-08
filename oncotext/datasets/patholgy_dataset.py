@@ -23,6 +23,7 @@ class PathologyDataset(data.Dataset):
         self.word_to_indx  = word_to_indx
         self.max_length = max_length
         self.dataset = reports
+        self.text_key = text_key
 
         self.class_balance = {}
         for i, sample in tqdm.tqdm(enumerate(self.dataset)):
@@ -50,5 +51,9 @@ class PathologyDataset(data.Dataset):
         return len(self.dataset)
 
     def __getitem__(self,index):
-        sample = self.dataset[index]
+        full_sample = self.dataset[index]
+        sample = { 'x': full_sample['x'],
+                   'i': full_sample['i'],
+                   'y': full_sample['y'],
+                   'text': full_sample[self.text_key]}
         return sample

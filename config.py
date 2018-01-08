@@ -94,6 +94,7 @@ class Config(object):
         'snapshot': None,
         'objective':'cross_entropy',
         'num_gpus': 1,
+        'save_dir': 'snapshot',
         'model_dir': 'snapshot/{}',
         'model_file': 'oncotext_{}.pt',
         'train_split': .80,
@@ -106,7 +107,8 @@ class Config(object):
         'use_matching_net_sampling': False,
         'use_top_tfidf_sampling': False,
         'learn_to_select':True,
-        'num_samples': 1
+        'num_samples': 1,
+        'debug_mode': False
     }
 
 

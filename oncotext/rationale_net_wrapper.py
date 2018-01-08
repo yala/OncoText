@@ -20,20 +20,23 @@ def train(name, reports, config, logger):
     logger.info("RN Wrapper: Succesffuly got embeddings")
     model_paths = []
 
-
     for diagnosis in diagnoses:
         logger.info("RN Wrapper: Training model for {}".format(diagnosis))
         args.aspect = diagnosis
-        train_data, dev_data = dataset_factory.get_oncotext_dataset_train(reports, label_maps, args, word_to_indx, text_key)
+        train_data, dev_data = dataset_factory.get_oncotext_dataset_train(
+                reports, label_maps, args, word_to_indx, text_key)
 
+        if not os.path.isdir(args.model_dir.format(name)):
+            os.makedirs(args.model_dir.format(name))
         args.model_path = os.path.join( args.model_dir.format(name),
                                         args.model_file.format(diagnosis))
         model_paths.append( args.model_path)
-
         gen, model = model_utils.get_model(args, embeddings, train_data)
-
-
-        epoch_stats, model, gen = train_utils.train_model(train_data, dev_data, model, gen, args)
+        try:
+            epoch_stats, model, gen = train_utils.train_model(train_data, dev_data, model, gen, args)
+            logger.info("RN Wrapper. {} model finished to training! Train class balance: {}. Dev class balance: {}".format(diagnosis, train_data.class_balance, dev_data.class_balance))
+        except Exception:
+            logger.warn("RN Wrapper. {} model failed to train! Train class balance: {}. Dev class balance: {}".format(diagnosis, train_data.class_balance, dev_data.class_balance))
 
     return model_paths
 
