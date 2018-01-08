@@ -11,6 +11,7 @@ class Args(object):
 
 class Config(object):
     DEBUG = True
+    DEFAULT_USERNAME = 'default'
     HOMEDIR = '/home/nlp/'
     PATHOLOGYDIR = os.path.join(HOMEDIR, 'pathology/')
     PICKLEDIR = os.path.join(PATHOLOGYDIR, "pickle_files")
@@ -86,7 +87,8 @@ class Config(object):
         'snapshot': None,
         'objective':'cross_entropy',
         'num_gpus ': 1,
-        'results_path': 'snapshot/oncotext_{}.pt',
+        'model_dir': 'snapshot/{}',
+        'model_file': 'oncotext_{}.pt'
         'train_split': .80
     }
 

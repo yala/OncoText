@@ -7,9 +7,9 @@ import rationale_net.utils.model as model
 import rationale_net.utils.dataset as dataset_utils
 import oncotext.utils.dataset_factory as dataset_factory
 import pdb
+import os
 
-
-def train(reports, config, logger):
+def train(name, reports, config, logger):
 
     args = generic.parse_args()
     diagnoses = config['DIAGNOSES']
@@ -25,7 +25,8 @@ def train(reports, config, logger):
         args.aspect = diagnosis
         train_data, dev_data = datasets_factory.get_oncotext_dataset_train(reports, label_maps, args, word_to_indx)
 
-        args.model_path = args.results_path.format(diagnosis)
+        args.model_path = os.path.join( args.model_dir.format(name),
+                                        args.model_file.format(diagnosis))
         model_paths.append( args.model_path)
 
         gen, model = model.get_model(args, embeddings, train_data)
@@ -38,10 +39,11 @@ def train(reports, config, logger):
 
 
 
-def label_reports(un_reports, config, logger):
+def label_reports(name, un_reports, config, logger):
     args = config['RATIONALE_NET_ARGS']
     diagnoses = config['DIAGNOSES']
     label_maps = config['POST_DIAGNOSES']
+    default_user = config['DEFAULT_USERNAME']
 
     embeddings, word_to_indx = dataset_utils.get_embedding_tensor(args)
 
@@ -51,9 +53,16 @@ def label_reports(un_reports, config, logger):
         logger.info("RN Wrapper: Start labeling reports for {}".format(diagnosis))
         args.aspect = diagnosis
 
-        snapshot_path = args.results_path.format(diagnosis)
-
-        args.snapshot = snapshot_path
+        snapshot_path = os.path.join( args.model_dir.format(name),
+                                        args.model_file.format(diagnosis))
+        if not os.path.exists(snapshot_path):
+            default_user_snapshot_path = os.path.join(
+                                        args.model_dir.format(default_user),
+                                        args.model_file.format(diagnosis))
+            logger.warn("RN Wrapper: {} model files dont exit! Using default user {} instead".format(name, default_user))
+            args.snapshot_path = default_user_snapshot_path
+        else:
+            args.snapshot = snapshot_path
         gen, model = model.get_model(args, embeddings, None)
 
         _, _, _, _, preds, _  = train.test_model(test_data, train_model, model, gen, optimizer, step, args)

@@ -15,7 +15,7 @@ import oncotext.export as export
 import oncotext.utils.generic as generic
 import oncotext.evaluation as evaluation
 import pickle
-import pdb 
+import pdb
 
 app = Flask(__name__)
 
@@ -36,6 +36,8 @@ DB_UNLABLED_PATH = config['DB_UNLABLED_PATH']
 
 SUCCESS_MSG = "Request Success"
 NOP_MSG = "Request No Op. Invalid arg"
+NO_SUCH_USR_MSG = "Error! User {} doesn't have a {} db initialized!"
+
 
 
 @app.route("/addTrain", methods=['POST'])
@@ -74,7 +76,7 @@ def addTrainData():
 
     logger.info("addTrain - Len train {}".format(len(db_train[name])))
     pickle.dump(db_train, open(DB_TRAIN_PATH, 'wb'))
-    return SUCCESS_MSG
+    return SUCCESS_MSG, 200
 
 
 
@@ -112,7 +114,7 @@ def addUnlabeledData():
     with open(DB_UNLABLED_PATH, 'wb') as f:
         pickle.dump(db_unlabeled, f)
     logger.info("addUnlabeled - db redumped to path {}".format(DB_UNLABLED_PATH))
-    return SUCCESS_MSG
+    return SUCCESS_MSG, 200
 
 @app.route("/train", methods=['GET'])
 def train():
@@ -124,8 +126,11 @@ def train():
     '''
     name = request.args.get("name") or "default"
     db_train = pickle.load(open(DB_TRAIN_PATH, 'rb'))
-    rationale_net_wrapper.train(db_train[name], config, logger)
-    return SUCCESS_MSG
+    if name not in db_train:
+        return NO_SUCH_USR_MSG.format(name, 'train'), 500
+
+    rationale_net_wrapper.train(name, db_train[name], config, logger)
+    return SUCCESS_MSG, 200
 
 
 # Kicks off job to run model on the corresping data
@@ -145,7 +150,11 @@ def predict():
     else:
         db_unlabeled = pickle.load(open(DB_UNLABLED_PATH, 'rb'))
 
+        if name not in db_unlabeled:
+            return NO_SUCH_USR_MSG.format(name, 'unlabeled'), 500
+
         reportDB = rationale_net_wrapper.label_reports(
+                                                name,
                                                 db_unlabeled[name],
                                                 config,
                                                 logger)

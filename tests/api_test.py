@@ -29,7 +29,7 @@ class Test_MIT_App(unittest.TestCase):
             del train_db[self.name]
             with open(TRAIN_DB_PATH, 'wb') as f:
                 pickle.dump(train_db, f)
-        
+
         with open(UNK_DB_PATH,'rb') as f:
             unk_db = pickle.load( f, encoding='bytes')
         if self.name in unk_db:
