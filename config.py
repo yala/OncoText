@@ -59,17 +59,17 @@ class Config(object):
     POST_DIAGNOSES = post_diagnoses
 
 
-    cancers = ['ILC', 'DCIS', 'IDC', 'TubularCancer', 'CancerInvasive', 'CancerInvNOS', 'CancerNotOfBreastOrigin']
+    CANCERS = ['ILC', 'DCIS', 'IDC', 'TubularCancer', 'CancerInvasive', 'CancerInvNOS', 'CancerNotOfBreastOrigin']
 
-    atypias = ['ALH', 'ADH', 'FlatEpithelial', 'LCIS', 'ADH_DCIS', 'LobularNeoplasia']
+    ATYPIAS = ['ALH', 'ADH', 'FlatEpithelial', 'LCIS', 'ADH_DCIS', 'LobularNeoplasia']
 
-    markers = ['ER', "ER_Intensity", 'PR', "PR_Intensity", "Her2", 'Her2Fish', "Her2_IHC", 'Are there Positive LN?', 'ECE', 'ITC', 'BVI', 'LVI']
+    MARKERS = ['ER', "ER_Intensity", 'PR', "PR_Intensity", "Her2", 'Her2Fish', "Her2_IHC", 'Are there Positive LN?', 'ECE', 'ITC', 'BVI', 'LVI']
 
-    ATYPIA_TABLES = [("allFEAsTable", cancers, ["FlatEpithelial"], False ),
-                     ("allADHsTable", cancers, ['ADH'], False),
-                     ("allAtypiaTable", cancers, atypias, False),
-                     ("allAtypia2010Table", cancers, atypias, True),
-                     ("allCancersTable", [], cancers, False)]
+    ATYPIA_TABLES = [("allFEAsTable", CANCERS, ["FlatEpithelial"], False ),
+                     ("allADHsTable", CANCERS, ['ADH'], False),
+                     ("allAtypiaTable", CANCERS, ATYPIAS, False),
+                     ("allAtypia2010Table", CANCERS, ATYPIAS, True),
+                     ("allCancersTable", [], CANCERS, False)]
 
     RATIONALE_NET_CONFIG = {
         'cuda': False,

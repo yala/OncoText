@@ -68,23 +68,23 @@ def apply_corrections(reportDB, trainDB, config, logger):
 
     return reportDB
 # Runs enforces global constraints like ER/PR NA given no cancer
-def generate_automatic_feilds(reportDB):
+def generate_automatic_feilds(reportDB, config):
 
     for r in reportDB:
         if "filename" not in r:
             r['filename'] = "Unknown"
 
-        if hasCat(r, const_cancers):
+        if hasCat(r, config['CANCERS']):
             r['cancer'] = '1'
         else:
             r['cancer'] = '0'
-        if hasCat(r, const_atypias):
+        if hasCat(r, config['ATYPIAS']):
             r['atypia'] = '1'
         else:
             r['atypia'] = '0'
 
         if r['cancer'] == '0':
-            for k in ['ER', 'PR', 'Her2Fish', 'ECE', 'LVI', 'BVI', 'PositiveLN', 'ITC']:
+            for k in config['MARKERS']:
                 r[k] = '9'
 
         for k in r.keys():
@@ -179,7 +179,7 @@ def apply_rules(reportDB, trainDB, config, logger):
     logger.info("postprocess - apply corrections")
     reportDB = apply_corrections(reportDB, trainDB, config, logger)
     logger.info("postprocess - generate automatic fields")
-    reportDB = generate_automatic_feilds(reportDB)
+    reportDB = generate_automatic_feilds(reportDB, config)
     logger.info("postprocess - aggregate episodes")
     reportDB = aggregate_episodes(reportDB, config)
 
