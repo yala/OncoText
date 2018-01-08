@@ -2,3 +2,4 @@ openpyxl
 Flask
 gensim
 mysqlclient
+tqdm
