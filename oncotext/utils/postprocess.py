@@ -1,4 +1,5 @@
 import pickle
+from oncotext.utils.generic import hasCat
 
 def prune_non_breast(reportDB, name, config, logger):
     logger.info("prune_non_breast - Loading non breast reports")

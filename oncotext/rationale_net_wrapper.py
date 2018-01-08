@@ -49,13 +49,11 @@ def label_reports(name, un_reports, config, logger):
     label_maps = config['POST_DIAGNOSES']
     default_user = config['DEFAULT_USERNAME']
     text_key = config['PREPROCESSED_REPORT_TEXT_KEY']
-
-    embeddings, word_to_indx = dataset_utils.get_embedding_tensor(args)
     args.aspect = "ALL"
+    embeddings, word_to_indx = dataset_utils.get_embedding_tensor(args)
     test_data = dataset_factory.get_oncotext_dataset_test(un_reports, label_maps, args, word_to_indx, text_key)
 
     for indx, diagnosis in enumerate(diagnoses):
-        pdb.set_trace()
         args.num_class = len(label_maps[diagnosis])
         logger.info("RN Wrapper: Start labeling reports for {}".format(diagnosis))
 
@@ -79,6 +77,7 @@ def label_reports(name, un_reports, config, logger):
             preds = np.zeros(len(test_data))
 
         for i in range(len(test_data)):
+
             prediction = label_maps[diagnosis][preds[i]]
             test_data.dataset[i][diagnosis] = prediction
 

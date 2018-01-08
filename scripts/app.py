@@ -145,8 +145,8 @@ def predict():
         returns:- labeled_db, msg, status code
     '''
     name = request.args.get("name") or "default"
-    if request.args.get("debug") == "True":
-        reportDB = pickle.load(open('validateDB_'+name+'.p', 'rb'))
+    if True:
+        reportDB = pickle.load(open('pickle_files/predictedDB_mghMar.p', 'rb'))
     else:
         db_unlabeled = pickle.load(open(DB_UNLABLED_PATH, 'rb'))
 
@@ -158,10 +158,15 @@ def predict():
                                                 db_unlabeled[name],
                                                 config,
                                                 logger)
+        pickle.dump(reportDB, open('pickle_files/predictedDB_{}.p'.format(name), 'wb'))
 
-    reportDB = postprocess.apply_rules(reportDB, config, logger)
+    train_db = pickle.load(open(DB_TRAIN_PATH,'rb'))
+    if name in train_db:
+        user_train_db = train_db[name]
+    else:
+        user_train_db = train_db[ config['DEFAULT_USERNAME']]
+    reportDB = postprocess.apply_rules(reportDB, user_train_db, config, logger)
 
-    pickle.dump(reportDB, open('returnedDB_'+name+'.p', 'w'))
 
     export.export.apply_rules(reportDB, config, logger)
     evaluation.evaluate(reportDB, config, logger)
