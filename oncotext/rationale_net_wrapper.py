@@ -7,6 +7,7 @@ import rationale_net.utils.model as model_utils
 import rationale_net.utils.dataset as dataset_utils
 import rationale_net.train.train as train_utils
 import oncotext.utils.dataset_factory as dataset_factory
+import numpy as np
 import pdb
 import os
 
@@ -67,14 +68,16 @@ def label_reports(name, un_reports, config, logger):
             args.snapshot_path = default_user_snapshot_path
         else:
             args.snapshot = snapshot_path
-        gen, model = model_utils.get_model(args, embeddings, None)
 
-        _, _, _, _, preds, _  = train_utils.test_model(test_data, model, gen, args)
-        #flatten
-        preds = preds
-        pdb.set_trace()
+        try:
+            gen, model = model_utils.get_model(args, embeddings, None)
+            _, _, _, _, preds, _  = train_utils.test_model(test_data, model, gen, args)
+        except Exception as e:
+            logger.warn("RN Wrapper. {} model failed to label reports! Following Exception({}). Populating all reports with 0 label".format(diagnosis, e))
+            preds = np.zeros(len(test_data))
+
         for i in range(len(test_data)):
-            prediction = label_maps[diagnosis][preds[i]] # Wrap with label map
+            prediction = label_maps[diagnosis][preds[i]]
             test_data.dataset[i][diagnosis] = prediction
 
     return test_data.dataset
