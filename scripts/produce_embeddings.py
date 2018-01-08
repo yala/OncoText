@@ -8,6 +8,7 @@ from config import Config
 import gensim.models.word2vec as word2vec
 import oncotext.utils.preprocess as preprocess
 import tqdm
+import pdb
 
 parser = argparse.ArgumentParser(description='Embeddings Producer with Gensim Word2Vec')
 
@@ -31,19 +32,20 @@ if __name__ == "__main__":
     sentences = []
     for r in tqdm.tqdm(reports):
         text = r[Config.RAW_REPORT_TEXT_KEY]
-        report_sentences = [ preprocess.preprocess_text(sentence) for sentence in text.split('\n')]
-        sentences.extend(sentences)
-
+        report_sentences = [ preprocess.preprocess_text(sentence).split() for sentence in text.split('\n')]
+        sentences.extend(report_sentences)
+    
     print("From {} reports, collected {} sentences".format(len(reports),len(sentences)))
-    model = Word2Vec(
+    model = word2vec.Word2Vec(
                     sentences,
                     size=args.dim,
                     window=args.window,
                     min_count=args.min_count,
                     workers=args.num_workers)
 
-    embeddings = model.vectors
-    vocab_to_indx = {v: i for i, v in enumerate(model.vocab)}
+    embeddings = model.wv.syn0
+    vocab = model.wv.vocab
+    vocab_to_indx = {v: vocab[v].index for v in vocab}
     pickle.dump(embeddings, open(args.embedding_path,'wb'))
     pickle.dump(vocab_to_indx, open(args.word2indx_path,'wb'))
 
