@@ -1,4 +1,5 @@
 # large files
+snapshot
 LOGS
 *.bin
 secrets

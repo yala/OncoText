@@ -8,7 +8,7 @@ import pdb
 from rationale_net.datasets.abstract_dataset import AbstractDataset
 import rationale_net.utils.dataset as utils
 import random
-
+import copy
 
 SMALL_TRAIN_SIZE = 800
 random.seed(0)
@@ -24,9 +24,9 @@ class PathologyDataset(data.Dataset):
         self.max_length = max_length
         self.dataset = reports
         self.text_key = text_key
-
+        self.samples = copy.deepcopy( self.dataset)
         self.class_balance = {}
-        for i, sample in tqdm.tqdm(enumerate(self.dataset)):
+        for i, sample in tqdm.tqdm(enumerate(self.samples)):
             sample['x'] = self.processLine(sample[text_key])
             if name == 'test':
                  sample['y'] = 0
@@ -49,10 +49,10 @@ class PathologyDataset(data.Dataset):
         return x
 
     def __len__(self):
-        return len(self.dataset)
+        return len(self.samples)
 
     def __getitem__(self,index):
-        full_sample = self.dataset[index]
+        full_sample = self.samples[index]
         sample = { 'x': full_sample['x'],
                    'i': full_sample['i'],
                    'y': full_sample['y'],

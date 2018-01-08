@@ -47,6 +47,7 @@ class Config(object):
     SIDE_KEY = "BreastSide"
     PATIENT_ID_KEY = "MRN"
     PRUNE_KEY = "Organ"
+    USE_SAVE_PREDS = False
     PRUNE_AFTER_PREDICT = False
 
     COLUMN_KEYS = parsing.parse_XLS( os.path.join(DROPBOXDIR,'SQL_KeysAndValues.xlsx'))

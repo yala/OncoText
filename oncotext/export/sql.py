@@ -35,7 +35,7 @@ def replace_sql_table(table, reports, column_keys,
 
     sql_statement = ("INSERT INTO {} ( {} ) VALUES ({})").format(
                                     table,
-                                    dbKeys,
+                                    ", ".join(dbKeys),
                                     ", ".join(placeholders))
 
     for report in reports:
@@ -47,9 +47,10 @@ def replace_sql_table(table, reports, column_keys,
             continue
 
         try:
-            cur.execute(sql, tuple(values))
+            cur.execute(sql_statement, tuple(values))
         except Exception as e:
-            logger.error("Export SQL: SQL Insert failed. Exception({})".format(e))
+
+            logger.error("Export SQL: SQL Insert failed. \nException({}). SQL statement {}".format(e, sql_statement))
             cur.close()
             db.close()
             return False

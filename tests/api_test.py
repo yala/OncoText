@@ -23,6 +23,7 @@ class Test_MIT_App(unittest.TestCase):
         self.prod_name = "mghMar"
 
     def tearDown(self):
+        return
         with open(TRAIN_DB_PATH,'rb') as f:
             train_db = pickle.load(f, encoding='bytes')
         if self.name in train_db:
@@ -62,7 +63,7 @@ class Test_MIT_App(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-    def test_train(self):
+    def test_train_prod(self):
         params = {"name":self.prod_name}
 
         response = requests.get( os.path.join(DOMAIN, 'train'),
@@ -90,7 +91,7 @@ class Test_MIT_App(unittest.TestCase):
         params = {"name":self.prod_name}
         response = requests.get( os.path.join(DOMAIN, 'predict'),
                                  params=params )
-        self.assertEquals(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
 if __name__ == '__main__':
     unittest.main()

@@ -146,7 +146,7 @@ def predict():
         returns:- labeled_db, msg, status code
     '''
     name = request.args.get("name") or "default"
-    if True:
+    if config['USE_SAVE_PREDS']:
         reportDB = pickle.load(open('pickle_files/predictedDB_mghMar.p', 'rb'))
     else:
         db_unlabeled = pickle.load(open(DB_UNLABLED_PATH, 'rb'))
@@ -175,7 +175,7 @@ def predict():
     evaluation.evaluate(reportDB, config, logger)
     if config['PRUNE_AFTER_PREDICT']:
         reportDB = postprocess.prune_non_breast(reportDB, name, config, logger)
-    return json.dumps({'reportDB': json_utils.make_json_compliant(reportDB), msg: SUCCESS_MSG})
+    return json.dumps({'reportDB': json_utils.make_json_compliant(reportDB), 'msg': SUCCESS_MSG})
 
 
 if __name__ == "__main__":
