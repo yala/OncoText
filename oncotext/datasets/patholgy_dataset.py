@@ -16,7 +16,7 @@ random.seed(0)
 
 class PathologyDataset(AbstractDataset):
 
-    def __init__(self, args, reports, label_map, word_to_indx, name, max_length=720):
+    def __init__(self, args, reports, label_map, word_to_indx, text_key, name, max_length=720):
         self.name = name
         self.args = args
         diagnosis = args.aspect
@@ -26,7 +26,7 @@ class PathologyDataset(AbstractDataset):
 
         self.class_balance = {}
         for i, sample in tqdm.tqdm(enumerate(self.dataset)):
-            sample['x'] = self.processLine(sample['text'])
+            sample['x'] = self.processLine(sample[text_key])
             if name == 'test':
                  sample['y'] = 0
             else:
@@ -37,6 +37,7 @@ class PathologyDataset(AbstractDataset):
                 self.class_balance[ val ] = 0
             self.class_balance[val] += 1
         print ("Class balance", self.class_balance)
+        args.num_class = len(label_map)
 
 
     ## Convert one line from beer dataset to {Text, Tensor, Labels}

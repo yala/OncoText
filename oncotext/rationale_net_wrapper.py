@@ -3,17 +3,18 @@ import torch
 import torch.autograd as autograd
 import rationale_net.utils.generic as generic
 import rationale_net.utils.parsing as parsing
-import rationale_net.utils.model as model
+import rationale_net.utils.model as model_utils
 import rationale_net.utils.dataset as dataset_utils
+import rationale_net.train.train as train_utils
 import oncotext.utils.dataset_factory as dataset_factory
 import pdb
 import os
 
 def train(name, reports, config, logger):
-
-    args = generic.parse_args()
+    args = config['RATIONALE_NET_ARGS']
     diagnoses = config['DIAGNOSES']
     label_maps = config['POST_DIAGNOSES']
+    text_key = config['PREPROCESSED_REPORT_TEXT_KEY']
 
     embeddings, word_to_indx = dataset_utils.get_embedding_tensor(args)
     logger.info("RN Wrapper: Succesffuly got embeddings")
@@ -23,18 +24,17 @@ def train(name, reports, config, logger):
     for diagnosis in diagnoses:
         logger.info("RN Wrapper: Training model for {}".format(diagnosis))
         args.aspect = diagnosis
-        train_data, dev_data = datasets_factory.get_oncotext_dataset_train(reports, label_maps, args, word_to_indx)
+        train_data, dev_data = dataset_factory.get_oncotext_dataset_train(reports, label_maps, args, word_to_indx, text_key)
 
         args.model_path = os.path.join( args.model_dir.format(name),
                                         args.model_file.format(diagnosis))
         model_paths.append( args.model_path)
 
-        gen, model = model.get_model(args, embeddings, train_data)
+        gen, model = model_utils.get_model(args, embeddings, train_data)
 
 
-        epoch_stats, model, gen = train.train_model(train_data, dev_data, model, gen, args)
+        epoch_stats, model, gen = train_utils.train_model(train_data, dev_data, model, gen, args)
 
-    ## TODO Save logs somewhere
     return model_paths
 
 
@@ -44,10 +44,11 @@ def label_reports(name, un_reports, config, logger):
     diagnoses = config['DIAGNOSES']
     label_maps = config['POST_DIAGNOSES']
     default_user = config['DEFAULT_USERNAME']
+    text_key = config['PREPROCESSED_REPORT_TEXT_KEY']
 
     embeddings, word_to_indx = dataset_utils.get_embedding_tensor(args)
 
-    test_data = datasets_factory.get_oncotext_dataset_test(un_reports, label_maps, args, word_to_indx)
+    test_data = dataset_factory.get_oncotext_dataset_test(un_reports, label_maps, args, word_to_indx, text_key)
 
     for indx, diagnosis in diagnoses:
         logger.info("RN Wrapper: Start labeling reports for {}".format(diagnosis))
@@ -63,9 +64,9 @@ def label_reports(name, un_reports, config, logger):
             args.snapshot_path = default_user_snapshot_path
         else:
             args.snapshot = snapshot_path
-        gen, model = model.get_model(args, embeddings, None)
+        gen, model = model_utils.get_model(args, embeddings, None)
 
-        _, _, _, _, preds, _  = train.test_model(test_data, train_model, model, gen, optimizer, step, args)
+        _, _, _, _, preds, _  = train_utils.test_model(test_data, model, gen, args)
         #flatten
         preds = preds
         pdb.set_trace()

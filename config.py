@@ -73,23 +73,40 @@ class Config(object):
 
     RATIONALE_NET_CONFIG = {
         'cuda': False,
+        'num_workers': 4,
+        'batch_size': 32,
+        'class_balance': True,
         'dropout': .1,
         'init_lr': 0.0001,
+        'weight_decay': 0,
+        'get_rationales': False,
+        'selection_lambda': .01,
+        'continuity_lambda': .01,
         'model_form': 'cnn',
         'hidden_dim': 100,
         'dataset': 'pathology_oncotext',
         'embedding': 'pathology',
         'num_layers': 1,
-        'filters': '3,4,5',
+        'filters': [3,4,5],
         'filter_num': 100,
         'epochs': 1,
         'patience': 5,
         'snapshot': None,
         'objective':'cross_entropy',
-        'num_gpus ': 1,
+        'num_gpus': 1,
         'model_dir': 'snapshot/{}',
         'model_file': 'oncotext_{}.pt',
-        'train_split': .80
+        'train_split': .80,
+        'use_gumbel': True,
+        'gumbel_temprature': 1,
+        'gumbel_decay': 1e-5,
+        'memnet':False,
+        'is_entailement':False,
+        'use_random_sampling': True,
+        'use_matching_net_sampling': False,
+        'use_top_tfidf_sampling': False,
+        'learn_to_select':True,
+        'num_samples': 1
     }
 
 
