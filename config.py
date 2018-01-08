@@ -10,6 +10,7 @@ class Args(object):
 
 
 class Config(object):
+    DEBUG = True
     HOMEDIR = '/home/nlp/'
     PATHOLOGYDIR = os.path.join(HOMEDIR, 'pathology/')
     PICKLEDIR = os.path.join(PATHOLOGYDIR, "pickle_files")
@@ -21,7 +22,7 @@ class Config(object):
 
 
     DB_TRAIN_PATH = os.path.join(PICKLEDIR, "reportDBAPI_train.p")
-    DB_BASE_PATH = os.path.join(PICKLEDIR, "reportDBAPI_train.p")
+    DB_BASE_PATH = os.path.join(PICKLEDIR, "pickle_files/reportDB_base_train.p")
     DB_UNLABLED_PATH = os.path.join(PICKLEDIR, "reportDBAPI_test.p")
     DB_NON_BREAST_PATH = os.path.join(PICKLEDIR, "reportDBAPI_nonbreasts.p")
 

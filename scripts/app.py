@@ -37,7 +37,7 @@ SUCCESS_MSG = "Request Success"
 NOP_MSG = "Request No Op. Invalid arg"
 
 
-@app.route("/addReports", methods=['POST'])
+@app.route("/addTrain", methods=['POST'])
 def addTrainData():
     '''
         Add a list of reports to training items for a given system user.
