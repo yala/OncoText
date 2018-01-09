@@ -7,6 +7,7 @@ import pickle
 import oncotext.utils.preprocess as preprocess
 import oncotext.logger as logger
 import oncotext.utils.parsing as parsing
+import oncotext.utils.generic as generic
 import argparse
 
 
@@ -39,7 +40,7 @@ def parse_annotation_file(path):
     elif path.endswith('xlsx'):
         return parsing.parse_XLS(path)
     else:
-        raise Exception("{} not an xml or xlsx!".format(path))
+        return []
 
 if __name__ == "__main__":
     '''
@@ -83,6 +84,13 @@ if __name__ == "__main__":
             if isinstance(key, bytes):
                 report[key.decode()] = report[key]
                 del report[key]
+                key = key.decode()
+
+            if "_x0020_" in key:
+                new_key = key.replace("_x0020_","_")
+                report[new_key] = report[key]
+                del report[key]
+
 
     # 1.9 Del keys in new convention that need be overwritten
     for report in db_base:
@@ -99,6 +107,11 @@ if __name__ == "__main__":
                 continue
             report[key] = report[old_conv_key]
             del report[old_conv_key]
+
+        ## Do this adhoc for Her2Fish
+        if 'Her2 (Fish)' in report:
+            report['Her2Fish'] = report['Her2 (Fish)']
+            del report['Her2 (Fish)']
 
     ## 4. Change all labels to new convention
 
@@ -124,10 +137,11 @@ if __name__ == "__main__":
             if val in LABEL_TO_NEW_LABEL_MAP:
                 transformed_keys.append(key)
                 report[key] = LABEL_TO_NEW_LABEL_MAP[val]
+    print("{} were transformed in relabel".format( set(transformed_keys)))
 
-    transformed_keys = set(transformed_keys)
     ## 5. Save as intermediate
-    pickle.dump(db_base, open(args.train_db_outpath_intermediate,'wb'))
+    intermediate_path = "pickle_files/reportDBAPI_train.p.intermediate"
+    pickle.dump(db_base, open(intermediate_path,'wb'))
 
     ## 6. Go through XMLs and update to naming / label convention
     files = os.listdir(args.extra_annotation_dir)
@@ -135,11 +149,55 @@ if __name__ == "__main__":
     for file in files:
         path = os.path.join(args.extra_annotation_dir, file)
         annotation = parse_annotation_file(path)
-        addit_annotations += annotation
+        addit_annotations.extend(annotation)
 
-    ## 7. Concat all dbs and call preprocessing script
+    filt_annotations = []
+    for report in addit_annotations:
+        try:
+            report = dict(report)
+            filt_annotations.append(report)
+        except Exception as e:
+            # Corrupt row, usaully just a note or just an ID for eyeballing it
+            continue
 
-    db_base = preprocess.apply_rules(db_base,
+    ## 6.5 Normalize key names
+    for report in filt_annotations:
+        if 'Her2 (Fish)' in report:
+            report['Her2Fish'] = report['Her2 (Fish)']
+            del report['Her2 (Fish)']
+        keys = report.keys()
+        for key in keys:
+            if "_x0020_" in key:
+                new_key = key.replace("_x0020_","_")
+                report[new_key] = report[key]
+                del report[key]
+
+    ##  6.9 Noramlize label values
+    transformed_keys = []
+    for report in filt_annotations:
+        for key in report:
+            val = report[key]
+            if val in LABEL_TO_NEW_LABEL_MAP:
+                transformed_keys.append(key)
+                report[key] = LABEL_TO_NEW_LABEL_MAP[val]
+
+    print("{} were transformed in relabel".format( set(transformed_keys)))
+
+    ## 7. Concat all dbs
+
+    db_concat_all = filt_annotations + db_base
+
+    ##7.5 Filter for only those that contain an annotation
+    db_concat = []
+    for report in db_concat_all:
+        if generic.hasCat(report, list(Config.DIAGNOSES.keys()), loose = True):
+            db_concat.append(report)
+
+    print("{} num annotations in end".format(len(db_concat)))
+
+    ##7.9 Call preprocesing script
+
+    db_concat = preprocess.apply_rules(db_concat,
                                      Config.RAW_REPORT_TEXT_KEY,
                                      Config.PREPROCESSED_REPORT_TEXT_KEY,
                                      Config.REPORT_TIME_KEY,
@@ -147,8 +205,8 @@ if __name__ == "__main__":
                                      logger)
 
     ## 8. put in a dict under default.
-    train_db = {Config.DEFAULT_USERNAME: db_base}
+    train_db = {Config.DEFAULT_USERNAME: db_concat}
 
     ## 9. dump to out path
-    pickle.dump(train_db, open(Config.train_db_outpath, 'wb'))
+    pickle.dump(train_db, open(args.train_db_outpath, 'wb'))
     logger.info(SUCCES_STR)
