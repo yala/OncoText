@@ -91,7 +91,7 @@ class Config(object):
         'num_layers': 1,
         'filters': [3,4,5],
         'filter_num': 100,
-        'epochs': 1,
+        'epochs': 15,
         'patience': 5,
         'snapshot': None,
         'objective':'cross_entropy',
