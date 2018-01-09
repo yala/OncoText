@@ -125,6 +125,8 @@ def apply_rules(reports, raw_text_key, preprocessed_text_key,
             continue
         # append already preprocessed reports
         if preprocessed_text_key in r:
+            r[preprocessed_text_key] = preprocess_text(
+                                            r[preprocessed_text_key])
             preprocessed_reports.append(r)
         else:
             preprocessed_reports.extend( segment_report(r,

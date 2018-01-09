@@ -1,8 +1,8 @@
 from openpyxl import load_workbook
 from collections import OrderedDict
 
-def parse_XLS(inp):
-    wb = load_workbook(inp)
+def parse_XLS(path):
+    wb = load_workbook(path)
     sheet = wb.active
     data = OrderedDict()
     for row in sheet.rows:
@@ -13,3 +13,14 @@ def parse_XLS(inp):
             else:
                 data[values[0]] = []
     return data
+
+def parse_XML(path):
+    xml = xmltodict.parse(open(path, 'r'))
+    dataroot = xml[xml.keys()[0]]
+    reportsKey = [key for key in dataroot.keys() if ('@' not in key)][-1]
+    annotatedReports = dataroot[reportsKey]
+    annotatedReports = [r for r in annotatedReports if r!=None and len(r)>0]
+    for r in annotatedReports:
+        r['filename'] = path
+
+    return annotatedReports
