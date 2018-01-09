@@ -49,6 +49,13 @@ def is_bilateral(text):
     bilat = "right" in text and "left" in text
     return not bilat
 
+def remove_none_vals(report):
+    keys = list(report.keys())
+    for key in keys:
+        if report[key] is None:
+            del report[key]
+    return report
+
 
 def segment_report(report, raw_text_key, preprocessed_text_key, side_key, logger):
     '''
@@ -138,4 +145,6 @@ def apply_rules(reports, raw_text_key, preprocessed_text_key,
     preprocessed_reports = [ date.set_timestamp(report, time_key, logger) for report in preprocessed_reports]
 
     preprocessed_reports = [set_uuid(report) for report in preprocessed_reports ]
+
+    preprocessed_reports = [remove_none_vals(report) for report in preprocessed_reports ]
     return preprocessed_reports

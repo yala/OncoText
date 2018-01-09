@@ -13,8 +13,8 @@ import argparse
 
 parser = argparse.ArgumentParser(description='Reproduce Db from invariants')
 
-parser.add_argument('--train_db_outpath',  type=str, default='pickle_files/reportDBAPI_train.p.new', help="Place where reports are stored ")
-
+parser.add_argument('--train_db_outpath',  type=str, default='pickle_files/reportDBAPI_train.p', help="Place where reports are stored ")
+parser.add_argument('--base_db_outpath',  type=str, default='pickle_files/reportDB_base_train.p', help="Place where reports are stored ")
 parser.add_argument('--train_db_outpath_intermediate',  type=str, default='pickle_files/reportDBAPI_train.p.intermediate', help="Place where reports are stored ")
 
 
@@ -207,6 +207,9 @@ if __name__ == "__main__":
     ## 8. put in a dict under default.
     train_db = {Config.DEFAULT_USERNAME: db_concat}
 
+
     ## 9. dump to out path
     pickle.dump(train_db, open(args.train_db_outpath, 'wb'))
+    pickle.dump(db_concat, open(args.base_db_outpath, 'wb'))
+
     logger.info(SUCCES_STR)
