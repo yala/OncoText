@@ -20,7 +20,7 @@ class Test_MIT_App(unittest.TestCase):
     def setUp(self):
 
         self.name = "test_user-{}".format(uuid.uuid4())
-        self.prod_name = "mghMar"
+        self.prod_name = "default"
 
     def tearDown(self):
         with open(TRAIN_DB_PATH,'rb') as f:
@@ -62,14 +62,6 @@ class Test_MIT_App(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-    def test_train_prod(self):
-        params = {"name":self.prod_name}
-
-        response = requests.get( os.path.join(DOMAIN, 'train'),
-                                 params=params )
-
-        self.assertEqual(response.status_code, 200)
-
     def test_full_predict_flow(self):
         addit_unk = pickle.load(open(ADD_UNK_PATH,'rb'))
         payload = json.dumps(addit_unk)
@@ -93,12 +85,6 @@ class Test_MIT_App(unittest.TestCase):
                                  params=params )
         self.assertEqual(response.status_code, 200)
 
-
-    def test_predict_prod(self):
-        params = {"name":self.prod_name}
-        response = requests.get( os.path.join(DOMAIN, 'predict'),
-                                 params=params )
-        self.assertEqual(response.status_code, 200)
 
 if __name__ == '__main__':
     unittest.main()
