@@ -4,7 +4,7 @@ from os.path import dirname, realpath
 import sys
 sys.path.append(dirname(dirname(realpath(__file__))))
 sys.path.append(os.path.join(dirname(dirname(realpath(__file__))),
-                             'rationale-net'))
+                             'text_nn'))
 import oncotext.logger as logger
 from flask import Flask
 from flask import request, json, jsonify
