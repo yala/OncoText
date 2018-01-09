@@ -120,6 +120,8 @@ if __name__ == "__main__":
                      'Other': '9',
                      'NA' :'9',
                      'LEFT': 'l',
+                     'L': 'l',
+                     'R': 'r',
                      'Negative': '0',
                      'No': '0',
                      'Positive': '1',
