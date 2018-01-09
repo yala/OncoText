@@ -119,17 +119,21 @@ if __name__ == "__main__":
                      'Absent': '0',
                      'Other': '9',
                      'NA' :'9',
+                     'na': '9'
                      'LEFT': 'l',
                      'L': 'l',
                      'R': 'r',
                      'Negative': '0',
                      'No': '0',
+                     'NO': '0',
                      'Positive': '1',
                      'Present': '1',
+                     'present': '1',
                      'RIGHT': 'r',
                      'Yes': '1',
                      'breast': '1',
-                     'non-breast': '0'
+                     'non-breast': '0',
+                     'unknown': '9'
                      }
 
     transformed_keys = []
@@ -164,11 +168,20 @@ if __name__ == "__main__":
 
     ## 6.5 Normalize key names
     for report in filt_annotations:
+
         if 'Her2 (Fish)' in report:
             report['Her2Fish'] = report['Her2 (Fish)']
             del report['Her2 (Fish)']
+
         keys = report.keys()
         for key in keys:
+            val = report[key]
+            if isinstance(val, bytes):
+                report[key] = val.decode()
+            if isinstance(key, bytes):
+                report[key.decode()] = report[key]
+                del report[key]
+                key = key.decode()
             if "_x0020_" in key:
                 new_key = key.replace("_x0020_","_")
                 report[new_key] = report[key]
@@ -188,6 +201,11 @@ if __name__ == "__main__":
     ## 7. Concat all dbs
 
     db_concat_all = filt_annotations + db_base
+
+    for report in db_concat_all:
+        for key in Config.DIAGNOSES:
+            if key in report and not report[key] in Config.DIAGNOSES[key]:
+                del report[key]
 
     ##7.5 Filter for only those that contain an annotation
     db_concat = []
