@@ -1,6 +1,0 @@
-[submodule "rationale-net"]
-	path = rationale-net
-	url = https://github.com/yala/rationale-net.git
-[submodule "text_nn"]
-	path = text_nn
-	url = git@github.com:yala/text_nn.git
