@@ -35,11 +35,16 @@ class PathologyDataset(data.Dataset):
                 sample['y'] = label_map[diagnosis].index(sample[diagnosis])
                 val = sample[diagnosis]
                 args.num_class = len(label_map[diagnosis])
+            sample['val'] = val
             sample['i'] = i
             if not val in self.class_balance:
                 self.class_balance[ val ] = 0
             self.class_balance[val] += 1
         print ("Class balance", self.class_balance)
+
+        weight_per_class = 1. / len(self.class_balance)
+        self.weights = [ weight_per_class / self.class_balance[d['val']]
+                             for d in self.samples ]
 
 
     ## Convert one line from beer dataset to {Text, Tensor, Labels}
