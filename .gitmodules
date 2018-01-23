@@ -1,0 +1,3 @@
+[submodule "text_nn"]
+	path = text_nn
+	url = https://github.com/yala/text_nn.git
