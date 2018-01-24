@@ -1,77 +1,77 @@
-# MGH Breast Cancer Pathology Report Project
+# OncoText - Information Extraction for Breast Cancer Pathology Reports
 
-# File Usage <br />
-There is a file system set up under ```Dropbox (Partners HealthCare)/Extraction``` designed to make usage as simple and customizable as possible. 
+# About
+OncoText is an information extraction service designed to parse structured data out of pathology reports. Currently, the system has pretrained models for categories like "DCIS", "LCIS", "ER Status", and around 20 more categories. Each extraction is modeled as document classification, and not as a tagging task.  The first version of the system and following technical extensions are described in:
+    [1] [Using Machine Learning to Parse Breast Pathology Reports ](https://link.springer.com/article/10.1007%2Fs10549-016-4035-1). BCRT 2016
+    [2] [Rationalizing Neural Predictions](https://people.csail.mit.edu/taolei/papers/emnlp16_rationale.pdf). EMNLP 2016
 
-The folder schema is as follows:
+
+All pretrained models are available on a docker image, and were trained/developed in a collaboration with Dr. Kevin Hughes from Mass General, and Regina Barzilay's Lab at MIT CSAIL. All models were trained on Partners Healthcare Pathology reports, and results may transfer poorly to pathology reports from other venues, if the phrasing there is significantly diferent. OncoText is currently deployed at Mass General and is designed to support adding new categories, new training data, and new sets of documents to parse. In principle, this can be used on any free text reports given you provide training data via the API. It's setup as a webservice and can be accessed through HTTP requests.
+
+<br/>
+## System Requirements
+We recommend a GPU machine for larger databases and heavier training loads. If running OncoWeb, it should be run a seperate CPU instance such that it doesn't compete for resources. A working docker can be found at dockerhub.com/yala/oncotext:0.1.0, and please look to the docker file if you wish to set this up on your server.
+
+<br/>
+
+## Configuration
+All system configuration in managed in ```config.py```.
+
+### Environment Variables
+In order to use OncoText, you have to set the following environment variables:
+    - ```PICKLEDIR``` This is the directory where to store the various train / raw databases you may way to parse.
+    - ```LOGFILE```Where the system will write all error/warning/info logs via pylogger
+    - ```CONFIG_XLSX``` The path of the category configuration excel file. See ``sample_category_excel.xlsx`` for an example. OncoText loads this excel file and interprets all rows with several column entries as categories to try to parse from the path reports.
+
+
+### Neural net configuation settings
+All Neural Net configuration, including the generation of rationales is defined in config.py. Please post an issue and ask if you'd like advice on tuning this. [text_nn](https://github.com/yala/text_nn) still lacks full documentation, but given interest, we will work on making that more public suitable.
+<br/>
+
+
+## API
+You can interact with OncoText via the following HTTP Methods. In general, all requests take a query parameter of "name". Each name can be thought of as a user of oncotext, which its unique training data and data to parse. If training data / trained models are not available for a given user "name", then the pretrained default models will be used if available.
+
+For a detailed look at how this works, I recommend looking at ```scripts/app.py```, and the tester ```test/api_test.py```.
+
+### addTrain
+You can ``POST`` new training data to OncoText via ```/addTrain```. OncoText preprocess the data, and add it to its train database. The next time OncoText is trained, it will train on the new data (in addition to the old).
+
 ```
-Dropbox (Partners HealthCare)
-|__ ...
-|
-|__ Extraction
-|   |
-|   |__ diagnoses.xlsx -> follow the current format to add/rearrange keys and possible values
-|   | 
-|   |   ***************** TRAINING *****************
-|   |__ ForTrainingXML -> add xml files for training
-|   |   |__ ...
-|   |   
-|   |__ PastTraining -> previously trained files are stored here
-|   |   |__ ...
-|   |   |__ TrainMarkersOct26.xml
-|   |   |__ TrainOct20.xml
-|   |   
-|   |   ***************** PARSING *****************
-|   |__ ForParsingXML -> add xml or xlsx files for labeling
-|   |   |__ ...
-|   |   
-|   |__ ForParsingHL7 -> add hl7 files for labeling
-|   |   |__ ...
-|   |  
-|   |__ ParsedCSV -> labeled reports from the ForParsing folders will be stored here as csv files
-|   |   |__ ...
-|   |   |__ NewMammoplastiesOct2017.csv
-|   |   |__ PathologyExtraThatWasMissingSept2017.csv
-|   |  
-|   |__ PastReports -> finished xml and hl7 files will be moved here
-|   |   |__ ...
-|   |   |__ NewMammoplastiesOct2017.xlsx
-|   |   |__ PathologyExtraThatWasMissingSept2017.xml
-|   |  
-|   |__ CorruptReports -> invalid files from ForParsing folders
-|   |   |__ ...
-|   |  
-|   |   ***************** EVALUATION *****************
-|   |__ EvalSets -> add xlsx files for evaluation
-|   |   |__ ...
-|   |   |__ evalDB.xlsx
-|   |   |__ pakisDB.xlsx
-|   |  
-|   |__ Results -> category scores from the evaluation will be stored here as xlsx files
-|   |   |__ ...
-|   |   |__ evalDB_YEAR_DAY_MONTH.xlsx
-|   |   |__ pakisDB_YEAR_DAY_MONTH.xlsx
-|   |  
+addTrainResp = requests.post("http://localhost:5000/addTrain", data=json.dumps(newTrainData), params={"name":'default')
+assert addTrainResp.status_code==200
 ```
 
+### addUnlabeled
+Adding unlabeled reports is quite similar to adding new train files. If you would like to label a set of new pathology reports, you can ``POST`` the data to OncoText, and it will perform the parse the new reports (in addition to the old) the next time it predicts.
+```
+addUnlabeledResp = requests.post("http://localhost:5000/addUnlabeled", data=json.dumps(newUnlabeledData), params={"name":'default'})
+assert addUnlabeledResp.status_code==200
+```
 
-# How to start service? <br />
-You can either setup a docker machine with the right environment to run/use the API, or use the rosetta2 service.   
-## Docker Setup 
-If you need to run this locally instead of hitting the MIT API, we recommend Docker.
- [dockerfile](dockerfile) shows a working example.
+### train
+This request tells OncoText to train its neural net based on the training reports you've previously added through ``addTrain``. This trains a seperate neural network for each extraction. In practice, we found indepdent models out performed ones jointly trained.
+```
+trainResp = requests.post("http://localhost:5000/train", params={"name":'default'})
+assert trainResp.status_code==200
+```
 
-## MIT Server / MGH Server 
-If you need to restart it, do: 
-export FLASK_APP=classifierAPI.py; 
-flask run
+### predict
+After OncoText has trained, this request tells OncoText to run its prediction algorithm on the unlabeled reports you have previously added through ``addUnlabeled``.
+```
+predResp = requests.post("http://localhost:5000/predict", params={"name":'default'})
+assert predResp.status_code==200
+```
+<br/>
 
 
-# API Usage  <br />
-The following API let's you add training data, train models, and get predictions for given reports. Under the hood, it uses boosting for annotation sparse classes and CNN for annotation rich classes. 
+
+## OncoText Report Structure
+OncoText relies on a couple special keys to know whats what. Under the hood, it stores all databases a as python lists of python dictionaries. Each dictionary represents a Pathology report for a single breast, which preprocessing splitting bilteral cases, and the ```RAW_REPORT_TEXT_KEY``` indicated the key of the full text. There are several other special keys, all of which specified in ```config.py```, and the handle things like post prediction pruning, what field is the date field, etc. For questions about this, feel free to reach out to @yala.
+
+<br/>
 
 
-For example usage see apiDemo.py, which does everything using the python requests library. 
-The api is available at: https://172.17.140.132:5000/\[endpoint\] (under mgh firewall) and https://rosetta7.csail.mit.edu:5000 (upon request in order to avoid hogging gpu resources)
 
-For questions, please ping @yala on slack.
+## Intergration and Deployment
+Oncotext is primarily used in conjunction with [OncoManage](https://github.com/yala/OncoManage). OncoManage sets up a folder structure where new training and unlabeled reports will automatically be added OncoText, and manages reporting on evaluation sets. It also handles exports to various databases, email notifications, and interfacing with a OncoWeb. OncoWeb is a [user interface](https://github.com/clarali/OncoWeb) for users to access and correct the machine's predictions. We are in the process of preparing all linked repos for public release. Some things are more tightly linked with our deployment at Mass General, but we hope that these tools will prove useful to the community.

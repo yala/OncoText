@@ -5,12 +5,16 @@ import unittest
 import pdb
 import pickle
 import uuid
+from config import Config
 
 DOMAIN = "http://localhost:5000/"
-TRAIN_DB_PATH = "/home/yala/oncotext_files/reportDBAPI_train.p"
-UNK_DB_PATH = "/home/yala/oncotext_files/reportDBAPI_test.p"
-ADD_TRAIN_PATH = "/home/yala/oncotext_files/test_data/addit_train.p"
-ADD_UNK_PATH = "/home/yala/oncotext_files/test_data/addit_unlabeled.p"
+TRAIN_DB_PATH = Config.DB_TRAIN_PATH
+UNK_DB_PATH = Config.DB_UNLABLED_PATH
+
+ADDITIONAL_DATA = { }
+FAKE_REPORT_TEXT = "Foo blah blah DCIS glue"
+ADDITIONAL_DATA[Config.RAW_REPORT_TEXT_KEY] = FAKE_REPORT_TEXT
+
 
 
 
@@ -38,9 +42,7 @@ class Test_MIT_App(unittest.TestCase):
                 pickle.dump(unk_db, f)
 
     def test_add_train(self):
-        with open(ADD_TRAIN_PATH,'rb') as f:
-            addit_train = pickle.load(f)
-        payload = json.dumps(addit_train)
+        payload = json.dumps(ADDITIONAL_DATA)
         params = {"name":self.name}
 
 
@@ -51,9 +53,7 @@ class Test_MIT_App(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_add_unk(self):
-        with open(ADD_UNK_PATH,'rb') as f:
-            addit_unk = pickle.load(f)
-        payload = json.dumps(addit_unk)
+        payload = json.dumps(ADDITIONAL_DATA)
         params = {"name":self.name}
 
         response = requests.post( os.path.join(DOMAIN, 'addUnlabeled'),
