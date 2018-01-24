@@ -1,5 +1,8 @@
 import json
+import sys
 import os
+from os.path import dirname, realpath
+sys.path.append(dirname(dirname(realpath(__file__))))
 import requests
 import unittest
 import pdb
@@ -11,12 +14,10 @@ DOMAIN = "http://localhost:5000/"
 TRAIN_DB_PATH = Config.DB_TRAIN_PATH
 UNK_DB_PATH = Config.DB_UNLABLED_PATH
 
-ADDITIONAL_DATA = { }
+ADDITIONAL_DATA = [{ }]
 FAKE_REPORT_TEXT = "Foo blah blah DCIS glue"
-ADDITIONAL_DATA[Config.RAW_REPORT_TEXT_KEY] = FAKE_REPORT_TEXT
-
-
-
+ADDITIONAL_DATA[0][Config.RAW_REPORT_TEXT_KEY] = FAKE_REPORT_TEXT
+ADDITIONAL_DATA[0]['DCIS'] = '1'
 
 
 class Test_MIT_App(unittest.TestCase):
@@ -63,8 +64,7 @@ class Test_MIT_App(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_full_predict_flow(self):
-        addit_unk = pickle.load(open(ADD_UNK_PATH,'rb'))
-        payload = json.dumps(addit_unk)
+        payload = json.dumps(ADDITIONAL_DATA)
         params = {"name":self.name}
 
         response = requests.post( os.path.join(DOMAIN, 'addUnlabeled'),
