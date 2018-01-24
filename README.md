@@ -9,8 +9,8 @@ OncoText is an information extraction service designed to parse structured data 
 
 All pretrained models are available on a [docker image](dockerhub.com/yala/oncotext:0.1.0), and were trained/developed in a collaboration with Dr. Kevin Hughes from Mass General, and Regina Barzilay's Lab at MIT CSAIL. All models were trained on Partners Healthcare Pathology reports, and results may transfer poorly to pathology reports from other venues, if the phrasing there is significantly diferent. OncoText is currently deployed at Mass General and is designed to support adding new categories, new training data, and new sets of documents to parse. In principle, this can be used on any free text reports given you provide training data via the API. It's setup as a webservice and can be accessed through HTTP requests.
 
-
 <br/>
+
 ## System Requirements
 We recommend a GPU machine for larger databases and heavier training loads. If running OncoWeb, it should be run a seperate CPU instance such that it doesn't compete for resources. A working docker can be found at [here](dockerhub.com/yala/oncotext:0.1.0), and please look to the docker file if you wish to set this up on your server.
 
@@ -79,3 +79,8 @@ OncoText relies on a couple special keys to know whats what. Under the hood, it 
 
 ## Intergration and Deployment
 Oncotext is primarily used in conjunction with [OncoManage](https://github.com/yala/OncoManage). OncoManage sets up a folder structure where new training and unlabeled reports will automatically be added OncoText, and manages reporting on evaluation sets. It also handles exports to various databases, email notifications, and interfacing with a OncoWeb. OncoWeb is a [user interface](https://github.com/clarali/OncoWeb) for users to access and correct the machine's predictions. We are in the process of preparing all linked repos for public release. Some things are more tightly linked with our deployment at Mass General, but we hope that these tools will prove useful to the community.
+
+<br/>
+
+## Next Release
+OncoText is still in alpha and at 0.1.0. The next release will include supporting rationale extraction on predict, and more sophisticated evaluation measures. 
