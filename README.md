@@ -12,7 +12,7 @@ All pretrained models are available on a [docker image](dockerhub.com/yala/oncot
 You can run the docker as follows:
 ```
 
- sudo docker run -it -p 5000:5000 -e LOGFILE=/OncoText/LOGS -e PICKLEDIR=/OncoText/oncotext_files -e CONFIG_XLSX=/OncoText/config.xlsx  -v PATH_TO_YOUR_LOGFILE:/OncoText/LOGS  -v PATH_TO_DB_DIR:/OncoText/oncotext_files  -v PATH_TO_CONFIG_EXCEL:/OncoText/config.xlsx  yala/oncotext:0.1.0
+ sudo nvidia-docker run -it -p 5000:5000 -e LOGFILE=/OncoText/LOGS -e PICKLEDIR=/OncoText/oncotext_files -e CONFIG_XLSX=/OncoText/config.xlsx  -v PATH_TO_YOUR_LOGFILE:/OncoText/LOGS  -v PATH_TO_DB_DIR:/OncoText/oncotext_files  -v PATH_TO_CONFIG_EXCEL:/OncoText/config.xlsx  yala/oncotext:0.1.0
 
 ```
 
