@@ -19,7 +19,7 @@ class Config(object):
     DB_BASE_PATH = os.path.join(PICKLEDIR, "reportDB_base_train.p")
     DB_UNLABLED_PATH = os.path.join(PICKLEDIR, "reportDBAPI_test.p")
     DB_NON_BREAST_PATH = os.path.join(PICKLEDIR, "reportDBAPI_nonbreasts.p")
-    EMBEDDING_PATH = os.path.join(PICKLEDIR, "hash_embeddings.p")
+    EMBEDDING_PATH = "pickle_files/hash_embeddings.p"
 
     if not os.path.exists(PICKLEDIR):
          os.makedirs(PICKLEDIR)
