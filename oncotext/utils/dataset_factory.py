@@ -34,5 +34,7 @@ def get_oncotext_dataset_test(reports, label_maps, args, text_key, vocab_size):
     test_data = oncotext.datasets.patholgy_dataset.PathologyDataset(args,reports, label_maps, text_key, 'test', vocab_size=vocab_size)
     return test_data
 
-def get_embedding_tensor(config):
-    return pickle.load(open(config['EMBEDDING_PATH'],'rb'))
+def get_embedding_tensor(config, args):
+    embeddings =  pickle.load(open(config['EMBEDDING_PATH'],'rb'))
+    args.embedding_dim = embeddings.shape[1]
+    return embeddings

@@ -29,7 +29,7 @@ def train(name, reports, config, logger):
     label_maps = config['POST_DIAGNOSES']
     text_key = config['PREPROCESSED_REPORT_TEXT_KEY']
 
-    embeddings = dataset_factory.get_embedding_tensor(config)
+    embeddings = dataset_factory.get_embedding_tensor(config, args)
     logger.info("RN Wrapper: Succesffuly got embeddings")
 
     results = []
@@ -71,7 +71,7 @@ def label_reports(name, un_reports, config, logger):
     default_user = config['DEFAULT_USERNAME']
     text_key = config['PREPROCESSED_REPORT_TEXT_KEY']
     args.aspect = "ALL"
-    embeddings = dataset_factory.get_embedding_tensor(config)
+    embeddings = dataset_factory.get_embedding_tensor(config, args)
     test_data = dataset_factory.get_oncotext_dataset_test(un_reports, label_maps, args, text_key, len(embeddings))
 
     for indx, diagnosis in enumerate(diagnoses):
