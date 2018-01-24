@@ -1,16 +1,18 @@
 # OncoText - Information Extraction for Breast Cancer Pathology Reports
 
-# About
+## About
 OncoText is an information extraction service designed to parse structured data out of pathology reports. Currently, the system has pretrained models for categories like "DCIS", "LCIS", "ER Status", and around 20 more categories. Each extraction is modeled as document classification, and not as a tagging task.  The first version of the system and following technical extensions are described in:
-    [1] [Using Machine Learning to Parse Breast Pathology Reports ](https://link.springer.com/article/10.1007%2Fs10549-016-4035-1). BCRT 2016
-    [2] [Rationalizing Neural Predictions](https://people.csail.mit.edu/taolei/papers/emnlp16_rationale.pdf). EMNLP 2016
+
+   - [Using Machine Learning to Parse Breast Pathology Reports ](https://link.springer.com/article/10.1007%2Fs10549-016-4035-1). BCRT 2016
+   - [Rationalizing Neural Predictions](https://people.csail.mit.edu/taolei/papers/emnlp16_rationale.pdf). EMNLP 2016
 
 
-All pretrained models are available on a docker image, and were trained/developed in a collaboration with Dr. Kevin Hughes from Mass General, and Regina Barzilay's Lab at MIT CSAIL. All models were trained on Partners Healthcare Pathology reports, and results may transfer poorly to pathology reports from other venues, if the phrasing there is significantly diferent. OncoText is currently deployed at Mass General and is designed to support adding new categories, new training data, and new sets of documents to parse. In principle, this can be used on any free text reports given you provide training data via the API. It's setup as a webservice and can be accessed through HTTP requests.
+All pretrained models are available on a [docker image](dockerhub.com/yala/oncotext:0.1.0), and were trained/developed in a collaboration with Dr. Kevin Hughes from Mass General, and Regina Barzilay's Lab at MIT CSAIL. All models were trained on Partners Healthcare Pathology reports, and results may transfer poorly to pathology reports from other venues, if the phrasing there is significantly diferent. OncoText is currently deployed at Mass General and is designed to support adding new categories, new training data, and new sets of documents to parse. In principle, this can be used on any free text reports given you provide training data via the API. It's setup as a webservice and can be accessed through HTTP requests.
+
 
 <br/>
 ## System Requirements
-We recommend a GPU machine for larger databases and heavier training loads. If running OncoWeb, it should be run a seperate CPU instance such that it doesn't compete for resources. A working docker can be found at dockerhub.com/yala/oncotext:0.1.0, and please look to the docker file if you wish to set this up on your server.
+We recommend a GPU machine for larger databases and heavier training loads. If running OncoWeb, it should be run a seperate CPU instance such that it doesn't compete for resources. A working docker can be found at [here](dockerhub.com/yala/oncotext:0.1.0), and please look to the docker file if you wish to set this up on your server.
 
 <br/>
 
@@ -19,13 +21,14 @@ All system configuration in managed in ```config.py```.
 
 ### Environment Variables
 In order to use OncoText, you have to set the following environment variables:
-    - ```PICKLEDIR``` This is the directory where to store the various train / raw databases you may way to parse.
-    - ```LOGFILE```Where the system will write all error/warning/info logs via pylogger
-    - ```CONFIG_XLSX``` The path of the category configuration excel file. See ``sample_category_excel.xlsx`` for an example. OncoText loads this excel file and interprets all rows with several column entries as categories to try to parse from the path reports.
+
+    - PICKLEDIR : This is the directory where to store the various train / raw databases you may way to parse.
+    - LOGFILE : Where the system will write all error/warning/info logs via pylogger
+    - CONFIG_XLSX : The path of the category configuration excel file. See ``sample_category_excel.xlsx`` for an example. OncoText loads this excel file and interprets all rows with several column entries as categories to try to parse from the path reports.
 
 
 ### Neural net configuation settings
-All Neural Net configuration, including the generation of rationales is defined in config.py. Please post an issue and ask if you'd like advice on tuning this. [text_nn](https://github.com/yala/text_nn) still lacks full documentation, but given interest, we will work on making that more public suitable.
+All Neural Net configuration, including the generation of rationales is defined in config.py. Please post an issue and ask if you'd like advice on tuning this. All the Neural Net code is in [text_nn](https://github.com/yala/text_nn), and lacks full documentation, but given interest, we will work on making that more public suitable.
 <br/>
 
 
@@ -67,7 +70,8 @@ assert predResp.status_code==200
 
 
 ## OncoText Report Structure
-OncoText relies on a couple special keys to know whats what. Under the hood, it stores all databases a as python lists of python dictionaries. Each dictionary represents a Pathology report for a single breast, which preprocessing splitting bilteral cases, and the ```RAW_REPORT_TEXT_KEY``` indicated the key of the full text. There are several other special keys, all of which specified in ```config.py```, and the handle things like post prediction pruning, what field is the date field, etc. For questions about this, feel free to reach out to @yala.
+OncoText relies on a couple special keys to know whats what. Under the hood, it stores all databases a as python lists of python dictionaries. Each dictionary represents a Pathology report for a single breas the ```RAW_REPORT_TEXT_KEY``` indicated the key of the full text. There are several other special keys, all of which specified in ```config.py```, and the handle things like post prediction pruning, what field is the date field, etc. For questions about this, feel free to reach out to @yala or post an issue. If there is interest, I'll update the documentation accordingly.
+
 
 <br/>
 
