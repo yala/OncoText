@@ -9,6 +9,13 @@ OncoText is an information extraction service designed to parse structured data 
 
 All pretrained models are available on a [docker image](dockerhub.com/yala/oncotext:0.1.0), and were trained/developed in a collaboration with Dr. Kevin Hughes from Mass General, and Regina Barzilay's Lab at MIT CSAIL. All models were trained on Partners Healthcare Pathology reports, and results may transfer poorly to pathology reports from other venues, if the phrasing there is significantly diferent. OncoText is currently deployed at Mass General and is designed to support adding new categories, new training data, and new sets of documents to parse. In principle, this can be used on any free text reports given you provide training data via the API. It's setup as a webservice and can be accessed through HTTP requests.
 
+You can run the docker as follows:
+```
+
+ sudo docker run -it -p 5000:5000 -e LOGFILE=/OncoText/LOGS -e PICKLEDIR=/OncoText/oncotext_files -e CONFIG_XLSX=/OncoText/config.xlsx  -v PATH_TO_YOUR_LOGFILE:/OncoText/LOGS  -v PATH_TO_DB_DIR:/OncoText/oncotext_files  -v PATH_TO_CONFIG_EXCEL:/OncoText/config.xlsx  yala/oncotext:0.1.0
+
+```
+
 <br/>
 
 ## System Requirements
