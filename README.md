@@ -60,16 +60,16 @@ assert addUnlabeledResp.status_code==200
 ```
 
 ### train
-This request tells OncoText to train its neural net based on the training reports you've previously added through ``addTrain``. This trains a seperate neural network for each extraction. In practice, we found indepdent models out performed ones jointly trained.
+This request tells OncoText to train its neural net based on the training reports you've previously added through ``addTrain``. This trains a seperate neural network for each extraction. In practice, we found indepdent models out performed ones jointly trained. OncoText will return Development set accuracies in the HTTP Response. 
 ```
 trainResp = requests.post("http://localhost:5000/train", params={"name":'default'})
 assert trainResp.status_code==200
 ```
 
 ### predict
-After OncoText has trained, this request tells OncoText to run its prediction algorithm on the unlabeled reports you have previously added through ``addUnlabeled``.
+After OncoText has trained, this request tells OncoText to run its prediction algorithm on the unlabeled reports you have previously added through ``addUnlabeled``. You also send a set of evaluation sets, and OncoText will score it's predictions on the unlabled set against matching records in the evaluation set. The accuracies are returned in the HTTP response. 
 ```
-predResp = requests.post("http://localhost:5000/predict", params={"name":'default'})
+predResp = requests.post("http://localhost:5000/predict", params={"name":'default'}, data=evaluation_sets)
 assert predResp.status_code==200
 ```
 <br/>
