@@ -55,7 +55,13 @@ class PathologyDataset(data.Dataset):
     ## Convert one line from beer dataset to {Text, Tensor, Labels}
     def processLine(self, raw_text):
         text = raw_text.split()[:self.max_length]
-        x =  [self.hash(token) for token in text]
+        text_indx =  [self.hash(token) for token in text]
+        if len(text_indx) < self.max_length:
+            nil_indx = 0
+            text_indx.extend( [nil_indx for _ in range(self.max_length - len(text_indx))])
+
+        x =  torch.LongTensor([text_indx])
+
         return x
 
     def __len__(self):
