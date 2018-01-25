@@ -17,7 +17,7 @@ You can run the docker as follows:
 ```
 
 You can download the model snapshots from:
-
+https://s3.amazonaws.com/oncotext-models/model-snapshots.tar.gz
 
 <br/>
 
