@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM nvidia/cuda:8.0-cudnn7-runtime-ubuntu16.04
+FROM nvidia/cuda:8.0-cudnn7-devel-ubuntu16.04
 
 # Set the working directory to /OncoServe
 WORKDIR /OncoText
