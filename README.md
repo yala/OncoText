@@ -12,9 +12,12 @@ All pretrained models are available on a [docker image](dockerhub.com/yala/oncot
 You can run the docker as follows:
 ```
 
- sudo nvidia-docker run -it -p 5000:5000 -e LOGFILE=/OncoText/LOGS -e PICKLEDIR=/OncoText/oncotext_files -e CONFIG_XLSX=/OncoText/config.xlsx  -v PATH_TO_YOUR_LOGFILE:/OncoText/LOGS  -v PATH_TO_DB_DIR:/OncoText/oncotext_files  -v PATH_TO_CONFIG_EXCEL:/OncoText/config.xlsx  yala/oncotext:0.1.0
+ sudo nvidia-docker run -it -p 5000:5000 -e LOGFILE=/OncoText/LOGS -e PICKLE_DIR=/OncoText/oncotext_files -e SNAPSHOT_DIR=/OncoText/snapshot -e CONFIG_XLSX=/OncoText/config.xlsx  -v PATH_TO_YOUR_LOGFILE:/OncoText/LOGS  -v PATH_TO_DB_DIR:/OncoText/oncotext_files  -v PATH_TO_CONFIG_EXCEL:/OncoText/config.xlsx -v PATH_TO_SNAPSHOT:/OncoText/snapshot  yala/oncotext:0.1.0
 
 ```
+
+You can download the model snapshots from:
+
 
 <br/>
 
@@ -29,7 +32,8 @@ All system configuration in managed in ```config.py```.
 ### Environment Variables
 In order to use OncoText, you have to set the following environment variables:
 
-    - PICKLEDIR : This is the directory where to store the various train / raw databases you may way to parse.
+    - PICKLE_DIR : This is the directory where to store the various train / raw databases you may way to parse.
+    - SNAPSHHOT_DIR : This is the directory where to store model snapshots.
     - LOGFILE : Where the system will write all error/warning/info logs via pylogger
     - CONFIG_XLSX : The path of the category configuration excel file. See ``sample_category_excel.xlsx`` for an example. OncoText loads this excel file and interprets all rows with several column entries as categories to try to parse from the path reports.
 
