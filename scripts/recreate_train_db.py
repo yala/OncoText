@@ -13,13 +13,13 @@ import argparse
 
 parser = argparse.ArgumentParser(description='Reproduce Db from invariants')
 
-parser.add_argument('--train_db_outpath',  type=str, default='pickle_files/reportDBAPI_train.p', help="Place where reports are stored ")
-parser.add_argument('--base_db_outpath',  type=str, default='pickle_files/reportDB_base_train.p', help="Place where reports are stored ")
-parser.add_argument('--train_db_outpath_intermediate',  type=str, default='pickle_files/reportDBAPI_train.p.intermediate', help="Place where reports are stored ")
+parser.add_argument('--train_db_outpath',  type=str, default=Config.PICKLEDIR+'reportDBAPI_train.p', help="Place where reports are stored ")
+parser.add_argument('--base_db_outpath',  type=str, default=Config.PICKLEDIR+'reportDB_base_train.p', help="Place where reports are stored ")
+parser.add_argument('--train_db_outpath_intermediate',  type=str, default=Config.PICKLEDIR+'reportDBAPI_train.p.intermediate', help="Place where reports are stored ")
 
 
-parser.add_argument('--source_db_path',  type=str, default='pickle_files/reportDB+red+clean.p', help="Place where original kevin+taghian reports annotations were collected")
-parser.add_argument('--source_addit_db_path',  type=str, default='pickle_files/additionalTrainRepsMar10.p', help="Place where first pickle file of addit annotations was stored")
+parser.add_argument('--source_db_path',  type=str, default=Config.PICKLEDIR+'reportDB+red+clean.p', help="Place where original kevin+taghian reports annotations were collected")
+parser.add_argument('--source_addit_db_path',  type=str, default=Config.PICKLEDIR+'additionalTrainRepsMar10.p', help="Place where first pickle file of addit annotations was stored")
 
 parser.add_argument('--extra_annotation_dir',  type=str, default='/home/nlp/Dropbox/NLP_Extraction/ForTraining/PastTraining', help="Dir of addition xlsx and xmls")
 
