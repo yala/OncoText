@@ -42,13 +42,16 @@ def score_on_test_set(reports, test_set, config, logger):
 
         preds = [text_to_pred[t][d] for t in texts if d in text_to_pred[t] and d in text_to_gold[t]]
         golds =  [text_to_gold[t][d] for t in texts if d in text_to_pred[t] and d in text_to_gold[t]]
-
+                
         if len(preds) == 0 or len(golds) == 0:
             logger.warn("evaluation [{}] - skipping because num preds {}, num golds {}".format(d, len(preds), len(golds)))
             continue
 
         res['ACCURACY'] = sklearn.metrics.accuracy_score(preds, golds)
-        try: 
+        try:
+            preds = [int(val) for val in preds]
+            golds = [int(val) for val in golds]
+            
             res['PRECISION'] = sklearn.metrics.precision_score(preds, golds)
             res['RECALL'] = sklearn.metrics.recall_score(preds, golds)
             res['F1'] = sklearn.metrics.f1_score(preds, golds)
