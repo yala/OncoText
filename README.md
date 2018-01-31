@@ -7,7 +7,7 @@ OncoText is an information extraction service designed to parse structured data 
    - [Rationalizing Neural Predictions](https://people.csail.mit.edu/taolei/papers/emnlp16_rationale.pdf). EMNLP 2016
 
 
-All pretrained models are available on a [docker image](dockerhub.com/yala/oncotext:0.1.0), and were trained/developed in a collaboration with Dr. Kevin Hughes from Mass General, and Regina Barzilay's Lab at MIT CSAIL. All models were trained on Partners Healthcare Pathology reports, and results may transfer poorly to pathology reports from other venues, if the phrasing there is significantly diferent. OncoText is currently deployed at Mass General and is designed to support adding new categories, new training data, and new sets of documents to parse. In principle, this can be used on any free text reports given you provide training data via the API. It's setup as a webservice and can be accessed through HTTP requests.
+All pretrained models are available on a [docker image](https://hub.docker.com/r/yala/oncotext/), and were trained/developed in a collaboration with Dr. Kevin Hughes from Mass General, and Regina Barzilay's Lab at MIT CSAIL. All models were trained on Partners Healthcare Pathology reports, and results may transfer poorly to pathology reports from other venues, if the phrasing there is significantly diferent. OncoText is currently deployed at Mass General and is designed to support adding new categories, new training data, and new sets of documents to parse. In principle, this can be used on any free text reports given you provide training data via the API. It's setup as a webservice and can be accessed through HTTP requests.
 
 You can run the docker as follows:
 ```
@@ -22,7 +22,8 @@ https://s3.amazonaws.com/oncotext-models/model-snapshots.tar.gz
 <br/>
 
 ## System Requirements
-We recommend a GPU machine for larger databases and heavier training loads. If running OncoWeb, it should be run a seperate CPU instance such that it doesn't compete for resources. A working docker can be found at [here](dockerhub.com/yala/oncotext:0.1.0), and please look to the docker file if you wish to set this up on your server.
+[Docker](https://docs.docker.com/install/) is the only real requirment. 
+We recommend a GPU machine for larger databases and heavier training loads. If running OncoWeb, it should be run a seperate CPU instance such that it doesn't compete for resources. A working docker can be found at [here](https://hub.docker.com/r/yala/oncotext/), and please look to the docker file if you wish to set this up on your server.
 
 <br/>
 
