@@ -21,7 +21,7 @@ parser.add_argument('--train_db_outpath_intermediate',  type=str, default=Config
 parser.add_argument('--source_db_path',  type=str, default=Config.PICKLEDIR+'reportDB+red+clean.p', help="Place where original kevin+taghian reports annotations were collected")
 parser.add_argument('--source_addit_db_path',  type=str, default=Config.PICKLEDIR+'additionalTrainRepsMar10.p', help="Place where first pickle file of addit annotations was stored")
 
-parser.add_argument('--extra_annotation_dir',  type=str, default='/home/nlp/Dropbox/NLP_Extraction/ForTraining/PastTraining', help="Dir of addition xlsx and xmls")
+parser.add_argument('--extra_annotation_dir',  type=str, default='/Mounts/Isilon/Dropbox/NLP_Extraction/ForTraining/PastTraining', help="Dir of addition xlsx and xmls")
 
 
 SUCCES_STR = "Reproduced train db!"
@@ -38,7 +38,7 @@ def parse_annotation_file(path):
     if path.endswith('xml'):
         return parsing.parse_XML(path)
     elif path.endswith('xlsx'):
-        return parsing.parse_XLS(path)
+        return parsing.parse_XLS_reports(path)
     else:
         return []
 
@@ -121,6 +121,10 @@ if __name__ == "__main__":
             report['NodeTissue'] = report['Node_tissue']
             del report['Node_tissue']
 
+        if 'Phylodes' in report:
+            report['Phyllodes'] = report['Phylodes']
+            del report['Phylodes']
+            
     ## 4. Change all labels to new convention
 
     LABEL_TO_NEW_LABEL_MAP = {

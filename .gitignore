@@ -117,3 +117,6 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+# Save files
+\#*
