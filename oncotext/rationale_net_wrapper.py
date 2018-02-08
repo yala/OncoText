@@ -20,6 +20,8 @@ def parse_epoch_stats_for_dev_results(diagnosis, epoch_stats, logger):
     aspect_result['ACCURACY'] = epoch_stats['dev_metric'][best_epoch_indx]
     logger.info("RN Wrapper. {} Accuracy={}".format(
                 diagnosis, aspect_result['ACCURACY']))
+    logger.info("RN Wrapper. {} Confusion_Matrix={}".format(
+                diagnosis, epoch_stats['dev_confusion_matrix'][best_epoch_indx]))
 
     return aspect_result
 
