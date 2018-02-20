@@ -7,7 +7,7 @@ OncoText is an information extraction service designed to parse structured data 
    - [Rationalizing Neural Predictions](https://people.csail.mit.edu/taolei/papers/emnlp16_rationale.pdf). EMNLP 2016
 
 
-All pretrained models are available on a [docker image](https://hub.docker.com/r/yala/oncotext/), and were trained/developed in a collaboration with Dr. Kevin Hughes from Mass General, and Regina Barzilay's Lab at MIT CSAIL. All models were trained on Partners Healthcare Pathology reports, and results may transfer poorly to pathology reports from other venues, if the phrasing there is significantly diferent. OncoText is currently deployed at Mass General and is designed to support adding new categories, new training data, and new sets of documents to parse. In principle, this can be used on any free text reports given you provide training data via the API. It's setup as a webservice and can be accessed through HTTP requests.
+OncoText can be run a [docker container](https://hub.docker.com/r/yala/oncotext/). There is a large set of pretrained models, all of which were trained/developed in a collaboration with Dr. Kevin Hughes from Mass General, and Regina Barzilay's Lab at MIT CSAIL. All models were trained on Partners Healthcare Pathology reports, and results may transfer poorly to pathology reports from other venues, if the phrasing there is significantly diferent. All pretrained models are stored on AWS and are available upon request. Note that different extractions have different performances depending on the difficulty of the task and the volume of training data so far. OncoText is currently deployed at Mass General and is designed to support adding new categories, new training data, and new sets of documents to parse. In principle, this can be used on any free text reports given you provide training data via the API. It's setup as a webservice and can be accessed through HTTP requests.
 
 You can run the docker as follows:
 ```
@@ -16,7 +16,7 @@ You can run the docker as follows:
 
 ```
 
-For pretrained model snapshots, please reach out to @yala. There is a link on AWS for them.
+For pretrained model snapshots, please reach out to @yala.
 
 <br/>
 
