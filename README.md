@@ -89,7 +89,7 @@ OncoText relies on a couple special keys to know whats what. Under the hood, it 
 
 
 ## Intergration and Deployment
-Oncotext is primarily used in conjunction with [OncoManage](https://github.com/yala/OncoManage). OncoManage sets up a folder structure where new training and unlabeled reports will automatically be added OncoText, and manages reporting on evaluation sets. It also handles exports to various databases, email notifications, and interfacing with a OncoWeb. OncoWeb is a [user interface](https://github.com/clarali/OncoWeb) for users to access and correct the machine's predictions. We are in the process of preparing all linked repos for public release. Some things are more tightly linked with our deployment at Mass General, but we hope that these tools will prove useful to the community.
+Oncotext is primarily used in conjunction with [OncoManage](https://github.com/yala/OncoManage). OncoManage sets up a folder structure where new training and unlabeled reports will automatically be added OncoText, and manages reporting on evaluation sets. It also handles exports to various databases, email notifications, and interfacing with a OncoWeb. OncoWeb is a [user interface](https://github.com/clarali/OncoText_Web) for users to access and correct the machine's predictions. We are in the process of preparing all linked repos for public release. Some things are more tightly linked with our deployment at Mass General, but we hope that these tools will prove useful to the community.
 
 <br/>
 
