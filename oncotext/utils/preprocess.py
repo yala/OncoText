@@ -86,13 +86,18 @@ def segment_report(report, raw_text_key, preprocessed_text_key, side_key, logger
 
     contains_side_annotation = side_key in report
 
-    if is_bilateral(full_text) and not contains_side_annotation:
+    if is_bilateral(full_text):
         segmented_text = segment_text(full_text)
-        for side, s_text in segmented_text.items():
-            segemented_r = copy.deepcopy(report)
-            segemented_r[side_key] = side
-            segemented_r[preprocessed_text_key] = s_text
-            segmented_reports.append(segemented_r)
+        if contains_side_annotation:
+            segmented_r = copy.deepcopy(report)
+            segmented_r[preprocessed_text_key] = segmented_text[report[side_key]]
+            segmented_reports = [segmented_r]
+        else:
+            for side, s_text in segmented_text.items():
+                segmented_r = copy.deepcopy(report)
+                segmented_r[side_key] = side
+                segmented_r[preprocessed_text_key] = s_text
+                segmented_reports.append(segmented_r)
     else:
         report[preprocessed_text_key] = full_text
         segmented_reports = [report]
@@ -111,6 +116,9 @@ def set_uuid(report):
         report['MRN'] = report['MRNPlusX']
     if not 'MRN' in report:
         report['MRN'] = 'Unknown'
+
+    if not 'EMPI' in report:
+        report['EMPI'] = '999999999'
 
     return report
 
