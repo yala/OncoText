@@ -34,13 +34,14 @@ class Config(object):
     PREPROCESSED_REPORT_TEXT_KEY = "Report_Text_Segmented"
     REPORT_TIME_KEY = "Report_Date_Time"
     SIDE_KEY = "BreastSide"
-    PATIENT_ID_KEY = "MRN"
+    PATIENT_ID_KEY = "EMPI"
     PRUNE_KEY = "Organ"
     PRUNE_AFTER_PREDICT = False
 
     COLUMN_KEYS = parsing.parse_XLS( os.environ['CONFIG_XLSX'])
 
     DIAGNOSES = {k: v for k, v in COLUMN_KEYS.items() if len(v) > 0}
+    #DIAGNOSES = {"Her2_IHC": ['0', '1', '2', '3', '9']}
     post_diagnoses = copy.deepcopy(DIAGNOSES)
     post_diagnoses['cancer'] = ['0', '1']
     post_diagnoses['atypia'] = ['0', '1']
@@ -73,7 +74,8 @@ class Config(object):
         'num_layers': 1,
         'filters': [3,4,5],
         'filter_num': 100,
-        'epochs': 25,
+        'steps': 1500,
+        'max_epochs': 75,
         'patience': 5,
         'snapshot': None,
         'objective':'cross_entropy',

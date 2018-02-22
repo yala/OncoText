@@ -116,7 +116,7 @@ def aggregate_episodes(reports, config):
     episode_span = config['SIX_MONTHS']
     ## Group reports by patient
     for i,r  in enumerate(reports):
-        patientID =r[patientIDkey]
+        patientID = r[patientIDkey]
         side = r[sideKey]
 
         if not patientID in patientDict:

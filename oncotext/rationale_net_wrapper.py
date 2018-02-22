@@ -45,6 +45,8 @@ def train(name, reports, config, logger):
             train_data, dev_data = dataset_factory.get_oncotext_dataset_train(
                 reports, label_maps, args, text_key, len(embeddings))
 
+            args.epochs = min(args.max_epochs, int(args.steps / (len(train_data) / args.batch_size)))
+            
             if not os.path.isdir(args.model_dir.format(name)):
                 os.makedirs(args.model_dir.format(name))
             args.model_path = os.path.join( args.model_dir.format(name),
