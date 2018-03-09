@@ -56,15 +56,16 @@ def apply_corrections(reportDB, trainDB, config, logger):
 
     for t in reportDB:
         text = t[text_key]
-        t['validated'] = text in textToLabel
         if text in textToLabel:
-            t['train'] = 1
+            t['train'] = "1"
             for d in textToLabel[text]:
                 if d in diagnoses:
                     if d in t and t[d] != textToLabel[text][d]:
                         corrections += 1
                     t[d] = textToLabel[text][d]
                     num_match += 1
+        else:
+            t['train'] = "0"
     logger.info("apply corrections - num corrections: {} . num match: {}".format(corrections, num_match))
 
     return reportDB
