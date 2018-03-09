@@ -13,16 +13,17 @@ class Args(object):
 class Config(object):
     PORT = 5000
     DEFAULT_USERNAME = 'default'
-    PICKLEDIR = os.environ['PICKLEDIR']
+    PICKLE_DIR = os.environ['PICKLE_DIR']
+    SNAPSHOT_DIR = os.environ['SNAPSHOT_DIR']
 
-    DB_TRAIN_PATH = os.path.join(PICKLEDIR, "reportDBAPI_train.p")
-    DB_BASE_PATH = os.path.join(PICKLEDIR, "reportDB_base_train.p")
-    DB_UNLABLED_PATH = os.path.join(PICKLEDIR, "reportDBAPI_test.p")
-    DB_NON_BREAST_PATH = os.path.join(PICKLEDIR, "reportDBAPI_nonbreasts.p")
+    DB_TRAIN_PATH = os.path.join(PICKLE_DIR, "reportDBAPI_train.p")
+    DB_BASE_PATH = os.path.join(PICKLE_DIR, "reportDB_base_train.p")
+    DB_UNLABLED_PATH = os.path.join(PICKLE_DIR, "reportDBAPI_test.p")
+    DB_NON_BREAST_PATH = os.path.join(PICKLE_DIR, "reportDBAPI_nonbreasts.p")
     EMBEDDING_PATH = "pickle_files/hash_embeddings.p"
 
-    if not os.path.exists(PICKLEDIR):
-         os.makedirs(PICKLEDIR)
+    if not os.path.exists(PICKLE_DIR):
+         os.makedirs(PICKLE_DIR)
          pickle.dump({}, open(DB_TRAIN_PATH, 'wb'))
          pickle.dump([], open(DB_BASE_PATH,'wb'))
          pickle.dump({}, open(DB_UNLABELED_PATH, 'wb'))
@@ -80,7 +81,7 @@ class Config(object):
         'objective':'cross_entropy',
         'num_gpus': 1,
         'save_dir': 'snapshot',
-        'model_dir': 'snapshot/{}',
+        'model_dir': SNAPSHOT_DIR+'/{}',
         'model_file': 'oncotext_{}.pt',
         'train_split': .80,
         'use_gumbel': True,

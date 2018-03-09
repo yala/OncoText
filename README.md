@@ -7,19 +7,22 @@ OncoText is an information extraction service designed to parse structured data 
    - [Rationalizing Neural Predictions](https://people.csail.mit.edu/taolei/papers/emnlp16_rationale.pdf). EMNLP 2016
 
 
-All pretrained models are available on a [docker image](dockerhub.com/yala/oncotext:0.1.0), and were trained/developed in a collaboration with Dr. Kevin Hughes from Mass General, and Regina Barzilay's Lab at MIT CSAIL. All models were trained on Partners Healthcare Pathology reports, and results may transfer poorly to pathology reports from other venues, if the phrasing there is significantly diferent. OncoText is currently deployed at Mass General and is designed to support adding new categories, new training data, and new sets of documents to parse. In principle, this can be used on any free text reports given you provide training data via the API. It's setup as a webservice and can be accessed through HTTP requests.
+OncoText can be run a [docker container](https://hub.docker.com/r/yala/oncotext/). There is a large set of pretrained models, all of which were trained/developed in a collaboration with Dr. Kevin Hughes from Mass General, and Regina Barzilay's Lab at MIT CSAIL. All models were trained on Partners Healthcare Pathology reports, and results may transfer poorly to pathology reports from other venues, if the phrasing there is significantly diferent. All pretrained models are stored on AWS and are available upon request. Note that different extractions have different performances depending on the difficulty of the task and the volume of training data so far. OncoText is currently deployed at Mass General and is designed to support adding new categories, new training data, and new sets of documents to parse. In principle, this can be used on any free text reports given you provide training data via the API. It's setup as a webservice and can be accessed through HTTP requests.
 
 You can run the docker as follows:
 ```
 
- sudo nvidia-docker run -it -p 5000:5000 -e LOGFILE=/OncoText/LOGS -e PICKLEDIR=/OncoText/oncotext_files -e CONFIG_XLSX=/OncoText/config.xlsx  -v PATH_TO_YOUR_LOGFILE:/OncoText/LOGS  -v PATH_TO_DB_DIR:/OncoText/oncotext_files  -v PATH_TO_CONFIG_EXCEL:/OncoText/config.xlsx  yala/oncotext:0.1.0
+ sudo nvidia-docker run -it -p 5000:5000 -e LOGFILE=/OncoText/LOGS -e PICKLE_DIR=/OncoText/oncotext_files -e SNAPSHOT_DIR=/OncoText/snapshot -e CONFIG_XLSX=/OncoText/config.xlsx  -v PATH_TO_YOUR_LOGFILE:/OncoText/LOGS  -v PATH_TO_DB_DIR:/OncoText/oncotext_files  -v PATH_TO_CONFIG_EXCEL:/OncoText/config.xlsx -v PATH_TO_SNAPSHOT:/OncoText/snapshot  yala/oncotext:0.1.0
 
 ```
+
+For pretrained model snapshots, please reach out to @yala.
 
 <br/>
 
 ## System Requirements
-We recommend a GPU machine for larger databases and heavier training loads. If running OncoWeb, it should be run a seperate CPU instance such that it doesn't compete for resources. A working docker can be found at [here](dockerhub.com/yala/oncotext:0.1.0), and please look to the docker file if you wish to set this up on your server.
+[Docker](https://docs.docker.com/install/) is the only real requirment. 
+We recommend a GPU machine for larger databases and heavier training loads. If running OncoWeb, it should be run a seperate CPU instance such that it doesn't compete for resources. A working docker can be found at [here](https://hub.docker.com/r/yala/oncotext/), and please look to the docker file if you wish to set this up on your server.
 
 <br/>
 
@@ -29,7 +32,8 @@ All system configuration in managed in ```config.py```.
 ### Environment Variables
 In order to use OncoText, you have to set the following environment variables:
 
-    - PICKLEDIR : This is the directory where to store the various train / raw databases you may way to parse.
+    - PICKLE_DIR : This is the directory where to store the various train / raw databases you may way to parse.
+    - SNAPSHHOT_DIR : This is the directory where to store model snapshots.
     - LOGFILE : Where the system will write all error/warning/info logs via pylogger
     - CONFIG_XLSX : The path of the category configuration excel file. See ``sample_category_excel.xlsx`` for an example. OncoText loads this excel file and interprets all rows with several column entries as categories to try to parse from the path reports.
 
@@ -85,7 +89,7 @@ OncoText relies on a couple special keys to know whats what. Under the hood, it 
 
 
 ## Intergration and Deployment
-Oncotext is primarily used in conjunction with [OncoManage](https://github.com/yala/OncoManage). OncoManage sets up a folder structure where new training and unlabeled reports will automatically be added OncoText, and manages reporting on evaluation sets. It also handles exports to various databases, email notifications, and interfacing with a OncoWeb. OncoWeb is a [user interface](https://github.com/clarali/OncoWeb) for users to access and correct the machine's predictions. We are in the process of preparing all linked repos for public release. Some things are more tightly linked with our deployment at Mass General, but we hope that these tools will prove useful to the community.
+Oncotext is primarily used in conjunction with [OncoManage](https://github.com/yala/OncoManage). OncoManage sets up a folder structure where new training and unlabeled reports will automatically be added OncoText, and manages reporting on evaluation sets. It also handles exports to various databases, email notifications, and interfacing with a OncoWeb. OncoWeb is a [user interface](https://github.com/clarali/OncoText_Web) for users to access and correct the machine's predictions. We are in the process of preparing all linked repos for public release. Some things are more tightly linked with our deployment at Mass General, but we hope that these tools will prove useful to the community.
 
 <br/>
 
