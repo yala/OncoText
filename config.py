@@ -36,7 +36,7 @@ class Config(object):
     REPORT_TIME_KEY = "Report_Date_Time"
     SIDE_KEY = "BreastSide"
     PATIENT_ID_KEY = "EMPI"
-    PRUNE_KEY = "Organ"
+    PRUNE_KEY = "OrganBreast"
     PRUNE_AFTER_PREDICT = False
 
     COLUMN_KEYS = parsing.parse_XLS( os.environ['CONFIG_XLSX'])
