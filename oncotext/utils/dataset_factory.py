@@ -1,5 +1,6 @@
 import random
 import oncotext.datasets.patholgy_dataset
+import oncotext.datasets.patholgy_dataset_tagging
 import pickle
 
 def get_oncotext_dataset_train(all_reports, label_maps, args, text_key, vocab_size):
@@ -11,14 +12,30 @@ def get_oncotext_dataset_train(all_reports, label_maps, args, text_key, vocab_si
     train_reports = reports[: split_indx]
     dev_reports = reports[split_indx:]
 
-    train_data = oncotext.datasets.patholgy_dataset.PathologyDataset(
+    if label_maps[args.aspect][0] == "NUM":
+        train_data = oncotext.datasets.patholgy_dataset_tagging.PathologyDatasetTagging(
                                                 args,
                                                 train_reports,
                                                 label_maps,
                                                 text_key,
                                                 'train',
                                                 vocab_size=vocab_size)
-    dev_data = oncotext.datasets.patholgy_dataset.PathologyDataset(
+        dev_data = oncotext.datasets.patholgy_dataset_tagging.PathologyDatasetTagging(
+                                                args,
+                                                dev_reports,
+                                                label_maps,
+                                                text_key,
+                                                'dev',
+                                                vocab_size=vocab_size)
+    else:
+        train_data = oncotext.datasets.patholgy_dataset.PathologyDataset(
+                                                args,
+                                                train_reports,
+                                                label_maps,
+                                                text_key,
+                                                'train',
+                                                vocab_size=vocab_size)
+        dev_data = oncotext.datasets.patholgy_dataset.PathologyDataset(
                                                 args,
                                                 dev_reports,
                                                 label_maps,
@@ -28,11 +45,13 @@ def get_oncotext_dataset_train(all_reports, label_maps, args, text_key, vocab_si
     return train_data, dev_data
 
 
-
-
 def get_oncotext_dataset_test(reports, label_maps, args, text_key, vocab_size):
-    test_data = oncotext.datasets.patholgy_dataset.PathologyDataset(args,reports, label_maps, text_key, 'test', vocab_size=vocab_size)
+    if label_maps[args.aspect][0] == "NUM":
+        test_data = oncotext.datasets.patholgy_dataset_tagging.PathologyDatasetTagging(args, reports, label_maps, text_key, 'test', vocab_size=vocab_size)
+    else:
+        test_data = oncotext.datasets.patholgy_dataset.PathologyDataset(args, reports, label_maps, text_key, 'test', vocab_size=vocab_size)        
     return test_data
+
 
 def get_embedding_tensor(config, args):
     embeddings =  pickle.load(open(config['EMBEDDING_PATH'],'rb'))

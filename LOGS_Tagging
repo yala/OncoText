@@ -1,0 +1,46 @@
+2018-03-27 15:16:06,819 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-03-27 15:16:06,819 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-03-27 15:16:06,849 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception module 'oncotext.datasets.patholgy_dataset_tagging' has no attribute 'PathologyDatasetTagging'
+2018-03-27 15:16:06,849 - oncotext - INFO - RN Wrapper: Training model for DCIS
+2018-03-27 15:18:24,504 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-03-27 15:18:24,504 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-03-27 15:18:24,539 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception 'matching'
+2018-03-27 15:19:37,232 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-03-27 15:19:37,233 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-03-27 15:20:29,336 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception 'Args' object has no attribute 'num_class'
+2018-03-27 15:22:07,001 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-03-27 15:22:07,002 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-03-27 15:23:31,961 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception size mismatch at /pytorch/torch/lib/THC/generic/THCTensorMathBlas.cu:243
+2018-03-27 15:52:20,297 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-03-27 15:52:20,298 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-03-27 15:53:32,912 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception size mismatch at /pytorch/torch/lib/THC/generic/THCTensorMathBlas.cu:243
+2018-03-27 15:56:13,968 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-03-27 15:56:13,968 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-03-27 15:57:22,269 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception list index out of range
+2018-03-27 15:59:43,142 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-03-27 15:59:43,142 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-03-27 16:00:41,199 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception size mismatch at /pytorch/torch/lib/THC/generic/THCTensorMathBlas.cu:243
+2018-03-27 16:04:07,933 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-03-27 16:04:07,933 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-03-27 16:05:35,841 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception size mismatch at /pytorch/torch/lib/THC/generic/THCTensorMathBlas.cu:243
+2018-03-27 16:09:16,268 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-03-27 16:09:16,268 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-03-27 16:10:37,726 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception size mismatch at /pytorch/torch/lib/THC/generic/THCTensorMathBlas.cu:243
+2018-03-27 16:37:41,728 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-03-27 16:37:41,729 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-03-27 16:38:40,114 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception 'val'
+2018-03-27 16:41:28,049 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-03-27 16:41:28,050 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-03-27 16:42:36,768 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception size mismatch at /pytorch/torch/lib/THC/generic/THCTensorMathBlas.cu:243
+2018-03-30 10:47:00,719 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-03-30 10:47:00,720 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-03-30 10:48:41,056 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception size mismatch at /pytorch/torch/lib/THC/generic/THCTensorMathBlas.cu:243
+2018-03-30 10:51:56,791 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-03-30 10:51:56,792 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-03-30 10:53:17,751 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception size mismatch at /pytorch/torch/lib/THC/generic/THCTensorMathBlas.cu:243
+2018-03-30 10:53:17,752 - oncotext - INFO - RN Wrapper: Training model for GradeMaxInvasive
+2018-03-30 10:54:59,106 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-03-30 10:54:59,107 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-03-30 10:56:39,540 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception size mismatch at /pytorch/torch/lib/THC/generic/THCTensorMathBlas.cu:243
+2018-03-30 10:56:39,541 - oncotext - INFO - RN Wrapper: Training model for GradeMaxInvasive
+2018-03-30 10:57:41,535 - oncotext - WARNING - RN Wrapper. GradeMaxInvasive model failed to train! Exception cuda runtime error (2) : out of memory at /pytorch/torch/lib/THC/generic/THCStorage.cu:58

@@ -42,6 +42,13 @@ def train(name, reports, config, logger):
         args.snapshot = None
 
         try:
+            if label_maps[args.aspect][0] == "NUM":
+                args.class_balance = False
+                args.use_as_classifier = False
+            else:
+                args.class_balance = True
+                args.use_as_classifier = True
+            
             train_data, dev_data = dataset_factory.get_oncotext_dataset_train(
                 reports, label_maps, args, text_key, len(embeddings))
 
@@ -103,8 +110,17 @@ def label_reports(name, un_reports, config, logger):
             logger.warn("RN Wrapper. {} model failed to label reports! Following Exception({}). Populating all reports with 0 label".format(diagnosis, e))
             preds = np.zeros(len(test_data), dtype=int)
 
-        for i in range(len(test_data)):
-            prediction = label_maps[diagnosis][preds[i]]
-            test_data.dataset[i][diagnosis] = prediction
+        if label_maps[diagnosis][0] == "NUM":
+            for i in range(len(test_data)):
+                if 1 in preds[i]:
+                    text = test_data.dataset[i][text_key].split()
+                    prediction = text[preds[i].index(1)]
+                    test_data.dataset[i][diagnosis] = prediction
+                else:
+                    test_data.dataset[i][diagnosis] = "NA"
+        else:
+            for i in range(len(test_data)):
+                prediction = label_maps[diagnosis][preds[i]]
+                test_data.dataset[i][diagnosis] = prediction
 
     return test_data.dataset

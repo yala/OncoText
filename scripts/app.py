@@ -167,6 +167,10 @@ def predict():
                                                     config,
                                                     logger)
 
+    pickle.dump(reportDB, open(os.path.join(config['PICKLE_DIR'], 'reportDBAPI_labeled_intermediate.p'), 'wb'))
+
+   # reportDB = pickle.load(open(os.path.join(config['PICKLE_DIR'], 'reportDBAPI_labeled_intermediate.p'), 'rb'))
+    
     train_db = pickle.load(open(DB_TRAIN_PATH,'rb'))
     if name in train_db:
         user_train_db = train_db[name]

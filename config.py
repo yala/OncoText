@@ -11,16 +11,16 @@ class Args(object):
 
 
 class Config(object):
-    PORT = 5000
+    PORT = 3000 #5000
     DEFAULT_USERNAME = 'default'
     PICKLE_DIR = os.environ['PICKLE_DIR']
     SNAPSHOT_DIR = os.environ['SNAPSHOT_DIR']
 
-    DB_TRAIN_PATH = os.path.join(PICKLE_DIR, "reportDBAPI_train.p")
+    DB_TRAIN_PATH = os.path.join(PICKLE_DIR, "trainfortagging.p") #"reportDBAPI_train.p")
     DB_BASE_PATH = os.path.join(PICKLE_DIR, "reportDB_base_train.p")
     DB_UNLABLED_PATH = os.path.join(PICKLE_DIR, "reportDBAPI_test.p")
     DB_NON_BREAST_PATH = os.path.join(PICKLE_DIR, "reportDBAPI_nonbreasts.p")
-    EMBEDDING_PATH = "pickle_files/hash_embeddings.p"
+    EMBEDDING_PATH = os.path.join(PICKLE_DIR, "hash_embeddings.p")
 
     if not os.path.exists(PICKLE_DIR):
          os.makedirs(PICKLE_DIR)
@@ -41,7 +41,8 @@ class Config(object):
 
     COLUMN_KEYS = parsing.parse_XLS( os.environ['CONFIG_XLSX'])
 
-    DIAGNOSES = {k: v for k, v in COLUMN_KEYS.items() if len(v) > 0}
+    DIAGNOSES = {"SizeMaxInvasive": ["NUM"], "GradeMaxInvasive": ['0', '1', '2', '3', '9']}
+    #DIAGNOSES = {k: v for k, v in COLUMN_KEYS.items() if len(v) > 0}
     post_diagnoses = copy.deepcopy(DIAGNOSES)
     post_diagnoses['cancer'] = ['0', '1']
     post_diagnoses['atypia'] = ['0', '1']

@@ -1,6 +1,7 @@
 from operator import itemgetter
 import pickle
 from oncotext.utils.generic import hasCat
+import datetime
 
 def prune_non_breast(reportDB, name, config, logger):
     logger.info("prune_non_breast - Loading non breast reports")
@@ -115,6 +116,11 @@ def aggregate_episodes(reports, config):
     patientIDkey = config['PATIENT_ID_KEY']
     dateKey = config['REPORT_TIME_KEY']
     episode_span = config['SIX_MONTHS']
+
+    for r in reports:
+        if isinstance(r[dateKey], str):
+            r[dateKey] = datetime.datetime.strptime(r[dateKey], '%Y-%m-%dT%H:%M:%S')
+
     ## Group reports by patient
     for i,r  in enumerate(reports):
         patientID = r[patientIDkey]

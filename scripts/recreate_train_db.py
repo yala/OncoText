@@ -124,6 +124,9 @@ if __name__ == "__main__":
         if 'Phylodes' in report:
             report['Phyllodes'] = report['Phylodes']
             del report['Phylodes']
+
+        if 'Organ' in report and 'OrganBreast' not in report:
+            report['OrganBreast'] = report['Organ']
             
     ## 4. Change all labels to new convention
 
