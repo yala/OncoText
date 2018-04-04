@@ -106,6 +106,12 @@ def generate_automatic_feilds(reportDB, config):
             elif r['Her2_IHC'] in ['0', '1', '2']:
                 r['her2'] = '0'
 
+        if 'DCIS' in r and r['DCIS'] == '0':
+            r['GradeMaxDCIS'] = '9'
+
+        if 'CancerInvasive' in r and r['CancerInvasive'] == '0':
+            r['GradeMaxInvasive'] = '9'
+
     return reportDB
 
 

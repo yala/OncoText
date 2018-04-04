@@ -44,3 +44,52 @@
 2018-03-30 10:56:39,540 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception size mismatch at /pytorch/torch/lib/THC/generic/THCTensorMathBlas.cu:243
 2018-03-30 10:56:39,541 - oncotext - INFO - RN Wrapper: Training model for GradeMaxInvasive
 2018-03-30 10:57:41,535 - oncotext - WARNING - RN Wrapper. GradeMaxInvasive model failed to train! Exception cuda runtime error (2) : out of memory at /pytorch/torch/lib/THC/generic/THCStorage.cu:58
+2018-04-04 12:22:46,945 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-04 12:22:46,945 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-04 12:23:06,627 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception 'NoneType' object has no attribute 'cuda'
+2018-04-04 12:23:06,627 - oncotext - INFO - RN Wrapper: Training model for GradeMaxInvasive
+2018-04-04 12:34:06,979 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-04 12:34:06,979 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-04 12:34:23,925 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception forward() got an unexpected keyword argument 'mask'
+2018-04-04 12:34:23,926 - oncotext - INFO - RN Wrapper: Training model for GradeMaxInvasive
+2018-04-04 12:37:34,325 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-04 12:37:34,325 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-04 12:54:44,330 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception name 'hidden' is not defined
+2018-04-04 12:56:05,593 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-04 12:56:05,594 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-04 12:56:44,015 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception Expected object of type Variable[torch.cuda.LongTensor] but found type Variable[torch.cuda.FloatTensor] for argument #1 'target'
+2018-04-04 12:58:36,327 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-04 12:58:36,327 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-04 12:59:16,589 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception multi-target not supported at /pytorch/torch/lib/THCUNN/generic/ClassNLLCriterion.cu:16
+2018-04-04 13:01:46,011 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-04 13:01:46,011 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-04 13:05:01,751 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception 
+2018-04-04 14:03:45,884 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-04 14:03:45,885 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-04 14:04:22,407 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception Expected 2 or 4 dimensions (got 3)
+2018-04-04 14:04:57,887 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-04 14:04:57,888 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-04 14:13:55,252 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception 
+2018-04-04 14:15:33,339 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-04 14:15:33,340 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-04 14:16:14,012 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception multi-target not supported at /pytorch/torch/lib/THCUNN/generic/ClassNLLCriterion.cu:16
+2018-04-04 14:16:21,796 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-04 14:16:21,796 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-04 14:18:57,717 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception 
+2018-04-04 14:21:15,452 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-04 14:21:15,453 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-04 14:21:42,156 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception Found input variables with inconsistent numbers of samples: [18, 12960]
+2018-04-04 14:22:17,872 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-04 14:22:17,872 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-04 14:24:08,588 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception 
+2018-04-04 14:26:32,348 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-04 14:26:32,348 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-04 14:31:18,735 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception 
+2018-04-04 14:33:18,003 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-04 14:33:18,003 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-04 14:33:54,402 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception 'list' object has no attribute 'view'
+2018-04-04 14:35:52,395 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-04 14:35:52,395 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-04 14:37:33,763 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception 
+2018-04-04 14:37:48,512 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-04 14:37:48,513 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive

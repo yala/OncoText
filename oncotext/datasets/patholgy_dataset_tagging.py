@@ -32,7 +32,7 @@ class PathologyDatasetTagging(data.Dataset):
             sample['i'] = i
             self.class_balance["matching"] += match
         print ("Class balance", self.class_balance)
-        args.num_class = 1
+        args.num_class = args.num_tags
         
 
     def hash(self, token):
@@ -59,7 +59,7 @@ class PathologyDatasetTagging(data.Dataset):
                 label_indx[text.index(val)] = 1
                 match = 1
                 
-        y = torch.FloatTensor(label_indx)
+        y = torch.LongTensor(label_indx)
         
         return x, y, val, match
 

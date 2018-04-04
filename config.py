@@ -41,7 +41,7 @@ class Config(object):
 
     COLUMN_KEYS = parsing.parse_XLS( os.environ['CONFIG_XLSX'])
 
-    DIAGNOSES = {"SizeMaxInvasive": ["NUM"], "GradeMaxInvasive": ['0', '1', '2', '3', '9']}
+    DIAGNOSES = {"SizeMaxInvasive": ["NUM"]}
     #DIAGNOSES = {k: v for k, v in COLUMN_KEYS.items() if len(v) > 0}
     post_diagnoses = copy.deepcopy(DIAGNOSES)
     post_diagnoses['cancer'] = ['0', '1']

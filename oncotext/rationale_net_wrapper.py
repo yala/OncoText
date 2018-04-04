@@ -45,6 +45,7 @@ def train(name, reports, config, logger):
             if label_maps[args.aspect][0] == "NUM":
                 args.class_balance = False
                 args.use_as_classifier = False
+                args.num_tags = 2
             else:
                 args.class_balance = True
                 args.use_as_classifier = True
