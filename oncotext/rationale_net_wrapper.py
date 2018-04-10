@@ -43,15 +43,15 @@ def train(name, reports, config, logger):
 
         try:
             if label_maps[args.aspect][0] == "NUM":
-                args.class_balance = False
+                args.class_balance = True #False
                 args.use_as_classifier = False
-                args.num_tags = 2
             else:
                 args.class_balance = True
                 args.use_as_classifier = True
             
+            args.vocab_size = len(embeddings)
             train_data, dev_data = dataset_factory.get_oncotext_dataset_train(
-                reports, label_maps, args, text_key, len(embeddings))
+                reports, label_maps, args, text_key)
 
             args.epochs = min(args.max_epochs, int(args.steps / (len(train_data) / args.batch_size)))
             
@@ -82,12 +82,23 @@ def label_reports(name, un_reports, config, logger):
     label_maps = config['POST_DIAGNOSES']
     default_user = config['DEFAULT_USERNAME']
     text_key = config['PREPROCESSED_REPORT_TEXT_KEY']
-    args.aspect = "ALL"
     embeddings = dataset_factory.get_embedding_tensor(config, args)
-    test_data = dataset_factory.get_oncotext_dataset_test(un_reports, label_maps, args, text_key, len(embeddings))
 
     for indx, diagnosis in enumerate(diagnoses):
-        args.num_class = len(label_maps[diagnosis])
+        args.aspect = diagnosis
+        
+        if label_maps[args.aspect][0] == "NUM":
+            args.class_balance = True #False
+            args.use_as_classifier = False
+            args.num_class = args.num_tags
+        else:
+            args.class_balance = True
+            args.use_as_classifier = True
+            args.num_class = len(label_maps[diagnosis])
+
+        args.vocab_size = len(embeddings)
+        test_data = dataset_factory.get_oncotext_dataset_test(un_reports, label_maps, args, text_key)
+
         logger.info("RN Wrapper: Start labeling reports for {}".format(diagnosis))
 
         snapshot_path = os.path.join( args.model_dir.format(name),
@@ -107,15 +118,22 @@ def label_reports(name, un_reports, config, logger):
             gen, model = model_utils.get_model(args, embeddings, None)
             test_stats  = train_utils.test_model(test_data, model, gen, args)
             preds = test_stats['preds']
+            
         except Exception as e:
             logger.warn("RN Wrapper. {} model failed to label reports! Following Exception({}). Populating all reports with 0 label".format(diagnosis, e))
             preds = np.zeros(len(test_data), dtype=int)
 
         if label_maps[diagnosis][0] == "NUM":
+            try:
+                preds = np.reshape(preds, (len(test_data), args.max_length))
+            except Exception as e:
+                logger.warn("RN Wrapper. {} model returned incorrectly sized labels {}! Following Exception({}). Populating all reports with 0 label".format(diagnosis, (len(preds), len(test_data)), e))
+                preds = np.zeros((len(test_data), args.max_length), dtype=int)
+                
             for i in range(len(test_data)):
                 if 1 in preds[i]:
                     text = test_data.dataset[i][text_key].split()
-                    prediction = text[preds[i].index(1)]
+                    prediction = text[np.where(preds[i] == 1)[0][0]]
                     test_data.dataset[i][diagnosis] = prediction
                 else:
                     test_data.dataset[i][diagnosis] = "NA"

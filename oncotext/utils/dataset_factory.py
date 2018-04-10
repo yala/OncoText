@@ -3,7 +3,7 @@ import oncotext.datasets.patholgy_dataset
 import oncotext.datasets.patholgy_dataset_tagging
 import pickle
 
-def get_oncotext_dataset_train(all_reports, label_maps, args, text_key, vocab_size):
+def get_oncotext_dataset_train(all_reports, label_maps, args, text_key):
     reports = [r for r in all_reports if args.aspect in r ]
     random.shuffle(reports)
     if len(reports) == 0:
@@ -18,38 +18,34 @@ def get_oncotext_dataset_train(all_reports, label_maps, args, text_key, vocab_si
                                                 train_reports,
                                                 label_maps,
                                                 text_key,
-                                                'train',
-                                                vocab_size=vocab_size)
+                                                'train')
         dev_data = oncotext.datasets.patholgy_dataset_tagging.PathologyDatasetTagging(
                                                 args,
                                                 dev_reports,
                                                 label_maps,
                                                 text_key,
-                                                'dev',
-                                                vocab_size=vocab_size)
+                                                'dev')
     else:
         train_data = oncotext.datasets.patholgy_dataset.PathologyDataset(
                                                 args,
                                                 train_reports,
                                                 label_maps,
                                                 text_key,
-                                                'train',
-                                                vocab_size=vocab_size)
+                                                'train')
         dev_data = oncotext.datasets.patholgy_dataset.PathologyDataset(
                                                 args,
                                                 dev_reports,
                                                 label_maps,
                                                 text_key,
-                                                'dev',
-                                                vocab_size=vocab_size)
+                                                'dev')
     return train_data, dev_data
 
 
-def get_oncotext_dataset_test(reports, label_maps, args, text_key, vocab_size):
+def get_oncotext_dataset_test(reports, label_maps, args, text_key):
     if label_maps[args.aspect][0] == "NUM":
-        test_data = oncotext.datasets.patholgy_dataset_tagging.PathologyDatasetTagging(args, reports, label_maps, text_key, 'test', vocab_size=vocab_size)
+        test_data = oncotext.datasets.patholgy_dataset_tagging.PathologyDatasetTagging(args, reports, label_maps, text_key, 'test')
     else:
-        test_data = oncotext.datasets.patholgy_dataset.PathologyDataset(args, reports, label_maps, text_key, 'test', vocab_size=vocab_size)        
+        test_data = oncotext.datasets.patholgy_dataset.PathologyDataset(args, reports, label_maps, text_key, 'test')        
     return test_data
 
 

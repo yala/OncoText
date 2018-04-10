@@ -206,6 +206,10 @@ if __name__ == "__main__":
             report['NodeTissue'] = report['Node_tissue']
             del report['Node_tissue']
 
+        #re-segment all reports
+        if 'Report_Text_Segmented' in report:
+            del report['Report_Text_Segmented']
+
 
     ##  6.9 Noramlize label values
     transformed_keys = []

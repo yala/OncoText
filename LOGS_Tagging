@@ -93,3 +93,139 @@
 2018-04-04 14:37:33,763 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception 
 2018-04-04 14:37:48,512 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
 2018-04-04 14:37:48,513 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-04 15:28:24,664 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-04 15:28:24,665 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-04 15:32:34,360 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-04 15:32:34,360 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-04 15:36:38,886 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-04 15:36:38,887 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-04 15:49:26,765 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-04 15:49:26,765 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-06 11:28:27,143 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-06 11:28:27,143 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-06 11:29:55,987 - oncotext - INFO - RN Wrapper. SizeMaxInvasive model finished to training! Train class balance: {'matching': 67}. Dev class balance: {'matching': 16}
+2018-04-06 11:29:55,988 - oncotext - INFO - RN Wrapper. SizeMaxInvasive Accuracy=0.9993827160493827
+2018-04-06 11:29:55,988 - oncotext - INFO - RN Wrapper. SizeMaxInvasive Confusion_Matrix=[[12944     0]
+ [    8     8]]
+2018-04-06 15:09:22,744 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-06 15:09:22,744 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-06 15:11:30,041 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-06 15:11:30,041 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-06 15:13:05,887 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-06 15:13:05,887 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-06 15:14:11,137 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-06 15:14:11,137 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-06 15:23:28,022 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-06 15:23:28,022 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-09 10:34:06,288 - oncotext - INFO - RN Wrapper: Start labeling reports for SizeMaxInvasive
+2018-04-09 10:34:13,256 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to label reports! Following Exception('Args' object has no attribute 'use_as_classifier'). Populating all reports with 0 label
+2018-04-09 10:43:12,032 - oncotext - INFO - RN Wrapper: Start labeling reports for SizeMaxInvasive
+2018-04-09 10:43:18,886 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to label reports! Following Exception('Args' object has no attribute 'use_as_classifier'). Populating all reports with 0 label
+2018-04-09 10:43:55,338 - oncotext - INFO - postprocess - apply corrections
+2018-04-09 10:43:56,352 - oncotext - INFO - apply corrections - num corrections: 0 . num match: 0
+2018-04-09 10:43:56,354 - oncotext - INFO - postprocess - generate automatic fields
+2018-04-09 10:43:58,304 - oncotext - INFO - postprocess - aggregate episodes
+2018-04-09 11:51:04,880 - oncotext - INFO - RN Wrapper: Start labeling reports for SizeMaxInvasive
+2018-04-09 11:51:12,934 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to label reports! Following Exception('Args' object has no attribute 'use_as_classifier'). Populating all reports with 0 label
+2018-04-09 11:55:49,866 - oncotext - INFO - RN Wrapper: Start labeling reports for SizeMaxInvasive
+2018-04-09 11:55:57,106 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to label reports! Following Exception('Args' object has no attribute 'use_as_classifier'). Populating all reports with 0 label
+2018-04-09 11:56:39,040 - oncotext - INFO - postprocess - apply corrections
+2018-04-09 11:56:40,392 - oncotext - INFO - apply corrections - num corrections: 0 . num match: 0
+2018-04-09 11:56:40,393 - oncotext - INFO - postprocess - generate automatic fields
+2018-04-09 11:56:42,292 - oncotext - INFO - postprocess - aggregate episodes
+2018-04-09 14:37:18,453 - oncotext - INFO - RN Wrapper: Start labeling reports for SizeMaxInvasive
+2018-04-09 14:37:26,323 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to label reports! Following Exception('Args' object has no attribute 'use_as_classifier'). Populating all reports with 0 label
+2018-04-09 14:39:57,017 - oncotext - INFO - RN Wrapper: Start labeling reports for BreastSide
+2018-04-09 14:40:00,492 - oncotext - WARNING - RN Wrapper. BreastSide model failed to label reports! Following Exception('Args' object has no attribute 'use_as_classifier'). Populating all reports with 0 label
+2018-04-09 14:40:24,298 - oncotext - INFO - postprocess - apply corrections
+2018-04-09 14:40:25,499 - oncotext - INFO - apply corrections - num corrections: 9 . num match: 23
+2018-04-09 14:40:25,501 - oncotext - INFO - postprocess - generate automatic fields
+2018-04-09 14:40:27,587 - oncotext - INFO - postprocess - aggregate episodes
+2018-04-09 14:51:02,123 - oncotext - INFO - RN Wrapper: Start labeling reports for SizeMaxInvasive
+2018-04-09 15:26:20,301 - oncotext - INFO - RN Wrapper: Start labeling reports for SizeMaxInvasive
+2018-04-09 15:45:05,217 - oncotext - INFO - RN Wrapper: Start labeling reports for SizeMaxInvasive
+2018-04-09 16:11:06,147 - oncotext - INFO - RN Wrapper: Start labeling reports for SizeMaxInvasive
+2018-04-09 16:33:12,110 - oncotext - INFO - RN Wrapper: Start labeling reports for SizeMaxInvasive
+2018-04-09 16:44:26,656 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to label reports! Following Exception(module 'pdb' has no attribute 'settrace'). Populating all reports with 0 label
+2018-04-09 16:48:48,918 - oncotext - INFO - RN Wrapper: Start labeling reports for SizeMaxInvasive
+2018-04-10 08:54:43,319 - oncotext - INFO - RN Wrapper: Start labeling reports for SizeMaxInvasive
+2018-04-10 09:07:23,492 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model returned incorrectly sized labels (318281040, 442057)! Following Exception(name 'text_data' is not defined). Populating all reports with 0 label
+2018-04-10 09:10:20,221 - oncotext - INFO - RN Wrapper: Start labeling reports for BreastSide
+2018-04-10 09:15:41,394 - oncotext - INFO - RN Wrapper: Start labeling reports for SizeMaxInvasive
+2018-04-10 09:39:33,790 - oncotext - INFO - RN Wrapper: Start labeling reports for SizeMaxInvasive
+2018-04-10 09:51:50,498 - oncotext - INFO - postprocess - apply corrections
+2018-04-10 09:51:51,785 - oncotext - INFO - apply corrections - num corrections: 0 . num match: 0
+2018-04-10 09:51:51,787 - oncotext - INFO - postprocess - generate automatic fields
+2018-04-10 09:51:53,918 - oncotext - INFO - postprocess - aggregate episodes
+2018-04-10 10:00:41,397 - oncotext - WARNING - No eval sets provided for prediction!
+2018-04-10 10:00:42,247 - oncotext - INFO - RN Wrapper: Start labeling reports for SizeMaxInvasive
+2018-04-10 10:00:47,762 - oncotext - INFO - postprocess - apply corrections
+2018-04-10 10:00:47,763 - oncotext - INFO - apply corrections - num corrections: 89 . num match: 89
+2018-04-10 10:00:47,763 - oncotext - INFO - postprocess - generate automatic fields
+2018-04-10 10:20:19,029 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-10 10:20:19,029 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-10 10:23:21,468 - oncotext - INFO - RN Wrapper. SizeMaxInvasive model finished to training! Train class balance: {'matching': 6}. Dev class balance: {'matching': 1}
+2018-04-10 10:23:21,469 - oncotext - INFO - RN Wrapper. SizeMaxInvasive Accuracy=0.9993055555555556
+2018-04-10 10:23:21,469 - oncotext - INFO - RN Wrapper. SizeMaxInvasive Confusion_Matrix=[[12951     8]
+ [    1     0]]
+2018-04-10 10:38:34,626 - oncotext - INFO - RN Wrapper: Start labeling reports for SizeMaxInvasive
+2018-04-10 10:38:35,606 - oncotext - INFO - postprocess - apply corrections
+2018-04-10 10:38:35,607 - oncotext - INFO - apply corrections - num corrections: 89 . num match: 89
+2018-04-10 10:38:35,608 - oncotext - INFO - postprocess - generate automatic fields
+2018-04-10 10:42:23,959 - oncotext - INFO - RN Wrapper: Start labeling reports for SizeMaxInvasive
+2018-04-10 10:42:25,035 - oncotext - INFO - postprocess - apply corrections
+2018-04-10 10:42:25,037 - oncotext - INFO - apply corrections - num corrections: 89 . num match: 89
+2018-04-10 10:42:25,037 - oncotext - INFO - postprocess - generate automatic fields
+2018-04-10 10:47:43,667 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-10 10:47:43,667 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-10 10:51:39,940 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-10 10:51:39,940 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-10 10:54:40,937 - oncotext - INFO - RN Wrapper. SizeMaxInvasive model finished to training! Train class balance: {'matching': 67}. Dev class balance: {'matching': 16}
+2018-04-10 10:54:40,938 - oncotext - INFO - RN Wrapper. SizeMaxInvasive Accuracy=0.9987654320987654
+2018-04-10 10:54:40,938 - oncotext - INFO - RN Wrapper. SizeMaxInvasive Confusion_Matrix=[[12944     0]
+ [   16     0]]
+2018-04-10 10:55:45,148 - oncotext - INFO - RN Wrapper: Start labeling reports for SizeMaxInvasive
+2018-04-10 10:55:46,246 - oncotext - INFO - postprocess - apply corrections
+2018-04-10 10:55:46,248 - oncotext - INFO - apply corrections - num corrections: 89 . num match: 89
+2018-04-10 10:55:46,248 - oncotext - INFO - postprocess - generate automatic fields
+2018-04-10 11:23:52,426 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-10 11:23:52,427 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-10 11:26:23,332 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-10 11:26:23,332 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-10 11:29:27,766 - oncotext - INFO - RN Wrapper. SizeMaxInvasive model finished to training! Train class balance: {'0': 51053, '1': 67}. Dev class balance: {'0': 12944, '1': 16}
+2018-04-10 11:29:27,767 - oncotext - INFO - RN Wrapper. SizeMaxInvasive Accuracy=0.9986882716049382
+2018-04-10 11:29:27,767 - oncotext - INFO - RN Wrapper. SizeMaxInvasive Confusion_Matrix=[[12943     1]
+ [   16     0]]
+2018-04-10 11:31:45,633 - oncotext - INFO - RN Wrapper: Start labeling reports for SizeMaxInvasive
+2018-04-10 11:31:46,604 - oncotext - INFO - postprocess - apply corrections
+2018-04-10 11:31:46,605 - oncotext - INFO - apply corrections - num corrections: 89 . num match: 89
+2018-04-10 11:31:46,605 - oncotext - INFO - postprocess - generate automatic fields
+2018-04-10 11:53:13,880 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-10 11:53:13,880 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-10 11:56:40,755 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-10 11:56:40,755 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-10 11:59:34,141 - oncotext - INFO - RN Wrapper. SizeMaxInvasive model finished to training! Train class balance: {'0': 51053, '1': 67}. Dev class balance: {'0': 12944, '1': 16}
+2018-04-10 11:59:34,141 - oncotext - INFO - RN Wrapper. SizeMaxInvasive Accuracy=0.9987654320987654
+2018-04-10 11:59:34,142 - oncotext - INFO - RN Wrapper. SizeMaxInvasive Confusion_Matrix=[[12944     0]
+ [   16     0]]
+2018-04-10 12:03:58,145 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-10 12:03:58,145 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-10 12:07:05,113 - oncotext - INFO - RN Wrapper. SizeMaxInvasive model finished to training! Train class balance: {'0': 51053, '1': 67}. Dev class balance: {'0': 12944, '1': 16}
+2018-04-10 12:07:05,113 - oncotext - INFO - RN Wrapper. SizeMaxInvasive Accuracy=0.9986882716049382
+2018-04-10 12:07:05,113 - oncotext - INFO - RN Wrapper. SizeMaxInvasive Confusion_Matrix=[[12943     1]
+ [   16     0]]
+2018-04-10 12:08:31,904 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-10 12:08:31,905 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-10 12:08:51,444 - oncotext - WARNING - RN Wrapper. SizeMaxInvasive model failed to train! Exception input and target have different number of elements: input[51120 x 2] has 102240 elements, while target[51120] has 51120 elements at /pytorch/torch/lib/THCUNN/generic/MSECriterion.cu:15
+2018-04-10 12:09:33,424 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-10 12:09:33,425 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-10 12:12:25,389 - oncotext - INFO - RN Wrapper. SizeMaxInvasive model finished to training! Train class balance: {'0': 51053, '1': 67}. Dev class balance: {'0': 12944, '1': 16}
+2018-04-10 12:12:25,389 - oncotext - INFO - RN Wrapper. SizeMaxInvasive Accuracy=0.9972993827160493
+2018-04-10 12:12:25,389 - oncotext - INFO - RN Wrapper. SizeMaxInvasive Confusion_Matrix=[[12925    19]
+ [   16     0]]
+2018-04-10 15:07:33,552 - oncotext - INFO - RN Wrapper: Succesffuly got embeddings
+2018-04-10 15:07:33,552 - oncotext - INFO - RN Wrapper: Training model for SizeMaxInvasive
+2018-04-10 15:11:20,346 - oncotext - INFO - RN Wrapper. SizeMaxInvasive model finished to training! Train class balance: {'0': 35434, '1': 66}. Dev class balance: {'0': 8984, '1': 16}
+2018-04-10 15:11:20,346 - oncotext - INFO - RN Wrapper. SizeMaxInvasive Accuracy=0.9976666666666667
+2018-04-10 15:11:20,347 - oncotext - INFO - RN Wrapper. SizeMaxInvasive Confusion_Matrix=[[8979    5]
+ [  16    0]]
