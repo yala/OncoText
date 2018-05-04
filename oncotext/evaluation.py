@@ -43,7 +43,6 @@ def score_on_test_set(reports, test_set, config, logger):
         preds = [text_to_pred[t][d] for t in texts if d in text_to_pred[t] and d in text_to_gold[t]]
         golds =  [text_to_gold[t][d] for t in texts if d in text_to_pred[t] and d in text_to_gold[t]]
                 
-        pdb.set_trace()
         if len(preds) == 0 or len(golds) == 0:
             logger.warn("evaluation [{}] - skipping because num preds {}, num golds {}".format(d, len(preds), len(golds)))
             continue

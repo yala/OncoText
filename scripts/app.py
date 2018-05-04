@@ -168,8 +168,6 @@ def predict():
                                                     logger)
 
     pickle.dump(reportDB, open(os.path.join(config['PICKLE_DIR'], 'reportDBAPI_labeled_intermediate.p'), 'wb'))
-
-   # reportDB = pickle.load(open(os.path.join(config['PICKLE_DIR'], 'reportDBAPI_labeled_intermediate.p'), 'rb'))
     
     train_db = pickle.load(open(DB_TRAIN_PATH,'rb'))
     if name in train_db:
@@ -177,10 +175,10 @@ def predict():
     else:
         user_train_db = []
 
-    # reportDB = postprocess.apply_rules(reportDB,
-    #                                     user_train_db,
-    #                                     config,
-    #                                     logger)
+    reportDB = postprocess.apply_rules(reportDB,
+                                        user_train_db,
+                                        config,
+                                        logger)
 
     results = evaluation.evaluate(reportDB, eval_sets, config, logger)
     if config['PRUNE_AFTER_PREDICT']:
