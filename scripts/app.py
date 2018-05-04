@@ -76,7 +76,7 @@ def addTrainData():
 
     db_train[name].extend(data)
 
-    logger.info("addTrain - Len train {}".format(len(db_train[name])))
+    logger.info("addTrain - Len train[{}] {}".format(name, len(db_train[name])))
     pickle.dump(db_train, open(DB_TRAIN_PATH, 'wb'))
     return SUCCESS_MSG, 200
 
@@ -177,10 +177,10 @@ def predict():
     else:
         user_train_db = []
 
-    reportDB = postprocess.apply_rules(reportDB,
-                                        user_train_db,
-                                        config,
-                                        logger)
+    # reportDB = postprocess.apply_rules(reportDB,
+    #                                     user_train_db,
+    #                                     config,
+    #                                     logger)
 
     results = evaluation.evaluate(reportDB, eval_sets, config, logger)
     if config['PRUNE_AFTER_PREDICT']:

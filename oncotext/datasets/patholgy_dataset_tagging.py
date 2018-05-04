@@ -34,10 +34,6 @@ class PathologyDatasetTagging(data.Dataset):
         print ("Class balance", self.class_balance)
         args.num_class = args.num_tags
 
-        self.class_balance['0'] = (self.class_balance['0'] * args.max_length) + (self.class_balance['1'] * (args.max_length - 1)) 
-        weight_per_class = 1. / args.num_class
-        self.weights = [ weight_per_class / self.class_balance[d['match']] for d in self.samples ]
-
                         
     def hash(self, token):
         """Unsigned 32 bit murmurhash for feature hashing."""

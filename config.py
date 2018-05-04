@@ -11,14 +11,14 @@ class Args(object):
 
 
 class Config(object):
-    PORT = 3000 #5000
+    PORT = 5000
     DEFAULT_USERNAME = 'default'
     PICKLE_DIR = os.environ['PICKLE_DIR']
     SNAPSHOT_DIR = os.environ['SNAPSHOT_DIR']
 
-    DB_TRAIN_PATH = os.path.join(PICKLE_DIR, "trainfortagging.p")#"reportDBAPI_train.p")
+    DB_TRAIN_PATH = os.path.join(PICKLE_DIR, "reportDBAPI_train.p")
     DB_BASE_PATH = os.path.join(PICKLE_DIR, "reportDB_base_train.p")
-    DB_UNLABLED_PATH = os.path.join(PICKLE_DIR, "trainfortagging.p")#"reportDBAPI_test.p")
+    DB_UNLABLED_PATH = os.path.join(PICKLE_DIR, "reportDBAPI_test.p")
     DB_NON_BREAST_PATH = os.path.join(PICKLE_DIR, "reportDBAPI_nonbreasts.p")
     EMBEDDING_PATH = os.path.join(PICKLE_DIR, "hash_embeddings.p")
 
@@ -41,8 +41,7 @@ class Config(object):
 
     COLUMN_KEYS = parsing.parse_XLS( os.environ['CONFIG_XLSX'])
 
-    DIAGNOSES = {"SizeMaxInvasive": ["NUM"]}#, "BreastSide": ["l", "r"]}
-    #DIAGNOSES = {k: v for k, v in COLUMN_KEYS.items() if len(v) > 0}
+    DIAGNOSES = {k: v for k, v in COLUMN_KEYS.items() if len(v) > 0}
     post_diagnoses = copy.deepcopy(DIAGNOSES)
     post_diagnoses['cancer'] = ['0', '1']
     post_diagnoses['atypia'] = ['0', '1']
@@ -60,7 +59,7 @@ class Config(object):
     RATIONALE_NET_CONFIG = {
         'cuda': True,
         'num_workers': 8,
-        'batch_size': 128, #128,
+        'batch_size': 32, #128,
         'class_balance': True,
         'dropout': .1,
         'init_lr': 0.0001,
@@ -79,7 +78,7 @@ class Config(object):
         'max_epochs': 75,
         'patience': 5,
         'snapshot': None,
-        'objective':'margin',#'cross_entropy',
+        'objective':'cross_entropy',
         'num_gpus': 1,
         'save_dir': 'snapshot',
         'model_dir': SNAPSHOT_DIR+'/{}',

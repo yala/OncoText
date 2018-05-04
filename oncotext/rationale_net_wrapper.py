@@ -43,7 +43,7 @@ def train(name, reports, config, logger):
 
         try:
             if label_maps[args.aspect][0] == "NUM":
-                args.class_balance = True #False
+                args.class_balance = False
                 args.use_as_classifier = False
             else:
                 args.class_balance = True
@@ -51,7 +51,7 @@ def train(name, reports, config, logger):
             
             args.vocab_size = len(embeddings)
             train_data, dev_data = dataset_factory.get_oncotext_dataset_train(
-                reports, label_maps, args, text_key)
+                 reports, label_maps, args, text_key)
 
             args.epochs = min(args.max_epochs, int(args.steps / (len(train_data) / args.batch_size)))
             
@@ -88,7 +88,7 @@ def label_reports(name, un_reports, config, logger):
         args.aspect = diagnosis
         
         if label_maps[args.aspect][0] == "NUM":
-            args.class_balance = True #False
+            args.class_balance = False
             args.use_as_classifier = False
             args.num_class = args.num_tags
         else:
@@ -133,7 +133,12 @@ def label_reports(name, un_reports, config, logger):
             for i in range(len(test_data)):
                 if 1 in preds[i]:
                     text = test_data.dataset[i][text_key].split()
-                    prediction = text[np.where(preds[i] == 1)[0][0]]
+                    #pdb.set_trace()
+                    ind = np.where(preds[i] == 1)[0][0]
+                    if ind < len(text):
+                        prediction = text[ind]
+                    else:
+                        prediction = "0"
                     test_data.dataset[i][diagnosis] = prediction
                 else:
                     test_data.dataset[i][diagnosis] = "NA"
