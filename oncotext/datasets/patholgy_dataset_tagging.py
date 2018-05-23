@@ -54,9 +54,10 @@ class PathologyDatasetTagging(data.Dataset):
         val = 'NA'
         match = '0'
         if self.name != "test":
-            val = sample[self.diagnosis]
-            if val in text:
-                label_indx[text.index(val)] = 1
+            val = sample[self.diagnosis].split()
+            if ' '.join(val) in ' '.join(text):
+                for v in val:
+                    label_indx[text.index(v, text.index(val))] = 1
                 match = '1'
                 
         y = torch.LongTensor(label_indx)

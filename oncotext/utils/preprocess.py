@@ -54,7 +54,7 @@ def is_bilateral(text):
         returns: True if report is believed to be bilateral
 
     '''
-    bilat = "right" in text and "left" in text
+    bilat = "breast" in text and "right" in text and "left" in text
     return bilat
 
 def remove_none_vals(report):
@@ -143,7 +143,7 @@ def apply_rules(reports, raw_text_key, preprocessed_text_key,
     preprocessed_reports = []
     for r in reports:
         # Skip reports with no text in it
-        if not raw_text_key in r:
+        if raw_text_key not in r and preprocessed_text_key not in r:
             logger.warn("preprocess - report has no {} feild.".format(raw_text_key))
             continue
         r[raw_text_key] = remove_bad_chars(r[raw_text_key])

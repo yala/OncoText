@@ -11,7 +11,7 @@ class Args(object):
 
 
 class Config(object):
-    PORT = 5000
+    PORT = 3000
     DEFAULT_USERNAME = 'default'
     PICKLE_DIR = os.environ['PICKLE_DIR']
     SNAPSHOT_DIR = os.environ['SNAPSHOT_DIR']

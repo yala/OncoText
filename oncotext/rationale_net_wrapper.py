@@ -134,14 +134,17 @@ def label_reports(name, un_reports, config, logger):
                 if 1 in preds[i]:
                     text = test_data.dataset[i][text_key].split()
                     #pdb.set_trace()
-                    ind = np.where(preds[i] == 1)[0][0]
-                    if ind < len(text):
-                        prediction = text[ind]
+                    inds = np.where(preds[i] == 1)[0]
+                    if len(inds) > 0:
+                        prediction = ""
+                        for ind in inds:
+                            if ind < len(text):
+                                prediction += text[ind]
                     else:
                         prediction = "0"
                     test_data.dataset[i][diagnosis] = prediction
                 else:
-                    test_data.dataset[i][diagnosis] = "NA"
+                    test_data.dataset[i][diagnosis] = "0"
         else:
             for i in range(len(test_data)):
                 prediction = label_maps[diagnosis][preds[i]]
