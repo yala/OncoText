@@ -50,15 +50,20 @@ class PathologyDatasetTagging(data.Dataset):
 
         x = torch.LongTensor([text_indx])
 
+        #pdb.set_trace()
         label_indx = [0 for _ in range(len(text_indx))]
         val = 'NA'
-        match = '0'
+        match = '1'
         if self.name != "test":
             val = sample[self.diagnosis].split()
-            if ' '.join(val) in ' '.join(text):
-                for v in val:
-                    label_indx[text.index(v, text.index(val))] = 1
-                match = '1'
+            for v in range(len(val)):
+                if val[v] not in text or text.index(val[v]) < text.index(val[v-1]):
+                    match = '0'
+                    break
+                
+            if match == '1':
+                for v in range(len(val)):
+                    label_indx[text.index(val[v], text.index(val[v-1])-1)] = 1
                 
         y = torch.LongTensor(label_indx)
         

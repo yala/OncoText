@@ -18,7 +18,10 @@ class Config(object):
 
     DB_TRAIN_PATH = os.path.join(PICKLE_DIR, "reportDBAPI_train.p")
     DB_BASE_PATH = os.path.join(PICKLE_DIR, "reportDB_base_train.p")
-    DB_UNLABLED_PATH = os.path.join(PICKLE_DIR, "reportDBAPI_test.p")
+
+    DB_UNLABLED_PATH = os.path.join(PICKLE_DIR, "prostateCoresUnlabeled.p")
+    #DB_UNLABLED_PATH = os.path.join(PICKLE_DIR, "reportDBAPI_test.p")
+
     DB_NON_BREAST_PATH = os.path.join(PICKLE_DIR, "reportDBAPI_nonbreasts.p")
     EMBEDDING_PATH = os.path.join(PICKLE_DIR, "hash_embeddings.p")
 

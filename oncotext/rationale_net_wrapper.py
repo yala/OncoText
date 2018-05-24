@@ -50,6 +50,7 @@ def train(name, reports, config, logger):
                 args.use_as_classifier = True
             
             args.vocab_size = len(embeddings)
+
             train_data, dev_data = dataset_factory.get_oncotext_dataset_train(
                  reports, label_maps, args, text_key)
 
@@ -60,6 +61,7 @@ def train(name, reports, config, logger):
             args.model_path = os.path.join( args.model_dir.format(name),
                                         args.model_file.format(diagnosis))
             gen, model = model_utils.get_model(args, embeddings, train_data)
+
             epoch_stats, model, gen = train_utils.train_model(train_data, dev_data, model, gen, args)
             logger.info("RN Wrapper. {} model finished to training! Train class balance: {}. Dev class balance: {}".format(diagnosis, train_data.class_balance, dev_data.class_balance))
 

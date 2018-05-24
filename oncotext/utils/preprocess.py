@@ -4,19 +4,19 @@ import copy
 import uuid
 
 def remove_bad_chars(text):
-    text = re.sub(r"_x000D_", "", text)
-    text = re.sub(r"_x0009_", "", text)
-    text = re.sub(r"_x000d_", "", text)
+    text = re.sub(r"_x000D_", " ", text)
+    text = re.sub(r"_x0009_", " ", text)
+    text = re.sub(r"_x000d_", " ", text)
     return text
 
 def preprocess_text(text):
     text = re.sub(r"[^\w\.]", " ", text)
     text = ' '.join(text.split('\n'))
-    text = re.sub(r"(----)+", "", text)
-    text = re.sub(r"(====)+", "", text)
+    text = re.sub(r"(----)+", " ", text)
+    text = re.sub(r"(====)+", " ", text)
     text = text.lower()
-    text = re.sub(r"_x000d_", "", text)
-    text = re.sub(r"_x009d_", "", text)
+    text = re.sub(r"_x000d_", " ", text)
+    text = re.sub(r"_x009d_", " ", text)
     return text
 
 def segment_text(txt):
@@ -146,6 +146,7 @@ def apply_rules(reports, raw_text_key, preprocessed_text_key,
         if raw_text_key not in r and preprocessed_text_key not in r:
             logger.warn("preprocess - report has no {} feild.".format(raw_text_key))
             continue
+        r[raw_text_key] = r[raw_text_key] if raw_text_key in r else r[preprocessed_text_key]
         r[raw_text_key] = remove_bad_chars(r[raw_text_key])
         # append already preprocessed reports
         if preprocessed_text_key in r:
