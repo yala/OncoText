@@ -123,6 +123,9 @@ def aggregate_episodes(reports, config):
     dateKey = config['REPORT_TIME_KEY']
     episode_span = config['SIX_MONTHS']
 
+    nonbreast = [r for r in reports if r['OrganBreast']!='1']
+    reports = [r for r in reports if r['OrganBreast']=='1']
+    
     for r in reports:
         if isinstance(r[dateKey], str):
             r[dateKey] = datetime.datetime.strptime(r[dateKey], '%Y-%m-%dT%H:%M:%S')
@@ -186,7 +189,7 @@ def aggregate_episodes(reports, config):
         newID = episodeRelabelDict[rep[patientIDkey]][oldID]
         rep['EpisodeID'] = newID
 
-    return reportsDB
+    return reportsDB + nonbreast
 
 def apply_rules(reportDB, trainDB, config, logger):
     '''

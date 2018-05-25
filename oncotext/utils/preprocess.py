@@ -10,6 +10,7 @@ def remove_bad_chars(text):
     return text
 
 def preprocess_text(text):
+    text = str(text)
     text = re.sub(r"[^\w\.]", " ", text)
     text = ' '.join(text.split('\n'))
     text = re.sub(r"(----)+", " ", text)

@@ -11,17 +11,14 @@ class Args(object):
 
 
 class Config(object):
-    PORT = 3000
+    PORT = 5000
     DEFAULT_USERNAME = 'default'
     PICKLE_DIR = os.environ['PICKLE_DIR']
     SNAPSHOT_DIR = os.environ['SNAPSHOT_DIR']
 
     DB_TRAIN_PATH = os.path.join(PICKLE_DIR, "reportDBAPI_train.p")
     DB_BASE_PATH = os.path.join(PICKLE_DIR, "reportDB_base_train.p")
-
-    DB_UNLABLED_PATH = os.path.join(PICKLE_DIR, "prostateCoresUnlabeled.p")
-    #DB_UNLABLED_PATH = os.path.join(PICKLE_DIR, "reportDBAPI_test.p")
-
+    DB_UNLABLED_PATH = os.path.join(PICKLE_DIR, "reportDBAPI_test.p")
     DB_NON_BREAST_PATH = os.path.join(PICKLE_DIR, "reportDBAPI_nonbreasts.p")
     EMBEDDING_PATH = os.path.join(PICKLE_DIR, "hash_embeddings.p")
 
