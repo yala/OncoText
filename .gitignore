@@ -1,6 +1,7 @@
 # large files
 snapshot
 LOGS
+LOGS_Tagging
 *.bin
 secrets
 *.DS_Store
@@ -120,3 +121,4 @@ ENV/
 
 # Save files
 \#*
+*~
