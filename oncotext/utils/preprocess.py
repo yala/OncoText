@@ -11,7 +11,7 @@ def remove_bad_chars(text):
 
 def preprocess_text(text):
     text = str(text)
-    text = re.sub(r"[^\w\.]", " ", text)
+    text = re.sub(r"[^\w\.\+=]", " ", text)
     text = ' '.join(text.split('\n'))
     text = re.sub(r"(----)+", " ", text)
     text = re.sub(r"(====)+", " ", text)
@@ -118,7 +118,7 @@ def set_uuid(report):
     if not 'MRN' in report:
         report['MRN'] = 'Unknown'
 
-    if not 'EMPI' in report:
+    if 'EMPI' not in report:
         report['EMPI'] = '999999999'
 
     return report
@@ -163,9 +163,9 @@ def apply_rules(reports, raw_text_key, preprocessed_text_key,
 
     preprocessed_reports = [ date.set_timestamp(report, time_key, logger) for report in preprocessed_reports]
 
-    preprocessed_reports = [set_uuid(report) for report in preprocessed_reports ]
-
     preprocessed_reports = [remove_none_vals(report) for report in preprocessed_reports ]
+
+    preprocessed_reports = [set_uuid(report) for report in preprocessed_reports ]
     return preprocessed_reports
 
 def remove_duplicates(reports, raw_text_key, preprocessed_text_key, logger):

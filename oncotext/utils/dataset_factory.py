@@ -1,6 +1,6 @@
 import random
-import oncotext.datasets.patholgy_dataset
-import oncotext.datasets.patholgy_dataset_tagging
+import oncotext.datasets.pathology_dataset_classifier
+import oncotext.datasets.pathology_dataset_tagger
 import pickle
 
 def get_oncotext_dataset_train(all_reports, label_maps, args, text_key):
@@ -13,39 +13,23 @@ def get_oncotext_dataset_train(all_reports, label_maps, args, text_key):
     dev_reports = reports[split_indx:]
 
     if label_maps[args.aspect][0] == "NUM":
-        train_data = oncotext.datasets.patholgy_dataset_tagging.PathologyDatasetTagging(
-                                                args,
-                                                train_reports,
-                                                label_maps,
-                                                text_key,
-                                                'train')
-        dev_data = oncotext.datasets.patholgy_dataset_tagging.PathologyDatasetTagging(
-                                                args,
-                                                dev_reports,
-                                                label_maps,
-                                                text_key,
-                                                'dev')
+        dataset_obj = oncotext.datasets.pathology_dataset_tagger.PathologyDatasetTagger
     else:
-        train_data = oncotext.datasets.patholgy_dataset.PathologyDataset(
-                                                args,
-                                                train_reports,
-                                                label_maps,
-                                                text_key,
-                                                'train')
-        dev_data = oncotext.datasets.patholgy_dataset.PathologyDataset(
-                                                args,
-                                                dev_reports,
-                                                label_maps,
-                                                text_key,
-                                                'dev')
+        dataset_obj = oncotext.datasets.pathology_dataset_classifier.PathologyDatasetClassifier
+        
+    train_data = dataset_obj(args, train_reports, label_maps, text_key, 'train')
+    dev_data = dataset_obj(args, dev_reports, label_maps, text_key, 'dev')
+    
     return train_data, dev_data
 
 
 def get_oncotext_dataset_test(reports, label_maps, args, text_key):
     if label_maps[args.aspect][0] == "NUM":
-        test_data = oncotext.datasets.patholgy_dataset_tagging.PathologyDatasetTagging(args, reports, label_maps, text_key, 'test')
+        dataset_obj = oncotext.datasets.pathology_dataset_tagger.PathologyDatasetTagger
     else:
-        test_data = oncotext.datasets.patholgy_dataset.PathologyDataset(args, reports, label_maps, text_key, 'test')        
+        dataset_obj = oncotext.datasets.pathology_dataset_classifier.PathologyDatasetClassifier
+        
+    test_data = dataset_obj(args, reports, label_maps, text_key, 'test')        
     return test_data
 
 

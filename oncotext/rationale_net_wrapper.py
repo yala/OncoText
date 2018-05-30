@@ -44,10 +44,10 @@ def train(name, reports, config, logger):
         try:
             if label_maps[args.aspect][0] == "NUM":
                 args.class_balance = False
-                args.use_as_classifier = False
+                args.use_as_tagger = True
             else:
                 args.class_balance = True
-                args.use_as_classifier = True
+                args.use_as_tagger = False
             
             args.vocab_size = len(embeddings)
 
@@ -91,11 +91,11 @@ def label_reports(name, un_reports, config, logger):
         
         if label_maps[args.aspect][0] == "NUM":
             args.class_balance = False
-            args.use_as_classifier = False
+            args.use_as_tagger = True
             args.num_class = args.num_tags
         else:
             args.class_balance = True
-            args.use_as_classifier = True
+            args.use_as_tagger = False
             args.num_class = len(label_maps[diagnosis])
 
         args.vocab_size = len(embeddings)
@@ -135,7 +135,7 @@ def label_reports(name, un_reports, config, logger):
             for i in range(len(test_data)):
                 if 1 in preds[i]:
                     text = test_data.dataset[i][text_key].split()
-                    #pdb.set_trace()
+                
                     inds = np.where(preds[i] == 1)[0]
                     if len(inds) > 0:
                         prediction = ""
