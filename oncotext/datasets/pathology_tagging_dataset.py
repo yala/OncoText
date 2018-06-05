@@ -15,7 +15,7 @@ SMALL_TRAIN_SIZE = 800
 random.seed(0)
 
 
-class PathologyDatasetTagger(data.Dataset):
+class PathologyTaggingDataset(data.Dataset):
 
     def __init__(self, args, reports, label_map, text_key, name):
         self.name = name

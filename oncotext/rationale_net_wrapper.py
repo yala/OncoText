@@ -6,6 +6,7 @@ import rationale_net.utils.parsing as parsing
 import rationale_net.utils.model as model_utils
 import rationale_net.train.train as train_utils
 import oncotext.utils.dataset_factory as dataset_factory
+import copy
 import numpy as np
 import pdb
 import os
@@ -125,31 +126,6 @@ def label_reports(name, un_reports, config, logger):
             logger.warn("RN Wrapper. {} model failed to label reports! Following Exception({}). Populating all reports with 0 label".format(diagnosis, e))
             preds = np.zeros(len(test_data), dtype=int)
 
-        if label_maps[diagnosis][0] == "NUM":
-            try:
-                preds = np.reshape(preds, (len(test_data), args.max_length))
-            except Exception as e:
-                logger.warn("RN Wrapper. {} model returned incorrectly sized labels {}! Following Exception({}). Populating all reports with 0 label".format(diagnosis, (len(preds), len(test_data)), e))
-                preds = np.zeros((len(test_data), args.max_length), dtype=int)
-                
-            for i in range(len(test_data)):
-                if 1 in preds[i]:
-                    text = test_data.dataset[i][text_key].split()
-                
-                    inds = np.where(preds[i] == 1)[0]
-                    if len(inds) > 0:
-                        prediction = ""
-                        for ind in inds:
-                            if ind < len(text):
-                                prediction += text[ind]
-                    else:
-                        prediction = "0"
-                    test_data.dataset[i][diagnosis] = prediction
-                else:
-                    test_data.dataset[i][diagnosis] = "0"
-        else:
-            for i in range(len(test_data)):
-                prediction = label_maps[diagnosis][preds[i]]
-                test_data.dataset[i][diagnosis] = prediction
-
+        test_data.dataset = dataset_factory.predsToLabels(preds, copy.deepcopy(test_data), label_maps, diagnosis, args, text_key, logger)
+        
     return test_data.dataset
