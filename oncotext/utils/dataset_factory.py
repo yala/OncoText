@@ -40,31 +40,36 @@ def get_embedding_tensor(config, args):
     return embeddings
 
 
-def predsToLabels(preds, test_data, label_maps, diagnosis, args, text_key, logger):
-    if label_maps[diagnosis][0] == "NUM":
-        try:
-            preds = np.reshape(preds, (len(test_data), args.max_length))
-        except Exception as e:
-            logger.warn("RN Wrapper. {} model returned incorrectly sized labels {}! Following Exception({}). Populating all reports with 0 label".format(diagnosis, (len(preds), len(test_data)), e))
-            preds = np.zeros((len(test_data), args.max_length), dtype=int)
+def get_labels_from_tagging_predictions(preds, test_data, diagnosis, args, text_key, logger):
+    try:
+        preds = np.reshape(preds, (len(test_data), args.max_length))
+    except Exception as e:
+        logger.warn("RN Wrapper. {} model returned incorrectly sized labels {}! Following Exception({}). Populating all reports with 0 label".format(diagnosis, (len(preds), len(test_data)), e))
+        preds = np.zeros((len(test_data), args.max_length), dtype=int)
 
-        for i in range(len(test_data)):
-            if 1 in preds[i]:
-                text = test_data.dataset[i][text_key].split()
-                inds = np.where(preds[i]== 1)[0]
-                if len(inds) > 0:
-                    prediction = ""
-                    for ind in inds:
-                        if ind < len(text):
-                            prediction += text[ind]
-                else:
-                    prediction = "0"
-                test_data.dataset[i][diagnosis] = prediction
-            else:
-                test_data.dataset[i][diagnosis] = "0"
-    else:
-        for i in range(len(test_data)):
-            prediction = label_maps[diagnosis][preds[i]]
+    for i in range(len(test_data)):
+        if 1 in preds[i]:
+            text = test_data.dataset[i][text_key].split()
+            inds = np.where(preds[i] == 1)[0]
+
+            prediction = ""
+            for ind in inds:
+                if ind < len(text):
+                    prediction += text[ind]
             test_data.dataset[i][diagnosis] = prediction
+        else:
+            test_data.dataset[i][diagnosis] = "0"
+    return test_data
+            
+def get_labels_from_classification_predictions(preds, test_data, label_maps, diagnosis):
+    for i in range(len(test_data)):
+        prediction = label_maps[diagnosis][preds[i]]
+        test_data.dataset[i][diagnosis] = prediction
+    return test_data
 
+def get_labels_from_predictions(preds, test_data, label_maps, diagnosis, args, text_key, logger):
+    if label_maps[diagnosis][0] == "NUM":
+        test_data = get_labels_from_tagging_predictions(preds, test_data, diagnosis, args, text_key, logger)
+    else:
+        test_data = get_labels_from_classification_predictions(preds, test_data, label_maps, diagnosis)
     return test_data.dataset

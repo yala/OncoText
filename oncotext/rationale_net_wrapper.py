@@ -126,6 +126,6 @@ def label_reports(name, un_reports, config, logger):
             logger.warn("RN Wrapper. {} model failed to label reports! Following Exception({}). Populating all reports with 0 label".format(diagnosis, e))
             preds = np.zeros(len(test_data), dtype=int)
 
-        test_data.dataset = dataset_factory.predsToLabels(preds, copy.deepcopy(test_data), label_maps, diagnosis, args, text_key, logger)
+        test_data.dataset = dataset_factory.get_labels_from_predictions(preds, copy.deepcopy(test_data), label_maps, diagnosis, args, text_key, logger)
         
     return test_data.dataset
