@@ -1,6 +1,7 @@
 from operator import itemgetter
 import pickle
 from oncotext.utils.generic import hasCat
+import datetime
 
 def prune_non_breast(reportDB, name, config, logger):
     logger.info("prune_non_breast - Loading non breast reports")
@@ -105,6 +106,12 @@ def generate_automatic_feilds(reportDB, config):
             elif r['Her2_IHC'] in ['0', '1', '2']:
                 r['her2'] = '0'
 
+        if 'DCIS' in r and r['DCIS'] == '0':
+            r['GradeMaxDCIS'] = '9'
+
+        if 'CancerInvasive' in r and r['CancerInvasive'] == '0':
+            r['GradeMaxInvasive'] = '9'
+
     return reportDB
 
 
@@ -115,6 +122,14 @@ def aggregate_episodes(reports, config):
     patientIDkey = config['PATIENT_ID_KEY']
     dateKey = config['REPORT_TIME_KEY']
     episode_span = config['SIX_MONTHS']
+
+    nonbreast = [r for r in reports if r['OrganBreast']!='1']
+    reports = [r for r in reports if r['OrganBreast']=='1']
+    
+    for r in reports:
+        if isinstance(r[dateKey], str):
+            r[dateKey] = datetime.datetime.strptime(r[dateKey], '%Y-%m-%dT%H:%M:%S')
+
     ## Group reports by patient
     for i,r  in enumerate(reports):
         patientID = r[patientIDkey]
@@ -174,7 +189,7 @@ def aggregate_episodes(reports, config):
         newID = episodeRelabelDict[rep[patientIDkey]][oldID]
         rep['EpisodeID'] = newID
 
-    return reportsDB
+    return reportsDB + nonbreast
 
 def apply_rules(reportDB, trainDB, config, logger):
     '''

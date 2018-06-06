@@ -76,7 +76,7 @@ def addTrainData():
 
     db_train[name].extend(data)
 
-    logger.info("addTrain - Len train {}".format(len(db_train[name])))
+    logger.info("addTrain - Len train[{}] {}".format(name, len(db_train[name])))
     pickle.dump(db_train, open(DB_TRAIN_PATH, 'wb'))
     return SUCCESS_MSG, 200
 
@@ -166,6 +166,9 @@ def predict():
                                                     db_unlabeled[name],
                                                     config,
                                                     logger)
+
+    pickle.dump(reportDB, open(os.path.join(config['PICKLE_DIR'], 'reportDBAPI_labeled_intermediate.p'), 'wb'))
+
 
     train_db = pickle.load(open(DB_TRAIN_PATH,'rb'))
     if name in train_db:

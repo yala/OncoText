@@ -52,9 +52,9 @@ def score_on_test_set(reports, test_set, config, logger):
             preds = [int(val) for val in preds]
             golds = [int(val) for val in golds]
             
-            res['PRECISION'] = sklearn.metrics.precision_score(preds, golds)
-            res['RECALL'] = sklearn.metrics.recall_score(preds, golds)
-            res['F1'] = sklearn.metrics.f1_score(preds, golds)
+            res['PRECISION'] = sklearn.metrics.precision_score(preds, golds, average="weighted")
+            res['RECALL'] = sklearn.metrics.recall_score(preds, golds, average="weighted")
+            res['F1'] = sklearn.metrics.f1_score(preds, golds, average="weighted")
         except Exception as e:
             logger.warn("Cant commpute Precis, Recall, F1 for {}".format(d))
             res['PRECISION'] = 'NA'

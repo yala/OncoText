@@ -124,6 +124,9 @@ if __name__ == "__main__":
         if 'Phylodes' in report:
             report['Phyllodes'] = report['Phylodes']
             del report['Phylodes']
+
+        if 'Organ' in report and 'OrganBreast' not in report:
+            report['OrganBreast'] = report['Organ']
             
     ## 4. Change all labels to new convention
 
@@ -202,6 +205,10 @@ if __name__ == "__main__":
         if 'Node_tissue' in report:
             report['NodeTissue'] = report['Node_tissue']
             del report['Node_tissue']
+
+        #re-segment all reports
+        if 'Report_Text_Segmented' in report:
+            del report['Report_Text_Segmented']
 
 
     ##  6.9 Noramlize label values
