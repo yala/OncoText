@@ -1,5 +1,6 @@
 import oncotext.utils.date as date
 import re
+import pdb
 import copy
 import uuid
 
@@ -19,7 +20,7 @@ def preprocess_text(text):
     text = re.sub(r"_x009d_", "", text)
     return text
 
-def segment_text(txt):
+def segment_left_right(txt):
     leftTxt = ""
     rightTxt = ""
 
@@ -57,15 +58,7 @@ def is_bilateral(text):
     bilat = "right" in text and "left" in text
     return bilat
 
-def remove_none_vals(report):
-    keys = list(report.keys())
-    for key in keys:
-        if report[key] is None:
-            del report[key]
-    return report
-
-
-def segment_report(report, raw_text_key, preprocessed_text_key, side_key, logger):
+def segment_breast(report, raw_text_key, preprocessed_text_key, side_key, logger):
     '''
         If report is bilateral, split into two reports. else return single
         report.
@@ -87,7 +80,7 @@ def segment_report(report, raw_text_key, preprocessed_text_key, side_key, logger
     contains_side_annotation = side_key in report
 
     if is_bilateral(full_text):
-        segmented_text = segment_text(full_text)
+        segmented_text = segment_left_right(full_text)
         if contains_side_annotation:
             segmented_r = copy.deepcopy(report)
             segmented_r[preprocessed_text_key] = segmented_text[report[side_key]]
@@ -104,6 +97,66 @@ def segment_report(report, raw_text_key, preprocessed_text_key, side_key, logger
 
     return segmented_reports
 
+
+def segment_prostate(report, raw_text_key, preprocessed_text_key, segment_id_key, segment_type_key, logger):
+    full_text = report[raw_text_key]
+    header = copy.deepcopy(report)
+    diags = copy.deepcopy(report)
+    footer = copy.deepcopy(report)
+
+    hindx = full_text.lower().find("diagnosis")
+    hindx = full_text.rfind("\n", 0, hindx)
+    header[preprocessed_text_key] = full_text[ :hindx]
+    header[segment_type_key] = "Header"
+    header[segment_id_key] = "Header"
+
+    dindx = re.search("md|m\.d|clinical history|clinical data|specimens submitted|tissue submitted|gross desciption|slide\-block description", full_text.lower()[hindx: ]).start() + hindx
+    dindx = full_text.rfind("\n", hindx, dindx)
+    diags[preprocessed_text_key] = full_text[hindx:dindx]
+    
+    footer[preprocessed_text_key] = full_text[dindx: ]
+    footer[segment_type_key] = "Description"
+    footer[segment_id_key] = "Description"
+
+    segmented_reports = [header]
+    
+    segments = [["", ""]]
+    for line in diags[preprocessed_text_key].split("\n"):
+        m = re.search('^[A-Z]\. ', line)
+        if m:
+            if segments[0][1] == "":
+                segments[0][0] += line[3: ]+"\n"
+                segments[0][1] = m.group(0)[ :-1]
+            else:
+                segments.append([line[3: ]+"\n", m.group(0)[ :-1]])
+        else:
+            segments[-1][0] += line+"\n"
+
+    if len(segments) == 1:
+        segments = [["", ""]]
+        alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        for line in diags[preprocessed_text_key].split("\n"):
+            m = re.search('^((\s)+)?PROSTATE ', line)
+            if m:
+                if segments[0][1] == "":
+                    segments[0][0] += line+"\n"
+                    segments[0][1] = alpha[0]+"."
+                else:
+                    segments.append([line+"\n", alpha[len(segments)]+"."])
+            else:
+                segments[-1][0] += line+"\n"
+        
+            
+    for tup in segments:
+        r = copy.deepcopy(report)
+        r[preprocessed_text_key] = tup[0]
+        r[segment_type_key] = "Diagnosis"
+        r[segment_id_key] = tup[1]
+        segmented_reports.append(r)
+
+    segmented_reports.append(footer)
+    return segmented_reports
+            
 def set_uuid(report):
     if not 'ID' in report:
         report['ID'] = str(uuid.uuid4())
@@ -122,8 +175,14 @@ def set_uuid(report):
 
     return report
 
-def apply_rules(reports, raw_text_key, preprocessed_text_key,
-                time_key, side_key, logger):
+def remove_none_vals(report):
+    keys = list(report.keys())
+    for key in keys:
+        if report[key] is None:
+            del report[key]
+    return report
+
+def apply_rules(reports, organ, raw_text_key, preprocessed_text_key, time_key, side_key, segment_id_key, segment_type_key, logger):
     '''
         Go through list of reports and do the following:
         - Segement into left/right
@@ -149,16 +208,15 @@ def apply_rules(reports, raw_text_key, preprocessed_text_key,
         r[raw_text_key] = remove_bad_chars(r[raw_text_key])
         # append already preprocessed reports
         if preprocessed_text_key in r:
-            r[preprocessed_text_key] = preprocess_text(
-                                            r[preprocessed_text_key])
+            r[preprocessed_text_key] = preprocess_text(r[preprocessed_text_key])
             preprocessed_reports.append(r)
         else:
-            preprocessed_reports.extend( segment_report(r,
-                                                        raw_text_key,
-                                                        preprocessed_text_key,
-                                                        side_key,
-                                                        logger) )
-
+            if organ == "OrganBreast":
+                segmented_reports = segment_breast(r, raw_text_key, preprocessed_text_key, side_key, logger)
+            elif organ == "OrganProstate":
+                segmented_reports = segment_prostate(r, raw_text_key, preprocessed_text_key, segment_id_key, segment_type_key, logger)
+            preprocessed_reports.extend(segmented_reports)
+                
     preprocessed_reports = [ date.set_timestamp(report, time_key, logger) for report in preprocessed_reports]
 
     preprocessed_reports = [set_uuid(report) for report in preprocessed_reports ]

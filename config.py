@@ -13,6 +13,9 @@ class Args(object):
 class Config(object):
     PORT = 5000
     DEFAULT_USERNAME = 'default'
+    DEFAULT_ORGAN = 'Meta'
+    META_SHEET = 'Meta'
+    
     PICKLE_DIR = os.environ['PICKLE_DIR']
     SNAPSHOT_DIR = os.environ['SNAPSHOT_DIR']
 
@@ -35,19 +38,23 @@ class Config(object):
     PREPROCESSED_REPORT_TEXT_KEY = "Report_Text_Segmented"
     REPORT_TIME_KEY = "Report_Date_Time"
     SIDE_KEY = "BreastSide"
+    SEGMENT_ID_KEY = "SegmentID"
+    SEGMENT_TYPE_KEY = "SegmentType"
     PATIENT_ID_KEY = "EMPI"
     PRUNE_KEY = "OrganBreast"
     PRUNE_AFTER_PREDICT = False
 
     COLUMN_KEYS = parsing.parse_XLS( os.environ['CONFIG_XLSX'])
 
-    DIAGNOSES = {k: v for k, v in COLUMN_KEYS.items() if len(v) > 0}
+    DIAGNOSES = {o: {} for o in COLUMN_KEYS.keys()}
+    for organ in DIAGNOSES:
+        DIAGNOSES[organ] = {k: v for k, v in COLUMN_KEYS[organ].items() if len(v) > 0}
     post_diagnoses = copy.deepcopy(DIAGNOSES)
-    post_diagnoses['cancer'] = ['0', '1']
-    post_diagnoses['atypia'] = ['0', '1']
-    post_diagnoses['her2'] = ['0', '1', '9']
-    post_diagnoses['ER_Intensity'] = ['0', '1', '2', '3', '9']
-    post_diagnoses['PR_Intensity'] = ['0', '1', '2', '3', '9']
+    post_diagnoses['OrganBreast']['cancer'] = ['0', '1']
+    post_diagnoses['OrganBreast']['atypia'] = ['0', '1']
+    post_diagnoses['OrganBreast']['her2'] = ['0', '1', '9']
+    post_diagnoses['OrganBreast']['ER_Intensity'] = ['0', '1', '2', '3', '9']
+    post_diagnoses['OrganBreast']['PR_Intensity'] = ['0', '1', '2', '3', '9']
     POST_DIAGNOSES = post_diagnoses
 
     CANCERS = ['ILC', 'DCIS', 'IDC', 'TubularCancer', 'CancerInvasive', 'CancerInvNOS', 'CancerNotOfBreastOrigin']

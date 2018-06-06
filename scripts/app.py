@@ -31,9 +31,10 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 logger = logger.get_logger(LOGNAME, LOGPATH)
 
-DB_TRAIN_PATH = config['DB_TRAIN_PATH']
+DB_TRAIN_PATH = config['DB_TRAIN_PATH'].split(".")[0]
 DB_UNLABLED_PATH = config['DB_UNLABLED_PATH']
 DEFAULT_USER = config['DEFAULT_USERNAME']
+DEFAULT_ORGAN = config['DEFAULT_ORGAN']
 
 SUCCESS_MSG = "Request Success"
 TRAIN_SUCCESS_MSG = "Request Success. Dev results returned"
@@ -54,30 +55,31 @@ def addTrainData():
     '''
     data = json.loads(request.data) or []
     name = request.args.get("name") or DEFAULT_USER
-    data = preprocess.apply_rules(data,
-                                  config['RAW_REPORT_TEXT_KEY'],
-                                  config['PREPROCESSED_REPORT_TEXT_KEY'],
-                                  config['REPORT_TIME_KEY'],
-                                  config['SIDE_KEY'],
-                                  logger)
+    organ = request.args.get("organ") or DEFAULT_ORGAN
+    data = preprocess.apply_rules(data, organ, config['RAW_REPORT_TEXT_KEY'], config['PREPROCESSED_REPORT_TEXT_KEY'], config['REPORT_TIME_KEY'], config['SIDE_KEY'], config['SEGMENT_ID_KEY'], config['SEGMENT_TYPE_KEY'], logger)
 
     if len(data) == 0 or not generic.contains_annotations(data, config):
-        logger.warn("addTrain - did not include any reports with labels. No op.")
+        logger.warn("addTrain[ - did not include any reports with labels. No op.")
         return NOP_MSG
 
     logger.info( "addTrain - data has keys {}".format( data[0].keys()))
     logger.info("addTrain - [{}] len data {}".format(name, len(data)))
 
-    db_train = pickle.load(open(DB_TRAIN_PATH, 'rb'), encoding='bytes')
-
+    filename = DB_TRAIN_PATH+"_"+organ+".p"
+    if os.path.isfile(filename):
+        db_train = pickle.load(open(filename, 'rb'), encoding='bytes')
+    else:
+        db_train = {}
+        
     if name not in db_train:
-        logger.info("Adding {} to db_train".format(name))
-        db_train[name] = pickle.load(open(config['DB_BASE_PATH'],'rb'), encoding='bytes')
+        logger.info("Adding {} to db_train_{}".format(name, organ))
+        default_train = pickle.load(open(config['DB_BASE_PATH'],'rb'), encoding='bytes')
+        db_train[name] = default_train[organ] if organ in default_train else []        
 
     db_train[name].extend(data)
 
     logger.info("addTrain - Len train {}".format(len(db_train[name])))
-    pickle.dump(db_train, open(DB_TRAIN_PATH, 'wb'))
+    pickle.dump(db_train, open(filename, 'wb'))
     return SUCCESS_MSG, 200
 
 
@@ -118,6 +120,7 @@ def addUnlabeledData():
     logger.info("addUnlabeled - db redumped to path {}".format(DB_UNLABLED_PATH))
     return SUCCESS_MSG, 200
 
+
 @app.route("/train", methods=['GET'])
 def train():
     '''
@@ -127,11 +130,15 @@ def train():
         returns:- dev_results, msg, status code
     '''
     name = request.args.get("name") or DEFAULT_USER
-    db_train = pickle.load(open(DB_TRAIN_PATH, 'rb'))
+    organ = request.args.get("organ") or DEFAULT_ORGAN
+
+    filename = DB_TRAIN_PATH+"_"+organ+".p"
+    db_train = pickle.load(open(filename, 'rb'))
+    
     if name not in db_train:
         return NO_SUCH_USR_MSG.format(name, 'train'), 500
     
-    result_dict = rationale_net_wrapper.train(name, db_train[name], config, logger)
+    result_dict = rationale_net_wrapper.train(name, organ, db_train[name], config, logger)
 
     return json.dumps({'results': result_dict,
             'msg':TRAIN_SUCCESS_MSG}), 200

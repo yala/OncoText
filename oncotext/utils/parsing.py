@@ -5,15 +5,16 @@ import datetime
 
 def parse_XLS(path):
     wb = load_workbook(path)
-    sheet = wb.active
     data = OrderedDict()
-    for row in sheet.rows:
-        values = [str(cell.value) for cell in row if cell.value is not None]
-        if len(values) > 0:
+    for sheet in wb.worksheets:
+        if sheet != None:
+            data[sheet.title] = OrderedDict()
+        for row in sheet.rows:
+            values = [str(cell.value) for cell in row if cell.value is not None]
             if len(values) > 1:
-                data[values[0]] = values[1: ]
-            else:
-                data[values[0]] = []
+                data[sheet.title][values[0]] = values[1: ]
+            elif len(values) == 0:
+                data[sheet.title][values[0]] = []
     return data
 
 
