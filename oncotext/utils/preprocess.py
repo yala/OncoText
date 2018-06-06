@@ -5,19 +5,20 @@ import copy
 import uuid
 
 def remove_bad_chars(text):
-    text = re.sub(r"_x000D_", "", text)
-    text = re.sub(r"_x0009_", "", text)
-    text = re.sub(r"_x000d_", "", text)
+    text = re.sub(r"_x000D_", " ", text)
+    text = re.sub(r"_x0009_", " ", text)
+    text = re.sub(r"_x000d_", " ", text)
     return text
 
 def preprocess_text(text):
-    text = re.sub(r"\W", " ", text)
+    text = str(text)
+    text = re.sub(r"[^\w\.\+=]", " ", text)
     text = ' '.join(text.split('\n'))
-    text = re.sub(r"(----)+", "", text)
-    text = re.sub(r"(====)+", "", text)
+    text = re.sub(r"(----)+", " ", text)
+    text = re.sub(r"(====)+", " ", text)
     text = text.lower()
-    text = re.sub(r"_x000d_", "", text)
-    text = re.sub(r"_x009d_", "", text)
+    text = re.sub(r"_x000d_", " ", text)
+    text = re.sub(r"_x009d_", " ", text)
     return text
 
 def segment_left_right(txt):
@@ -55,7 +56,7 @@ def is_bilateral(text):
         returns: True if report is believed to be bilateral
 
     '''
-    bilat = "right" in text and "left" in text
+    bilat = "breast" in text and "right" in text and "left" in text
     return bilat
 
 def segment_breast(report, raw_text_key, preprocessed_text_key, side_key, logger):
@@ -170,7 +171,7 @@ def set_uuid(report):
     if not 'MRN' in report:
         report['MRN'] = 'Unknown'
 
-    if not 'EMPI' in report:
+    if 'EMPI' not in report:
         report['EMPI'] = '999999999'
 
     return report
@@ -202,9 +203,10 @@ def apply_rules(reports, organ, raw_text_key, preprocessed_text_key, time_key, s
     preprocessed_reports = []
     for r in reports:
         # Skip reports with no text in it
-        if not raw_text_key in r:
+        if raw_text_key not in r and preprocessed_text_key not in r:
             logger.warn("preprocess - report has no {} feild.".format(raw_text_key))
             continue
+        r[raw_text_key] = r[raw_text_key] if raw_text_key in r else r[preprocessed_text_key]
         r[raw_text_key] = remove_bad_chars(r[raw_text_key])
         # append already preprocessed reports
         if preprocessed_text_key in r:
@@ -219,9 +221,9 @@ def apply_rules(reports, organ, raw_text_key, preprocessed_text_key, time_key, s
                 
     preprocessed_reports = [ date.set_timestamp(report, time_key, logger) for report in preprocessed_reports]
 
-    preprocessed_reports = [set_uuid(report) for report in preprocessed_reports ]
-
     preprocessed_reports = [remove_none_vals(report) for report in preprocessed_reports ]
+
+    preprocessed_reports = [set_uuid(report) for report in preprocessed_reports ]
     return preprocessed_reports
 
 def remove_duplicates(reports, raw_text_key, preprocessed_text_key, logger):

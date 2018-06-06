@@ -15,14 +15,12 @@ SMALL_TRAIN_SIZE = 800
 random.seed(0)
 
 
-class PathologyDataset(data.Dataset):
+class PathologyClassificationDataset(data.Dataset):
 
-    def __init__(self, args, reports, label_map, text_key, name, vocab_size=1e6, max_length=720):
+    def __init__(self, args, reports, label_map, text_key, name):
         self.name = name
         self.args = args
         diagnosis = args.aspect
-        self.vocab_size  = vocab_size
-        self.max_length = max_length
         self.dataset = reports
         self.text_key = text_key
         self.samples = copy.deepcopy( self.dataset)
@@ -50,15 +48,15 @@ class PathologyDataset(data.Dataset):
 
     def hash(self, token):
         """Unsigned 32 bit murmurhash for feature hashing."""
-        return murmurhash3_32(token, positive=True) % self.vocab_size
+        return murmurhash3_32(token, positive=True) % self.args.vocab_size
 
     ## Convert one line from beer dataset to {Text, Tensor, Labels}
     def processLine(self, raw_text):
-        text = raw_text.split()[:self.max_length]
+        text = raw_text.split()[:self.args.max_length]
         text_indx =  [self.hash(token) for token in text]
-        if len(text_indx) < self.max_length:
+        if len(text_indx) < self.args.max_length:
             nil_indx = 0
-            text_indx.extend( [nil_indx for _ in range(self.max_length - len(text_indx))])
+            text_indx.extend( [nil_indx for _ in range(self.args.max_length - len(text_indx))])
 
         x =  torch.LongTensor([text_indx])
 

@@ -6,6 +6,7 @@ import rationale_net.utils.parsing as parsing
 import rationale_net.utils.model as model_utils
 import rationale_net.train.train as train_utils
 import oncotext.utils.dataset_factory as dataset_factory
+import copy
 import numpy as np
 import pdb
 import os
@@ -42,8 +43,17 @@ def train(name, organ, reports, config, logger):
         args.snapshot = None
 
         try:
+            if label_maps[args.aspect][0] == "NUM":
+                args.class_balance = False
+                args.use_as_tagger = True
+            else:
+                args.class_balance = True
+                args.use_as_tagger = False
+            
+            args.vocab_size = len(embeddings)
+
             train_data, dev_data = dataset_factory.get_oncotext_dataset_train(
-                reports, label_maps, args, text_key, len(embeddings))
+                 reports, label_maps, args, text_key)
 
             args.epochs = min(args.max_epochs, int(args.steps / (len(train_data) / args.batch_size)))
             
@@ -52,6 +62,7 @@ def train(name, organ, reports, config, logger):
             args.model_path = os.path.join( args.model_dir.format(name),
                                         args.model_file.format(diagnosis))
             gen, model = model_utils.get_model(args, embeddings, train_data)
+
             epoch_stats, model, gen = train_utils.train_model(train_data, dev_data, model, gen, args)
             logger.info("RN Wrapper. {} model finished to training! Train class balance: {}. Dev class balance: {}".format(diagnosis, train_data.class_balance, dev_data.class_balance))
 
@@ -74,12 +85,23 @@ def label_reports(name, un_reports, config, logger):
     label_maps = config['POST_DIAGNOSES']
     default_user = config['DEFAULT_USERNAME']
     text_key = config['PREPROCESSED_REPORT_TEXT_KEY']
-    args.aspect = "ALL"
     embeddings = dataset_factory.get_embedding_tensor(config, args)
-    test_data = dataset_factory.get_oncotext_dataset_test(un_reports, label_maps, args, text_key, len(embeddings))
 
     for indx, diagnosis in enumerate(diagnoses):
-        args.num_class = len(label_maps[diagnosis])
+        args.aspect = diagnosis
+        
+        if label_maps[args.aspect][0] == "NUM":
+            args.class_balance = False
+            args.use_as_tagger = True
+            args.num_class = args.num_tags
+        else:
+            args.class_balance = True
+            args.use_as_tagger = False
+            args.num_class = len(label_maps[diagnosis])
+
+        args.vocab_size = len(embeddings)
+        test_data = dataset_factory.get_oncotext_dataset_test(un_reports, label_maps, args, text_key)
+
         logger.info("RN Wrapper: Start labeling reports for {}".format(diagnosis))
 
         snapshot_path = os.path.join( args.model_dir.format(name),
@@ -99,12 +121,11 @@ def label_reports(name, un_reports, config, logger):
             gen, model = model_utils.get_model(args, embeddings, None)
             test_stats  = train_utils.test_model(test_data, model, gen, args)
             preds = test_stats['preds']
+            
         except Exception as e:
             logger.warn("RN Wrapper. {} model failed to label reports! Following Exception({}). Populating all reports with 0 label".format(diagnosis, e))
             preds = np.zeros(len(test_data), dtype=int)
 
-        for i in range(len(test_data)):
-            prediction = label_maps[diagnosis][preds[i]]
-            test_data.dataset[i][diagnosis] = prediction
-
+        test_data.dataset = dataset_factory.get_labels_from_predictions(preds, copy.deepcopy(test_data), label_maps, diagnosis, args, text_key, logger)
+        
     return test_data.dataset

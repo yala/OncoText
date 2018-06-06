@@ -50,7 +50,6 @@ if __name__ == "__main__":
 
     db_base = pickle.load(open(args.source_db_path, 'rb'), encoding='bytes')
     db_base += pickle.load(open(args.source_addit_db_path, 'rb'), encoding='bytes')
-
     
     ## Get previous annotation files
     files = os.listdir(args.extra_annotation_dir)
@@ -96,6 +95,10 @@ if __name__ == "__main__":
         if 'Node_tissue' in report:
             report['NodeTissue'] = report['Node_tissue']
             del report['Node_tissue']
+
+        # re-segment all reports
+        if Config.PREPROCESSED_REPORT_TEXT_KEY in report:
+            del report[Config.PREPROCESSED_REPORT_TEXT_KEY]
 
 
     ## Noramlize label values
@@ -205,7 +208,11 @@ if __name__ == "__main__":
                 if 'Phylodes' in report:
                     report['Phyllodes'] = report['Phylodes']
                     del report['Phylodes']
-            
+
+                if 'Organ' in report and 'OrganBreast' not in report:
+                    report['OrganBreast'] = report['Organ']
+
+                    
             ## 3. Change all labels to new convention
 
             transformed_keys = []

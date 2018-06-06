@@ -23,7 +23,7 @@ class Config(object):
     DB_BASE_PATH = os.path.join(PICKLE_DIR, "reportDB_base_train.p")
     DB_UNLABLED_PATH = os.path.join(PICKLE_DIR, "reportDBAPI_test.p")
     DB_NON_BREAST_PATH = os.path.join(PICKLE_DIR, "reportDBAPI_nonbreasts.p")
-    EMBEDDING_PATH = "pickle_files/hash_embeddings.p"
+    EMBEDDING_PATH = os.path.join(PICKLE_DIR, "hash_embeddings.p")
 
     if not os.path.exists(PICKLE_DIR):
          os.makedirs(PICKLE_DIR)
@@ -66,7 +66,7 @@ class Config(object):
     RATIONALE_NET_CONFIG = {
         'cuda': True,
         'num_workers': 8,
-        'batch_size': 128,
+        'batch_size': 32,
         'class_balance': True,
         'dropout': .1,
         'init_lr': 0.0001,
@@ -101,7 +101,11 @@ class Config(object):
         'use_top_tfidf_sampling': False,
         'learn_to_select':True,
         'num_samples': 1,
-        'debug_mode': False
+        'debug_mode': False,
+        'vocab_size': 1e6,
+        'max_length': 720,
+        'num_tags': 2,
+        'lbda': 0.9
     }
 
     RATIONALE_NET_ARGS = Args(RATIONALE_NET_CONFIG)
