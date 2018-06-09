@@ -100,7 +100,10 @@ def label_reports(name, un_reports, config, logger):
             args.num_class = len(label_maps[diagnosis])
 
         args.vocab_size = len(embeddings)
-        test_data = dataset_factory.get_oncotext_dataset_test(un_reports, label_maps, args, text_key)
+        if indx == 0:
+            test_data = dataset_factory.get_oncotext_dataset_test(un_reports, label_maps, args, text_key)
+        else:
+            test_data = dataset_factory.get_oncotext_dataset_test(test_data.dataset, label_maps, args, text_key)
 
         logger.info("RN Wrapper: Start labeling reports for {}".format(diagnosis))
 
