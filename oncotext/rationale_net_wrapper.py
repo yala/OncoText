@@ -100,7 +100,6 @@ def label_reports(name, organ, un_reports, config, logger):
             args.num_class = len(label_maps[diagnosis])
 
         args.vocab_size = len(embeddings)
-
         if indx == 0:
             test_data = dataset_factory.get_oncotext_dataset_test(un_reports, label_maps, args, text_key)
         else:
