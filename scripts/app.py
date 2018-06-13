@@ -1,4 +1,3 @@
-
 import os, shutil
 from os.path import dirname, realpath
 import sys
@@ -32,7 +31,7 @@ app.config.from_object(__name__)
 logger = logger.get_logger(LOGNAME, LOGPATH)
 
 DB_TRAIN_PATH = config['DB_TRAIN_PATH'].split(".")[0]
-DB_UNLABLED_PATH = config['DB_UNLABLED_PATH']
+DB_UNLABLED_PATH = config['DB_UNLABLED_PATH'].split(".")[0]
 DEFAULT_USER = config['DEFAULT_USERNAME']
 DEFAULT_ORGAN = config['DEFAULT_ORGAN']
 
@@ -56,7 +55,16 @@ def addTrainData():
     data = json.loads(request.data) or []
     name = request.args.get("name") or DEFAULT_USER
     organ = request.args.get("organ") or DEFAULT_ORGAN
-    data = preprocess.apply_rules(data, organ, config['RAW_REPORT_TEXT_KEY'], config['PREPROCESSED_REPORT_TEXT_KEY'], config['REPORT_TIME_KEY'], config['SIDE_KEY'], config['SEGMENT_ID_KEY'], config['SEGMENT_TYPE_KEY'], logger)
+
+    data = preprocess.apply_rules(data,
+                                  organ,
+                                  config['RAW_REPORT_TEXT_KEY'],
+                                  config['PREPROCESSED_REPORT_TEXT_KEY'],
+                                  config['REPORT_TIME_KEY'],
+                                  config['SIDE_KEY'],
+                                  config['SEGMENT_ID_KEY'],
+                                  config['SEGMENT_TYPE_KEY'],
+                                  logger)
 
     if len(data) == 0 or not generic.contains_annotations(data, config):
         logger.warn("addTrain[ - did not include any reports with labels. No op.")
@@ -101,23 +109,34 @@ def addUnlabeledData():
         return NOP_MSG
 
     name = request.args.get("name") or DEFAULT_USER
+    organ = request.args.get("organ") or DEFAULT_ORGAN
+
+    filename = DB_UNLABLED_PATH+"_"+organ+".p"
+    if os.path.isfile(filename):
+        db_unlabeled = pickle.load(open(filename, 'rb'), encoding='bytes')
+    else:
+        db_unlabeled = {}
+        
+    if name not in db_unlabeled:
+        logger.info( "addUnlabeled - Adding {} to db_unlabeled_{}".format(name, organ))
+        db_unlabeled[name] = []
+
     data = preprocess.apply_rules(data,
+                                  organ,
                                   config['RAW_REPORT_TEXT_KEY'],
                                   config['PREPROCESSED_REPORT_TEXT_KEY'],
                                   config['REPORT_TIME_KEY'],
                                   config['SIDE_KEY'],
+                                  config['SEGMENT_ID_KEY'],
+                                  config['SEGMENT_TYPE_KEY'],
                                   logger)
-    db_unlabeled = pickle.load(open(DB_UNLABLED_PATH, 'rb'), encoding='bytes')
 
-    if name not in db_unlabeled:
-        logger.info( "addUnlabeled - Adding {} to db_unlabeled".format(name))
-        db_unlabeled[name] = []
+    logger.info( "addUnlabeled - Re-writing {} reports to db_unlabeled".format(len(data)))
+    db_unlabeled[name] = data
 
-    db_unlabeled[name].extend(data)
-    logger.info( "addUnlabeled - Adding {} reports to db_unlabeled".format(len(data)))
-    with open(DB_UNLABLED_PATH, 'wb') as f:
-        pickle.dump(db_unlabeled, f)
-    logger.info("addUnlabeled - db redumped to path {}".format(DB_UNLABLED_PATH))
+    pickle.dump(db_unlabeled, open(filename, 'wb'))
+    logger.info("addUnlabeled - db redumped to path {}".format(filename))
+    
     return SUCCESS_MSG, 200
 
 
@@ -158,43 +177,46 @@ def predict():
         returns:- labeled_db, results, msg, status code
     '''
     name = request.args.get("name") or DEFAULT_USER
+    organ = request.args.get("organ") or DEFAULT_ORGAN
     try:
         eval_sets = json.loads(request.data.decode())
     except Exception as e:
         eval_sets = {}
         logger.warn("No eval sets provided for prediction!")
-
-    db_unlabeled = pickle.load(open(DB_UNLABLED_PATH, 'rb'))
+        
+    filename = DB_UNLABLED_PATH+"_"+organ+".p"
+    db_unlabeled = pickle.load(open(filename, 'rb'))
 
     if name not in db_unlabeled:
         return NO_SUCH_USR_MSG.format(name, 'unlabeled'), 500
 
     reportDB = rationale_net_wrapper.label_reports(name,
-                                                    db_unlabeled[name],
-                                                    config,
-                                                    logger)
+                                                   organ,
+                                                   db_unlabeled[name],
+                                                   config,
+                                                   logger)
 
-    pickle.dump(reportDB, open(os.path.join(config['PICKLE_DIR'], 'reportDBAPI_labeled_intermediate.p'), 'wb'))
+    pickle.dump(reportDB, open(os.path.join(config['PICKLE_DIR'], 'reportDBAPI_labeled_intermediate_'+organ+'.p'), 'wb'))
+    # reportDB = pickle.load(open(os.path.join(config['PICKLE_DIR'], 'reportDBAPI_labeled_intermediate_'+organ+'.p'), 'rb'))
 
-
-    train_db = pickle.load(open(DB_TRAIN_PATH,'rb'))
+    train_filename = DB_TRAIN_PATH+"_"+organ+".p"
+    train_db = pickle.load(open(train_filename, 'rb'))
     if name in train_db:
         user_train_db = train_db[name]
     else:
         user_train_db = []
 
     reportDB = postprocess.apply_rules(reportDB,
-                                        user_train_db,
-                                        config,
-                                        logger)
-
+                                       user_train_db,
+                                       organ,
+                                       config,
+                                       logger)
+    
     results = evaluation.evaluate(reportDB, eval_sets, config, logger)
-    if config['PRUNE_AFTER_PREDICT']:
-        reportDB = postprocess.prune_non_breast(reportDB, name, config, logger)
-
+    
     return json.dumps({'reportDB': json_utils.make_json_compliant(reportDB),
-                        'results': results,
-                        'msg': SUCCESS_MSG})
+                       'results': results,
+                       'msg': SUCCESS_MSG})
 
 
 if __name__ == "__main__":

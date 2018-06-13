@@ -2,6 +2,7 @@ from operator import itemgetter
 import pickle
 from oncotext.utils.generic import hasCat
 import datetime
+import pdb
 
 def prune_non_breast(reportDB, name, config, logger):
     logger.info("prune_non_breast - Loading non breast reports")
@@ -72,60 +73,62 @@ def apply_corrections(reportDB, trainDB, config, logger):
     return reportDB
 
 # Runs enforces global constraints like ER/PR NA given no cancer
-def generate_automatic_feilds(reportDB, config):
+def generate_automatic_feilds(reportDB, organ, config):
 
     for r in reportDB:
         if "filename" not in r:
             r['filename'] = "Unknown"
 
-        if r[config['PRUNE_KEY']] == '0':
-            for k in config['CANCERS'] + config['ATYPIAS']:
-                r[k] = '0'
+    if organ == 'OrganBreast':
+        for r in reportDB:
+            if hasCat(r, config['CANCERS']):
+                r['cancer'] = '1'
+            else:
+                r['cancer'] = '0'
 
-        if hasCat(r, config['CANCERS']):
-            r['cancer'] = '1'
-        else:
-            r['cancer'] = '0'
-        if hasCat(r, config['ATYPIAS']):
-            r['atypia'] = '1'
-        else:
-            r['atypia'] = '0'
+            if hasCat(r, config['ATYPIAS']):
+                r['atypia'] = '1'
+            else:
+                r['atypia'] = '0'
 
-        if r['cancer'] == '0':
-            for k in config['MARKERS']:
-                r[k] = '9'
+            if r['cancer'] == '0':
+                for k in config['MARKERS']:
+                    r[k] = '9'
 
+            if 'Her2Fish' in r and r['Her2Fish'] != '9':
+                r['her2'] = r['Her2Fish']
+            else:
+                if 'Her2_IHC' not in r or r['Her2_IHC'] == '9':
+                    r['her2'] = '9'
+                elif r['Her2_IHC'] == '3':
+                    r['her2'] = '1'
+                elif r['Her2_IHC'] in ['0', '1', '2']:
+                    r['her2'] = '0'
+                
+            if 'DCIS' in r and r['DCIS'] == '0':
+                r['GradeMaxDCIS'] = '9'
 
-        if 'Her2Fish' in r and r['Her2Fish'] != '9':
-            r['her2'] = r['Her2Fish']
-        else:
-            if 'Her2_IHC' not in r or r['Her2_IHC'] == '9':
-                r['her2'] = '9'
-            elif r['Her2_IHC'] == '3':
-                r['her2'] = '1'
-            elif r['Her2_IHC'] in ['0', '1', '2']:
-                r['her2'] = '0'
+            if 'CancerInvasive' in r and r['CancerInvasive'] == '0':
+                r['GradeMaxInvasive'] = '9'
 
-        if 'DCIS' in r and r['DCIS'] == '0':
-            r['GradeMaxDCIS'] = '9'
-
-        if 'CancerInvasive' in r and r['CancerInvasive'] == '0':
-            r['GradeMaxInvasive'] = '9'
-
+    elif organ == "OrganProstate":
+        for r in reportDB:
+            if r['ProstateCa'] == '0':
+                numerical = [k for k in config['POST_DIAGNOSES']['OrganProstate'] if config['POST_DIAGNOSES']['OrganProstate'][k] == ["NUM"]]
+                for k in numerical:
+                    r[k] = '0'
+                
     return reportDB
 
 
-def aggregate_episodes(reports, config):
+def aggregate_episodes_breast(reports, config):
 
     patientDict = {}
     sideKey = config['SIDE_KEY']
     patientIDkey = config['PATIENT_ID_KEY']
     dateKey = config['REPORT_TIME_KEY']
     episode_span = config['SIX_MONTHS']
-
-    nonbreast = [r for r in reports if r['OrganBreast']!='1']
-    reports = [r for r in reports if r['OrganBreast']=='1']
-    
+   
     for r in reports:
         if isinstance(r[dateKey], str):
             r[dateKey] = datetime.datetime.strptime(r[dateKey], '%Y-%m-%dT%H:%M:%S')
@@ -189,9 +192,18 @@ def aggregate_episodes(reports, config):
         newID = episodeRelabelDict[rep[patientIDkey]][oldID]
         rep['EpisodeID'] = newID
 
-    return reportsDB + nonbreast
+    return reportsDB
 
-def apply_rules(reportDB, trainDB, config, logger):
+
+def aggregate_episodes(reports, organ, config):
+    if organ == 'OrganBreast':
+        reportsDB = aggregate_episodes_breast(reports, config)
+        return reportsDB
+    else:
+        return reports
+    
+    
+def apply_rules(reportDB, trainDB, organ, config, logger):
     '''
         - Match up predicted labels with train ones, and correct errors
         - Procedurally create labels for things like cancer/atypia
@@ -200,8 +212,8 @@ def apply_rules(reportDB, trainDB, config, logger):
     logger.info("postprocess - apply corrections")
     reportDB = apply_corrections(reportDB, trainDB, config, logger)
     logger.info("postprocess - generate automatic fields")
-    reportDB = generate_automatic_feilds(reportDB, config)
+    reportDB = generate_automatic_feilds(reportDB, organ, config)
     logger.info("postprocess - aggregate episodes")
-    reportDB = aggregate_episodes(reportDB, config)
+    reportDB = aggregate_episodes(reportDB, organ, config)
 
     return reportDB

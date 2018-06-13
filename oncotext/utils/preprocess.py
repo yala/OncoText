@@ -100,6 +100,7 @@ def segment_breast(report, raw_text_key, preprocessed_text_key, side_key, logger
 
 
 def segment_prostate(report, raw_text_key, preprocessed_text_key, segment_id_key, segment_type_key, logger):
+
     full_text = report[raw_text_key]
     header = copy.deepcopy(report)
     diags = copy.deepcopy(report)
@@ -107,19 +108,24 @@ def segment_prostate(report, raw_text_key, preprocessed_text_key, segment_id_key
 
     hindx = full_text.lower().find("diagnosis")
     hindx = full_text.rfind("\n", 0, hindx)
-    header[preprocessed_text_key] = full_text[ :hindx]
+    header[preprocessed_text_key] = preprocess_text(full_text[ :hindx])
     header[segment_type_key] = "Header"
     header[segment_id_key] = "Header"
 
-    dindx = re.search("md|m\.d|clinical history|clinical data|specimens submitted|tissue submitted|gross desciption|slide\-block description", full_text.lower()[hindx: ]).start() + hindx
+    m = re.search("md|m\.d|clinical history|clinical data|specimens submitted|tissue submitted|gross desciption|slide\-block description", full_text.lower()[hindx: ])
+    if m:
+        dindx = m.start() + hindx
+    else:
+        dindx = hindx
     dindx = full_text.rfind("\n", hindx, dindx)
     diags[preprocessed_text_key] = full_text[hindx:dindx]
     
-    footer[preprocessed_text_key] = full_text[dindx: ]
+    footer[preprocessed_text_key] = preprocess_text(full_text[dindx: ])
     footer[segment_type_key] = "Description"
     footer[segment_id_key] = "Description"
 
-    segmented_reports = [header]
+    segmented_dict = {header[segment_id_key]: header,
+                      footer[segment_id_key]: footer} 
     
     segments = [["", ""]]
     for line in diags[preprocessed_text_key].split("\n"):
@@ -150,13 +156,29 @@ def segment_prostate(report, raw_text_key, preprocessed_text_key, segment_id_key
             
     for tup in segments:
         r = copy.deepcopy(report)
-        r[preprocessed_text_key] = tup[0]
+        r[preprocessed_text_key] = preprocess_text(tup[0])
         r[segment_type_key] = "Diagnosis"
         r[segment_id_key] = tup[1]
-        segmented_reports.append(r)
-
-    segmented_reports.append(footer)
+        segmented_dict[r[segment_id_key]] = r
+        
+    if segment_id_key in report:
+        segmented_reports = [segmented_dict[report[segment_id_key]]]
+    else:
+        segmented_reports = [segmented_dict[k] for k in segmented_dict]
+        
     return segmented_reports
+
+def segment_reports(r, organ, raw_text_key, preprocessed_text_key, side_key, segment_id_key, segment_type_key, logger):
+    if organ == "OrganBreast":
+        segmented_reports = segment_breast(r, raw_text_key, preprocessed_text_key, side_key, logger)
+    elif organ == "OrganProstate":
+        segmented_reports = segment_prostate(r, raw_text_key, preprocessed_text_key, segment_id_key, segment_type_key, logger)
+    else:
+        r[preprocessed_text_key] = preprocess_text(r[raw_text_key])
+        segmented_reports = [r]
+
+    return segmented_reports
+
             
 def set_uuid(report):
     if not 'ID' in report:
@@ -204,26 +226,24 @@ def apply_rules(reports, organ, raw_text_key, preprocessed_text_key, time_key, s
     for r in reports:
         # Skip reports with no text in it
         if raw_text_key not in r and preprocessed_text_key not in r:
-            logger.warn("preprocess - report has no {} feild.".format(raw_text_key))
+            logger.warn("preprocess - report has no {} field.".format(raw_text_key))
             continue
         r[raw_text_key] = r[raw_text_key] if raw_text_key in r else r[preprocessed_text_key]
         r[raw_text_key] = remove_bad_chars(r[raw_text_key])
-        # append already preprocessed reports
+
         if preprocessed_text_key in r:
             r[preprocessed_text_key] = preprocess_text(r[preprocessed_text_key])
             preprocessed_reports.append(r)
         else:
-            if organ == "OrganBreast":
-                segmented_reports = segment_breast(r, raw_text_key, preprocessed_text_key, side_key, logger)
-            elif organ == "OrganProstate":
-                segmented_reports = segment_prostate(r, raw_text_key, preprocessed_text_key, segment_id_key, segment_type_key, logger)
+            segmented_reports = segment_reports(r, organ, raw_text_key, preprocessed_text_key, side_key, segment_id_key, segment_type_key, logger)
             preprocessed_reports.extend(segmented_reports)
                 
-    preprocessed_reports = [ date.set_timestamp(report, time_key, logger) for report in preprocessed_reports]
+    preprocessed_reports = [date.set_timestamp(report, time_key, logger) for report in preprocessed_reports]
 
     preprocessed_reports = [remove_none_vals(report) for report in preprocessed_reports ]
 
     preprocessed_reports = [set_uuid(report) for report in preprocessed_reports ]
+
     return preprocessed_reports
 
 def remove_duplicates(reports, raw_text_key, preprocessed_text_key, logger):
@@ -237,9 +257,9 @@ def remove_duplicates(reports, raw_text_key, preprocessed_text_key, logger):
     unique_report_dict = {}
 
     for r in reports:
-        unique_report_dict[ r[raw_text_key] ] = r
         if preprocessed_text_key in r:
             del r[preprocessed_text_key]
+        unique_report_dict[ r[raw_text_key] ] = r
 
     unique_reports = [ v for k,v in unique_report_dict.items() ]
     return unique_reports

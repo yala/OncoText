@@ -9,7 +9,7 @@ import oncotext.logger as logger
 import oncotext.utils.parsing as parsing
 import oncotext.utils.generic as generic
 import argparse
-
+import pdb
 
 parser = argparse.ArgumentParser(description='Reproduce Db from invariants')
 
@@ -48,14 +48,11 @@ if __name__ == "__main__":
         recreate train db from the original cohort Taghian and Hughes provided.
     '''
 
-    db_base = pickle.load(open(args.source_db_path, 'rb'), encoding='bytes')
-    db_base += pickle.load(open(args.source_addit_db_path, 'rb'), encoding='bytes')
-    
     ## Get previous annotation files
     files = os.listdir(args.extra_annotation_dir)
     addit_annotations = []
-    for file in files:
-        path = os.path.join(args.extra_annotation_dir, file)
+    for f in files:
+        path = os.path.join(args.extra_annotation_dir, f)
         annotation = parse_annotation_file(path)
         addit_annotations.extend(annotation)
 
@@ -138,6 +135,9 @@ if __name__ == "__main__":
     for organ in Config.COLUMN_KEYS:
         db_concat_all = []
         if organ == "OrganBreast":
+            db_base = pickle.load(open(args.source_db_path, 'rb'), encoding='bytes')
+            db_base += pickle.load(open(args.source_addit_db_path, 'rb'), encoding='bytes')
+    
             ## 1.  Keys not in old convention
             conved_keys= ['CancerSuspicious',
                           'ALH',
@@ -231,28 +231,30 @@ if __name__ == "__main__":
             if len(r.keys() & Config.COLUMN_KEYS[organ].keys()) > 0:
                 db_concat_all.append(r)
 
-
-        # for report in db_concat_all:
-        #     for key in Config.DIAGNOSES:
-        #         if key in report and not report[key] in Config.DIAGNOSES[key]:
-        #             del report[key]
+        for report in db_concat_all:
+            for key in Config.POST_DIAGNOSES[organ]:
+                if key in report and Config.POST_DIAGNOSES[organ][key] != ["NUM"] and report[key] not in Config.POST_DIAGNOSES[organ][key]:
+                    del report[key]
 
 
         ##7.5 Filter for only those that contain an annotation
         db_concat = []
         for report in db_concat_all:
-            if generic.hasCat(report, list(Config.DIAGNOSES.keys()), loose = True):
+            if generic.hasCat(report, list(Config.DIAGNOSES[organ].keys()), loose = True):
                 db_concat.append(report)
 
-        print("{} num annotations in end for {}".format(len(db_concat, organ)))
+        print("{} num annotations in end for {}".format(len(db_concat), organ))
 
         
         ##7.9 Call preprocesing script
         db_concat = preprocess.apply_rules(db_concat,
+                                           organ,
                                            Config.RAW_REPORT_TEXT_KEY,
                                            Config.PREPROCESSED_REPORT_TEXT_KEY,
                                            Config.REPORT_TIME_KEY,
                                            Config.SIDE_KEY,
+                                           Config.SEGMENT_ID_KEY,
+                                           Config.SEGMENT_TYPE_KEY,
                                            logger)
 
         db_default[organ] = db_concat
@@ -263,6 +265,6 @@ if __name__ == "__main__":
         pickle.dump(train_db, open(filename, 'wb'))
     
     ## 9. dump to out path
-    pickle.dump(db_concat, open(args.base_db_outpath, 'wb'))
+    pickle.dump(db_default, open(args.base_db_outpath, 'wb'))
 
     logger.info(SUCCES_STR)

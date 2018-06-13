@@ -11,10 +11,10 @@ class Args(object):
 
 
 class Config(object):
-    PORT = 5000
+    PORT = 3000#5000
     DEFAULT_USERNAME = 'default'
     DEFAULT_ORGAN = 'Meta'
-    META_SHEET = 'Meta'
+    META_KEY = 'Meta'
     
     PICKLE_DIR = os.environ['PICKLE_DIR']
     SNAPSHOT_DIR = os.environ['SNAPSHOT_DIR']
