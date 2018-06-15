@@ -3,6 +3,7 @@ import oncotext.datasets.pathology_classification_dataset
 import oncotext.datasets.pathology_tagging_dataset
 import pickle
 import numpy as np
+import pdb
 
 def get_oncotext_dataset_train(all_reports, label_maps, args, text_key):
     reports = [r for r in all_reports if args.aspect in r ]
@@ -62,9 +63,12 @@ def get_labels_from_tagging_predictions(preds, test_data, diagnosis, args, text_
     return test_data
             
 def get_labels_from_classification_predictions(preds, test_data, label_maps, diagnosis):
-    for i in range(len(test_data)):
-        prediction = label_maps[diagnosis][preds[i]]
-        test_data.dataset[i][diagnosis] = prediction
+    for i in reversed(range(len(test_data))):
+        try:
+            prediction = label_maps[diagnosis][preds[i]]
+            test_data.dataset[i][diagnosis] = prediction
+        except Exception:
+            pdb.set_trace()
     return test_data
 
 def get_labels_from_predictions(preds, test_data, label_maps, diagnosis, args, text_key, logger):

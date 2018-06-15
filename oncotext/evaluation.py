@@ -24,7 +24,7 @@ def score_on_test_set(reports, test_set, config, logger):
         logger)
     
     preprocessed_text_key = config['PREPROCESSED_REPORT_TEXT_KEY']
-    diagnoses = config['POST_DIAGNOSES']
+    diagnoses = config['POST_DIAGNOSES'][organ]
 
     text_to_gold = {}
     for r in gold_reports:

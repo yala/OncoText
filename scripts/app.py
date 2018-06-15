@@ -131,8 +131,12 @@ def addUnlabeledData():
                                   config['SEGMENT_TYPE_KEY'],
                                   logger)
 
-    logger.info( "addUnlabeled - Re-writing {} reports to db_unlabeled".format(len(data)))
-    db_unlabeled[name] = data
+    if organ == config['META_KEY']:
+        logger.info( "addUnlabeled - Adding {} reports to db_unlabeled".format(len(data)))
+        db_unlabeled[name].extend(data)
+    else:
+        logger.info( "addUnlabeled - Re-writing {} reports to db_unlabeled".format(len(data)))
+        db_unlabeled[name] = data
 
     pickle.dump(db_unlabeled, open(filename, 'wb'))
     logger.info("addUnlabeled - db redumped to path {}".format(filename))
