@@ -121,6 +121,7 @@ def addUnlabeledData():
         logger.info( "addUnlabeled - Adding {} to db_unlabeled_{}".format(name, organ))
         db_unlabeled[name] = []
 
+    data = preprocess.remove_duplicates(data, config['RAW_REPORT_TEXT_KEY'], config['PREPROCESSED_REPORT_TEXT_KEY'], logger)
     data = preprocess.apply_rules(data,
                                   organ,
                                   config['RAW_REPORT_TEXT_KEY'],
