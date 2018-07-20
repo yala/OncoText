@@ -62,18 +62,18 @@ def get_labels_from_tagging_predictions(preds, test_data, diagnosis, args, text_
             test_data.dataset[i][diagnosis] = "0"
     return test_data
             
-def get_labels_from_classification_predictions(preds, test_data, label_maps, diagnosis):
-    for i in reversed(range(len(test_data))):
+def get_labels_from_classification_predictions(preds, test_data, label_maps, diagnosis, logger):
+    for i in range(len(test_data)):
         try:
             prediction = label_maps[diagnosis][preds[i]]
             test_data.dataset[i][diagnosis] = prediction
-        except Exception:
-            pdb.set_trace()
+        except Exception as e:
+            logger.warn("RN Wrapper. {} model failed to return prediction".format(diagnosis))
     return test_data
 
 def get_labels_from_predictions(preds, test_data, label_maps, diagnosis, args, text_key, logger):
     if label_maps[diagnosis][0] == "NUM":
         test_data = get_labels_from_tagging_predictions(preds, test_data, diagnosis, args, text_key, logger)
     else:
-        test_data = get_labels_from_classification_predictions(preds, test_data, label_maps, diagnosis)
+        test_data = get_labels_from_classification_predictions(preds, test_data, label_maps, diagnosis, logger)
     return test_data.dataset
