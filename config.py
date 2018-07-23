@@ -87,18 +87,11 @@ class Config(object):
         'use_gumbel': True,
         'gumbel_temprature': 1,
         'gumbel_decay': 1e-5,
-        'memnet':False,
-        'is_entailement':False,
-        'use_random_sampling': True,
-        'use_matching_net_sampling': False,
-        'use_top_tfidf_sampling': False,
-        'learn_to_select':True,
         'num_samples': 1,
         'debug_mode': False,
         'vocab_size': 1e6,
         'max_length': 720,
-        'num_tags': 2,
-        'lbda': 0.9
+        'tag_lambda': 0.9
     }
 
     RATIONALE_NET_ARGS = Args(RATIONALE_NET_CONFIG)
