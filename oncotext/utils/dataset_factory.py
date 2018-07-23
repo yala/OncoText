@@ -3,6 +3,7 @@ import oncotext.datasets.pathology_classification_dataset
 import oncotext.datasets.pathology_tagging_dataset
 import pickle
 import numpy as np
+import pdb
 
 def get_oncotext_dataset_train(all_reports, label_maps, args, text_key):
     reports = [r for r in all_reports if args.aspect in r ]
@@ -61,15 +62,18 @@ def get_labels_from_tagging_predictions(preds, test_data, diagnosis, args, text_
             test_data.dataset[i][diagnosis] = "0"
     return test_data
             
-def get_labels_from_classification_predictions(preds, test_data, label_maps, diagnosis):
+def get_labels_from_classification_predictions(preds, test_data, label_maps, diagnosis, logger):
     for i in range(len(test_data)):
-        prediction = label_maps[diagnosis][preds[i]]
-        test_data.dataset[i][diagnosis] = prediction
+        try:
+            prediction = label_maps[diagnosis][preds[i]]
+            test_data.dataset[i][diagnosis] = prediction
+        except Exception as e:
+            logger.warn("RN Wrapper. {} model failed to return prediction".format(diagnosis))
     return test_data
 
 def get_labels_from_predictions(preds, test_data, label_maps, diagnosis, args, text_key, logger):
     if label_maps[diagnosis][0] == "NUM":
         test_data = get_labels_from_tagging_predictions(preds, test_data, diagnosis, args, text_key, logger)
     else:
-        test_data = get_labels_from_classification_predictions(preds, test_data, label_maps, diagnosis)
+        test_data = get_labels_from_classification_predictions(preds, test_data, label_maps, diagnosis, logger)
     return test_data.dataset

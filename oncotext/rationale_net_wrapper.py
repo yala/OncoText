@@ -26,10 +26,10 @@ def parse_epoch_stats_for_dev_results(diagnosis, epoch_stats, logger):
 
     return aspect_result
 
-def train(name, reports, config, logger):
+def train(name, organ, reports, config, logger):
     args = config['RATIONALE_NET_ARGS']
-    diagnoses = config['DIAGNOSES']
-    label_maps = config['POST_DIAGNOSES']
+    diagnoses = config['DIAGNOSES'][organ]
+    label_maps = config['POST_DIAGNOSES'][organ]
     text_key = config['PREPROCESSED_REPORT_TEXT_KEY']
 
     embeddings = dataset_factory.get_embedding_tensor(config, args)
@@ -79,10 +79,10 @@ def train(name, reports, config, logger):
 
 
 
-def label_reports(name, un_reports, config, logger):
+def label_reports(name, organ, un_reports, config, logger):
     args = config['RATIONALE_NET_ARGS']
-    diagnoses = config['DIAGNOSES']
-    label_maps = config['POST_DIAGNOSES']
+    diagnoses = config['DIAGNOSES'][organ]
+    label_maps = config['POST_DIAGNOSES'][organ]
     default_user = config['DEFAULT_USERNAME']
     text_key = config['PREPROCESSED_REPORT_TEXT_KEY']
     embeddings = dataset_factory.get_embedding_tensor(config, args)

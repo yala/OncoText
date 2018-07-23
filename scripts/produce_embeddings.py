@@ -12,10 +12,10 @@ import pdb
 
 parser = argparse.ArgumentParser(description='Embeddings Producer with Gensim Word2Vec')
 
-parser.add_argument('--reports_path',  type=str, default='pickle_files/reportDBAPI_test.p', help="Place where reports are stored ")
-parser.add_argument('--embedding_path',  type=str, default='pickle_files/embeddings.p', help="Place where embeddings are stored ")
-parser.add_argument('--word2indx_path',  type=str, default='pickle_files/vocabIndxDict.p', help="Place where word2indx are stored ")
-parser.add_argument('--user',  type=str, default='mghMar', help="user who's reports to use")
+parser.add_argument('--reports_path',  type=str, default=os.path.join(Config.PICKLE_DIR, 'reportDBAPI_test_Meta.p'), help="Place where reports are stored ")
+parser.add_argument('--embedding_path',  type=str, default=os.path.join(Config.PICKLE_DIR, 'hash_embeddings.p'), help="Place where embeddings are stored ")
+parser.add_argument('--word2indx_path',  type=str, default=os.path.join(Config.PICKLE_DIR, 'vocabIndxDict.p'), help="Place where word2indx are stored ")
+parser.add_argument('--user',  type=str, default='default', help="user who's reports to use")
 parser.add_argument('--dim',  type=int, default=200, help="Dimension for embedding")
 parser.add_argument('--num_workers',  type=int, default=8, help="Num workers to use")
 parser.add_argument('--window',  type=int, default=5, help="Window size for CBOW")
