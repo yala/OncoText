@@ -18,6 +18,7 @@ class Config(object):
     
     PICKLE_DIR = os.environ['PICKLE_DIR']
     SNAPSHOT_DIR = os.environ['SNAPSHOT_DIR']
+    CUDA = os.environ['CUDA']
 
     DB_TRAIN_PATH = os.path.join(PICKLE_DIR, "reportDBAPI_train.p")
     DB_BASE_PATH = os.path.join(PICKLE_DIR, "reportDB_base_train.p")
@@ -68,7 +69,7 @@ class Config(object):
     MARKERS = ['ER', "ER_Intensity", 'PR', "PR_Intensity", "her2", 'Her2Fish', "Her2_IHC", 'PositiveLN', 'ECE', 'ITC', 'BVI', 'LVI']
 
     RATIONALE_NET_CONFIG = {
-        'cuda': True,
+        'cuda': CUDA,
         'num_workers': 8,
         'batch_size': 32,
         'class_balance': True,

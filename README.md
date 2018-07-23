@@ -12,7 +12,7 @@ OncoText can be run a [docker container](https://hub.docker.com/r/yala/oncotext/
 You can run the docker as follows:
 ```
 
- sudo nvidia-docker run -it -p 5000:5000 -e LOGFILE=/OncoText/LOGS -e PICKLE_DIR=/OncoText/oncotext_files -e SNAPSHOT_DIR=/OncoText/snapshot -e CONFIG_XLSX=/OncoText/config.xlsx  -v PATH_TO_YOUR_LOGFILE:/OncoText/LOGS  -v PATH_TO_DB_DIR:/OncoText/oncotext_files  -v PATH_TO_CONFIG_EXCEL:/OncoText/config.xlsx -v PATH_TO_SNAPSHOT:/OncoText/snapshot  yala/oncotext:0.2.0
+ sudo nvidia-docker run -it -p 5000:5000 -e LOGFILE=/OncoText/LOGS -e PICKLE_DIR=/OncoText/oncotext_files -e SNAPSHOT_DIR=/OncoText/snapshot -e CONFIG_XLSX=/OncoText/config.xlsx  -e CUDA=true -v PATH_TO_YOUR_LOGFILE:/OncoText/LOGS  -v PATH_TO_DB_DIR:/OncoText/oncotext_files  -v PATH_TO_CONFIG_EXCEL:/OncoText/config.xlsx -v PATH_TO_SNAPSHOT:/OncoText/snapshot  yala/oncotext:0.2.0
 
 ```
 
@@ -39,6 +39,7 @@ In order to use OncoText, you have to set the following environment variables:
     - SNAPSHHOT_DIR : This is the directory where to store model snapshots.
     - LOGFILE : Where the system will write all error/warning/info logs via pylogger
     - CONFIG_XLSX : The path of the category configuration excel file. See ``sample_category_excel.xlsx`` for an example. OncoText loads this excel file and interprets all rows with several column entries as categories to try to parse from the path reports.
+    - CUDA : Set to True if you have GPUs to use (and use nvidia-docker if so), otherwise, set to False to run pytorch in CPU mode
 
 
 ### Neural net configuation settings
