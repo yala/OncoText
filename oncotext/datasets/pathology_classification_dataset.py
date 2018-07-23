@@ -6,10 +6,11 @@ import pickle
 import json
 import pdb
 from rationale_net.datasets.abstract_dataset import AbstractDataset
-import rationale_net.utils.dataset as utils
+import rationale_net.utils.embedding as utils
 import random
 import copy
 from sklearn.utils import murmurhash3_32
+from collections import Counter
 
 SMALL_TRAIN_SIZE = 800
 random.seed(0)
@@ -41,10 +42,13 @@ class PathologyClassificationDataset(data.Dataset):
             self.class_balance[val] += 1
         print ("Class balance", self.class_balance)
 
-        weight_per_class = 1. / len(self.class_balance)
-        self.weights = [ weight_per_class / self.class_balance[d['val']]
-                             for d in self.samples ]
-
+        # Compute sample weights
+        dist_key = 'y'
+        label_dist = [d[dist_key] for d in self.samples]
+        label_counts = Counter(label_dist)
+        weight_per_label = 1./ len(label_counts)
+        label_weights = { label: weight_per_label/count for label, count in label_counts.items()}
+        self.weights = [ label_weights[d[dist_key]] for d in self.samples]
 
     def hash(self, token):
         """Unsigned 32 bit murmurhash for feature hashing."""

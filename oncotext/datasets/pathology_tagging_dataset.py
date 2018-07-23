@@ -6,7 +6,7 @@ import pickle
 import json
 import pdb
 from rationale_net.datasets.abstract_dataset import AbstractDataset
-import rationale_net.utils.dataset as utils
+import rationale_net.utils.embedding as utils
 import random
 import copy
 from sklearn.utils import murmurhash3_32

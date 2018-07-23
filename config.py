@@ -26,11 +26,15 @@ class Config(object):
     EMBEDDING_PATH = os.path.join(PICKLE_DIR, "hash_embeddings.p")
 
     if not os.path.exists(PICKLE_DIR):
-         os.makedirs(PICKLE_DIR)
-         pickle.dump({}, open(DB_TRAIN_PATH, 'wb'))
-         pickle.dump([], open(DB_BASE_PATH,'wb'))
-         pickle.dump({}, open(DB_UNLABELED_PATH, 'wb'))
-         pickle.dump({}, open(DB_NON_BREAST_PATH, 'wb'))
+        os.makedirs(PICKLE_DIR)
+    if not os.path.exists(DB_TRAIN_PATH):
+        pickle.dump({}, open(DB_TRAIN_PATH, 'wb'))
+    if not os.path.exists(DB_BASE_PATH):
+        pickle.dump([], open(DB_BASE_PATH,'wb'))
+    if not os.path.exists(DB_UNLABLED_PATH):
+        pickle.dump({}, open(DB_UNLABLED_PATH, 'wb'))
+    if not os.path.exists(DB_NON_BREAST_PATH):
+        pickle.dump({}, open(DB_NON_BREAST_PATH, 'wb'))
 
     SIX_MONTHS = datetime.timedelta(365/2)
 
@@ -68,9 +72,9 @@ class Config(object):
         'num_workers': 8,
         'batch_size': 32,
         'class_balance': True,
-        'dropout': .1,
+        'dropout': 0,
         'init_lr': 0.0001,
-        'weight_decay': 0,
+        'weight_decay': 5e-5,
         'get_rationales': False,
         'selection_lambda': .01,
         'continuity_lambda': .01,

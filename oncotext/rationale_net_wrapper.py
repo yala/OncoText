@@ -4,7 +4,7 @@ import torch.autograd as autograd
 import rationale_net.utils.generic as generic
 import rationale_net.utils.parsing as parsing
 import rationale_net.utils.model as model_utils
-import rationale_net.train.train as train_utils
+import rationale_net.learn.train as train_utils
 import oncotext.utils.dataset_factory as dataset_factory
 import copy
 import numpy as np
@@ -18,7 +18,10 @@ def parse_epoch_stats_for_dev_results(diagnosis, epoch_stats, logger):
     aspect_result = { 'NAME' : diagnosis}
 
     best_epoch_indx = epoch_stats['best_epoch']
-    aspect_result['ACCURACY'] = epoch_stats['dev_metric'][best_epoch_indx]
+    aspect_result['ACCURACY'] = epoch_stats['dev_accuracy'][best_epoch_indx]
+    aspect_result['PRECISION'] = epoch_stats['dev_precision'][best_epoch_indx]
+    aspect_result['RECALL'] = epoch_stats['dev_recall'][best_epoch_indx]
+    aspect_result['F1'] = epoch_stats['dev_f1'][best_epoch_indx]
     logger.info("RN Wrapper. {} Accuracy={}".format(
                 diagnosis, aspect_result['ACCURACY']))
     logger.info("RN Wrapper. {} Confusion_Matrix={}".format(
@@ -55,7 +58,7 @@ def train(name, organ, reports, config, logger):
             train_data, dev_data = dataset_factory.get_oncotext_dataset_train(
                  reports, label_maps, args, text_key)
 
-            args.epochs = min(args.max_epochs, int(args.steps / (len(train_data) / args.batch_size)))
+            args.epochs = max(args.max_epochs, int(args.steps / (len(train_data) / args.batch_size)))
             
             if not os.path.isdir(args.model_dir.format(name)):
                 os.makedirs(args.model_dir.format(name))
@@ -71,7 +74,10 @@ def train(name, organ, reports, config, logger):
         except Exception as e:
             logger.warn("RN Wrapper. {} model failed to train! Exception {}".format(diagnosis, e))
             aspect_result = {'NAME' : diagnosis,
-                            'ACCURACY': 'NA Training Failed'}
+                            'ACCURACY': 'NA Training Failed',
+                            'PRECISION': 'NA',
+                            'RECALL': 'NA',
+                            'F1': 'NA'}
 
         results.append(aspect_result)
 
