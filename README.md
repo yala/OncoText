@@ -12,16 +12,19 @@ OncoText can be run a [docker container](https://hub.docker.com/r/yala/oncotext/
 You can run the docker as follows:
 ```
 
- sudo nvidia-docker run -it -p 5000:5000 -e LOGFILE=/OncoText/LOGS -e PICKLE_DIR=/OncoText/oncotext_files -e SNAPSHOT_DIR=/OncoText/snapshot -e CONFIG_XLSX=/OncoText/config.xlsx  -v PATH_TO_YOUR_LOGFILE:/OncoText/LOGS  -v PATH_TO_DB_DIR:/OncoText/oncotext_files  -v PATH_TO_CONFIG_EXCEL:/OncoText/config.xlsx -v PATH_TO_SNAPSHOT:/OncoText/snapshot  yala/oncotext:0.1.0
+ sudo nvidia-docker run -it -p 5000:5000 -e LOGFILE=/OncoText/LOGS -e PICKLE_DIR=/OncoText/oncotext_files -e SNAPSHOT_DIR=/OncoText/snapshot -e CONFIG_XLSX=/OncoText/config.xlsx  -v PATH_TO_YOUR_LOGFILE:/OncoText/LOGS  -v PATH_TO_DB_DIR:/OncoText/oncotext_files  -v PATH_TO_CONFIG_EXCEL:/OncoText/config.xlsx -v PATH_TO_SNAPSHOT:/OncoText/snapshot  yala/oncotext:0.2.0
 
 ```
 
 For pretrained model snapshots, please reach out to @yala.
 
+To use Oncotext with pretrained models, I recommend looking at:
+```scripts/demo.py```
+
 <br/>
 
 ## System Requirements
-[Docker](https://docs.docker.com/install/) is the only real requirment. 
+[Docker](https://docs.docker.com/install/) is the only real requirment.
 We recommend a GPU machine for larger databases and heavier training loads. If running OncoWeb, it should be run a seperate CPU instance such that it doesn't compete for resources. A working docker can be found at [here](https://hub.docker.com/r/yala/oncotext/), and please look to the docker file if you wish to set this up on your server.
 
 <br/>
@@ -64,14 +67,14 @@ assert addUnlabeledResp.status_code==200
 ```
 
 ### train
-This request tells OncoText to train its neural net based on the training reports you've previously added through ``addTrain``. This trains a seperate neural network for each extraction. In practice, we found indepdent models out performed ones jointly trained. OncoText will return Development set accuracies in the HTTP Response. 
+This request tells OncoText to train its neural net based on the training reports you've previously added through ``addTrain``. This trains a seperate neural network for each extraction. In practice, we found indepdent models out performed ones jointly trained. OncoText will return Development set accuracies in the HTTP Response.
 ```
 trainResp = requests.get("http://localhost:5000/train", params={"name":'default'})
 assert trainResp.status_code==200
 ```
 
 ### predict
-After OncoText has trained, this request tells OncoText to run its prediction algorithm on the unlabeled reports you have previously added through ``addUnlabeled``. You also send a set of evaluation sets, and OncoText will score it's predictions on the unlabled set against matching records in the evaluation set. The accuracies are returned in the HTTP response. 
+After OncoText has trained, this request tells OncoText to run its prediction algorithm on the unlabeled reports you have previously added through ``addUnlabeled``. You also send a set of evaluation sets, and OncoText will score it's predictions on the unlabled set against matching records in the evaluation set. The accuracies are returned in the HTTP response.
 ```
 predResp = requests.get("http://localhost:5000/predict", params={"name":'default'}, data=json.dumps({"evaluation_set_filename": evaluation_set}))
 assert predResp.status_code==200
@@ -94,4 +97,4 @@ Oncotext is primarily used in conjunction with [OncoManage](https://github.com/y
 <br/>
 
 ## Next Release
-OncoText is still in alpha and at 0.1.0. The next release will include supporting rationale extraction on predict, and more sophisticated evaluation measures. 
+OncoText is still in alpha and at 0.1.0. The next release will include supporting rationale extraction on predict, and more sophisticated evaluation measures.
