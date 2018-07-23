@@ -1,4 +1,5 @@
 import requests
+import json
 '''
     This is running example of how to use OncoText at test time.
     This assumes you have already downloaded snapshots from the MIT team or
@@ -32,8 +33,9 @@ assert response.status_code == 200
 # 3. Call predict
 
 request_path = 'http://localhost:5000/predict'
-response = requests.get(request_path, params={'name':oncotext_user,'organ':'organ'})
+response = requests.get(request_path, params={'name':oncotext_user,'organ':organ})
+# Extract the annotated reports via parsing the response.text with json as follows:
 reports_with_predictions = json.loads(response.text)
 
-print reports_with_predictions
+print(reports_with_predictions)
 

@@ -103,7 +103,8 @@ class Config(object):
         'vocab_size': 1e6,
         'max_length': 720,
         'tag_lambda': 0.9,
-        'tuning_metric': 'f1'
+        'tuning_metric': 'f1',
+        'num_tags': 2
     }
 
     RATIONALE_NET_ARGS = Args(RATIONALE_NET_CONFIG)
