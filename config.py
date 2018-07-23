@@ -11,7 +11,7 @@ class Args(object):
 
 
 class Config(object):
-    PORT = 3000
+    PORT = 5000
     DEFAULT_USERNAME = 'default'
     DEFAULT_ORGAN = 'Meta'
     META_KEY = 'Meta'
