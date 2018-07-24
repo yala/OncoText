@@ -203,13 +203,12 @@ def predict():
 
     pickle.dump(reportDB, open(os.path.join(config['PICKLE_DIR'], 'reportDBAPI_labeled_intermediate_'+organ+'.p'), 'wb'))
     # reportDB = pickle.load(open(os.path.join(config['PICKLE_DIR'], 'reportDBAPI_labeled_intermediate_'+organ+'.p'), 'rb'))
-
+    user_train_db = []
     train_filename = DB_TRAIN_PATH+"_"+organ+".p"
-    train_db = pickle.load(open(train_filename, 'rb'))
-    if name in train_db:
-        user_train_db = train_db[name]
-    else:
-        user_train_db = []
+    if os.path.exists(train_filename):
+        train_db = pickle.load(open(train_filename, 'rb'))
+        if name in train_db:
+            user_train_db = train_db[name]
 
     reportDB = postprocess.apply_rules(reportDB,
                                        user_train_db,
