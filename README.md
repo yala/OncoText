@@ -35,10 +35,10 @@ All system configuration in managed in ```config.py```.
 ### Environment Variables
 In order to use OncoText, you have to set the following environment variables:
 
-    - PICKLE_DIR : This is the directory where to store the various train / raw databases you may way to parse.
+    - PICKLE_DIR : This is the directory where to store the various train / raw databases you may way to parse. This directory should also store the word embeddings, which can be downloaded from ``required_files/hash_embeddings.p.tar.gz``. You to uncompress it and place it in PICKLE_DIR
     - SNAPSHHOT_DIR : This is the directory where to store model snapshots.
     - LOGFILE : Where the system will write all error/warning/info logs via pylogger
-    - CONFIG_XLSX : The path of the category configuration excel file. See ``sample_category_excel.xlsx`` for an example. OncoText loads this excel file and interprets all rows with several column entries as categories to try to parse from the path reports.
+    - CONFIG_XLSX : The path of the category configuration excel file. See ``required_files/example_config.xlsx`` for an example. OncoText loads this excel file and interprets all rows with several column entries as categories to try to parse from the path reports.
     - CUDA : Set to True if you have GPUs to use (and use nvidia-docker if so), otherwise, set to False to run pytorch in CPU mode
 
 
