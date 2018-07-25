@@ -6,9 +6,9 @@ import json
     trained your own models using the "addTrain" and "train" interface.
 '''
 #0. Set up paths, user, and organ system you want to use.
-request_path = 'http://localhost:3000/addUnlabeled'
+request_path = 'http://localhost:5000/addUnlabeled'
 oncotext_user = 'demo'
-organ = "OrganProstate"
+organ = "OrganBreast"
 
 #1.  Add Unlabled example
 
@@ -32,7 +32,7 @@ assert response.status_code == 200
 
 # 3. Call predict
 
-request_path = 'http://localhost:3000/predict'
+request_path = 'http://localhost:5000/predict'
 response = requests.get(request_path, params={'name':oncotext_user,'organ':organ})
 # Extract the annotated reports via parsing the response.text with json as follows:
 reports_with_predictions = json.loads(response.text)
