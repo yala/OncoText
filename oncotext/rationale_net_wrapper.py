@@ -58,6 +58,7 @@ def train(name, organ, reports, config, logger):
             train_data, dev_data = dataset_factory.get_oncotext_dataset_train(
                  reports, label_maps, args, text_key)
 
+            args.batch_size = args.train_batch_size
             args.epochs = max(args.max_epochs, int(args.steps / (len(train_data) / args.batch_size)))
             
             if not os.path.isdir(args.model_dir.format(name)):
@@ -106,6 +107,7 @@ def label_reports(name, organ, un_reports, config, logger):
             args.num_class = len(label_maps[diagnosis])
 
         args.vocab_size = len(embeddings)
+        args.batch_size = args.pred_batch_size
         if indx == 0:
             test_data = dataset_factory.get_oncotext_dataset_test(un_reports, label_maps, args, text_key)
         else:

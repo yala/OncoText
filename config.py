@@ -71,7 +71,8 @@ class Config(object):
     RATIONALE_NET_CONFIG = {
         'cuda': CUDA,
         'num_workers': 8,
-        'batch_size': 32,
+        'train_batch_size': 32,
+        'pred_batch_size': 200,
         'class_balance': True,
         'dropout': 0,
         'init_lr': 0.0001,
