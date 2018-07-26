@@ -21,6 +21,7 @@ For pretrained model snapshots, please reach out to @yala.
 To use Oncotext with pretrained models, I recommend looking at:
 ```scripts/demo.py```
 
+The system supports training and predicting separately for different organs.
 <br/>
 
 ## System Requirements
@@ -56,28 +57,28 @@ For a detailed look at how this works, I recommend looking at ```scripts/app.py`
 You can ``POST`` new training data to OncoText via ```/addTrain```. OncoText preprocess the data, and add it to its train database. The next time OncoText is trained, it will train on the new data (in addition to the old).
 
 ```
-addTrainResp = requests.post("http://localhost:5000/addTrain", data=json.dumps(newTrainData), params={"name":'default')
+addTrainResp = requests.post("http://localhost:5000/addTrain", data=json.dumps(newTrainData), params={"name":'default', "organ":'OrganBreast')
 assert addTrainResp.status_code==200
 ```
 
 ### addUnlabeled
 Adding unlabeled reports is quite similar to adding new train files. If you would like to label a set of new pathology reports, you can ``POST`` the data to OncoText, and it will perform the parse the new reports (in addition to the old) the next time it predicts.
 ```
-addUnlabeledResp = requests.post("http://localhost:5000/addUnlabeled", data=json.dumps(newUnlabeledData), params={"name":'default'})
+addUnlabeledResp = requests.post("http://localhost:5000/addUnlabeled", data=json.dumps(newUnlabeledData), params={"name":'default', "organ":'OrganBreast'})
 assert addUnlabeledResp.status_code==200
 ```
 
 ### train
 This request tells OncoText to train its neural net based on the training reports you've previously added through ``addTrain``. This trains a seperate neural network for each extraction. In practice, we found indepdent models out performed ones jointly trained. OncoText will return Development set accuracies in the HTTP Response.
 ```
-trainResp = requests.get("http://localhost:5000/train", params={"name":'default'})
+trainResp = requests.get("http://localhost:5000/train", params={"name":'default', "organ":'OrganBreast'})
 assert trainResp.status_code==200
 ```
 
 ### predict
 After OncoText has trained, this request tells OncoText to run its prediction algorithm on the unlabeled reports you have previously added through ``addUnlabeled``. You also send a set of evaluation sets, and OncoText will score it's predictions on the unlabled set against matching records in the evaluation set. The accuracies are returned in the HTTP response.
 ```
-predResp = requests.get("http://localhost:5000/predict", params={"name":'default'}, data=json.dumps({"evaluation_set_filename": evaluation_set}))
+predResp = requests.get("http://localhost:5000/predict", params={"name":'default', "organ":'OrganBreast'}, data=json.dumps({"evaluation_set_filename": evaluation_set}))
 assert predResp.status_code==200
 ```
 <br/>
@@ -85,7 +86,7 @@ assert predResp.status_code==200
 
 
 ## OncoText Report Structure
-OncoText relies on a couple special keys to know whats what. Under the hood, it stores all databases a as python lists of python dictionaries. Each dictionary represents a Pathology report for a single breas the ```RAW_REPORT_TEXT_KEY``` indicated the key of the full text. There are several other special keys, all of which specified in ```config.py```, and the handle things like post prediction pruning, what field is the date field, etc. For questions about this, feel free to reach out to @yala or post an issue. If there is interest, I'll update the documentation accordingly.
+OncoText relies on a couple special keys to know whats what. Under the hood, it stores all databases a as python lists of python dictionaries. Each dictionary represents a Pathology report. The ```RAW_REPORT_TEXT_KEY``` indicates the key of the full text. There are several other special keys, all of which specified in ```config.py```, and the handle things like post prediction pruning, what field is the date field, etc. For questions about this, feel free to reach out to @yala or post an issue. If there is interest, I'll update the documentation accordingly.
 
 
 <br/>
@@ -93,7 +94,7 @@ OncoText relies on a couple special keys to know whats what. Under the hood, it 
 
 
 ## Intergration and Deployment
-Oncotext is primarily used in conjunction with [OncoManage](https://github.com/yala/OncoManage). OncoManage sets up a folder structure where new training and unlabeled reports will automatically be added OncoText, and manages reporting on evaluation sets. It also handles exports to various databases, email notifications, and interfacing with a OncoWeb. OncoWeb is a [user interface](https://github.com/clarali/OncoText_Web) for users to access and correct the machine's predictions. We are in the process of preparing all linked repos for public release. Some things are more tightly linked with our deployment at Mass General, but we hope that these tools will prove useful to the community.
+Oncotext is primarily used in conjunction with [OncoManage](https://github.com/yala/OncoManage). OncoManage sets up a folder structure where new training and unlabeled reports will automatically be added OncoText, and manages reporting on evaluation sets. It also handles organ recognition and multi-organ training/prediction, exports to various databases, email notifications, and interfacing with a OncoWeb. OncoWeb is a [user interface](https://github.com/clarali/OncoText_Web) for users to access and correct the machine's predictions. We are in the process of preparing all linked repos for public release. Some things are more tightly linked with our deployment at Mass General, but we hope that these tools will prove useful to the community.
 
 <br/>
 
