@@ -171,7 +171,7 @@ def segment_prostate(report, raw_text_key, preprocessed_text_key, segment_id_key
 def segment_reports(r, organ, raw_text_key, preprocessed_text_key, side_key, segment_id_key, segment_type_key, logger):
     if organ == "OrganBreast":
         segmented_reports = segment_breast(r, raw_text_key, preprocessed_text_key, side_key, logger)
-    elif organ == "OrganProstate":
+    elif organ == "OrganProstateCore":
         segmented_reports = segment_prostate(r, raw_text_key, preprocessed_text_key, segment_id_key, segment_type_key, logger)
     else:
         r[preprocessed_text_key] = preprocess_text(r[raw_text_key])

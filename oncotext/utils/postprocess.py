@@ -113,6 +113,13 @@ def generate_automatic_feilds(reportDB, organ, config):
 
     elif organ == "OrganProstate":
         for r in reportDB:
+            if r['BiopsyType'] == 'Core':
+                r['OrganProstateCore'] = '1'
+                r['OrganProstateNonCore'] = '0'
+            else:
+                r['OrganProstateCore'] = '0'
+                r['OrganProstateNonCore'] = '1'
+
             if r['ProstateCa'] == '0':
                 numerical = [k for k in config['POST_DIAGNOSES']['OrganProstate'] if config['POST_DIAGNOSES']['OrganProstate'][k] == ["NUM"]]
                 for k in numerical:
