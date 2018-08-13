@@ -219,9 +219,9 @@ def apply_rules(reportDB, trainDB, organ, config, logger):
     '''
     logger.info("postprocess - apply corrections")
     reportDB = apply_corrections(reportDB, trainDB, config, logger)
-    logger.info("postprocess - generate automatic fields")
-    reportDB = generate_automatic_feilds(reportDB, organ, config)
-    logger.info("postprocess - aggregate episodes")
-    reportDB = aggregate_episodes(reportDB, organ, config, logger)
+    # logger.info("postprocess - generate automatic fields")
+    # reportDB = generate_automatic_feilds(reportDB, organ, config)
+    # logger.info("postprocess - aggregate episodes")
+    # reportDB = aggregate_episodes(reportDB, organ, config, logger)
 
     return reportDB

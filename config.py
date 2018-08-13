@@ -92,7 +92,7 @@ class Config(object):
         'patience': 5,
         'snapshot': None,
         'objective':'cross_entropy',
-        'num_gpus': 1,
+        'num_gpus': 2,
         'save_dir': 'snapshot',
         'model_dir': SNAPSHOT_DIR+'/{}',
         'model_file': 'oncotext_{}.pt',
