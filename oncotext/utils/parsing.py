@@ -13,7 +13,7 @@ def parse_XLS(path):
             values = [str(cell.value) for cell in row if cell.value is not None]
             if len(values) > 1:
                 data[sheet.title][values[0]] = values[1: ]
-            elif len(values) == 0:
+            elif len(values) == 1:
                 data[sheet.title][values[0]] = []
     return data
 

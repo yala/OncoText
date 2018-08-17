@@ -1,6 +1,6 @@
 # large files
 snapshot
-LOGS
+LOGS*
 LOGS_Tagging
 *.bin
 secrets

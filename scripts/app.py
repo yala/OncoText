@@ -66,7 +66,7 @@ def addTrainData():
                                   config['SEGMENT_TYPE_KEY'],
                                   logger)
 
-    if len(data) == 0 or not generic.contains_annotations(data, config):
+    if len(data) == 0 or not generic.contains_annotations(data, organ, config):
         logger.warn("addTrain[ - did not include any reports with labels. No op.")
         return NOP_MSG
 

@@ -49,7 +49,7 @@ class Config(object):
     PRUNE_KEY = "OrganBreast"
     PRUNE_AFTER_PREDICT = False
 
-    COLUMN_KEYS = parsing.parse_XLS( os.environ['CONFIG_XLSX'])
+    COLUMN_KEYS = parsing.parse_XLS(os.environ['CONFIG_XLSX'])
 
     DIAGNOSES = {o: {} for o in COLUMN_KEYS.keys()}
     for organ in DIAGNOSES:
@@ -69,7 +69,7 @@ class Config(object):
     MARKERS = ['ER', "ER_Intensity", 'PR', "PR_Intensity", "her2", 'Her2Fish', "Her2_IHC", 'PositiveLN', 'ECE', 'ITC', 'BVI', 'LVI']
 
     RATIONALE_NET_CONFIG = {
-        'cuda': CUDA,
+        'cuda': CUDA=='true',
         'num_workers': 8,
         'train_batch_size': 32,
         'pred_batch_size': 200,
@@ -92,7 +92,7 @@ class Config(object):
         'patience': 5,
         'snapshot': None,
         'objective':'cross_entropy',
-        'num_gpus': 2,
+        'num_gpus': 1,
         'save_dir': 'snapshot',
         'model_dir': SNAPSHOT_DIR+'/{}',
         'model_file': 'oncotext_{}.pt',

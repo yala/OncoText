@@ -111,15 +111,21 @@ def generate_automatic_feilds(reportDB, organ, config):
             if 'CancerInvasive' in r and r['CancerInvasive'] == '0':
                 r['GradeMaxInvasive'] = '9'
 
-    elif organ == "OrganProstate":
+    elif organ == "Meta":
         for r in reportDB:
-            if r['BiopsyType'] == 'Core':
-                r['OrganProstateCore'] = '1'
-                r['OrganProstateNonCore'] = '0'
+            if r['OrganProstate'] == '1':
+                if r['BiopsyType'] == 'Core':
+                    r['OrganProstateCore'] = '1'
+                    r['OrganProstateNonCore'] = '0'
+                else:
+                    r['OrganProstateCore'] = '0'
+                    r['OrganProstateNonCore'] = '1'
             else:
                 r['OrganProstateCore'] = '0'
-                r['OrganProstateNonCore'] = '1'
+                r['OrganProstateNonCore'] = '0'
 
+    elif organ == "OrganProstateCore" or organ == "OrganProstateNonCore":
+        for r in reportDB:
             if r['ProstateCa'] == '0':
                 numerical = [k for k in config['POST_DIAGNOSES']['OrganProstate'] if config['POST_DIAGNOSES']['OrganProstate'][k] == ["NUM"]]
                 for k in numerical:
@@ -219,9 +225,9 @@ def apply_rules(reportDB, trainDB, organ, config, logger):
     '''
     logger.info("postprocess - apply corrections")
     reportDB = apply_corrections(reportDB, trainDB, config, logger)
-    # logger.info("postprocess - generate automatic fields")
-    # reportDB = generate_automatic_feilds(reportDB, organ, config)
-    # logger.info("postprocess - aggregate episodes")
-    # reportDB = aggregate_episodes(reportDB, organ, config, logger)
+    logger.info("postprocess - generate automatic fields")
+    reportDB = generate_automatic_feilds(reportDB, organ, config)
+    logger.info("postprocess - aggregate episodes")
+    reportDB = aggregate_episodes(reportDB, organ, config, logger)
 
     return reportDB
