@@ -10,8 +10,7 @@ import oncotext.utils.preprocess as preprocess
 import oncotext.utils.generic as generic
 import sklearn.metrics
 
-def score_on_test_set(reports, test_set, config, logger):
-    organ = generic.getOrgan(test_set[0], config)
+def score_on_test_set(reports, test_set, organ, config, logger):
     gold_reports = preprocess.apply_rules(
         test_set,
         organ,
@@ -83,7 +82,7 @@ def score_on_test_set(reports, test_set, config, logger):
     return results, keys
 
 
-def evaluate(reportDB, eval_sets, config, logger):
+def evaluate(reportDB, eval_sets, organ, config, logger):
     all_results = {}
 
     for file_name in eval_sets:
@@ -91,7 +90,7 @@ def evaluate(reportDB, eval_sets, config, logger):
         relevant_reports = [r for r in reportDB if r['filename'] == file_name]
         logger.info("Scoring reportDB against test_set {}".format(file_name))
         logger.info("Scoring reportDB has {} records matching  test_set {} records".format(len(relevant_reports), len(test_set)))
-        results, result_keys = score_on_test_set(relevant_reports, test_set, config, logger)
+        results, result_keys = score_on_test_set(relevant_reports, test_set, organ, config, logger)
         all_results[file_name]= results
 
     return all_results

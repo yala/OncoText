@@ -19,6 +19,7 @@ class Config(object):
     PICKLE_DIR = os.environ['PICKLE_DIR']
     SNAPSHOT_DIR = os.environ['SNAPSHOT_DIR']
     CUDA = os.environ['CUDA']
+    print('CUDA', CUDA, CUDA=='true')
 
     DB_TRAIN_PATH = os.path.join(PICKLE_DIR, "reportDBAPI_train.p")
     DB_BASE_PATH = os.path.join(PICKLE_DIR, "reportDB_base_train.p")
@@ -61,6 +62,7 @@ class Config(object):
     post_diagnoses['OrganBreast']['ER_Intensity'] = ['0', '1', '2', '3', '9']
     post_diagnoses['OrganBreast']['PR_Intensity'] = ['0', '1', '2', '3', '9']
     POST_DIAGNOSES = post_diagnoses
+    ORGANS = post_diagnoses.keys()
 
     CANCERS = ['ILC', 'DCIS', 'IDC', 'TubularCancer', 'CancerInvasive', 'CancerInvNOS', 'CancerNotOfBreastOrigin']
 
@@ -69,7 +71,7 @@ class Config(object):
     MARKERS = ['ER', "ER_Intensity", 'PR', "PR_Intensity", "her2", 'Her2Fish', "Her2_IHC", 'PositiveLN', 'ECE', 'ITC', 'BVI', 'LVI']
 
     RATIONALE_NET_CONFIG = {
-        'cuda': CUDA=='true',
+        'cuda': True,
         'num_workers': 8,
         'train_batch_size': 32,
         'pred_batch_size': 200,

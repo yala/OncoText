@@ -187,7 +187,7 @@ def predict():
         eval_sets = json.loads(request.data.decode())
     except Exception as e:
         eval_sets = {}
-        logger.warn("No eval sets provided for prediction!")
+        logger.warn("No eval sets provided for prediction!", e)
         
     filename = DB_UNLABLED_PATH+"_"+organ+".p"
     db_unlabeled = pickle.load(open(filename, 'rb'))
@@ -216,7 +216,7 @@ def predict():
                                        config,
                                        logger)
     
-    results = evaluation.evaluate(reportDB, eval_sets, config, logger)
+    results = evaluation.evaluate(reportDB, eval_sets, organ, config, logger)
     
     return json.dumps({'reportDB': json_utils.make_json_compliant(reportDB),
                        'results': results,
