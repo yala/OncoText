@@ -111,10 +111,23 @@ def generate_automatic_feilds(reportDB, organ, config):
             if 'CancerInvasive' in r and r['CancerInvasive'] == '0':
                 r['GradeMaxInvasive'] = '9'
 
-    elif organ == "OrganProstate":
+    elif organ == "Meta":
+        for r in reportDB:
+            if r['OrganProstate'] == '1':
+                if r['BiopsyType'] == 'Core':
+                    r['OrganProstateCore'] = '1'
+                    r['OrganProstateNonCore'] = '0'
+                else:
+                    r['OrganProstateCore'] = '0'
+                    r['OrganProstateNonCore'] = '1'
+            else:
+                r['OrganProstateCore'] = '0'
+                r['OrganProstateNonCore'] = '0'
+
+    elif organ == "OrganProstateCore" or organ == "OrganProstateNonCore":
         for r in reportDB:
             if r['ProstateCa'] == '0':
-                numerical = [k for k in config['POST_DIAGNOSES']['OrganProstate'] if config['POST_DIAGNOSES']['OrganProstate'][k] == ["NUM"]]
+                numerical = [k for k in config['POST_DIAGNOSES']['OrganProstateCore'] if config['POST_DIAGNOSES']['OrganProstateCore'][k] == ["NUM"]]
                 for k in numerical:
                     r[k] = '0'
                 

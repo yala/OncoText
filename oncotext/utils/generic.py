@@ -22,8 +22,8 @@ def hasCat(r, cat, loose=False):
     return False
 
 
-def contains_annotations(reports, config):
-    diagnoses = config['DIAGNOSES']
+def contains_annotations(reports, organ, config):
+    diagnoses = config['DIAGNOSES'][organ]
     for r in reports:
         if hasCat(r, diagnoses, loose=True):
             return True

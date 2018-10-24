@@ -149,7 +149,8 @@ def segment_prostate(report, raw_text_key, preprocessed_text_key, segment_id_key
                     segments[0][0] += line+"\n"
                     segments[0][1] = alpha[0]+"."
                 else:
-                    segments.append([line+"\n", alpha[len(segments)]+"."])
+                    segment_name = alpha[len(segments)%len(alpha)]
+                    segments.append([line+"\n", segment_name + "."])
             else:
                 segments[-1][0] += line+"\n"
         
@@ -171,7 +172,7 @@ def segment_prostate(report, raw_text_key, preprocessed_text_key, segment_id_key
 def segment_reports(r, organ, raw_text_key, preprocessed_text_key, side_key, segment_id_key, segment_type_key, logger):
     if organ == "OrganBreast":
         segmented_reports = segment_breast(r, raw_text_key, preprocessed_text_key, side_key, logger)
-    elif organ == "OrganProstate":
+    elif organ == "OrganProstateCore":
         segmented_reports = segment_prostate(r, raw_text_key, preprocessed_text_key, segment_id_key, segment_type_key, logger)
     else:
         r[preprocessed_text_key] = preprocess_text(r[raw_text_key])
@@ -230,6 +231,9 @@ def apply_rules(reports, organ, raw_text_key, preprocessed_text_key, time_key, s
             continue
         r[raw_text_key] = r[raw_text_key] if raw_text_key in r else r[preprocessed_text_key]
         r[raw_text_key] = remove_bad_chars(r[raw_text_key])
+
+        if organ == 'Meta':
+            r[preprocessed_text_key] = r[raw_text_key]
 
         if preprocessed_text_key in r:
             r[preprocessed_text_key] = preprocess_text(r[preprocessed_text_key])
